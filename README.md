@@ -1,0 +1,76 @@
+	      ___           ___           ___       ___           ___     
+	     /\  \         /\  \         /\__\     /\  \         |\__\    
+	    /::\  \       /::\  \       /:/  /    /::\  \        |:|  |   
+	   /:/\:\  \     /:/\:\  \     /:/  /    /:/\:\  \       |:|  |   
+	  /::\~\:\  \   /::\~\:\  \   /:/  /    /::\~\:\  \      |:|__|__ 
+	 /:/\:\ \:\__\ /:/\:\ \:\__\ /:/__/    /:/\:\ \:\__\ ____/::::\__\
+	 \/_|::\/:/  / \:\~\:\ \/__/ \:\  \    \/__\:\/:/  / \::::/~~/~   
+	    |:|::/  /   \:\ \:\__\    \:\  \        \::/  /   ~~|:|~~|    
+	    |:|\/__/     \:\ \/__/     \:\  \       /:/  /      |:|  |    
+	    |:|  |        \:\__\        \:\__\     /:/  /       |:|  |    
+	     \|__|         \/__/         \/__/     \/__/         \|__|    
+	, we are the good guys
+
+
+# SPACE10 Conversational User Interface
+
+## Get started
+
+### NPM
+[Install](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
+
+	$ cd gulp-tasks
+	$ npm install --save
+
+
+### Gulp
+[Install](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
+
+
+
+### bower
+[Install](https://bower.io/#install-bower)
+
+
+
+### tsd
+[Install](https://github.com/DefinitelyTyped/tsd#install)
+
+	$ cd src/scripts
+	$ tsd install
+
+
+
+### Gulp tasks
+#### main task
+watch task, watches .styl, .ts, .jpg, .png, .gif
+
+	$ gulp
+
+#### sub tasks
+
+	$ gulp stylus
+	$ gulp typescript
+	$ gulp build
+
+
+### install new packages for dev
+	
+	$ cd ./gulp-tasks
+	$ npm install --save-dev XX
+
+
+### Typescript + tsd
+/src/scripts/tsd.json
+ex.:
+	
+	$ tsd install XX --save --resolve
+
+
+# Tests...
+
+# Usage...
+
+# Conventions
+OOP w. Typescript
+BEM methodology

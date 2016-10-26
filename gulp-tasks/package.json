@@ -1,0 +1,25 @@
+{
+  "name": "space10",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp-bower": "*",
+    "gulp-changed": "*",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-flatten": "*",
+    "gulp-insert-lines": "*",
+    "gulp-jsmin": "^0.1.5",
+    "gulp-livereload": "*",
+    "gulp-notify": "*",
+    "gulp-prompt": "*",
+    "gulp-rename": "^1.2.2",
+    "gulp-stylus": "*",
+    "gulp-typescript": "*",
+    "gulp-util": "*",
+    "nib": "*",
+    "rupture": "*",
+    "stream": "*",
+    "typescript": "*"
+  }
+}

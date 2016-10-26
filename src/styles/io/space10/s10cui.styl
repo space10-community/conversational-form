@@ -1,0 +1,59 @@
+@import "nib"
+@import "rupture"
+@import "s10cui-variables"
+
+// boilerplate
+.s10-cui
+	*, *:before, *:after
+		box-sizing border-box
+
+	button
+		border none
+		background none
+		margin 0px
+		padding 0px
+		outline none
+		-webkit-tap-highlight-color rgba(0, 0, 0, 0) !important
+
+	// input:not([type="checkbox"]):-webkit-autofill
+	// 	-webkit-box-shadow 0 0 0px 1000px white inset
+	// 	background-color white
+
+	// input:not([type="checkbox"])
+	// 	&:focus, &:focus, &:focus
+	// 		outline none
+	// 		-webkit-appearance none
+
+	menu
+		padding 0px
+		margin 0px
+
+
+	a, a:active, a:visited
+		color currentColor
+
+	button, a
+		cursor pointer
+		text-decoration none
+	
+
+// interface styling
+.s10-cui
+	// width 100%
+	// height 100%
+	position absolute
+	top 0px
+	left 0px
+	right 0px
+	bottom 0px
+	z-index 999
+	margin auto
+	background alpha(white, 50%)
+
+	opacity 0
+	will-change opacity
+	transition opacity $anim-time $anim-easeOut
+
+.s10-cui--show
+	opacity 1
+
