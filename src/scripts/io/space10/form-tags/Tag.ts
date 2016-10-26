@@ -39,14 +39,7 @@ namespace io.space10 {
 		private pattern: RegExp;
 
 		private validationCallback?: (value: string) => boolean; // can also be set through cui-validation attribute.
-		private questions: Array<string>;
-
-		// cui-question will overwrite all
-		// label cui-questions="What is your first name?"
-		// if no cui-questions then a look for:
-		// <label tag with label:for attribute to input:id
-		// check: label > for : id
-		//fallsback to standards...
+		private questions: Array<string>; // can also be set through cui-questions attribute.
 
 		public get type (): string{
 			return this.el.getAttribute("type");
@@ -74,10 +67,16 @@ namespace io.space10 {
 			this.el = options.el;
 
 			// map questions to Tag
-			if(this.el.getAttribute("cui-questions"))
+			if(this.el.getAttribute("cui-questions")){
 				this.questions = this.el.getAttribute("cui-questions").split("|");
-			else if(options.questions)
+			}else if(options.questions){
 				this.questions = options.questions;
+			}else{
+				// TODO: look for label..
+				// if no cui-questions then a look for:
+				// <label tag with label:for attribute to input:id
+				// check: label > for : id
+			}
 			
 			// custom validation
 			if(this.validationCallback){
