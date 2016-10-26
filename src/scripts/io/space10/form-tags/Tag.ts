@@ -70,8 +70,11 @@ namespace io.space10 {
 			if(element.style.visibility === "hidden")
 				return false;
 
-
-			return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+			
+			if(element.tagName.toLowerCase() == "select")
+				return true
+			else
+				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 		}
 
 		protected setValue(value: string | number){

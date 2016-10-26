@@ -34,7 +34,7 @@ namespace io.space10 {
 				const group: io.space10.ITagGroup = <io.space10.ITagGroup> this.flowManager.currentTag;
 				for (var i = 0; i < group.elements.length; i++) {
 					var element: ITag = group.elements[i];
-					str += "</br>— group tag type: " + element.type;
+					str += "</br>- group tag type: " + element.type;
 				}
 			}else{
 				// single tag..

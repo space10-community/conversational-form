@@ -96,43 +96,32 @@
 						formEl = document.getElementById("co-billing-form");
 
 					// build some static elements
-					var inputFields = formEl.getElementsByTagName("input");
-					for (var i = 0; i < inputFields.length; i++) {
-						var element = inputFields[i];
-						tags.push(new io.space10.InputTag({
-							el: element
-							//validationCallback
-							// questions: Array<String>
-						}));
+					var fields = [].slice.call(formEl.getElementsByTagName("input"), 0)
+					fields = fields.concat([].slice.call(formEl.getElementsByTagName("select"), 0));
+					fields = fields.concat([].slice.call(formEl.getElementsByTagName("button"), 0));
+
+					for (var i = 0; i < fields.length; i++) {
+						var element = fields[i];
+						if(element.tagName.toLowerCase() == "input"){
+							tags.push(new io.space10.InputTag({
+								el: element
+								//validationCallback
+								// questions: Array<String>
+							}));
+						}else if(element.tagName.toLowerCase() == "select"){
+							tags.push(new io.space10.SelectTag({
+								el: element
+								//validationCallback
+								// questions: Array<String>
+							}));
+						}else if(element.tagName.toLowerCase() == "button"){
+							tags.push(new io.space10.ButtonTag({
+								el: element
+								//validationCallback
+								// questions: Array<String>
+							}));
+						}
 					}
-
-					var selectElements = formEl.getElementsByTagName("select");
-					for (var i = 0; i < selectElements.length; i++) {
-						var element = selectElements[i];
-						
-						tags.push(new io.space10.SelectTag({
-							el: element
-							//validationCallback
-							// questions: Array<String>
-						}));
-					}
-
-					var buttons = formEl.getElementsByTagName("button");
-					for (var i = 0; i < buttons.length; i++) {
-						var element = buttons[i];
-
-						tags.push(new io.space10.ButtonTag({
-							el: element
-							//validationCallback
-							// questions: Array<String>
-						}));
-					}
-
-
-
-
-
-
 
 					window.space10CUI = new io.space10.Space10CUI({
 						formEl: formEl,

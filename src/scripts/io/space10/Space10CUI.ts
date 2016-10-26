@@ -89,42 +89,33 @@ namespace io.space10 {
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				const inputFields: NodeListOf<HTMLInputElement> = this.formEl.getElementsByTagName("input");
-				for (var i = 0; i < inputFields.length; i++) {
-					const element = inputFields[i];
-					if(Tag.isTagValid(element)){
-						// ignore hidden tags
-						this.tags.push(new io.space10.InputTag({
-							el: element
-							//validationCallback
-							// questions: Array<String>
-						}));
-					}
-				}
+				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.getElementsByTagName("input"), 0);
+				fields = fields.concat([].slice.call(this.formEl.getElementsByTagName("select"), 0));
+				fields = fields.concat([].slice.call(this.formEl.getElementsByTagName("button"), 0));
 
-				const selectElements: NodeListOf<HTMLSelectElement> = this.formEl.getElementsByTagName("select");
-				for (var i = 0; i < selectElements.length; i++) {
-					const element = selectElements[i];
+				for (var i = 0; i < fields.length; i++) {
+					const element = fields[i];
 					if(Tag.isTagValid(element)){
 						// ignore hidden tags
-						this.tags.push(new io.space10.SelectTag({
+						if(element.tagName.toLowerCase() == "input"){
+							this.tags.push(new io.space10.InputTag({
+								el: element
+								//validationCallback
+								// questions: Array<String>
+							}));
+						}else if(element.tagName.toLowerCase() == "select"){
+							this.tags.push(new io.space10.SelectTag({
+								el: element
+								//validationCallback
+								// questions: Array<String>
+							}));
+						}else if(element.tagName.toLowerCase() == "button"){
+							this.tags.push(new io.space10.ButtonTag({
 							el: element
 							//validationCallback
 							// questions: Array<String>
 						}));
-					}
-				}
-
-				const buttons: NodeListOf<HTMLButtonElement> = this.formEl.getElementsByTagName("button");
-				for (var i = 0; i < buttons.length; i++) {
-					const element = buttons[i];
-					if(Tag.isTagValid(element)){
-						// ignore hidden tags
-						this.tags.push(new io.space10.ButtonTag({
-							el: element
-							//validationCallback
-							// questions: Array<String>
-						}));
+						}
 					}
 				}
 			}else{
@@ -186,6 +177,7 @@ namespace io.space10 {
 
 		private setupUI(){
 			console.log(this, 'this.tags:', this.tags);
+
 			// start the flow
 			this.flowManager = new FlowManager({
 				cuiReference: this,
