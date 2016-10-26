@@ -68,9 +68,26 @@ ex.:
 
 
 # Tests...
+sadsda
 
 # Usage...
+asdsada
 
 # Conventions
-OOP w. Typescript
-BEM methodology
+Link to google doc?
+
+
+# Usage
+
+### CUI tag attributes
+
+#### cue-questions
+* to map questions directly to a tag.
+* seperate by | to allow for more questions, app will shuffle.
+
+	<input type="text" cue-questions="What is your name?|Please tell me your name." ..
+
+#### cue-validation
+* set validation callback, be aware that eval is used to make the method available.
+
+	<input type="text" cue-validation="window.validateFunction" ..

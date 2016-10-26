@@ -29,6 +29,8 @@ namespace io.space10 {
 			else if(this.flowManager.currentTag.name)
 				str += "</br>tag name: " + this.flowManager.currentTag.name;
 
+			str += "</br>tag question: " + this.flowManager.currentTag.question;
+
 
 			if(this.flowManager.currentTag.type == "group"){
 				const group: io.space10.ITagGroup = <io.space10.ITagGroup> this.flowManager.currentTag;
@@ -37,7 +39,6 @@ namespace io.space10 {
 					str += "</br>- group tag type: " + element.type;
 				}
 			}else{
-				// single tag..
 			}
 
 			this.el.innerHTML = str;

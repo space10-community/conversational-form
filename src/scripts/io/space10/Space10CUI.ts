@@ -19,6 +19,7 @@ namespace io.space10 {
 		formEl: HTMLFormElement,
 		context?: HTMLElement,
 		dictionaryData?: Object,
+		dictionaryAI?: Object,
 		submitCallback?: () => void | HTMLButtonElement,
 	}
 
@@ -28,7 +29,7 @@ namespace io.space10 {
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
-		private tags: Array<ITag>;
+		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
 		private cuiInput:Input;
@@ -38,10 +39,14 @@ namespace io.space10 {
 			console.log("Space10 Conversational User Interface.");
 			this.submitCallback = options.submitCallback;
 			this.formEl = options.formEl;
-			if(options.dictionaryData)
-				this.dictionary = new io.space10.Dictionary({data: options.dictionaryData});
-			else
+			if(options.dictionaryData || options.dictionaryAI){
+				this.dictionary = new io.space10.Dictionary({
+					data: options.dictionaryData,
+					aiQuestions: options.dictionaryAI,
+				});
+			}else{
 				this.dictionary = new io.space10.Dictionary();
+			}
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
@@ -89,9 +94,7 @@ namespace io.space10 {
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.getElementsByTagName("input"), 0);
-				fields = fields.concat([].slice.call(this.formEl.getElementsByTagName("select"), 0));
-				fields = fields.concat([].slice.call(this.formEl.getElementsByTagName("button"), 0));
+				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button"), 0);
 
 				for (var i = 0; i < fields.length; i++) {
 					const element = fields[i];
@@ -100,19 +103,19 @@ namespace io.space10 {
 						if(element.tagName.toLowerCase() == "input"){
 							this.tags.push(new io.space10.InputTag({
 								el: element
-								//validationCallback
+								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
 							this.tags.push(new io.space10.SelectTag({
 								el: element
-								//validationCallback
+								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
 							this.tags.push(new io.space10.ButtonTag({
 							el: element
-							//validationCallback
+							// validationCallback
 							// questions: Array<String>
 						}));
 						}
@@ -123,11 +126,17 @@ namespace io.space10 {
 			}
 
 			// remove invalid tags if they sneaked in.. tihs could happen if tags are setup manually
+			const indexesToRemove: Array<ITag> = [];
 			for(var i = 0; i < this.tags.length; i++){
 				const element = this.tags[i];
 				if(!Tag.isTagValid(element.el)){
-					this.tags.splice(i, 1);
+					indexesToRemove.push(element);
 				}
+			}
+
+			for (var i = 0; i < indexesToRemove.length; i++) {
+				var tag: ITag = indexesToRemove[i];
+				this.tags.splice(this.tags.indexOf(tag), 1);
 			}
 
 			//let's start the conversation
@@ -158,7 +167,7 @@ namespace io.space10 {
 						const tagGroup: io.space10.TagGroup = new io.space10.TagGroup({
 							elements: groups[group]
 							// el: element
-							//validationCallback
+							// validationCallback
 							// questions: Array<String>
 						});
 

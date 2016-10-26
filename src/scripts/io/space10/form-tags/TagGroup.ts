@@ -32,6 +32,10 @@ namespace io.space10 {
 			return this.elements[0].title;
 		}
 
+		public get question():string{
+			return this.elements[0].question;
+		}
+
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
 			console.log(this, 'TagGroup:', this.elements);

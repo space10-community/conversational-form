@@ -85,10 +85,16 @@
 				background: yellow;
 				width: 600px;
 				height: 800px;
+				padding-top: 200px;
 			}
 		</style>
 
 		<script>
+			var testValidation = function(value){
+				console.log("testValidation", value);
+				return true;
+			};
+
 			// Self-Invoking Anonymous Function to get started
 			(function(){
 				setTimeout(function() {
@@ -96,36 +102,37 @@
 						formEl = document.getElementById("co-billing-form");
 
 					// build some static elements
-					var fields = [].slice.call(formEl.getElementsByTagName("input"), 0)
-					fields = fields.concat([].slice.call(formEl.getElementsByTagName("select"), 0));
-					fields = fields.concat([].slice.call(formEl.getElementsByTagName("button"), 0));
+					var fields = [].slice.call(formEl.querySelectorAll("input, select, button"), 0);
 
 					for (var i = 0; i < fields.length; i++) {
 						var element = fields[i];
 						if(element.tagName.toLowerCase() == "input"){
 							tags.push(new io.space10.InputTag({
-								el: element
-								//validationCallback
-								// questions: Array<String>
+								el: element,
+								questions: ["Constructor set question1", "Constructor set question2"]
+								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
 							tags.push(new io.space10.SelectTag({
 								el: element
-								//validationCallback
+								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
 							tags.push(new io.space10.ButtonTag({
 								el: element
-								//validationCallback
+								// validationCallback
 								// questions: Array<String>
 							}));
 						}
 					}
+					console.log("fields:", fields);
+					console.log("tags:", tags);
 
 					window.space10CUI = new io.space10.Space10CUI({
 						formEl: formEl,
 						//dictionaryData: {},
+						//dictionaryAI: {},
 						context: document.getElementsByClassName("form-outer")[0],
 						tags: tags
 						//submitCallback: () => void | HTMLButtonElement
@@ -181,13 +188,34 @@
 					<div class="field name-firstname">
 						<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
 						<div class="input-box">
-							<input type="text" id="billing:firstname" name="billing[firstname]" value="" title="Fornavn" maxlength="255" class="input-text required-entry">
+							<input
+								type="text"
+								id="billing:firstname"
+								name="billing[firstname]"
+								value=""
+								title="Fornavn"
+								maxlength="255"
+								class="input-text required-entry"
+
+								cui-validation="window.testValidation"
+								cui-questions="Attribute question1|Attribute question2"
+							>
 						</div>
 					</div>
 					<div class="field name-lastname">
 						<label for="billing:lastname" class="required"><em>*</em>Efternavn</label>
 						<div class="input-box">
-							<input type="text" id="billing:lastname" name="billing[lastname]" value="" title="Efternavn" maxlength="255" class="input-text required-entry">
+							<input
+								type="text"
+								id="billing:lastname"
+								name="billing[lastname]"
+								value=""
+								title="Efternavn"
+								maxlength="255"
+								class="input-text required-entry"
+
+								pattern="^hello" <!-- pattern that only allows strings containing hello -->
+							>
 						</div>
 					</div>
 				</div>

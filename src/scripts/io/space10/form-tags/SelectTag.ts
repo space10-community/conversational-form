@@ -15,13 +15,7 @@ namespace io.space10 {
 			super(options);
 
 			var optionTags = this.el.getElementsByTagName("option");
-			// console.log(this, 'select:', this.el.value);
-			// console.log(this, 'select:', optionTags);
-			// console.log(this, 'input:', this.el.getAttribute("type"), this.el);
-			this.setValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
-
-			// auto values..
-			// ....
+			// this.setValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
 		}
 	}
 }
