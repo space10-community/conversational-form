@@ -1,9 +1,13 @@
 /// <reference path="Button.ts"/>
 /// <reference path="../Space10CUI.ts"/>
+/// <reference path="../logic/FlowManager.ts"/>
 
 // namespace
 namespace io.space10 {
 	// interface
+	// export interface IInputOptions extends IBasicElementOptions{
+
+	// }
 	
 	// class
 	export class Input extends io.space10.BasicElement {
@@ -17,11 +21,13 @@ namespace io.space10 {
 			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
 			console.log("this.el", this, this.el);
-			
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			console.log("onkeyup");
+			if(event.keyCode == 13){
+				// enter pressed
+				this.flowManager.nextStep();
+			}
 		}
 
 		// override

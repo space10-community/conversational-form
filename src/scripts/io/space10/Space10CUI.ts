@@ -73,10 +73,22 @@ namespace io.space10 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+			// if tags are not defined then we will try and build some tags our selves..
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				// if tags are not defined then we will try and build some tags our selves..
 				const inputFields: NodeListOf<HTMLInputElement> = this.formEl.getElementsByTagName("input");
 				for (var i = 0; i < inputFields.length; i++) {
 					const element = inputFields[i];
@@ -103,10 +115,6 @@ namespace io.space10 {
 					}
 				}
 
-
-
-
-
 				const buttons: NodeListOf<HTMLButtonElement> = this.formEl.getElementsByTagName("button");
 				for (var i = 0; i < buttons.length; i++) {
 					const element = buttons[i];
@@ -131,8 +139,8 @@ namespace io.space10 {
 				}
 			}
 
+			//let's start the conversation
 			this.setupTagGroups();
-
 			this.setupUI();
 
 			return this;
@@ -156,17 +164,20 @@ namespace io.space10 {
 				for (let group in groups){
 					if(groups[group].length > 1){
 						// only if more elements with same name..
-						this.tags.push(new io.space10.TagGroup({
+						const tagGroup: io.space10.TagGroup = new io.space10.TagGroup({
 							elements: groups[group]
 							// el: element
 							//validationCallback
 							// questions: Array<String>
-						}));
+						});
 
 						// remove the tags as they are now apart of a group
 						for(var i = 0; i < groups[group].length; i++){
 							let tagToBeRemoved: InputTag = groups[group][i];
-							this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1);
+							if(i == 0)// add the group at same index as the the first tag to be removed
+								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1, tagGroup);
+							else
+								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1);
 						}
 					}
 				}
@@ -174,29 +185,35 @@ namespace io.space10 {
 		}
 
 		private setupUI(){
-			var s10context: HTMLElement = document.createElement("div");
-			s10context.id = "s10-cui";
-			s10context.className = "s10-cui";
-			this.context.appendChild(s10context);
-
-			this.chat = new ChatInterface({});
-			s10context.appendChild(this.chat.el);
-
-			// CUI UI
-			this.cuiInput = new Input({});
-			s10context.appendChild(this.cuiInput.el);
-
-			// var b = new Button({});
-			// s10context.appendChild(b.el);
-
-			setTimeout(() => s10context.classList.add("s10-cui--show"), 0);
-
-
+			console.log(this, 'this.tags:', this.tags);
 			// start the flow
 			this.flowManager = new FlowManager({
 				cuiReference: this,
 				tags: this.tags,
 			});
+
+			var s10context: HTMLElement = document.createElement("div");
+			s10context.id = "s10-cui";
+			s10context.className = "s10-cui";
+			this.context.appendChild(s10context);
+
+			this.chat = new ChatInterface({
+				flowManager: this.flowManager
+			});
+			s10context.appendChild(this.chat.el);
+
+			// CUI UI
+			this.cuiInput = new Input({
+				flowManager: this.flowManager
+			});
+			s10context.appendChild(this.cuiInput.el);
+
+			// var b = new Button({});
+			// s10context.appendChild(b.el);
+			setTimeout(() =>{
+				s10context.classList.add("s10-cui--show")
+				this.flowManager.start();
+			}, 0);
 		}
 
 		public remove(){
@@ -205,7 +222,7 @@ namespace io.space10 {
 	}
 
 	export interface IBasicElementOptions{
-
+		flowManager: FlowManager;
 	}
 
 	export interface IBasicElement{
@@ -217,7 +234,10 @@ namespace io.space10 {
 	export class BasicElement implements IBasicElement{
 		public el: Element;
 
+		protected flowManager: FlowManager;
+
 		constructor(options: IBasicElementOptions){
+			this.flowManager = options.flowManager;
 			this.createElement();
 		}
 
@@ -229,6 +249,10 @@ namespace io.space10 {
 		}
 
 		// template, should be overwritten ...
-		public getTemplate () : string {return `...`};
+		public getTemplate () : string {return `template missing...`};
+
+		public remove(){
+
+		}
 	}
 }

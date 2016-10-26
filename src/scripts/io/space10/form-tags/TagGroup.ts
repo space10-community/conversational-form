@@ -13,7 +13,7 @@ namespace io.space10 {
 	}
 
 	export interface ITagGroup extends ITag{
-		// elements: Array <InputTag>
+		elements: Array <InputTag>
 	}
 
 	// class
@@ -26,6 +26,10 @@ namespace io.space10 {
 
 		public get name (): string{
 			return this.elements[0].name;
+		}
+
+		public get title (): string{
+			return this.elements[0].title;
 		}
 
 		constructor(options: ITagGroupOptions){

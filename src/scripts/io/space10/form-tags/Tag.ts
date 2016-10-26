@@ -18,6 +18,7 @@ namespace io.space10 {
 		el?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
 		type: string,
 		name: string,
+		title: string,
 	}
 
 	export interface ITagOptions{
@@ -42,12 +43,19 @@ namespace io.space10 {
 		public get name (): string{
 			return this.el.getAttribute("name");
 		}
+		
+		public get title (): string{
+			return this.el.getAttribute("title");
+		}
 
 		constructor(options: ITagOptions){
 			this.el = options.el;
 
-			this.questions = options.questions;
-			this.validationCallback = options.validationCallback;
+			if(options.questions)
+				this.questions = options.questions;
+			
+			if(this.validationCallback)
+				this.validationCallback = options.validationCallback;
 
 			this.defaultValue = this.el.value;
 		}

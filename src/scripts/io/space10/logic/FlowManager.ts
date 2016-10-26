@@ -8,6 +8,10 @@ namespace io.space10 {
 		tags: Array<ITag>;
 	}
 
+	export const FlowEvents = {
+		UPDATE: "cui-flow-update"
+	}
+
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
@@ -19,23 +23,27 @@ namespace io.space10 {
 		private step: number = 0;
 		private stepTimer: number = 0;
 
+		public get currentTag(): io.space10.ITag | io.space10.ITagGroup {
+			return this.tags[this.step];
+		}
+
 		constructor(options: FlowManagerOptions){
 			this.cuiReference = options.cuiReference;
 			this.tags = options.tags;
 
 			this.maxSteps = this.tags.length;
+		}
 
-			console.log(this, 'FlowManager', this.tags);
-
+		public start(){
 			this.validateStepAndUpdate();
 		}
 
-		private nextStep(){
+		public nextStep(){
 			this.step++;
 			this.validateStepAndUpdate();
 		}
 
-		private previousStep(){
+		public previousStep(){
 			this.step--;
 			this.validateStepAndUpdate();
 		}
@@ -47,7 +55,7 @@ namespace io.space10 {
 		}
 
 		private showStep(){
-			console.log('showStep:', this.tags[this.step]);
+			document.dispatchEvent(new Event(io.space10.FlowEvents.UPDATE));
 		}
 	}
 }
