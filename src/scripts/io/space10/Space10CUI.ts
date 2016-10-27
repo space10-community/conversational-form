@@ -1,6 +1,6 @@
 /// <reference path="ui/Button.ts"/>
 /// <reference path="ui/Input.ts"/>
-/// <reference path="ui/ChatInterface.ts"/>
+/// <reference path="ui/chat/ChatInterface.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
@@ -199,13 +199,11 @@ namespace io.space10 {
 			this.context.appendChild(s10context);
 
 			this.chat = new ChatInterface({
-				flowManager: this.flowManager
 			});
 			s10context.appendChild(this.chat.el);
 
 			// CUI UI
 			this.cuiInput = new Input({
-				flowManager: this.flowManager
 			});
 			s10context.appendChild(this.cuiInput.el);
 
@@ -223,7 +221,7 @@ namespace io.space10 {
 	}
 
 	export interface IBasicElementOptions{
-		flowManager: FlowManager;
+
 	}
 
 	export interface IBasicElement{
@@ -235,14 +233,11 @@ namespace io.space10 {
 	export class BasicElement implements IBasicElement{
 		public el: Element;
 
-		protected flowManager: FlowManager;
-
 		constructor(options: IBasicElementOptions){
-			this.flowManager = options.flowManager;
-			this.createElement();
+			this.createElement(options);
 		}
 
-		protected createElement(){
+		protected createElement(options: IBasicElementOptions): Element{
 			var template: HTMLTemplateElement = document.createElement('template');
 			template.innerHTML = this.getTemplate();
 			this.el = <Element> template.content.firstChild;

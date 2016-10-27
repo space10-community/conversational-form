@@ -40,5 +40,9 @@ namespace io.space10 {
 			this.elements = options.elements;
 			console.log(this, 'TagGroup:', this.elements);
 		}
+
+		public setTagValueAndIsValid(value: string | number):boolean{
+			return true;
+		}
 	}
 }

@@ -1,0 +1,37 @@
+@import "nib"
+@import "rupture"
+@import "../../s10cui-variables"
+
+s10cui-chat
+	display block
+	width 100%
+	background pink
+	height s("calc(100% - %s)", $input-field-height)
+
+	padding 20px
+
+	overflow-x hidden
+	overflow-y scroll
+
+	// TODO: Style scrollbars...
+	&::-webkit-scrollbar
+		background red
+		width 12px
+	&::-webkit-scrollbar-button
+		background yellow
+		width 12px
+	&::-webkit-scrollbar-track
+		background brown
+		width 12px
+	&::-webkit-scrollbar-track-piece
+		background pink
+		width 12px
+	&::-webkit-scrollbar-thumb
+		background orange
+		width 12px
+	&::-webkit-scrollbar-corner
+		background blue
+		width 12px
+	&::-webkit-resizer
+		background green
+		width 12px

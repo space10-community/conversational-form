@@ -22,6 +22,7 @@ namespace io.space10 {
 		name: string,
 		title: string,
 		question: string,
+		setTagValueAndIsValid(value: string | number):boolean;
 	}
 
 	export interface ITagOptions{
@@ -76,8 +77,6 @@ namespace io.space10 {
 			}else{
 				this.findLabelAndSetQuestions();
 			}
-
-			console.log("questions set:", this.questions);
 			
 			// custom validation
 			if(this.validationCallback){
@@ -87,7 +86,7 @@ namespace io.space10 {
 				this.validationCallback = eval(this.el.getAttribute("cui-validation"));
 			}
 
-			// reg ex pattern is set on the Tag
+			// reg ex pattern is set on the Tag, so use it in our validation
 			if(this.el.getAttribute("pattern"))
 				this.pattern = new RegExp(this.el.getAttribute("pattern"));
 
@@ -98,7 +97,7 @@ namespace io.space10 {
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
-			
+
 			if(element.style.display === "none")
 				return false;
 			
@@ -112,7 +111,7 @@ namespace io.space10 {
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 		}
 
-		protected setTagValue(value: string | number){
+		public setTagValueAndIsValid(value: string | number):boolean{
 			// validation?
 			let isValid: boolean = true;
 			if(this.pattern){
@@ -121,14 +120,17 @@ namespace io.space10 {
 			if(isValid && this.validationCallback){
 				isValid = this.validationCallback(value.toString());
 			}
-			console.log(this, 'set value -> value:', value);
-			console.log(this, 'set value -> isValid:', isValid);
+
+			// console.log(this, 'set value -> value:', value);
+			// console.log(this, 'set value -> isValid:', isValid);
 
 			if(isValid){
 				this.el.value = value.toString();
 			}else{
-				throw new Error("s10-cui: value:string is not valid. Value: "+value);
+				// throw new Error("s10-cui: value:string is not valid. Value: "+value);
 			}
+
+			return isValid;
 		}
 
 		private findLabelAndSetQuestions(){
