@@ -11,11 +11,10 @@ namespace io.space10 {
 		constructor(options?: IDictionaryOptions){
 			Dictionary.instance = this;
 
-			// allow for overwritting
-			
-			// TODO: should validate key values from new data
-			if(options && options.data)
-				this.data = options.data;
+			// allow for Dictionary data overwrite
+			if(options && options.data){
+				this.validateAndSetNewData(options.data);
+			}
 			
 			if(options && options.aiQuestions)
 				this.AIQuestions = options.aiQuestions;
@@ -40,6 +39,15 @@ namespace io.space10 {
 			}
 
 			return value;
+		}
+
+		private validateAndSetNewData(data: any){
+			if(!data["entry-not-found"])
+				throw new Error("SPACE10 CUI Dictionary Error, 'entry-not-found' is undefined");
+			if(!data["input-placeholder"])
+				throw new Error("SPACE10 CUI Dictionary Error, 'input-placeholder' is undefined");
+			
+			this.data = data;
 		}
 
 		// can be overwritten
