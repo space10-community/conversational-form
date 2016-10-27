@@ -73,9 +73,6 @@ namespace io.space10 {
 			}else if(options.questions){
 				// questions array
 				this.questions = options.questions;
-			}else if(options.label){
-				// single label can also be passsed
-				this.questions = [options.label];
 			}else{
 				this.findLabelAndSetQuestions();
 			}

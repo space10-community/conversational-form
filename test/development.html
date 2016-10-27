@@ -109,8 +109,8 @@
 						if(element.tagName.toLowerCase() == "input"){
 							tags.push(new io.space10.InputTag({
 								el: element,
-								label: i == 1 ? "Question/label set via option (constructor)" : null
-								// questions: ["Constructor set question1", "Constructor set question2"]
+								// label: i == 1 ? "Question/label set via option (constructor)" : null
+								questions: i == 1 ? ["Question/label set via option (constructor) - 1", "Question/label set via option (constructor) - 2"] : null
 								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
