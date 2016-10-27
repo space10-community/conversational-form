@@ -115,7 +115,7 @@ namespace io.space10 {
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 		}
 
-		protected setValue(value: string | number){
+		protected setTagValue(value: string | number){
 			// validation?
 			let isValid: boolean = true;
 			if(this.pattern){

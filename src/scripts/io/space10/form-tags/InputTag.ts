@@ -10,17 +10,17 @@ namespace io.space10 {
 			super(options);
 
 			// if(this.el.getAttribute("type") == "text"){
-			// 	this.setValue("hello world");
+			// 	this.setTagValue("hello world");
 			// }else if(this.el.getAttribute("type") == "email"){
-			// 	this.setValue("Uhwe@uhwe.dk");
+			// 	this.setTagValue("Uhwe@uhwe.dk");
 			// }else if(this.el.getAttribute("type") == "tel"){
-			// 	this.setValue("+49"+(Math.random() * 9999999));
+			// 	this.setTagValue("+49"+(Math.random() * 9999999));
 			// }else if(this.el.getAttribute("type") == "checkbox"){
 			// 	(<HTMLInputElement> this.el).checked = Math.random() > 0.5;
 			// }else if(this.el.getAttribute("type") == "radio"){
 			// 	(<HTMLInputElement> this.el).checked = Math.random() > 0.5;
 			// }else if(this.el.getAttribute("type") == "password"){
-			// 	this.setValue("xxx");
+			// 	this.setTagValue("xxx");
 			// }
 		}
 	}

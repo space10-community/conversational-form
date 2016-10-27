@@ -15,7 +15,7 @@ namespace io.space10 {
 			super(options);
 
 			var optionTags = this.el.getElementsByTagName("option");
-			// this.setValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
+			// this.setTagValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
 		}
 	}
 }
