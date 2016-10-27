@@ -12,6 +12,8 @@ namespace io.space10 {
 	export class ChatInterface extends io.space10.BasicElement {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
+		private onInputKeyChangeCallback: () => void;
+		private currentUserResponse: io.space10.ChatResponse;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -23,11 +25,31 @@ namespace io.space10 {
 			// user input update
 			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
 			document.addEventListener(io.space10.FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+
+			// user input update
+			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
+			document.addEventListener(io.space10.InputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+		}
+
+		private onInputKeyChange(event: CustomEvent){
+			if(this.currentUserResponse){
+				const inputFieldStr: string = event.detail;
+				if(inputFieldStr.length == 0){
+					this.currentUserResponse.visible = false;
+				}else{
+					if(!this.currentUserResponse.visible)
+						this.currentUserResponse.visible = true;
+				}
+			}
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
-			// TODO: Add user image
-			this.createUserResponse(event.detail, "");
+			if(this.currentUserResponse)
+				this.currentUserResponse.setValue(event.detail);
+			else{
+				// this should never happen..
+				this.createUserResponse(event.detail);
+			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
@@ -53,6 +75,9 @@ namespace io.space10 {
 			}
 			
 			this.createTag(currentTag);
+			
+			// create the waiting user response
+			this.createUserResponse();
 		}
 
 		private createTag(tag: io.space10.ITag | io.space10.ITagGroup){
@@ -64,19 +89,20 @@ namespace io.space10 {
 				console.log(this, 'create specific tag:', tag.type);
 			}
 
-			// TODO: This is just for testing, REMOVE!
+			// TODO: This is just for testing, !!!!!!!!!!!!!! REMOVE !!!!!!!!!!!!!!!
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
 			this.createUserResponse(tag.question, aiThumb);
 		}
 
-		private createUserResponse(value: string, image: string){
-			var response: io.space10.ChatResponse = new io.space10.ChatResponse({
+		private createUserResponse(value: string = null, image: string = Dictionary.get("user-image")){
+			
+			this.currentUserResponse = new io.space10.ChatResponse({
 				// image: null,
 				response: value,// || input-response,
 				image: image
 			});
 
-			this.el.appendChild(response.el);
+			this.el.appendChild(this.currentUserResponse.el);
 			this.el.scrollTo(0, 1000000000);
 		}
 

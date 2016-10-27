@@ -11,6 +11,7 @@ namespace io.space10 {
 
 	export const InputEvents = {
 		UPDATE: "cui-input-user-input-update",
+		KEY_CHANGE: "cui-input-key-change",
 	}
 
 	
@@ -60,6 +61,10 @@ namespace io.space10 {
 				}));
 
 				this.resetValue();
+			}else{
+				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.KEY_CHANGE, {
+					detail: this.getValue()
+				}));
 			}
 		}
 

@@ -48,15 +48,13 @@ namespace io.space10 {
 				}));
 
 				// TODO: remove...
-				setTimeout(() => this.nextStep(), 1500);
+				setTimeout(() => this.nextStep(), 1000);
 			}else{
 				console.warn("Value not valid!!!", event.detail);
 				document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.USER_INPUT_INVALID, {
 					detail: event.detail //input value
 				}));
 			}
-
-
 		}
 
 		public start(){

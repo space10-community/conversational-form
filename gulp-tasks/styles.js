@@ -19,7 +19,10 @@ function swallowError(error) {
 }
 
 gulp.task('stylus', function() {
-	var src = global.srcFolder + "/styles/**/*.styl";
+	var src = [
+		global.srcFolder + "/styles/**/*.styl",
+		"!" + global.srcFolder + "/styles/**/*-variables.styl"
+	]
 	var dst = global.buildFolder;
 
 	var stream = gulp.src(src)

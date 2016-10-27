@@ -20,6 +20,7 @@ namespace io.space10 {
 		context?: HTMLElement,
 		dictionaryData?: Object,
 		dictionaryAI?: Object,
+		userImage?: string,
 		submitCallback?: () => void | HTMLButtonElement,
 	}
 
@@ -43,9 +44,12 @@ namespace io.space10 {
 				this.dictionary = new io.space10.Dictionary({
 					data: options.dictionaryData,
 					aiQuestions: options.dictionaryAI,
+					userImage: options.userImage,
 				});
 			}else{
-				this.dictionary = new io.space10.Dictionary();
+				this.dictionary = new io.space10.Dictionary({
+					userImage: options.userImage,
+				});
 			}
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
@@ -185,7 +189,7 @@ namespace io.space10 {
 		}
 
 		private setupUI(){
-			console.log(this, 'this.tags:', this.tags);
+			console.log('Space10CUI > mapped DOM tags:', this.tags);
 
 			// start the flow
 			this.flowManager = new FlowManager({

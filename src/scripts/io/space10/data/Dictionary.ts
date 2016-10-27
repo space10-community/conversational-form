@@ -4,10 +4,12 @@ namespace io.space10 {
 	export interface IDictionaryOptions{
 		data?: Object;
 		aiQuestions?: Object;
+		userImage: string;
 	}
 	// class
 	export class Dictionary{
 		private static instance: Dictionary;
+
 		constructor(options?: IDictionaryOptions){
 			Dictionary.instance = this;
 
@@ -15,6 +17,9 @@ namespace io.space10 {
 			if(options && options.data){
 				this.validateAndSetNewData(options.data);
 			}
+
+			if(options.userImage)
+				this.data["user-image"] = options.userImage;
 			
 			if(options && options.aiQuestions)
 				this.AIQuestions = options.aiQuestions;
@@ -52,6 +57,7 @@ namespace io.space10 {
 
 		// can be overwritten
 		protected data: any = {
+			"user-image": "base64 fallback..?",
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Hello mellow..",
 		}

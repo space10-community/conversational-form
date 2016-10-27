@@ -38,7 +38,7 @@ namespace io.space10 {
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
-			console.log(this, 'TagGroup:', this.elements);
+			// console.log(this, 'TagGroup:', this.elements);
 		}
 
 		public setTagValueAndIsValid(value: string | number):boolean{
