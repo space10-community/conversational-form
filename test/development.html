@@ -109,7 +109,8 @@
 						if(element.tagName.toLowerCase() == "input"){
 							tags.push(new io.space10.InputTag({
 								el: element,
-								questions: ["Constructor set question1", "Constructor set question2"]
+								label: i == 1 ? "Question/label set via option (constructor)" : null
+								// questions: ["Constructor set question1", "Constructor set question2"]
 								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
@@ -198,7 +199,7 @@
 								class="input-text required-entry"
 
 								cui-validation="window.testValidation"
-								cui-questions="Attribute question1|Attribute question2"
+								cui-questions="Question/label set via tag-attribute - 1|Question/label set via tag-attribute - 2"
 							>
 						</div>
 					</div>

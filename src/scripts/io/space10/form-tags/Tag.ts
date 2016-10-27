@@ -27,6 +27,7 @@ namespace io.space10 {
 	export interface ITagOptions{
 		el?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
 		questions?: Array<string>,
+		label?: string,
 		validationCallback?: (value: string) => boolean,// can also be set through cui-validation attribute
 	}
 
@@ -57,7 +58,7 @@ namespace io.space10 {
 			if(this.questions){
 				return this.questions[Math.floor(Math.random() * this.questions.length)];
 			}else{
-				// fallback to ai response from dictionary
+				// fallback to AI response from dictionary
 				const aiReponse: string = Dictionary.getAIResponse(this.type);
 				return aiReponse;
 			}
@@ -70,13 +71,16 @@ namespace io.space10 {
 			if(this.el.getAttribute("cui-questions")){
 				this.questions = this.el.getAttribute("cui-questions").split("|");
 			}else if(options.questions){
+				// questions array
 				this.questions = options.questions;
+			}else if(options.label){
+				// single label can also be passsed
+				this.questions = [options.label];
 			}else{
-				// TODO: look for label..
-				// if no cui-questions then a look for:
-				// <label tag with label:for attribute to input:id
-				// check: label > for : id
+				this.findLabelAndSetQuestions();
 			}
+
+			console.log("questions set:", this.questions);
 			
 			// custom validation
 			if(this.validationCallback){
@@ -127,6 +131,43 @@ namespace io.space10 {
 				this.el.value = value.toString();
 			}else{
 				throw new Error("s10-cui: value:string is not valid. Value: "+value);
+			}
+		}
+
+		private findLabelAndSetQuestions(){
+			// <label tag with label:for attribute to el:id
+			// check for label tag, we only go 2 steps backwards..
+
+			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
+
+			const elId: string = this.el.getAttribute("id");
+
+			if(this.el.parentNode){
+				// step backwards and check for label tag.
+				let labels: NodeListOf<HTMLLabelElement> = (<HTMLElement> this.el.parentNode).getElementsByTagName("label");
+
+				if(labels.length == 0 && this.el.parentNode.parentNode){
+					// step backwards and check for label tag.
+					// TODO: Should remove this? could create problems...
+					labels = (<HTMLElement> this.el.parentNode.parentNode).getElementsByTagName("label");
+				}
+
+				if(labels.length > 0){
+					if(elId){
+						// element has :id, so expect label to have :for
+						for (var i = 0; i < labels.length; i++) {
+							var label: HTMLLabelElement = labels[i];
+							if(label.getAttribute("for") == elId){
+								this.questions = [label.innerText];
+							}
+						}
+					}else{
+						// no id>for attribute paring, so just take the first label...
+						this.questions = [labels[0].innerText];
+					}
+				}else{
+					// we don't set a default value for questions as this will result in a fallback response from Dictionary
+				}
 			}
 		}
 	}

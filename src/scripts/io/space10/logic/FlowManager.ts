@@ -48,6 +48,11 @@ namespace io.space10 {
 			this.validateStepAndUpdate();
 		}
 
+		public addStep(){
+			// this can be used for when a Tags value is updated and new tags are presented,
+			// TODO: fix this
+		}
+
 		private validateStepAndUpdate(){
 			this.step %= this.maxSteps;
 
