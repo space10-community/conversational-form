@@ -8,11 +8,17 @@ namespace io.space10 {
 	// export interface IInputOptions extends IBasicElementOptions{
 
 	// }
+
+	export const InputEvents = {
+		UPDATE: "cui-input-user-input-update",
+	}
+
 	
 	// class
 	export class Input extends io.space10.BasicElement {
-
 		public el: Element;
+		private flowUpdateCallback: () => void;
+		private inputInvalidCallback: () => void;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -20,22 +26,50 @@ namespace io.space10 {
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
-			console.log("this.el", this, this.el);
+			// flow update
+			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
+			document.addEventListener(io.space10.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+
+			this.inputInvalidCallback = this.inputInvalid.bind(this);
+			document.addEventListener(io.space10.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+		}
+
+		public getValue():string{
+			return (<HTMLInputElement> this.el).value;
+		}
+
+		private inputInvalid(event: CustomEvent){
+			this.el.removeAttribute("disabled");
+			(<HTMLInputElement> this.el).focus();
+		}
+
+		private onFlowUpdate(event: CustomEvent){
+			this.el.removeAttribute("disabled");
+			(<HTMLInputElement> this.el).focus();
 		}
 
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 13){
-				// enter pressed
-				this.flowManager.nextStep();
+				// enter
+
+				this.el.setAttribute("disabled", "disabled");
+
+				// TODO: validate input ..
+				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.UPDATE, {
+					detail: this.getValue()
+				}));
+
+				this.resetValue();
 			}
+		}
+
+		private resetValue(){
+			(<HTMLInputElement> this.el).value = "";
 		}
 
 		// override
 		public getTemplate () : string {
-			return `<input class='s10cui-input' type='input'>
-					yessss
-					mere multiline...
-				</input>`;
+			return `<input class='s10cui-input' type='input'>`;
 		}
 	}
 }

@@ -73,13 +73,16 @@ sadsda
 # Usage...
 asdsada
 
+
 # Conventions
 Link to google doc?
 
 
 # Usage
 
+
 ### CUI tag attributes
+
 
 #### cue-questions
 * to map questions directly to a tag.
@@ -91,3 +94,19 @@ Link to google doc?
 * set validation callback, be aware that eval is used to make the method available.
 
 	<input type="text" cue-validation="window.validateFunction" ..
+
+
+Elements
+form-tags/* : represent DOM (virtual) tags
+ui/* : represent interface (views) tags, like the input field or cui radio buttons
+
+
+Event flow
+* FlowManager, connects flow and Tags
+listens:
+io.space10.InputEvents.UPDATE
+
+validates and distributes
+io.space10.InputEvents.USER_INPUT_UPDATE
+io.space10.InputEvents.USER_INPUT_INVALID
+

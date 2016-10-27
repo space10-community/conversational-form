@@ -1,12 +1,46 @@
 @import "nib"
 @import "rupture"
+@import "../../s10cui-variables"
+
+$thumbArea = 38px
 
 s10cui-chat-response
 	display block
 	width 50%
-	background red
-	padding 20px
+	position relative
+	background rgba(255,255,255,0.2)
+	padding-left 50px
+	padding-top 20px
+	color $color-chat-reponse-default-text
 
 	&:nth-child(2n+2)
 		margin-right 0px
 		margin-left auto
+		padding-left 0
+		padding-right 50px
+		color $color-chat-reponse-user-text
+
+		thumb
+			left auto
+			right 0px
+		
+		text
+			border-radius 20px 0px 20px 20px
+			background $color-chat-reponse-user-bg
+	
+	text
+		display block
+		padding 20px
+		background $color-chat-reponse-default-bg
+		border-radius 0px 20px 20px 20px
+
+	thumb
+		position absolute
+		top 0px
+		left 0px
+		display block
+		width $thumbArea
+		height $thumbArea
+		border-radius 50%
+		background-size cover
+		background-position 50% 50%

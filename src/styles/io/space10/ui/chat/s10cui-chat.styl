@@ -1,11 +1,12 @@
 @import "nib"
 @import "rupture"
+@import "../../s10cui-variables"
 
 s10cui-chat
 	display block
 	width 100%
 	background pink
-	height 100%
+	height s("calc(100% - %s)", $input-field-height)
 
 	padding 20px
 

@@ -210,7 +210,7 @@
 						</div>
 					</div>
 					<div class="field name-lastname">
-						<label for="billing:lastname" class="required"><em>*</em>Efternavn</label>
+						<label for="billing:lastname" class="required"><em>*</em>Efternavn (has RegEx pattern)</label>
 						<div class="input-box">
 							<input
 								type="text"
@@ -220,9 +220,10 @@
 								title="Efternavn"
 								maxlength="255"
 								class="input-text required-entry"
-
-								pattern="^hello" <!-- pattern that only allows strings containing hello -->
+								
+								pattern="^hello"
 							>
+							<!-- above pattern that only allows strings containing hello -->
 						</div>
 					</div>
 				</div>
@@ -231,7 +232,20 @@
 											<div class="field">
 										<label for="billing:email" class="required"><em>*</em>E-mailadresse</label>
 										<div class="input-box">
-											<input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="billing[email]" id="billing:email" value="" title="E-mailadresse" class="input-text validate-email required-entry">
+											<input
+												type="email"
+												autocapitalize="off"
+												autocorrect="off"
+												spellcheck="false"
+												name="billing[email]"
+												id="billing:email"
+												value=""
+												title="E-mailadresse"
+												class="input-text validate-email required-entry"
+
+												pattern="^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$"
+											>
+											<!-- above pattern that checks for correct email -->
 										</div>
 									</div>
 											<div class="field">
