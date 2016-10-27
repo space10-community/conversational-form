@@ -1,6 +1,7 @@
-/// <reference path="Button.ts"/>
-/// <reference path="../Space10CUI.ts"/>
-/// <reference path="../logic/FlowManager.ts"/>
+/// <reference path="ChatResponse.ts"/>
+/// <reference path="../Button.ts"/>
+/// <reference path="../../Space10CUI.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
 
 
 // namespace
@@ -38,16 +39,22 @@ namespace io.space10 {
 					var element: ITag = group.elements[i];
 					str += "</br>- group tag type: " + element.type;
 				}
-			}else{
 			}
+			
+			// this.el.innerHTML = str;
 
-			this.el.innerHTML = str;
+			var response: io.space10.ChatResponse = new io.space10.ChatResponse({
+				// image: null,
+				response: this.flowManager.currentTag.question,// || input-response,
+			});
+			this.el.appendChild(response.el);
+			this.el.scrollTo(0, 1000000000);
 		}
 
 		public getTemplate () : string {
-			return `<div class='s10cui-chat' type='pluto'>
+			return `<s10cui-chat type='pluto'>
 						Chat
-					</div>`;
+					</s10cui-chat>`;
 		}
 
 		public remove(){

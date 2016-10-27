@@ -76,8 +76,6 @@ namespace io.space10 {
 			}else{
 				this.findLabelAndSetQuestions();
 			}
-
-			console.log("questions set:", this.questions);
 			
 			// custom validation
 			if(this.validationCallback){
@@ -87,7 +85,7 @@ namespace io.space10 {
 				this.validationCallback = eval(this.el.getAttribute("cui-validation"));
 			}
 
-			// reg ex pattern is set on the Tag
+			// reg ex pattern is set on the Tag, so use it in our validation
 			if(this.el.getAttribute("pattern"))
 				this.pattern = new RegExp(this.el.getAttribute("pattern"));
 
