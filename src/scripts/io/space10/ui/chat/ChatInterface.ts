@@ -1,5 +1,4 @@
 /// <reference path="ChatResponse.ts"/>
-/// <reference path="../Button.ts"/>
 /// <reference path="../../Space10CUI.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
 

@@ -1,5 +1,4 @@
-/// <reference path="ui/Button.ts"/>
-/// <reference path="ui/Input.ts"/>
+/// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatInterface.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
@@ -33,7 +32,7 @@ namespace io.space10 {
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
-		private cuiInput:Input;
+		private cuiInput:UserInput;
 		private chat:ChatInterface;
 
 		constructor(options: Space10CUIOptions){
@@ -207,7 +206,7 @@ namespace io.space10 {
 			s10context.appendChild(this.chat.el);
 
 			// CUI UI
-			this.cuiInput = new Input({
+			this.cuiInput = new UserInput({
 			});
 			s10context.appendChild(this.cuiInput.el);
 

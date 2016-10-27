@@ -1,4 +1,3 @@
-/// <reference path="Button.ts"/>
 /// <reference path="../Space10CUI.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
 
@@ -16,7 +15,7 @@ namespace io.space10 {
 
 	
 	// class
-	export class Input extends io.space10.BasicElement {
+	export class UserInput extends io.space10.BasicElement {
 		public el: Element;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
