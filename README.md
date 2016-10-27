@@ -67,21 +67,18 @@ ex.:
 	$ tsd install XX --save --resolve
 
 
-# Tests...
-sadsda
+## Tests...
+TBD ...
 
-# Usage...
-asdsada
+## Usage...
+TBD ...
 
 
-# Conventions
+## Conventions
 Link to google doc?
 
 
-# Usage
-
-
-### CUI tag attributes
+## DOM Element attributes
 
 
 #### cue-questions
@@ -96,25 +93,39 @@ Link to google doc?
 	<input type="text" cue-validation="window.validateFunction" ..
 
 
-Dictionary
-TODO... fill out 
+## Classes
+========
 
-Elements
-form-tags/* : represent DOM (virtual) tags
-Tag
-SelectTag
-InputTag
-ButtonTag
-TagGroup (contains x number of the above)
-ui/* : represent interface (views) tags, like the input field or cui radio buttons
+#### Dictionary
+Reference to app labels and AI default responses. Everything can be overwritten.
 
 
-Event flow
-* FlowManager, connects flow and Tags
-listens:
-io.space10.InputEvents.UPDATE
+#### FlowManager;
+Controls the flow of the app, binds events from views together
 
-validates and distributes
-io.space10.InputEvents.USER_INPUT_UPDATE
-io.space10.InputEvents.USER_INPUT_INVALID
+#### form-tags/*:  
+represent DOM (virtual) tags  
+
+**Tag**  
+**SelectTag**  
+**InputTag**  
+**ButtonTag**  
+**TagGroup** (contains x number of the above)  
+
+#### ui/*:
+Represent app views, like the User Inputfield or CUI radio buttons  
+
+**UserInput**, handles user input and shows different kinds of interaction UI, like RadioButtons, SelectList etc.  
+**ChatList,** handles ChatResponses  
+**ChatResponse,** chat bubble
+
+#### Events
+##### UserInputEvents:
+SUBMIT: when a value is submittet from the UserInput view
+KEY_CHANGE: when a key is used, 
+
+##### FlowEvents:
+USER_INPUT_UPDATE: "cui-flow-user-input-update",
+USER_INPUT_INVALID: "cui-flow-user-input-invalid",
+FLOW_UPDATE: "cui-flow-update",
 

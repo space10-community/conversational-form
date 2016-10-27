@@ -1,5 +1,5 @@
 /// <reference path="ui/UserInput.ts"/>
-/// <reference path="ui/chat/ChatInterface.ts"/>
+/// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
@@ -33,7 +33,7 @@ namespace io.space10 {
 		private flowManager: FlowManager;
 
 		private cuiInput:UserInput;
-		private chat:ChatInterface;
+		private chatList:ChatList;
 
 		constructor(options: Space10CUIOptions){
 			console.log("Space10 Conversational User Interface.");
@@ -201,9 +201,8 @@ namespace io.space10 {
 			s10context.className = "s10-cui";
 			this.context.appendChild(s10context);
 
-			this.chat = new ChatInterface({
-			});
-			s10context.appendChild(this.chat.el);
+			this.chatList = new ChatList({});
+			s10context.appendChild(this.chatList.el);
 
 			// CUI UI
 			this.cuiInput = new UserInput({

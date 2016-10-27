@@ -4,16 +4,15 @@
 // namespace
 namespace io.space10 {
 	// interface
-	// export interface IInputOptions extends IBasicElementOptions{
+	// export interface IUserInputOptions extends IBasicElementOptions{
 
 	// }
 
-	export const InputEvents = {
-		UPDATE: "cui-input-user-input-update",
+	export const UserInputEvents = {
+		SUBMIT: "cui-input-user-input-submit",
 		KEY_CHANGE: "cui-input-key-change",
 	}
 
-	
 	// class
 	export class UserInput extends io.space10.BasicElement {
 		public el: Element;
@@ -60,6 +59,13 @@ namespace io.space10 {
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
 			(<HTMLInputElement> this.el).focus();
+
+			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
+			// TODO: Show UI according to what kind of tag it is..
+			if(currentTag.type == "group")
+				console.log('UserInput > currentTag type:', (<io.space10.ITagGroup> currentTag).elements[0].type);
+			else
+				console.log('UserInput > currentTag type:', currentTag.type);
 		}
 
 		private onKeyUp(event: KeyboardEvent){
@@ -68,11 +74,11 @@ namespace io.space10 {
 				this.el.setAttribute("disabled", "disabled");
 
 				// TODO: validate input ..
-				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.UPDATE, {
+				document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
 					detail: this.getValue()
 				}));
 			}else{
-				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.KEY_CHANGE, {
+				document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.KEY_CHANGE, {
 					detail: this.getValue()
 				}));
 			}

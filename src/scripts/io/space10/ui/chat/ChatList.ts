@@ -8,7 +8,7 @@ namespace io.space10 {
 	// interface
 
 	// class
-	export class ChatInterface extends io.space10.BasicElement {
+	export class ChatList extends io.space10.BasicElement {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
@@ -27,7 +27,7 @@ namespace io.space10 {
 
 			// user input update
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
-			document.addEventListener(io.space10.InputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+			document.addEventListener(io.space10.UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -47,53 +47,21 @@ namespace io.space10 {
 				this.currentUserResponse.setValue(event.detail);
 			else{
 				// this should never happen..
-				this.createUserResponse(event.detail);
+				this.createResponse(event.detail);
 			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
 			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
 
-			let str: string;
-			str = "<u>CUI Chat</u>";
-			str += "</br>tag type: " + currentTag.type;
-			if(currentTag.title)
-				str += "</br>tag title: " + currentTag.title;
-			else if(currentTag.name)
-				str += "</br>tag name: " + currentTag.name;
-
-			str += "</br>tag question: " + currentTag.question;
-
-
-			if(currentTag.type == "group"){
-				const group: io.space10.ITagGroup = <io.space10.ITagGroup> currentTag;
-				for (var i = 0; i < group.elements.length; i++) {
-					var element: ITag = group.elements[i];
-					str += "</br>- group tag type: " + element.type;
-				}
-			}
-			
-			this.createTag(currentTag);
+			const aiThumb: string = Dictionary.getAIResponse("thumb");
+			this.createResponse((currentTag.title || currentTag.name) + " : " + currentTag.question, aiThumb);
 			
 			// create the waiting user response
-			this.createUserResponse();
+			this.createResponse();
 		}
 
-		private createTag(tag: io.space10.ITag | io.space10.ITagGroup){
-			// TODO: create special tags..
-			if(tag.type == "group"){
-				const grouptTag: io.space10.ITag = (<io.space10.ITagGroup> tag).elements[0]
-				console.log(this, 'create specific tag:', grouptTag.type);
-			}else{
-				console.log(this, 'create specific tag:', tag.type);
-			}
-
-			// TODO: This is just for testing, !!!!!!!!!!!!!! REMOVE !!!!!!!!!!!!!!!
-			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			this.createUserResponse(tag.question, aiThumb);
-		}
-
-		private createUserResponse(value: string = null, image: string = Dictionary.get("user-image")){
+		private createResponse(value: string = null, image: string = Dictionary.get("user-image")){
 			
 			this.currentUserResponse = new io.space10.ChatResponse({
 				// image: null,

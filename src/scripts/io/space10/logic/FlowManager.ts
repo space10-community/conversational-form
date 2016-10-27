@@ -24,7 +24,7 @@ namespace io.space10 {
 		private maxSteps: number = 0;
 		private step: number = 0;
 		private stepTimer: number = 0;
-		private userInputUpdateCallback: () => void;
+		private userInputSubmitCallback: () => void;
 
 		public get currentTag(): io.space10.ITag | io.space10.ITagGroup {
 			return this.tags[this.step];
@@ -36,11 +36,11 @@ namespace io.space10 {
 
 			this.maxSteps = this.tags.length;
 
-			this.userInputUpdateCallback = this.userInputUpdate.bind(this);
-			document.addEventListener(io.space10.InputEvents.UPDATE, this.userInputUpdateCallback, false);
+			this.userInputSubmitCallback = this.userInputSubmit.bind(this);
+			document.addEventListener(io.space10.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 		}
 
-		public userInputUpdate(event: CustomEvent){
+		public userInputSubmit(event: CustomEvent){
 			// TODO: Handle flow things??
 			if(this.currentTag.setTagValueAndIsValid(event.detail)){
 				document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.USER_INPUT_UPDATE, {
@@ -78,8 +78,8 @@ namespace io.space10 {
 		}
 
 		public remove(){
-			document.removeEventListener(io.space10.InputEvents.UPDATE, this.userInputUpdateCallback, false);
-			this.userInputUpdateCallback = null;
+			document.removeEventListener(io.space10.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
+			this.userInputSubmitCallback = null;
 		}
 
 		private validateStepAndUpdate(){
