@@ -5,8 +5,10 @@
 $thumbArea = 38px
 
 s10cui-chat-response
-	display block
-	width 50%
+	display table
+	max-width 50%
+	min-width 100px
+	width auto
 	position relative
 	// background rgba(255,255,255,0.2)
 	padding-left 50px
@@ -36,6 +38,7 @@ s10cui-chat-response
 				top 50%
 				left 20px
 				transform translateY(-50%)
+				padding-right 20px
 			
 			&[thinking]
 				&:after

@@ -59,7 +59,7 @@ namespace io.space10 {
 		protected data: any = {
 			"user-image": "base64 fallback..?",
 			"entry-not-found": "Dictionary item not found.",
-			"input-placeholder": "Hello mellow..",
+			"input-placeholder": "Type your answer here ...",
 		}
 
 		// default...
