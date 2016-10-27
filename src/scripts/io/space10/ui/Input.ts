@@ -20,6 +20,7 @@ namespace io.space10 {
 		public el: Element;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
+		private errorTimer: number = 0;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -40,27 +41,34 @@ namespace io.space10 {
 		}
 
 		private inputInvalid(event: CustomEvent){
-			this.el.removeAttribute("disabled");
-			(<HTMLInputElement> this.el).focus();
+			this.el.setAttribute("error", "");
+			this.el.setAttribute("disabled", "disabled");
+			clearTimeout(this.errorTimer);
+
+			this.errorTimer = setTimeout(() => {
+				this.el.removeAttribute("disabled");
+				this.el.removeAttribute("error");
+				(<HTMLInputElement> this.el).focus();
+			}, 2000);
 		}
 
 		private onFlowUpdate(event: CustomEvent){
+			clearTimeout(this.errorTimer);
+			this.el.removeAttribute("error");
 			this.el.removeAttribute("disabled");
+			this.resetValue();
 			(<HTMLInputElement> this.el).focus();
 		}
 
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 13){
 				// enter
-
 				this.el.setAttribute("disabled", "disabled");
 
 				// TODO: validate input ..
 				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.UPDATE, {
 					detail: this.getValue()
 				}));
-
-				this.resetValue();
 			}else{
 				document.dispatchEvent(new CustomEvent(io.space10.InputEvents.KEY_CHANGE, {
 					detail: this.getValue()

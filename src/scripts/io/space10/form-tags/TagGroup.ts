@@ -42,7 +42,13 @@ namespace io.space10 {
 		}
 
 		public setTagValueAndIsValid(value: string | number):boolean{
-			return true;
+			let isValid: boolean = true;
+
+			if(value == ""){
+				isValid = false;
+			}
+
+			return isValid;
 		}
 	}
 }

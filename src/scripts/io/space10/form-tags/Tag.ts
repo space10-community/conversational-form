@@ -112,13 +112,19 @@ namespace io.space10 {
 		}
 
 		public setTagValueAndIsValid(value: string | number):boolean{
-			// validation?
+			// this sets the value of the tag in the DOM
+			// validation
 			let isValid: boolean = true;
 			if(this.pattern){
 				isValid = this.pattern.test(value.toString());
 			}
+
 			if(isValid && this.validationCallback){
 				isValid = this.validationCallback(value.toString());
+			}
+
+			if(value == ""){
+				isValid = false;
 			}
 
 			// console.log(this, 'set value -> value:', value);

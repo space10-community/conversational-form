@@ -11,21 +11,37 @@
 	&:focus, &:focus, &:focus
 		outline none
 		-webkit-appearance none
-		box-shadow 0px 0px 10px red
+		box-shadow 0px 0px 30px rgba(0,0,0,0.2)
 	
 	border-radius 0
 	border none
 	-webkit-appearance none
 
 	// styling
-	transition box-shadow $anim-time $anim-easeOut
+	color $color-input-text
+	will-change box-shadow, background, color
+	transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut
 	width 100%
 	height $input-field-height
 	background white
-	box-shadow 0px 0px 2px red
+	box-shadow 0px 0px 1px rgba(0,0,0,0.15)
 	padding 5px 5px 5px 15px
 
+	&::-webkit-input-placeholder
+		color currentColor
+	&::-moz-input-placeholder
+		color currentColor
+	&:-moz-input-placeholder
+		color currentColor
+	&:-ms-input-placeholder
+		color currentColor
+
 	&[disabled="disabled"]
-		background black
+		background $color-chat-reponse-user-bg
+	
+	&[error]
+		background $color-input-error-bg
+		color $color-input-error-text
+	
 
 
