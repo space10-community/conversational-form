@@ -60,6 +60,7 @@ namespace io.space10 {
 			"user-image": "base64 fallback..?",
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Type your answer here ...",
+			"input-placeholder-error": "Your input is not correct ...",
 		}
 
 		// default...

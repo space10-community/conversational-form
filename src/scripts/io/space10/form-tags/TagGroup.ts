@@ -1,4 +1,6 @@
+/// <reference path="ButtonTag.ts"/>
 /// <reference path="InputTag.ts"/>
+/// <reference path="SelectTag.ts"/>
 
 // group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same
@@ -9,16 +11,16 @@
 namespace io.space10 {
 	// interface
 	export interface ITagGroupOptions{
-		elements: Array <InputTag>;
+		elements: Array <InputTag | SelectTag | ButtonTag>;
 	}
 
 	export interface ITagGroup extends ITag{
-		elements: Array <InputTag>
+		elements: Array <InputTag | SelectTag | ButtonTag>
 	}
 
 	// class
 	export class TagGroup implements ITagGroup {
-		public elements: Array <InputTag>;
+		public elements: Array <InputTag | SelectTag | ButtonTag>;
 
 		public get type (): string{
 			return "group";

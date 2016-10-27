@@ -7,7 +7,7 @@ $thumbArea = 38px
 s10cui-chat-response
 	display table
 	max-width 50%
-	min-width 100px
+	min-width 105px
 	width auto
 	position relative
 	// background rgba(255,255,255,0.2)
@@ -43,6 +43,9 @@ s10cui-chat-response
 			&[thinking]
 				&:after
 					animation dot-progress 1s linear infinite
+			
+			&[value-added]
+				animation bounce $anim-time * 0.5 $anim-easeOutBack
 	
 	text
 		display block
@@ -100,3 +103,11 @@ s10cui-chat-response
 		content "..."
 	100%
 		content "..."
+
+@keyframes bounce
+	0%
+		transform scale(1, 1)
+	50%
+		transform scale(1.2, 1.2)
+	100%
+		transform scale(1, 1)

@@ -30,10 +30,13 @@ namespace io.space10 {
 			const text: Element = this.el.getElementsByTagName("text")[0];
 			text.innerHTML = value;
 
-			if(!this.response || this.response.length == 0)
+			if(!this.response || this.response.length == 0){
 				text.setAttribute("thinking", "");
-			else
+
+			}else{
+				text.setAttribute("value-added", "");
 				text.removeAttribute("thinking");
+			}
 		}
 
 		protected createElement(options: IChatResponseOptions): Element{

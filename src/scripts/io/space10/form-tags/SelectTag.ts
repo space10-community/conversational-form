@@ -14,7 +14,7 @@ namespace io.space10 {
 		constructor(options: ITagOptions){
 			super(options);
 
-			var optionTags = this.el.getElementsByTagName("option");
+			var optionTags = this.domElement.getElementsByTagName("option");
 			// this.setTagValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
 		}
 	}

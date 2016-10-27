@@ -9,7 +9,7 @@ namespace io.space10 {
 		constructor(options: ITagOptions){
 			super(options);
 
-			// if(this.el.getAttribute("type") == "submit" || this.el.getAttribute("type") == "button"){
+			// if(this.domElement.getAttribute("type") == "submit" || this.domElement.getAttribute("type") == "button"){
 			// 	//...
 			// }
 		}

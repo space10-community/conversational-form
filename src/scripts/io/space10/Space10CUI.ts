@@ -106,19 +106,19 @@ namespace io.space10 {
 						// ignore hidden tags
 						if(element.tagName.toLowerCase() == "input"){
 							this.tags.push(new io.space10.InputTag({
-								el: element
+								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
 							this.tags.push(new io.space10.SelectTag({
-								el: element
+								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
 							this.tags.push(new io.space10.ButtonTag({
-							el: element
+							domElement: element
 							// validationCallback
 							// questions: Array<String>
 						}));
@@ -133,7 +133,7 @@ namespace io.space10 {
 			const indexesToRemove: Array<ITag> = [];
 			for(var i = 0; i < this.tags.length; i++){
 				const element = this.tags[i];
-				if(!Tag.isTagValid(element.el)){
+				if(!Tag.isTagValid(element.domElement)){
 					indexesToRemove.push(element);
 				}
 			}

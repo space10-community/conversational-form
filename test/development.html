@@ -114,20 +114,20 @@
 						var element = fields[i];
 						if(element.tagName.toLowerCase() == "input"){
 							tags.push(new io.space10.InputTag({
-								el: element,
+								domElement: element,
 								// label: i == 1 ? "Question/label set via option (constructor)" : null
 								questions: i == 1 ? ["Question/label set via option (constructor) - 1", "Question/label set via option (constructor) - 2"] : null
 								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
 							tags.push(new io.space10.SelectTag({
-								el: element
+								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
 							tags.push(new io.space10.ButtonTag({
-								el: element
+								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));

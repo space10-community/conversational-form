@@ -9,17 +9,17 @@ namespace io.space10 {
 		constructor(options: ITagOptions){
 			super(options);
 
-			// if(this.el.getAttribute("type") == "text"){
+			// if(this.domElement.getAttribute("type") == "text"){
 			// 	this.setTagValue("hello world");
-			// }else if(this.el.getAttribute("type") == "email"){
+			// }else if(this.domElement.getAttribute("type") == "email"){
 			// 	this.setTagValue("Uhwe@uhwe.dk");
-			// }else if(this.el.getAttribute("type") == "tel"){
+			// }else if(this.domElement.getAttribute("type") == "tel"){
 			// 	this.setTagValue("+49"+(Math.random() * 9999999));
-			// }else if(this.el.getAttribute("type") == "checkbox"){
-			// 	(<HTMLInputElement> this.el).checked = Math.random() > 0.5;
-			// }else if(this.el.getAttribute("type") == "radio"){
-			// 	(<HTMLInputElement> this.el).checked = Math.random() > 0.5;
-			// }else if(this.el.getAttribute("type") == "password"){
+			// }else if(this.domElement.getAttribute("type") == "checkbox"){
+			// 	(<HTMLInputElement> this.domElement).checked = Math.random() > 0.5;
+			// }else if(this.domElement.getAttribute("type") == "radio"){
+			// 	(<HTMLInputElement> this.domElement).checked = Math.random() > 0.5;
+			// }else if(this.domElement.getAttribute("type") == "password"){
 			// 	this.setTagValue("xxx");
 			// }
 		}

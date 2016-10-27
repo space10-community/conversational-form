@@ -43,11 +43,13 @@ namespace io.space10 {
 		private inputInvalid(event: CustomEvent){
 			this.el.setAttribute("error", "");
 			this.el.setAttribute("disabled", "disabled");
+			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
 				this.el.removeAttribute("disabled");
 				this.el.removeAttribute("error");
+				this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 				(<HTMLInputElement> this.el).focus();
 			}, 2000);
 		}
@@ -56,6 +58,7 @@ namespace io.space10 {
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
 			this.el.removeAttribute("disabled");
+			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
 			(<HTMLInputElement> this.el).focus();
 		}

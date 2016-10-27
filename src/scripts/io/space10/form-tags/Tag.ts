@@ -17,7 +17,7 @@
 namespace io.space10 {
 	// interface
 	export interface ITag{
-		el?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
+		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
 		type: string,
 		name: string,
 		title: string,
@@ -26,7 +26,7 @@ namespace io.space10 {
 	}
 
 	export interface ITagOptions{
-		el?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
+		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
 		questions?: Array<string>,
 		label?: string,
 		validationCallback?: (value: string) => boolean,// can also be set through cui-validation attribute
@@ -34,7 +34,7 @@ namespace io.space10 {
 
 	// class
 	export class Tag implements ITag {
-		public el: HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
+		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
 		
 		protected defaultValue: string | number;
 		
@@ -44,15 +44,15 @@ namespace io.space10 {
 		private questions: Array<string>; // can also be set through cui-questions attribute.
 
 		public get type (): string{
-			return this.el.getAttribute("type");
+			return this.domElement.getAttribute("type");
 		}
 
 		public get name (): string{
-			return this.el.getAttribute("name");
+			return this.domElement.getAttribute("name");
 		}
 		
 		public get title (): string{
-			return this.el.getAttribute("title");
+			return this.domElement.getAttribute("title");
 		}
 
 		public get question():string{
@@ -66,11 +66,11 @@ namespace io.space10 {
 		}
 
 		constructor(options: ITagOptions){
-			this.el = options.el;
+			this.domElement = options.domElement;
 
 			// map questions to Tag
-			if(this.el.getAttribute("cui-questions")){
-				this.questions = this.el.getAttribute("cui-questions").split("|");
+			if(this.domElement.getAttribute("cui-questions")){
+				this.questions = this.domElement.getAttribute("cui-questions").split("|");
 			}else if(options.questions){
 				// questions array
 				this.questions = options.questions;
@@ -81,17 +81,17 @@ namespace io.space10 {
 			// custom validation
 			if(this.validationCallback){
 				this.validationCallback = options.validationCallback;
-			}else if(this.el.getAttribute("cui-validation")){
+			}else if(this.domElement.getAttribute("cui-validation")){
 				// set it through an attribute, danger land with eval
-				this.validationCallback = eval(this.el.getAttribute("cui-validation"));
+				this.validationCallback = eval(this.domElement.getAttribute("cui-validation"));
 			}
 
 			// reg ex pattern is set on the Tag, so use it in our validation
-			if(this.el.getAttribute("pattern"))
-				this.pattern = new RegExp(this.el.getAttribute("pattern"));
+			if(this.domElement.getAttribute("pattern"))
+				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
 
 			// default value of Tag
-			this.defaultValue = this.el.value;
+			this.defaultValue = this.domElement.value;
 		}
 
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement):boolean{
@@ -131,7 +131,7 @@ namespace io.space10 {
 			// console.log(this, 'set value -> isValid:', isValid);
 
 			if(isValid){
-				this.el.value = value.toString();
+				this.domElement.value = value.toString();
 			}else{
 				// throw new Error("s10-cui: value:string is not valid. Value: "+value);
 			}
@@ -145,16 +145,16 @@ namespace io.space10 {
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
-			const elId: string = this.el.getAttribute("id");
+			const elId: string = this.domElement.getAttribute("id");
 
-			if(this.el.parentNode){
+			if(this.domElement.parentNode){
 				// step backwards and check for label tag.
-				let labels: NodeListOf<HTMLLabelElement> = (<HTMLElement> this.el.parentNode).getElementsByTagName("label");
+				let labels: NodeListOf<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
 
-				if(labels.length == 0 && this.el.parentNode.parentNode){
+				if(labels.length == 0 && this.domElement.parentNode.parentNode){
 					// step backwards and check for label tag.
 					// TODO: Should remove this? could create problems...
-					labels = (<HTMLElement> this.el.parentNode.parentNode).getElementsByTagName("label");
+					labels = (<HTMLElement> this.domElement.parentNode.parentNode).getElementsByTagName("label");
 				}
 
 				if(labels.length > 0){
