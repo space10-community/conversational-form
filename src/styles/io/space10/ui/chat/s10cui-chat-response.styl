@@ -32,21 +32,6 @@ s10cui-chat-response
 			transform-origin 100% 0%
 			transform translateY(-10px) translateX(-10px) scale(0.001, 0.001)
 
-			&:after
-				content ""
-				display block
-				position absolute
-				top 50%
-				left 20px
-				transform translateY(-50%)
-				padding-right 20px
-			
-			&[thinking]
-				&:after
-					animation dot-progress 1s linear infinite
-			
-			&[value-added]
-				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
 	
 	text
 		display block
@@ -59,6 +44,21 @@ s10cui-chat-response
 		transform translateY(-10px) translateX(10px) scale(0.001, 0.001)
 		will-change transform, opacity, background
 		transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
+
+		&:after
+			content ""
+			display block
+			position absolute
+			top 50%
+			left 20px
+			transform translateY(-50%)
+			padding-right 20px
+
+		&[thinking]
+			font-size 150%
+
+			&:after
+				animation dot-progress 1s linear infinite
 
 
 
@@ -91,6 +91,9 @@ s10cui-chat-response
 			opacity 1
 			transition-delay 0s, 0s, 0s
 
+			&[value-added]
+				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
+
 
 
 @keyframes dot-progress
@@ -108,7 +111,10 @@ s10cui-chat-response
 @keyframes bounce
 	0%
 		transform scale(1, 1)
+		opacity 1
 	50%
-		transform scale(1.2, 1.2)
+		transform scale(1.1, 1.1)
+		opacity 0.85
 	100%
 		transform scale(1, 1)
+		opacity 1

@@ -19,7 +19,20 @@
 
 
 
+		<script
+			type="text/javascript"
+			src="../build/io/space10/logic/Helpers.js"
+		></script>
 
+		<script
+			type="text/javascript"
+			src="../build/io/space10/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/io/space10/ui/control-elements/BasicControlElement.js"
+		></script>
 
 		<script 
 			type="text/javascript"
@@ -53,6 +66,16 @@
 
 		<script
 			type="text/javascript"
+			src="../build/io/space10/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/io/space10/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
 			src="../build/io/space10/ui/UserInput.js"
 		></script>
 
@@ -74,7 +97,8 @@
 
 
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/s10cui.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/s10cui-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-radio-button.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/s10cui-input.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat-response.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat.css"/>
@@ -108,20 +132,20 @@
 					for (var i = 0; i < fields.length; i++) {
 						var element = fields[i];
 						if(element.tagName.toLowerCase() == "input"){
-							tags.push(new io.space10.InputTag({
+							tags.push(io.space10.Tag.createTag({
 								domElement: element,
 								// label: i == 1 ? "Question/label set via option (constructor)" : null
 								questions: i == 1 ? ["Question/label set via option (constructor) - 1", "Question/label set via option (constructor) - 2"] : null
 								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
-							tags.push(new io.space10.SelectTag({
+							tags.push(io.space10.Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
-							tags.push(new io.space10.ButtonTag({
+							tags.push(io.space10.Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
@@ -285,6 +309,12 @@
 									</div>
 								</li>
 								<li class="fields">
+									<!-- <div class="field">
+										<label for="billing:fileupload" class="required"><em>*</em>File upload</label>
+										<div class="input-box">
+											<input type="file" name="billing[fileupload]" value="" title="File upload" class="input-file  required-entry" id="billing:fileupload">
+										</div>
+									</div> -->
 									<div class="field">
 										<label for="billing:telephone" class="required"><em>*</em>Telefonnummer</label>
 										<div class="input-box">

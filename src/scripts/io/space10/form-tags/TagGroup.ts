@@ -1,6 +1,7 @@
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="InputTag.ts"/>
 /// <reference path="SelectTag.ts"/>
+/// <reference path="../ui/UserInput.ts"/>
 
 // group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same
@@ -35,12 +36,25 @@ namespace io.space10 {
 		}
 
 		public get question():string{
-			return this.elements[0].question;
+			var str: string = "";
+			for (var i = 0; i < this.elements.length; i++) {
+				var element: ITag = this.elements[i];
+				str += element.question + (i < this.elements.length - 1 ? " + " : "");
+			}
+			return str;
 		}
+
+		public get value (): string{
+			// TODO: fix value???
+			return "";
+		}
+
+		private onInputKeyChangeCallback: () => void;
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
-			// console.log(this, 'TagGroup:', this.elements);
+
+			console.log('TagGroup registered:', this.elements[0].type, this);
 		}
 
 		public setTagValueAndIsValid(value: string | number):boolean{

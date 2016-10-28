@@ -1,5 +1,5 @@
 /// <reference path="ChatResponse.ts"/>
-/// <reference path="../../Space10CUI.ts"/>
+/// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
 
 
@@ -12,7 +12,7 @@ namespace io.space10 {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
-		private currentUserResponse: io.space10.ChatResponse;
+		private currentResponse: io.space10.ChatResponse;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -31,51 +31,52 @@ namespace io.space10 {
 		}
 
 		private onInputKeyChange(event: CustomEvent){
-			if(this.currentUserResponse){
+			if(this.currentResponse){
 				const inputFieldStr: string = event.detail;
 				if(inputFieldStr.length == 0){
-					this.currentUserResponse.visible = false;
+					this.currentResponse.visible = false;
 				}else{
-					if(!this.currentUserResponse.visible)
-						this.currentUserResponse.visible = true;
+					if(!this.currentResponse.visible)
+						this.currentResponse.visible = true;
 				}
 			}
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
-			if(this.currentUserResponse)
-				this.currentUserResponse.setValue(event.detail);
+			if(this.currentResponse)
+				this.currentResponse.setValue(event.detail);
 			else{
 				// this should never happen..
-				this.createResponse(event.detail);
+				throw new Error("No current response??")
 			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
 			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
 
+			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			this.createResponse((currentTag.title || currentTag.name) + " : " + currentTag.question, aiThumb);
+			console.log(this, 'currentTag:', currentTag);
+			this.createResponse(true, (currentTag.name || currentTag.title) + " : " + currentTag.question, aiThumb);
 			
-			// create the waiting user response
-			this.createResponse();
+			// user reponse, create the waiting response
+			this.createResponse(false);
 		}
 
-		private createResponse(value: string = null, image: string = Dictionary.get("user-image")){
-			
-			this.currentUserResponse = new io.space10.ChatResponse({
+		private createResponse(isAIReponse: boolean, value: string = null, image: string = Dictionary.get("user-image")){
+			this.currentResponse = new io.space10.ChatResponse({
 				// image: null,
+				isAIReponse: isAIReponse,
 				response: value,// || input-response,
 				image: image
 			});
 
-			this.el.appendChild(this.currentUserResponse.el);
+			this.el.appendChild(this.currentResponse.el);
 			this.el.scrollTo(0, 1000000000);
 		}
 
 		public getTemplate () : string {
 			return `<s10cui-chat type='pluto'>
-						Chat
 					</s10cui-chat>`;
 		}
 
