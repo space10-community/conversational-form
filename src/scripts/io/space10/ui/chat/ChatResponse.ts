@@ -4,7 +4,7 @@
 // namespace
 namespace io.space10 {
 	// interface
-	export interface IChatResponseOptions extends IBasicElementOptions{
+	export interface IChatResponseOptions{
 		response: string;
 		image: string;
 		isAIReponse: boolean;
@@ -34,26 +34,28 @@ namespace io.space10 {
 			}else{
 				text.setAttribute("value-added", "");
 				text.removeAttribute("thinking");
+
+				if(!this.visible){
+					this.visible = true;
+				}
 			}
 		}
 
-		protected createElement(options: IChatResponseOptions): Element{
+		protected setData(options: IChatResponseOptions){
 			this.image = options.image;
 			this.response = "";
 			this.isAIReponse = options.isAIReponse;
-
-			super.createElement(options);
+			super.setData(options);
 
 			setTimeout(() => {
 				this.visible = this.isAIReponse || (this.response && this.response.length > 0);
 				this.setValue("");
 
 				if(this.isAIReponse){
-					setTimeout(() => this.setValue(options.response), io.space10.Helpers.lerp(Math.random(), 500, 1200));
+					// ...
+					setTimeout(() => this.setValue(options.response), io.space10.Helpers.lerp(Math.random(), 250, 600));
 				}
 			}, 0);
-
-			return this.el;
 		}
 
 		// template, can be overwritten ...

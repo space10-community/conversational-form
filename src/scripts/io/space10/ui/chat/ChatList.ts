@@ -56,7 +56,8 @@ namespace io.space10 {
 
 			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			this.createResponse(true, (currentTag.title || currentTag.name) + " : " + currentTag.question, aiThumb);
+			console.log(this, 'currentTag:', currentTag);
+			this.createResponse(true, (currentTag.name || currentTag.title) + " : " + currentTag.question, aiThumb);
 			
 			// user reponse, create the waiting response
 			this.createResponse(false);
@@ -76,7 +77,6 @@ namespace io.space10 {
 
 		public getTemplate () : string {
 			return `<s10cui-chat type='pluto'>
-						Chat
 					</s10cui-chat>`;
 		}
 

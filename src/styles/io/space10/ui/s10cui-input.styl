@@ -8,47 +8,50 @@ s10cui-input
 	width 100%
 	height $input-field-height
 
-s10cui-input input
-	// resets..
-	&:-webkit-autofill
-		// -webkit-box-shadow 0 0 0px 1000px white inset
-		background-color white
+	input
+		// resets..
+		&:-webkit-autofill
+			// -webkit-box-shadow 0 0 0px 1000px white inset
+			background-color white
 
-	&:focus, &:focus, &:focus
-		outline none
+		&:focus, &:focus, &:focus
+			outline none
+			-webkit-appearance none
+			box-shadow 0px 0px 30px rgba(0,0,0,0.2)
+		
+		border-radius 0
+		border none
 		-webkit-appearance none
-		box-shadow 0px 0px 30px rgba(0,0,0,0.2)
-	
-	border-radius 0
-	border none
-	-webkit-appearance none
 
-	// styling
-	width 100%
-	height $input-field-height
-	color $color-input-text
-	will-change box-shadow, background, color
-	transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut
-	background white
-	box-shadow 0px 0px 1px rgba(0,0,0,0.15)
-	padding 5px 5px 5px 15px
+		// styling
+		font-family 'Roboto', sans-serif
+		font-size 12px
 
-	&::-webkit-input-placeholder
-		color currentColor
-	&::-moz-input-placeholder
-		color currentColor
-	&:-moz-input-placeholder
-		color currentColor
-	&:-ms-input-placeholder
-		color currentColor
+		width 100%
+		height $input-field-height
+		color $color-input-text
+		will-change box-shadow, background, color
+		transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut
+		background white
+		box-shadow 0px 0px 1px rgba(0,0,0,0.15)
+		padding 5px 5px 5px 15px
 
-	&[disabled="disabled"]
-		background $color-chat-reponse-user-bg
-	
-	&[error]
-		background $color-input-error-bg
-		color $color-input-error-text
-	
+		&::-webkit-input-placeholder
+			color currentColor
+		&::-moz-input-placeholder
+			color currentColor
+		&:-moz-input-placeholder
+			color currentColor
+		&:-ms-input-placeholder
+			color currentColor
+
+		&[disabled="disabled"]
+			background $color-chat-reponse-user-bg
+		
+		&[error]
+			background $color-input-error-bg
+			color $color-input-error-text
+
 s10cui-input-control-elements
 	display block
 	width 100%

@@ -1,4 +1,7 @@
 /// <reference path="../data/Dictionary.ts"/>
+/// <reference path="InputTag.ts"/>
+/// <reference path="ButtonTag.ts"/>
+/// <reference path="SelectTag.ts"/>
 
 // basic tag from form logic
 // types:
@@ -23,6 +26,8 @@ namespace io.space10 {
 		title: string,
 		question: string,
 		setTagValueAndIsValid(value: string | number):boolean;
+
+		value:string;
 	}
 
 	export interface ITagOptions{
@@ -39,6 +44,7 @@ namespace io.space10 {
 		protected defaultValue: string | number;
 		
 		private pattern: RegExp;
+		private _title: string;
 
 		private validationCallback?: (value: string) => boolean; // can also be set through cui-validation attribute.
 		private questions: Array<string>; // can also be set through cui-questions attribute.
@@ -52,7 +58,11 @@ namespace io.space10 {
 		}
 		
 		public get title (): string{
-			return this.domElement.getAttribute("title");
+			return this._title
+		}
+
+		public get value (): string{
+			return this.domElement.value;
 		}
 
 		public get question():string{
@@ -66,7 +76,12 @@ namespace io.space10 {
 		}
 
 		constructor(options: ITagOptions){
+			if(!Tag.isTagValid(options.domElement)){
+				return;
+			}
+
 			this.domElement = options.domElement;
+			this._title = this.domElement.getAttribute("title");
 
 			// map questions to Tag
 			if(this.domElement.getAttribute("cui-questions")){
@@ -92,6 +107,10 @@ namespace io.space10 {
 
 			// default value of Tag
 			this.defaultValue = this.domElement.value;
+
+			if(this.type != "group"){
+				console.log('Tag registered:', this.type);
+			}
 		}
 
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement):boolean{
@@ -109,6 +128,39 @@ namespace io.space10 {
 				return true
 			else
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+		}
+
+		public static createTag(options: ITagOptions): ITag{
+			const element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement = options.domElement;
+			if(Tag.isTagValid(element)){
+				// ignore hidden tags
+				let tag: ITag;
+				if(element.tagName.toLowerCase() == "input"){
+					tag = new InputTag({
+						domElement: element
+						// validationCallback
+						// questions: Array<String>
+					});
+				}else if(element.tagName.toLowerCase() == "select"){
+					tag = new SelectTag({
+						domElement: element
+						// validationCallback
+						// questions: Array<String>
+					});
+				}else if(element.tagName.toLowerCase() == "button"){
+					tag = new ButtonTag({
+						domElement: element
+						// validationCallback
+						// questions: Array<String>
+					});
+				}
+
+				return tag;
+			}else{
+				// console.warn("Tag is not valid!: "+ element);
+				return null;
+			}
+
 		}
 
 		public setTagValueAndIsValid(value: string | number):boolean{
@@ -145,33 +197,42 @@ namespace io.space10 {
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
-			const elId: string = this.domElement.getAttribute("id");
 
+			// TODO: clean up the logic
+
+			const elId: string = this.domElement.getAttribute("id");
 			if(this.domElement.parentNode){
 				// step backwards and check for label tag.
-				let labels: NodeListOf<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
+				let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
 
-				if(labels.length == 0 && this.domElement.parentNode.parentNode){
+				if(labels.length == 0){
+					// check if innerText..
+					let innerText: string = (<any>this.domElement.parentNode).innerText;
+					
+					
 					// step backwards and check for label tag.
 					// TODO: Should remove this? could create problems...
-					labels = (<HTMLElement> this.domElement.parentNode.parentNode).getElementsByTagName("label");
+					if(innerText && innerText.length > 0)
+						labels = [(<HTMLLabelElement>this.domElement.parentNode)];
+					else if(this.domElement.parentNode.parentNode)
+						labels = (<HTMLElement> this.domElement.parentNode.parentNode).getElementsByTagName("label");
 				}
 
 				if(labels.length > 0){
-					if(elId){
-						// element has :id, so expect label to have :for
-						for (var i = 0; i < labels.length; i++) {
-							var label: HTMLLabelElement = labels[i];
-							if(label.getAttribute("for") == elId){
-								this.questions = [label.innerText];
-							}
+					this.questions = [];
+					for (var i = 0; i < labels.length; i++) {
+						var label: HTMLLabelElement = labels[i];
+						if(!elId || (elId && label.getAttribute("for") == elId)){
+							this.questions.push(label.innerText);
 						}
-					}else{
-						// no id>for attribute paring, so just take the first label...
-						this.questions = [labels[0].innerText];
 					}
 				}else{
 					// we don't set a default value for questions as this will result in a fallback response from Dictionary
+				}
+
+				// if title is not set from the title attribute then set it to the label...
+				if(!this._title){
+					this._title = this.questions && this.questions.length > 0 ? this.questions[0] : labels[0].innerText;
 				}
 			}
 		}

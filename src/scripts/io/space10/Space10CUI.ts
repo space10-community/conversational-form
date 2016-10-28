@@ -37,6 +37,7 @@ namespace io.space10 {
 
 		constructor(options: Space10CUIOptions){
 			console.log("Space10 Conversational User Interface.");
+
 			this.submitCallback = options.submitCallback;
 			this.formEl = options.formEl;
 			if(options.dictionaryData || options.dictionaryAI){
@@ -104,23 +105,24 @@ namespace io.space10 {
 					if(Tag.isTagValid(element)){
 						// ignore hidden tags
 						if(element.tagName.toLowerCase() == "input"){
-							this.tags.push(new io.space10.InputTag({
+							this.tags.push(Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
+							
 						}else if(element.tagName.toLowerCase() == "select"){
-							this.tags.push(new io.space10.SelectTag({
+							this.tags.push(Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
-							this.tags.push(new io.space10.ButtonTag({
-							domElement: element
-							// validationCallback
-							// questions: Array<String>
-						}));
+							this.tags.push(Tag.createTag({
+								domElement: element
+								// validationCallback
+								// questions: Array<String>
+							}));
 						}
 					}
 				}
@@ -128,11 +130,11 @@ namespace io.space10 {
 				// tags are manually setup and passed as options.tags.
 			}
 
-			// remove invalid tags if they sneaked in.. tihs could happen if tags are setup manually
+			// remove invalid tags if they've sneaked in.. this could happen if tags are setup manually as we don't encurage to use static Tag.isTagValid
 			const indexesToRemove: Array<ITag> = [];
 			for(var i = 0; i < this.tags.length; i++){
 				const element = this.tags[i];
-				if(!Tag.isTagValid(element.domElement)){
+				if(!element || !Tag.isTagValid(element.domElement)){
 					indexesToRemove.push(element);
 				}
 			}

@@ -1,0 +1,19 @@
+@import "nib"
+@import "rupture"
+@import "../../s10cui-variables"
+
+.s10cui-button
+	background orange
+	cursor pointer
+	display table
+	border 1px solid alpha($color-dark-blue, 10%)
+	padding 20px
+
+	&:hover
+		background red
+
+	&:active
+		background yellow
+
+.s10cui-button.--disabled
+	pointer-events none

@@ -9,19 +9,21 @@ namespace io.space10 {
 		constructor(options: ITagOptions){
 			super(options);
 
-			// if(this.domElement.getAttribute("type") == "text"){
-			// 	this.setTagValue("hello world");
-			// }else if(this.domElement.getAttribute("type") == "email"){
-			// 	this.setTagValue("Uhwe@uhwe.dk");
-			// }else if(this.domElement.getAttribute("type") == "tel"){
-			// 	this.setTagValue("+49"+(Math.random() * 9999999));
-			// }else if(this.domElement.getAttribute("type") == "checkbox"){
-			// 	(<HTMLInputElement> this.domElement).checked = Math.random() > 0.5;
-			// }else if(this.domElement.getAttribute("type") == "radio"){
-			// 	(<HTMLInputElement> this.domElement).checked = Math.random() > 0.5;
-			// }else if(this.domElement.getAttribute("type") == "password"){
-			// 	this.setTagValue("xxx");
-			// }
+			if(this.domElement.getAttribute("type") == "text"){
+
+			}else if(this.domElement.getAttribute("type") == "email"){
+
+			}else if(this.domElement.getAttribute("type") == "tel"){
+
+			}else if(this.domElement.getAttribute("type") == "checkbox"){
+
+			}else if(this.domElement.getAttribute("type") == "radio"){
+
+			}else if(this.domElement.getAttribute("type") == "password"){
+
+			}else if(this.domElement.getAttribute("type") == "file"){
+
+			}
 		}
 	}
 }

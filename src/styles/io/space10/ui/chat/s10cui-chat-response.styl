@@ -55,11 +55,10 @@ s10cui-chat-response
 			padding-right 20px
 
 		&[thinking]
+			font-size 150%
+
 			&:after
 				animation dot-progress 1s linear infinite
-		
-		&[value-added]
-			animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
 
 
 
@@ -91,6 +90,9 @@ s10cui-chat-response
 			transform scale(1, 1) translateY(0px)
 			opacity 1
 			transition-delay 0s, 0s, 0s
+
+			&[value-added]
+				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
 
 
 

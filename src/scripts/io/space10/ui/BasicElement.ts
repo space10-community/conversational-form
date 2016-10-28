@@ -1,9 +1,6 @@
 // namespace
 namespace io.space10 {
 	// interface
-
-	// class
-
 	export interface IBasicElementOptions{
 
 	}
@@ -14,14 +11,20 @@ namespace io.space10 {
 		getTemplate(): string;
 	}
 
+	// class
 	export class BasicElement implements IBasicElement{
 		public el: Element;
 
 		constructor(options: IBasicElementOptions){
-			this.createElement(options);
+			this.setData(options);
+			this.createElement();
 		}
 
-		protected createElement(options: IBasicElementOptions): Element{
+		protected setData(options: IBasicElementOptions){
+			
+		}
+
+		protected createElement(): Element{
 			var template: HTMLTemplateElement = document.createElement('template');
 			template.innerHTML = this.getTemplate();
 			this.el = <Element> template.content.firstChild;

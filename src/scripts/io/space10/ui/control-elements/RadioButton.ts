@@ -6,16 +6,10 @@ namespace io.space10 {
 
 	// class
 	export class RadioButton extends io.space10.Button {
-		constructor(options: IBasicElementOptions){
-			super(options);
-
-
-		}
-
 		// override
 		public getTemplate () : string {
-			return `<s10cui-radio-button>
-				radio button...
+			return `<s10cui-radio-button class="s10cui-button">
+				` + this.referenceTag.title + `
 			</s10cui-radio-button>
 			`;
 		}
