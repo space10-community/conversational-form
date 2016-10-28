@@ -210,7 +210,8 @@
 											<input type="text" id="billing:vat_id" name="billing[vat_id]" value="" title="Momsnummer" class="input-text " onkeyup="cloneToBillingTaxVat();">
 										</div>
 									</div>
-													</li>
+									</li>
+								
 								<li class="fields"><div class="customer-name">
 					<div class="field name-firstname">
 						<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
@@ -229,6 +230,18 @@
 							>
 						</div>
 					</div>
+
+						<div class="field radiocontrol">
+							<label class="checkbox">
+								<input type="radio" class="v-middle" name="customer_or_business2" value="0" checked="checked">
+								<span class="v-middle">Kunde 2</span>
+							</label>
+							<label class="checkbox">
+								<input type="radio" class="v-middle" name="customer_or_business2" value="1">
+								<span class="v-middle">Business 2</span>
+							</label>
+						</div>
+ 
 					<div class="field name-lastname">
 						<label for="billing:lastname" class="required"><em>*</em>Efternavn (has RegEx pattern)</label>
 						<div class="input-box">

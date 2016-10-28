@@ -61,6 +61,7 @@ s10cui-chat-response
 			font-size 150%
 
 			&:after
+				will-change auto
 				animation dot-progress 1s linear infinite
 
 
@@ -90,6 +91,7 @@ s10cui-chat-response
 			transition-delay $anim-time * 0.33, $anim-time * 0.33, 0s
 
 			&[value-added]
+				will-change auto
 				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
 
 		thumb
