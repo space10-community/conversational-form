@@ -98,7 +98,7 @@ namespace io.space10 {
 			for (var i = 0; i < tags.length; i++) {
 				var tag: io.space10.ITag = tags[i];
 				
-				console.log(this, 'tag.type:', tag);
+				// console.log(this, 'UserInput > tag.type:', tag.type);
 				switch(tag.type){
 					case "radio" :
 						this.controlElements.push(new RadioButton({
@@ -107,12 +107,15 @@ namespace io.space10 {
 						break;
 					case "checkbox" :
 						// TODO: add checkbox tag..
+						console.log("UserInput buildControlElements:", "checkbox");
 						break;
 					case "select" :
 						// TODO: add select sub tag..
+						console.log("UserInput buildControlElements:", "select list");
 						break;
-					case "text" :
+					default :
 						// nothing to add.
+						console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
 						break;
 				}
 
@@ -127,7 +130,7 @@ namespace io.space10 {
 			console.log('UserInput onControlElementSubmit:', tag);
 
 			document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
-				detail: tag.value
+				detail: tag.title
 			}));
 		}
 

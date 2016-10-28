@@ -3,17 +3,25 @@
 @import "../../s10cui-variables"
 
 .s10cui-button
-	background orange
+	background white
 	cursor pointer
-	display table
+	display inline-table
 	border 1px solid alpha($color-dark-blue, 10%)
-	padding 20px
+	padding 15px 35px
+	border-radius 25px
+	color $color-chat-reponse-user-text
+
+	will-change background
+	transition background $anim-time $anim-easeOut
+
+	&:not(:last-child)
+		margin-right 15px
 
 	&:hover
-		background red
+		background alpha($color-dark-blue, 10%)
 
 	&:active
-		background yellow
+		background alpha($color-dark-blue, 20%)
 
 .s10cui-button.--disabled
 	pointer-events none

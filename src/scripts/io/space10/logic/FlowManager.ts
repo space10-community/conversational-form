@@ -47,7 +47,7 @@ namespace io.space10 {
 					detail: event.detail //input value
 				}));
 
-				// TODO: remove...
+				// goto next step when user has answered
 				setTimeout(() => this.nextStep(), 1000);
 			}else{
 				console.warn("Value not valid!!!", event.detail);

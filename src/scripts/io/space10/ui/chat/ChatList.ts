@@ -56,7 +56,6 @@ namespace io.space10 {
 
 			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			console.log(this, 'currentTag:', currentTag);
 			this.createResponse(true, (currentTag.name || currentTag.title) + " : " + currentTag.question, aiThumb);
 			
 			// user reponse, create the waiting response

@@ -190,7 +190,8 @@ namespace io.space10 {
 		}
 
 		private setupUI(){
-			console.log('Space10CUI > mapped DOM tags:', this.tags);
+			console.log('Space10CUI start > these are the mapped DOM tags:', this.tags);
+			console.log('----------------------------------------------');
 
 			// start the flow
 			this.flowManager = new FlowManager({

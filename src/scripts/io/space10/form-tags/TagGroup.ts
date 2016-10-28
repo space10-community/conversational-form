@@ -64,6 +64,8 @@ namespace io.space10 {
 				isValid = false;
 			}
 
+			// TODO: Set value on fields!!!
+
 			return isValid;
 		}
 	}
