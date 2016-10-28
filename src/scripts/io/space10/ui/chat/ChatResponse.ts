@@ -1,4 +1,5 @@
 /// <reference path="../BasicElement.ts"/>
+/// <reference path="../../logic/Helpers.ts"/>
 
 // namespace
 namespace io.space10 {
@@ -6,12 +7,14 @@ namespace io.space10 {
 	export interface IChatResponseOptions extends IBasicElementOptions{
 		response: string;
 		image: string;
+		isAIReponse: boolean;
 	}
 
 	// class
 	export class ChatResponse extends io.space10.BasicElement {
 		private response: string;
 		private image: string;
+		private isAIReponse: boolean;
 
 		public set visible(value: boolean){
 			if(value){
@@ -21,10 +24,6 @@ namespace io.space10 {
 			}
 		}
 
-		constructor(options: IChatResponseOptions){
-			super(options);
-		}
-
 		public setValue(value: string){
 			this.response = value;
 			const text: Element = this.el.getElementsByTagName("text")[0];
@@ -32,7 +31,6 @@ namespace io.space10 {
 
 			if(!this.response || this.response.length == 0){
 				text.setAttribute("thinking", "");
-
 			}else{
 				text.setAttribute("value-added", "");
 				text.removeAttribute("thinking");
@@ -40,12 +38,19 @@ namespace io.space10 {
 		}
 
 		protected createElement(options: IChatResponseOptions): Element{
-			this.response = options.response;
 			this.image = options.image;
+			this.response = "";
+			this.isAIReponse = options.isAIReponse;
+
 			super.createElement(options);
 
 			setTimeout(() => {
-				this.visible = this.response && this.response.length > 0;
+				this.visible = this.isAIReponse || (this.response && this.response.length > 0);
+				this.setValue("");
+
+				if(this.isAIReponse){
+					setTimeout(() => this.setValue(options.response), io.space10.Helpers.lerp(Math.random(), 500, 1200));
+				}
 			}, 0);
 
 			return this.el;
