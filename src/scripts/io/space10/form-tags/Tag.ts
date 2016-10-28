@@ -58,7 +58,11 @@ namespace io.space10 {
 		}
 		
 		public get title (): string{
-			return this._title
+			if(!this._title){
+				this._title = this.domElement.getAttribute("title");
+			}
+
+			return this._title;
 		}
 
 		public get value (): string{
@@ -66,13 +70,11 @@ namespace io.space10 {
 		}
 
 		public get question():string{
-			if(this.questions){
-				return this.questions[Math.floor(Math.random() * this.questions.length)];
-			}else{
-				// fallback to AI response from dictionary
-				const aiReponse: string = Dictionary.getAIResponse(this.type);
-				return aiReponse;
+			if(!this.questions){
+				this.findLabelAndSetQuestions();
 			}
+
+			return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}
 
 		constructor(options: ITagOptions){
@@ -81,17 +83,11 @@ namespace io.space10 {
 			}
 
 			this.domElement = options.domElement;
-			this._title = this.domElement.getAttribute("title");
 
-			// map questions to Tag
-			if(this.domElement.getAttribute("cui-questions")){
-				this.questions = this.domElement.getAttribute("cui-questions").split("|");
-			}else if(options.questions){
-				// questions array
+			// questions array
+			if(options.questions)
 				this.questions = options.questions;
-			}else{
-				this.findLabelAndSetQuestions();
-			}
+
 			
 			// custom validation
 			if(this.validationCallback){
@@ -192,48 +188,57 @@ namespace io.space10 {
 		}
 
 		private findLabelAndSetQuestions(){
+			if(this.questions)
+				return;
+
 			// <label tag with label:for attribute to el:id
 			// check for label tag, we only go 2 steps backwards..
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
 
-			// TODO: clean up the logic
+			if(this.domElement.getAttribute("cui-questions")){
+				this.questions = this.domElement.getAttribute("cui-questions").split("|");
+			}else{
+				// questions not set, so find
 
-			const elId: string = this.domElement.getAttribute("id");
-			if(this.domElement.parentNode){
-				// step backwards and check for label tag.
-				let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
-
-				if(labels.length == 0){
-					// check if innerText..
-					let innerText: string = (<any>this.domElement.parentNode).innerText;
-					
-					
+				// TODO: clean up the logic
+				const elId: string = this.domElement.getAttribute("id");
+				if(this.domElement.parentNode){
 					// step backwards and check for label tag.
-					// TODO: Should remove this? could create problems...
-					if(innerText && innerText.length > 0)
-						labels = [(<HTMLLabelElement>this.domElement.parentNode)];
-					else if(this.domElement.parentNode.parentNode)
-						labels = (<HTMLElement> this.domElement.parentNode.parentNode).getElementsByTagName("label");
-				}
+					let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
 
-				if(labels.length > 0){
-					this.questions = [];
-					for (var i = 0; i < labels.length; i++) {
-						var label: HTMLLabelElement = labels[i];
-						if(!elId || (elId && label.getAttribute("for") == elId)){
-							this.questions.push(label.innerText);
-						}
+					if(labels.length == 0){
+						// check if innerText..
+						let innerText: string = (<any>this.domElement.parentNode).innerText;
+						
+						// step backwards and check for label tag.
+						if(innerText && innerText.length > 0)
+							labels = [(<HTMLLabelElement>this.domElement.parentNode)];
 					}
-				}else{
-					// we don't set a default value for questions as this will result in a fallback response from Dictionary
-				}
 
-				// if title is not set from the title attribute then set it to the label...
-				if(!this._title){
-					this._title = this.questions && this.questions.length > 0 ? this.questions[0] : labels[0].innerText;
+					if(labels.length > 0){
+						this.questions = [];
+						for (var i = 0; i < labels.length; i++) {
+							var label: HTMLLabelElement = labels[i];
+							if(elId && (elId && label.getAttribute("for") == elId)){
+								this.questions.push(label.innerText);
+							}
+						}
+					}else{
+						// we don't set a default value for questions as this will result in a fallback response from Dictionary
+						this.questions = [Dictionary.getAIResponse(this.type)];
+					}
+
+					// if title is not set from the title attribute then set it to the label...
+					if(!this._title){
+						this._title = this.questions && this.questions.length > 0 ? this.questions[0] : labels[0].innerText;
+					}
 				}
+			}
+
+			if(!this.questions || this.questions.length == 0){
+				this.questions = [Dictionary.getAIResponse(this.type)];
 			}
 		}
 	}

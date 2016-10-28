@@ -36,7 +36,10 @@ namespace io.space10 {
 			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
 			this.inputElement = this.el.getElementsByTagName("input")[0];
-			this.controlElementsElement = this.el.getElementsByTagName("s10cui-input-control-elements")[0];
+
+			//<s10cui-input-control-elements> is defined in the ChatList.ts
+			this.controlElementsElement = document.getElementById("s10-cui-element").getElementsByTagName("s10cui-input-control-elements")[0];
+			// console.log("======", document.getElementById("s10-cui"))
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
@@ -170,7 +173,6 @@ namespace io.space10 {
 		// override
 		public getTemplate () : string {
 			return `<s10cui-input>
-				<s10cui-input-control-elements></s10cui-input-control-elements>
 				<input type='input'>
 			</s10cui-input>
 			`;

@@ -61,8 +61,21 @@ namespace io.space10 {
 
 			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			this.createResponse(true, (currentTag.name || currentTag.title) + " : " + currentTag.question, aiThumb);
+			let aiReponse: string = "";
+
+			// if(currentTag.type == "group"){
+			// 	console.log("AI group reponse....:", currentTag);
+			// 	const groupTagType: string = (<io.space10.ITagGroup> currentTag).getGroupTagType();
+			// 	aiReponse = Dictionary.getAIResponse(groupTagType);
+			// }else{
+			// 	console.log("AI tag reponse....:", currentTag);
+			// 	aiReponse = Dictionary.getAIResponse(currentTag.type);
+			// }
+
+			aiReponse = "ChatList: " + (currentTag.name || currentTag.title) + " : " + currentTag.question;
 			
+			this.createResponse(true, aiReponse, aiThumb);
+
 			// user reponse, create the waiting response
 			this.createResponse(false);
 		}
@@ -74,13 +87,14 @@ namespace io.space10 {
 				response: value,// || input-response,
 				image: image
 			});
-
-			this.el.appendChild(this.currentResponse.el);
+			
+			this.el.insertBefore(this.currentResponse.el, this.el.children[0]);
 			this.el.scrollTo(0, 1000000000);
 		}
 
 		public getTemplate () : string {
 			return `<s10cui-chat type='pluto'>
+						<s10cui-input-control-elements></s10cui-input-control-elements>
 					</s10cui-chat>`;
 		}
 

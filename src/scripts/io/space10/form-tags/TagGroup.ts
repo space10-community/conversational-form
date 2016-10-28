@@ -16,7 +16,8 @@ namespace io.space10 {
 	}
 
 	export interface ITagGroup extends ITag{
-		elements: Array <InputTag | SelectTag | ButtonTag>
+		elements: Array <InputTag | SelectTag | ButtonTag>;
+		getGroupTagType: () => string;
 	}
 
 	// class
@@ -36,12 +37,23 @@ namespace io.space10 {
 		}
 
 		public get question():string{
-			var str: string = "";
 			for (var i = 0; i < this.elements.length; i++) {
-				var element: ITag = this.elements[i];
-				str += element.question + (i < this.elements.length - 1 ? " + " : "");
+				// force question render..
+				this.elements[i].question
 			}
-			return str;
+
+			// expect the first tag of the group to have the question, else fallback to AIReponse
+
+			const firstTag: ITag = this.elements[0];
+			const firstTagQuestion: string = firstTag.question;
+
+			if(firstTagQuestion){
+				return firstTagQuestion;
+			}else{
+				// fallback to AI response from dictionary
+				const aiReponse: string = Dictionary.getAIResponse(firstTag.type);
+				return aiReponse;
+			}
 		}
 
 		public get value (): string{
@@ -55,6 +67,10 @@ namespace io.space10 {
 			this.elements = options.elements;
 
 			console.log('TagGroup registered:', this.elements[0].type, this);
+		}
+
+		public getGroupTagType():string{
+			return this.elements[0].type;
 		}
 
 		public setTagValueAndIsValid(value: string | ITag):boolean{

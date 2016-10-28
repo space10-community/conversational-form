@@ -200,7 +200,7 @@ namespace io.space10 {
 			});
 
 			var s10context: HTMLElement = document.createElement("div");
-			s10context.id = "s10-cui";
+			s10context.id = "s10-cui-element";
 			s10context.className = "s10-cui";
 			this.context.appendChild(s10context);
 

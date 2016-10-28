@@ -10,12 +10,12 @@ s10cui-chat-response
 	min-width 105px
 	width auto
 	position relative
-	// background rgba(255,255,255,0.2)
+	backface-visibility hidden
 	padding-left 50px
 	padding-top 20px
 	color $color-chat-reponse-default-text
 
-	&:nth-child(2n+2)// user..
+	&:nth-of-type(odd)// user..
 		margin-right 0px
 		margin-left auto
 		padding-left 0
@@ -37,6 +37,7 @@ s10cui-chat-response
 		display block
 		position relative
 		padding 20px
+		min-height 57px
 		background $color-chat-reponse-default-bg
 		border-radius 0px 20px 20px 20px
 		opacity 0
@@ -44,6 +45,8 @@ s10cui-chat-response
 		transform translateY(-10px) translateX(10px) scale(0.001, 0.001)
 		will-change transform, opacity, background
 		transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
+		backface-visibility hidden
+		height auto
 
 		&:after
 			content ""
@@ -86,13 +89,14 @@ s10cui-chat-response
 			transition-timing-function $anim-easeOutBack, $anim-easeOut, $anim-easeOut
 			transition-delay $anim-time * 0.33, $anim-time * 0.33, 0s
 
+			&[value-added]
+				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
+
 		thumb
 			transform scale(1, 1) translateY(0px)
 			opacity 1
 			transition-delay 0s, 0s, 0s
 
-			&[value-added]
-				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
 
 
 
