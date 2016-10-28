@@ -2,7 +2,13 @@
 @import "rupture"
 @import "../s10cui-variables"
 
-.s10cui-input
+s10cui-input
+	display block
+	position relative
+	width 100%
+	height $input-field-height
+
+s10cui-input input
 	// resets..
 	&:-webkit-autofill
 		// -webkit-box-shadow 0 0 0px 1000px white inset
@@ -18,11 +24,11 @@
 	-webkit-appearance none
 
 	// styling
+	width 100%
+	height $input-field-height
 	color $color-input-text
 	will-change box-shadow, background, color
 	transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut
-	width 100%
-	height $input-field-height
 	background white
 	box-shadow 0px 0px 1px rgba(0,0,0,0.15)
 	padding 5px 5px 5px 15px
@@ -42,6 +48,16 @@
 	&[error]
 		background $color-input-error-bg
 		color $color-input-error-text
+	
+s10cui-input-control-elements
+	display block
+	width 100%
+	height auto
+	position absolute
+	top -20px
+	left 0px
+	transform translateY(-100%)
+	background red
 	
 
 

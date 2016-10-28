@@ -1,4 +1,4 @@
-/// <reference path="../Space10CUI.ts"/>
+/// <reference path="BasicElement.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
 
 // namespace
@@ -16,6 +16,8 @@ namespace io.space10 {
 	// class
 	export class UserInput extends io.space10.BasicElement {
 		public el: Element;
+
+		private inputElement: HTMLInputElement;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
 		private errorTimer: number = 0;
@@ -26,6 +28,8 @@ namespace io.space10 {
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
+			this.inputElement = this.el.getElementsByTagName("input")[0];
+
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(io.space10.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -35,35 +39,35 @@ namespace io.space10 {
 		}
 
 		public getValue():string{
-			return (<HTMLInputElement> this.el).value;
+			return this.inputElement.value;
 		}
 
 		private inputInvalid(event: CustomEvent){
-			this.el.setAttribute("error", "");
-			this.el.setAttribute("disabled", "disabled");
-			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
+			this.inputElement.setAttribute("error", "");
+			this.inputElement.setAttribute("disabled", "disabled");
+			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
-				this.el.removeAttribute("disabled");
-				this.el.removeAttribute("error");
-				this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-				(<HTMLInputElement> this.el).focus();
+				this.inputElement.removeAttribute("disabled");
+				this.inputElement.removeAttribute("error");
+				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+				this.inputElement.focus();
 			}, 2000);
 		}
 
 		private onFlowUpdate(event: CustomEvent){
 			clearTimeout(this.errorTimer);
-			this.el.removeAttribute("error");
-			this.el.removeAttribute("disabled");
-			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+			this.inputElement.removeAttribute("error");
+			this.inputElement.removeAttribute("disabled");
+			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
-			(<HTMLInputElement> this.el).focus();
+			this.inputElement.focus();
 
 			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
 			// TODO: Show UI according to what kind of tag it is..
 			if(currentTag.type == "group")
-				console.log('UserInput > currentTag type:', (<io.space10.ITagGroup> currentTag).elements[0].type);
+				console.log('UserInput > currentTag is a group of types:', (<io.space10.ITagGroup> currentTag).elements[0].type);
 			else
 				console.log('UserInput > currentTag type:', currentTag.type);
 		}
@@ -71,7 +75,7 @@ namespace io.space10 {
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 13){
 				// enter
-				this.el.setAttribute("disabled", "disabled");
+				this.inputElement.setAttribute("disabled", "disabled");
 
 				// TODO: validate input ..
 				document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
@@ -85,12 +89,16 @@ namespace io.space10 {
 		}
 
 		private resetValue(){
-			(<HTMLInputElement> this.el).value = "";
+			this.inputElement.value = "";
 		}
 
 		// override
 		public getTemplate () : string {
-			return `<input class='s10cui-input' type='input'>`;
+			return `<s10cui-input>
+				<s10cui-input-control-elements>control elements</s10cui-input-control-elements>
+				<input type='input'>
+			</s10cui-input>
+			`;
 		}
 	}
 }

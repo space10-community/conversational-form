@@ -1,4 +1,4 @@
-/// <reference path="../../Space10CUI.ts"/>
+/// <reference path="../BasicElement.ts"/>
 
 // namespace
 namespace io.space10 {
