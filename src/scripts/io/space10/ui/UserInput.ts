@@ -1,4 +1,6 @@
 /// <reference path="BasicElement.ts"/>
+/// <reference path="control-elements/Button.ts"/>
+/// <reference path="control-elements/RadioButton.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
 
 // namespace
@@ -21,6 +23,8 @@ namespace io.space10 {
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
 		private errorTimer: number = 0;
+		private controlElements: Array<IBasicElement>;
+		private controlElementsElement: Element;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -29,6 +33,7 @@ namespace io.space10 {
 			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
 
 			this.inputElement = this.el.getElementsByTagName("input")[0];
+			this.controlElementsElement = this.el.getElementsByTagName("s10cui-input-control-elements")[0];
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
@@ -66,10 +71,46 @@ namespace io.space10 {
 
 			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
 			// TODO: Show UI according to what kind of tag it is..
-			if(currentTag.type == "group")
+			if(currentTag.type == "group"){
 				console.log('UserInput > currentTag is a group of types:', (<io.space10.ITagGroup> currentTag).elements[0].type);
-			else
+				this.buildControlElements((<io.space10.ITagGroup> currentTag).elements);
+			}else{
 				console.log('UserInput > currentTag type:', currentTag.type);
+				this.buildControlElements([currentTag]);
+			}
+		}
+
+		private buildControlElements(tags: Array<io.space10.ITag>){
+			//TODO: Remove old elements..
+			if(this.controlElements){
+				while(this.controlElements.length > 0)
+					this.controlElementsElement.removeChild(this.controlElements.pop().el);
+			}
+
+			this.controlElements = [];
+
+			for (var i = 0; i < tags.length; i++) {
+				var tag: io.space10.ITag = tags[i];
+				
+				console.log(this, 'tag.type:', tag.type);
+				switch(tag.type){
+					case "radio" :
+						this.controlElements.push(new RadioButton({}));
+						break;
+					case "checkbox" :
+						// TODO: add checkbox tag..
+						break;
+					case "select" :
+						// TODO: add select sub tag..
+						break;
+					case "texts" :
+						// nothing to add.
+						break;
+				}
+
+				if(tag.type != "text")
+					this.controlElementsElement.appendChild(this.controlElements[this.controlElements.length - 1].el);
+			}
 		}
 
 		private onKeyUp(event: KeyboardEvent){
@@ -95,7 +136,7 @@ namespace io.space10 {
 		// override
 		public getTemplate () : string {
 			return `<s10cui-input>
-				<s10cui-input-control-elements>control elements</s10cui-input-control-elements>
+				<s10cui-input-control-elements></s10cui-input-control-elements>
 				<input type='input'>
 			</s10cui-input>
 			`;
