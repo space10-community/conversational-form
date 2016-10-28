@@ -57,7 +57,7 @@ namespace io.space10 {
 			console.log('TagGroup registered:', this.elements[0].type, this);
 		}
 
-		public setTagValueAndIsValid(value: string | number):boolean{
+		public setTagValueAndIsValid(value: string | ITag):boolean{
 			let isValid: boolean = true;
 
 			if(value == ""){
@@ -65,6 +65,18 @@ namespace io.space10 {
 			}
 
 			// TODO: Set value on fields!!!
+			const groupType: string = this.elements[0].type;
+			for (var i = 0; i < this.elements.length; i++) {
+				var tag: ITag = this.elements[i];
+				if(tag == value){
+					console.log("TAG", tag)
+					if(groupType == "radio")
+						(<HTMLInputElement> tag.domElement).checked = true;
+				}else{
+					if(groupType == "radio")
+						(<HTMLInputElement> tag.domElement).checked = false;
+				}
+			}
 
 			return isValid;
 		}

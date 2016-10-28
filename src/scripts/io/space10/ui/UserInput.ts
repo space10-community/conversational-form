@@ -49,7 +49,7 @@ namespace io.space10 {
 			document.addEventListener(io.space10.BasicControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 		}
 
-		public getValue():string{
+		public getInputValue():string{
 			return this.inputElement.value;
 		}
 
@@ -126,23 +126,25 @@ namespace io.space10 {
 		}
 
 		private onControlElementSubmit(event: CustomEvent){
+			// when ex a RadioButton is clicked..
 			var tag: io.space10.ITag = event.detail;
 			console.log('UserInput onControlElementSubmit:', tag);
 
 			document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
-				detail: tag.title
+				detail: tag
 			}));
 		}
 
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 13){
+				// ENTER key
+
 				if(this.currentTag.type != "group"){
-					// for none groups
-					// ENTER key
+					// for NONE groups
 					this.inputElement.setAttribute("disabled", "disabled");
 
 					document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
-						detail: this.getValue()
+						detail: this.getInputValue()
 					}));
 				}else{
 					// TODO: When a group and enter is pressed?
@@ -150,13 +152,13 @@ namespace io.space10 {
 				}
 			}else{
 				document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.KEY_CHANGE, {
-					detail: this.getValue()
+					detail: this.getInputValue()
 				}));
 
 				if(this.currentTag.type == "group" && this.controlElements.length > 0){
 					// filter this.controlElements.........
 					console.log('filter control elements:', this.controlElements);
-					console.log('with value:', this.getValue());
+					console.log('with value:', this.getInputValue());
 				}
 			}
 		}

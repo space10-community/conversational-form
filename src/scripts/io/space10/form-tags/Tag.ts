@@ -25,7 +25,7 @@ namespace io.space10 {
 		name: string,
 		title: string,
 		question: string,
-		setTagValueAndIsValid(value: string | number):boolean;
+		setTagValueAndIsValid(value: string | ITag):boolean;
 
 		value:string;
 	}
@@ -163,7 +163,7 @@ namespace io.space10 {
 
 		}
 
-		public setTagValueAndIsValid(value: string | number):boolean{
+		public setTagValueAndIsValid(value: string | ITag):boolean{
 			// this sets the value of the tag in the DOM
 			// validation
 			let isValid: boolean = true;

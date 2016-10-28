@@ -208,8 +208,7 @@ namespace io.space10 {
 			s10context.appendChild(this.chatList.el);
 
 			// CUI UI
-			this.cuiInput = new UserInput({
-			});
+			this.cuiInput = new UserInput({});
 			s10context.appendChild(this.cuiInput.el);
 
 			// var b = new Button({});

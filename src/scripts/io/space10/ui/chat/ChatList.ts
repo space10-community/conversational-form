@@ -43,8 +43,13 @@ namespace io.space10 {
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
-			if(this.currentResponse)
-				this.currentResponse.setValue(event.detail);
+			if(this.currentResponse){
+				const response: string | ITag = event.detail;
+				if(response.toString() == "[object Object]")
+					this.currentResponse.setValue((<ITag> response).title);
+				else
+					this.currentResponse.setValue((<string> response));
+			}
 			else{
 				// this should never happen..
 				throw new Error("No current response??")

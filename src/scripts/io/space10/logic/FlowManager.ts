@@ -42,7 +42,7 @@ namespace io.space10 {
 
 		public userInputSubmit(event: CustomEvent){
 			// TODO: Handle flow things??
-			if(this.currentTag.setTagValueAndIsValid(event.detail)){
+			if(this.currentTag.setTagValueAndIsValid(<string | ITagGroup> event.detail)){
 				document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.USER_INPUT_UPDATE, {
 					detail: event.detail //input value
 				}));
