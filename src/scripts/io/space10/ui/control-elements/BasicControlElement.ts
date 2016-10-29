@@ -19,7 +19,7 @@ namespace io.space10 {
 	// class
 	export class BasicControlElement extends BasicElement implements IBasicControlElement{
 		public el: Element;
-		public referenceTag: io.space10.ITag;
+		public referenceTag: ITag;
 
 		protected setData(options: IBasicControlElementOptions){
 			this.referenceTag = options.referenceTag;

@@ -24,7 +24,7 @@ namespace io.space10 {
 	}
 
 	export class Space10CUI{
-		public dictionary: io.space10.Dictionary;
+		public dictionary: Dictionary;
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
@@ -40,31 +40,25 @@ namespace io.space10 {
 
 			this.submitCallback = options.submitCallback;
 			this.formEl = options.formEl;
-			if(options.dictionaryData || options.dictionaryAI){
-				this.dictionary = new io.space10.Dictionary({
-					data: options.dictionaryData,
-					aiQuestions: options.dictionaryAI,
-					userImage: options.userImage,
-				});
-			}else{
-				this.dictionary = new io.space10.Dictionary({
-					userImage: options.userImage,
-				});
-			}
+
+			// 
+			this.dictionary = new Dictionary({
+				data: options.dictionaryData,
+				aiQuestions: options.dictionaryAI,
+				userImage: options.userImage,
+			});
+			
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
 			setTimeout(() => this.init(), 0);
 		}
 
-		public init(): io.space10.Space10CUI{
+		public init(): Space10CUI{
 			const configTag: any = document.getElementById("s10-cui");
 
-			if(configTag.getAttribute("development") != undefined){
-				console.log("in development...");
-			}else{
-				console.log("NOT in development...");
-				// inject production css...
+			if(configTag.getAttribute("development") == undefined){
+				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("style");
 				const cdnUrl: string = "http://CDN/GITHUB URL.../";
@@ -169,7 +163,7 @@ namespace io.space10 {
 				for (let group in groups){
 					if(groups[group].length > 1){
 						// only if more elements with same name..
-						const tagGroup: io.space10.TagGroup = new io.space10.TagGroup({
+						const tagGroup: TagGroup = new TagGroup({
 							elements: groups[group]
 							// el: element
 							// validationCallback

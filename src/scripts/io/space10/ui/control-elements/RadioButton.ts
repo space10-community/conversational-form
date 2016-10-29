@@ -5,7 +5,7 @@ namespace io.space10 {
 	// interface
 
 	// class
-	export class RadioButton extends io.space10.Button {
+	export class RadioButton extends Button {
 		// override
 		public getTemplate () : string {
 			return `<s10cui-radio-button class="s10cui-button">

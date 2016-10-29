@@ -11,7 +11,7 @@ namespace io.space10 {
 	}
 
 	// class
-	export class ChatResponse extends io.space10.BasicElement {
+	export class ChatResponse extends BasicElement {
 		private response: string;
 		private image: string;
 		private isAIReponse: boolean;
@@ -41,7 +41,7 @@ namespace io.space10 {
 			}
 		}
 
-		protected setData(options: IChatResponseOptions){
+		protected setData(options: IChatResponseOptions):void{
 			this.image = options.image;
 			this.response = "";
 			this.isAIReponse = options.isAIReponse;
@@ -53,7 +53,7 @@ namespace io.space10 {
 
 				if(this.isAIReponse){
 					// ...
-					setTimeout(() => this.setValue(options.response), io.space10.Helpers.lerp(Math.random(), 250, 600));
+					setTimeout(() => this.setValue(options.response), Helpers.lerp(Math.random(), 500, 900));
 				}
 			}, 0);
 		}

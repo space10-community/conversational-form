@@ -26,7 +26,7 @@ namespace io.space10 {
 		private stepTimer: number = 0;
 		private userInputSubmitCallback: () => void;
 
-		public get currentTag(): io.space10.ITag | io.space10.ITagGroup {
+		public get currentTag(): ITag | ITagGroup {
 			return this.tags[this.step];
 		}
 
@@ -37,13 +37,13 @@ namespace io.space10 {
 			this.maxSteps = this.tags.length;
 
 			this.userInputSubmitCallback = this.userInputSubmit.bind(this);
-			document.addEventListener(io.space10.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
+			document.addEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 		}
 
 		public userInputSubmit(event: CustomEvent){
 			// TODO: Handle flow things??
 			if(this.currentTag.setTagValueAndIsValid(<string | ITagGroup> event.detail)){
-				document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.USER_INPUT_UPDATE, {
+				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
 					detail: event.detail //input value
 				}));
 
@@ -51,7 +51,7 @@ namespace io.space10 {
 				setTimeout(() => this.nextStep(), 1000);
 			}else{
 				console.warn("Value not valid!!!", event.detail);
-				document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.USER_INPUT_INVALID, {
+				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
 					detail: event.detail //input value
 				}));
 			}
@@ -78,7 +78,7 @@ namespace io.space10 {
 		}
 
 		public remove(){
-			document.removeEventListener(io.space10.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
+			document.removeEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 			this.userInputSubmitCallback = null;
 		}
 
@@ -92,7 +92,7 @@ namespace io.space10 {
 		}
 
 		private showStep(){
-			document.dispatchEvent(new CustomEvent(io.space10.FlowEvents.FLOW_UPDATE, {
+			document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 				detail: this.currentTag
 			}));
 		}

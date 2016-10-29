@@ -5,7 +5,7 @@ namespace io.space10 {
 	// interface
 
 	// class
-	export class Button extends io.space10.BasicControlElement {
+	export class Button extends BasicControlElement {
 		private clickCallback: () => void;
 
 		constructor(options: IBasicControlElementOptions){

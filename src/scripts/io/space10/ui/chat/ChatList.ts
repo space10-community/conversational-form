@@ -8,26 +8,26 @@ namespace io.space10 {
 	// interface
 
 	// class
-	export class ChatList extends io.space10.BasicElement {
+	export class ChatList extends BasicElement {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
-		private currentResponse: io.space10.ChatResponse;
+		private currentResponse: ChatResponse;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
-			document.addEventListener(io.space10.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			// user input update
 			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
-			document.addEventListener(io.space10.FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 
 			// user input update
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
-			document.addEventListener(io.space10.UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -57,7 +57,7 @@ namespace io.space10 {
 		}
 
 		private onFlowUpdate(event: CustomEvent){
-			const currentTag: io.space10.ITag | io.space10.ITagGroup = <io.space10.ITag | io.space10.ITagGroup> event.detail;
+			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 
 			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
@@ -65,7 +65,7 @@ namespace io.space10 {
 
 			// if(currentTag.type == "group"){
 			// 	console.log("AI group reponse....:", currentTag);
-			// 	const groupTagType: string = (<io.space10.ITagGroup> currentTag).getGroupTagType();
+			// 	const groupTagType: string = (<ITagGroup> currentTag).getGroupTagType();
 			// 	aiReponse = Dictionary.getAIResponse(groupTagType);
 			// }else{
 			// 	console.log("AI tag reponse....:", currentTag);
@@ -81,7 +81,7 @@ namespace io.space10 {
 		}
 
 		private createResponse(isAIReponse: boolean, value: string = null, image: string = Dictionary.get("user-image")){
-			this.currentResponse = new io.space10.ChatResponse({
+			this.currentResponse = new ChatResponse({
 				// image: null,
 				isAIReponse: isAIReponse,
 				response: value,// || input-response,
@@ -94,14 +94,13 @@ namespace io.space10 {
 
 		public getTemplate () : string {
 			return `<s10cui-chat type='pluto'>
-						<s10cui-input-control-elements></s10cui-input-control-elements>
 					</s10cui-chat>`;
 		}
 
 		public remove(){
-			document.removeEventListener(io.space10.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
-			document.addEventListener(io.space10.FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
 			super.remove();
 		}

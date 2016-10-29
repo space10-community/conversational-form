@@ -16,7 +16,7 @@ namespace io.space10 {
 	}
 
 	// class
-	export class UserInput extends io.space10.BasicElement {
+	export class UserInput extends BasicElement {
 		public el: Element;
 
 		private inputElement: HTMLInputElement;
@@ -27,7 +27,7 @@ namespace io.space10 {
 		private controlElements: Array<IBasicElement>;
 		private controlElementsElement: Element;
 
-		private currentTag: io.space10.ITag | io.space10.ITagGroup;
+		private currentTag: ITag | ITagGroup;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -38,12 +38,12 @@ namespace io.space10 {
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 
 			//<s10cui-input-control-elements> is defined in the ChatList.ts
-			this.controlElementsElement = document.getElementById("s10-cui-element").getElementsByTagName("s10cui-input-control-elements")[0];
+			this.controlElementsElement = this.el.getElementsByTagName("s10cui-input-control-elements")[0];
 			// console.log("======", document.getElementById("s10-cui"))
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
-			document.addEventListener(io.space10.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			this.inputInvalidCallback = this.inputInvalid.bind(this);
 			document.addEventListener(io.space10.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
@@ -173,6 +173,7 @@ namespace io.space10 {
 		// override
 		public getTemplate () : string {
 			return `<s10cui-input>
+				<s10cui-input-control-elements></s10cui-input-control-elements>
 				<input type='input'>
 			</s10cui-input>
 			`;

@@ -200,24 +200,22 @@ namespace io.space10 {
 			if(this.domElement.getAttribute("cui-questions")){
 				this.questions = this.domElement.getAttribute("cui-questions").split("|");
 			}else{
-				// questions not set, so find
-
-				// TODO: clean up the logic
-				const elId: string = this.domElement.getAttribute("id");
-				if(this.domElement.parentNode){
+				// questions not set, so find it in the DOM
+				const parentDomNode: Node = this.domElement.parentNode;
+				if(parentDomNode){
+					const elId: string = this.domElement.getAttribute("id");
 					// step backwards and check for label tag.
-					let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> this.domElement.parentNode).getElementsByTagName("label");
+					let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
 					if(labels.length == 0){
-						// check if innerText..
-						let innerText: string = (<any>this.domElement.parentNode).innerText;
-						
-						// step backwards and check for label tag.
+						// check for innerText 
+						const innerText: string = (<any>parentDomNode).innerText;
 						if(innerText && innerText.length > 0)
-							labels = [(<HTMLLabelElement>this.domElement.parentNode)];
+							labels = [(<HTMLLabelElement>parentDomNode)];
 					}
 
 					if(labels.length > 0){
+						// if <label> are found then add them to the questions array
 						this.questions = [];
 						for (var i = 0; i < labels.length; i++) {
 							var label: HTMLLabelElement = labels[i];
@@ -226,7 +224,7 @@ namespace io.space10 {
 							}
 						}
 					}else{
-						// we don't set a default value for questions as this will result in a fallback response from Dictionary
+						// no labels found, so set default
 						this.questions = [Dictionary.getAIResponse(this.type)];
 					}
 
