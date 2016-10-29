@@ -80,7 +80,7 @@ namespace io.space10 {
 				isValid = false;
 			}
 
-			// TODO: Set value on fields!!!
+			// TODO: Set value on fields
 			const groupType: string = this.elements[0].type;
 			for (var i = 0; i < this.elements.length; i++) {
 				var tag: ITag = this.elements[i];

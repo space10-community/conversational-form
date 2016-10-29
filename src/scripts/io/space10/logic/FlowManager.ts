@@ -45,7 +45,6 @@ namespace io.space10 {
 		public userInputSubmit(event: CustomEvent){
 			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
-			// TODO: Handle flow things??
 			if(this.currentTag.setTagValueAndIsValid(<string | ITag> event.detail)){
 				Space10CUI.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, event.detail)
 
@@ -66,7 +65,6 @@ namespace io.space10 {
 		}
 
 		public start(){
-			//TODO: Add intro screen?
 			this.validateStepAndUpdate();
 		}
 

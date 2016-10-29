@@ -86,7 +86,6 @@ namespace io.space10 {
 			this.inputElement.focus();
 
 			this.currentTag = <ITag | ITagGroup> event.detail;
-			// TODO: Show UI according to what kind of tag it is..
 			if(this.currentTag.type == "group"){
 				console.log('UserInput > currentTag is a group of types:', (<ITagGroup> this.currentTag).elements[0].type);
 				this.buildControlElements((<ITagGroup> this.currentTag).elements);
