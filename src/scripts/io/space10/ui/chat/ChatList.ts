@@ -12,6 +12,7 @@ namespace io.space10 {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
+		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
 
 		constructor(options: IBasicElementOptions){
@@ -28,6 +29,16 @@ namespace io.space10 {
 			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+
+			// user input key change
+			this.onControlElementsAddedToUserInputCallback = this.onControlElementsAddedToUserInput.bind(this);
+			document.addEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
+		}
+
+		private onControlElementsAddedToUserInput(event: CustomEvent){
+			const dto: ControlElementsDTO = event.detail;
+			console.log((<any>this.constructor).name, 'onControlElementsAddedToUserInput:', dto);
+			this.el.style.paddingBottom = (dto.height + 60) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -110,6 +121,8 @@ namespace io.space10 {
 			this.userInputUpdateCallback = null;
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 			this.onInputKeyChangeCallback = null
+			document.removeEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
+			this.onControlElementsAddedToUserInputCallback = null
 			super.remove();
 		}
 	}

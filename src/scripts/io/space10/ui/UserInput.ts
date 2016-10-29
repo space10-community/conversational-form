@@ -9,6 +9,10 @@ namespace io.space10 {
 	// export interface IUserInputOptions extends IBasicElementOptions{
 
 	// }
+	
+	export interface ControlElementsDTO{
+		height: number;
+	}
 
 	export const UserInputEvents = {
 		SUBMIT: "cui-input-user-input-submit",
@@ -16,11 +20,14 @@ namespace io.space10 {
 
 		KEY_CHANGE: "cui-input-key-change",
 		//	detail: string
+
+		CONTROL_ELEMENTS_ADDED: "cui-input-control-elements added",
+		//	detail: string
 	}
 
 	// class
 	export class UserInput extends BasicElement {
-		public el: Element;
+		public el: HTMLElement;
 
 		private inputElement: HTMLInputElement;
 		private flowUpdateCallback: () => void;
@@ -28,7 +35,7 @@ namespace io.space10 {
 		private onControlElementSubmitCallback: () => void;
 		private errorTimer: number = 0;
 		private controlElements: Array<IBasicElement>;
-		private controlElementsElement: Element;
+		private controlElementsElement: HTMLElement;
 
 		private currentTag: ITag | ITagGroup;
 
@@ -41,7 +48,7 @@ namespace io.space10 {
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 
 			//<s10cui-input-control-elements> is defined in the ChatList.ts
-			this.controlElementsElement = this.el.getElementsByTagName("s10cui-input-control-elements")[0];
+			this.controlElementsElement = <HTMLElement> this.el.getElementsByTagName("s10cui-input-control-elements")[0];
 			// console.log("======", document.getElementById("s10-cui"))
 
 			// flow update
@@ -131,7 +138,17 @@ namespace io.space10 {
 				const element: IBasicElement = this.controlElements[this.controlElements.length - 1];
 				if(element)
 					this.controlElementsElement.appendChild(element.el);
+				
 			}
+
+			const controlElementsAddedDTO: ControlElementsDTO = {
+				height: this.controlElementsElement.offsetHeight,
+			};
+
+			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
+			document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
+				detail: controlElementsAddedDTO
+			}));
 		}
 
 		private onControlElementSubmit(event: CustomEvent){
@@ -139,7 +156,6 @@ namespace io.space10 {
 
 			// when ex a RadioButton is clicked..
 			const tag: ITag = event.detail;
-
 
 			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, tag);
 			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {

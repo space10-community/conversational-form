@@ -14,10 +14,13 @@ s10cui-chat
 	overflow-y scroll
 
 	// flow children to bottom
-	display flex;
-	flex-flow column nowrap;
-	justify-content flex-end;
-	align-items baseline;
+	display flex
+	flex-flow column nowrap
+	justify-content flex-end
+	align-items baseline
+
+	will-change padding-bottom
+	transition padding-bottom $anim-time * 0.5 $anim-easeOut
 
 	// TODO: Style scrollbars...
 	&::-webkit-scrollbar

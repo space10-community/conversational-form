@@ -81,14 +81,14 @@ s10cui-chat-response
 		transform-origin 50% 50%
 		transform scale(0.001, 0.001) translateY(50px)
 		will-change transform, opacity
-		transition transform $anim-time * 0.5 $anim-easeOutBack $anim-time * 0.2, opacity $anim-time * 0.5 $anim-easeOut $anim-time * 0.2
+		transition transform $anim-time * 0.5 $anim-easeOutBack $anim-time * 0.25, opacity $anim-time * 0.5 $anim-easeOut $anim-time * 0.25
 
 	&.show
 		text
 			transform translateY(0px) translateX(0px) scale(1, 1)
 			opacity 1
 			transition-timing-function $anim-easeOutBack, $anim-easeOut, $anim-easeOut
-			transition-delay $anim-time * 0.33, $anim-time * 0.33, 0s
+			transition-delay $anim-time * 0.25, $anim-time * 0.25, 0s
 
 			&[value-added]
 				will-change auto

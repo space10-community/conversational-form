@@ -6,14 +6,14 @@ namespace io.space10 {
 	}
 
 	export interface IBasicElement{
-		el: Element;
+		el: HTMLElement;
 		// template, can be overwritten ...
 		getTemplate(): string;
 	}
 
 	// class
 	export class BasicElement implements IBasicElement{
-		public el: Element;
+		public el: HTMLElement;
 
 		constructor(options: IBasicElementOptions){
 			this.setData(options);
@@ -27,7 +27,7 @@ namespace io.space10 {
 		protected createElement(): Element{
 			var template: HTMLTemplateElement = document.createElement('template');
 			template.innerHTML = this.getTemplate();
-			this.el = <Element> template.content.firstChild;
+			this.el = <HTMLElement> template.content.firstChild;
 			return this.el;
 		}
 
