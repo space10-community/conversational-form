@@ -25,12 +25,14 @@ namespace io.space10 {
 			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
 			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 
-			// user input update
+			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 		}
 
 		private onInputKeyChange(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			if(this.currentResponse){
 				const inputFieldStr: string = event.detail;
 				if(inputFieldStr.length == 0){
@@ -43,6 +45,8 @@ namespace io.space10 {
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			if(this.currentResponse){
 				const response: string | ITag = event.detail;
 				if(response.toString() == "[object Object]")
@@ -57,6 +61,8 @@ namespace io.space10 {
 		}
 
 		private onFlowUpdate(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 
 			// AI response
@@ -100,8 +106,10 @@ namespace io.space10 {
 		public remove(){
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
-			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
+			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+			this.onInputKeyChangeCallback = null
 			super.remove();
 		}
 	}

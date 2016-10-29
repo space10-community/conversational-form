@@ -205,9 +205,7 @@ namespace io.space10 {
 			this.cuiInput = new UserInput({});
 			s10context.appendChild(this.cuiInput.el);
 
-			// var b = new Button({});
-			// s10context.appendChild(b.el);
-			setTimeout(() =>{
+			setTimeout(() => {
 				s10context.classList.add("s10-cui--show")
 				this.flowManager.start();
 			}, 0);
@@ -215,6 +213,19 @@ namespace io.space10 {
 
 		public remove(){
 			console.log(this, 'remove() Space10 CUI');
+		}
+
+		// to illustrate the event flow of the app
+		public static ILLUSTRATE_APP_FLOW: boolean = true;
+		public static illustrateFlow(classRef: any, type: string, eventType: string, detail: any = null){
+			// Space10CUI.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail);
+			// Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
+			if(Space10CUI.ILLUSTRATE_APP_FLOW){
+				console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event type:", type);
+				if(detail)
+					console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event detail:", detail);
+			}
 		}
 	}
 }

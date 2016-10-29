@@ -1,14 +1,14 @@
-/// <reference path="BasicControlElement.ts"/>
+/// <reference path="ControlElement.ts"/>
 
 // namespace
 namespace io.space10 {
 	// interface
 
 	// class
-	export class Button extends BasicControlElement {
+	export class Button extends ControlElement {
 		private clickCallback: () => void;
 
-		constructor(options: IBasicControlElementOptions){
+		constructor(options: IControlElementOptions){
 			super(options);
 
 			this.clickCallback = this.onClick.bind(this);

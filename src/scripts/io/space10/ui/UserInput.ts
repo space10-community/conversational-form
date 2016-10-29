@@ -12,7 +12,10 @@ namespace io.space10 {
 
 	export const UserInputEvents = {
 		SUBMIT: "cui-input-user-input-submit",
+		//	detail: string
+
 		KEY_CHANGE: "cui-input-key-change",
+		//	detail: string
 	}
 
 	// class
@@ -46,10 +49,10 @@ namespace io.space10 {
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			this.inputInvalidCallback = this.inputInvalid.bind(this);
-			document.addEventListener(io.space10.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+			document.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 
 			this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this);
-			document.addEventListener(io.space10.BasicControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+			document.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 		}
 
 		public getInputValue():string{
@@ -57,6 +60,8 @@ namespace io.space10 {
 		}
 
 		private inputInvalid(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			this.inputElement.setAttribute("error", "");
 			this.inputElement.setAttribute("disabled", "disabled");
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
@@ -71,6 +76,8 @@ namespace io.space10 {
 		}
 
 		private onFlowUpdate(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			clearTimeout(this.errorTimer);
 			this.inputElement.removeAttribute("error");
 			this.inputElement.removeAttribute("disabled");
@@ -78,18 +85,18 @@ namespace io.space10 {
 			this.resetValue();
 			this.inputElement.focus();
 
-			this.currentTag = <io.space10.ITag | io.space10.ITagGroup> event.detail;
+			this.currentTag = <ITag | ITagGroup> event.detail;
 			// TODO: Show UI according to what kind of tag it is..
 			if(this.currentTag.type == "group"){
-				console.log('UserInput > currentTag is a group of types:', (<io.space10.ITagGroup> this.currentTag).elements[0].type);
-				this.buildControlElements((<io.space10.ITagGroup> this.currentTag).elements);
+				console.log('UserInput > currentTag is a group of types:', (<ITagGroup> this.currentTag).elements[0].type);
+				this.buildControlElements((<ITagGroup> this.currentTag).elements);
 			}else{
 				console.log('UserInput > currentTag type:', this.currentTag.type);
 				this.buildControlElements([this.currentTag]);
 			}
 		}
 
-		private buildControlElements(tags: Array<io.space10.ITag>){
+		private buildControlElements(tags: Array<ITag>){
 			// remove old elements
 			if(this.controlElements){
 				while(this.controlElements.length > 0)
@@ -99,7 +106,7 @@ namespace io.space10 {
 			this.controlElements = [];
 
 			for (var i = 0; i < tags.length; i++) {
-				var tag: io.space10.ITag = tags[i];
+				var tag: ITag = tags[i];
 				
 				// console.log(this, 'UserInput > tag.type:', tag.type);
 				switch(tag.type){
@@ -122,23 +129,28 @@ namespace io.space10 {
 						break;
 				}
 
-				const element: io.space10.IBasicElement = this.controlElements[this.controlElements.length - 1];
+				const element: IBasicElement = this.controlElements[this.controlElements.length - 1];
 				if(element)
 					this.controlElementsElement.appendChild(element.el);
 			}
 		}
 
 		private onControlElementSubmit(event: CustomEvent){
-			// when ex a RadioButton is clicked..
-			var tag: io.space10.ITag = event.detail;
-			console.log('UserInput onControlElementSubmit:', tag);
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
-			document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
+			// when ex a RadioButton is clicked..
+			const tag: ITag = event.detail;
+
+
+			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, tag);
+			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 				detail: tag
 			}));
 		}
 
 		private onKeyUp(event: KeyboardEvent){
+			const value: string = this.getInputValue();
+
 			if(event.keyCode == 13){
 				// ENTER key
 
@@ -146,22 +158,24 @@ namespace io.space10 {
 					// for NONE groups
 					this.inputElement.setAttribute("disabled", "disabled");
 
-					document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.SUBMIT, {
-						detail: this.getInputValue()
+					Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
+					document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
+						detail: value
 					}));
 				}else{
 					// TODO: When a group and enter is pressed?
 					// check if value has been choose? Can submit without any values..
 				}
 			}else{
-				document.dispatchEvent(new CustomEvent(io.space10.UserInputEvents.KEY_CHANGE, {
-					detail: this.getInputValue()
+				Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
+				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
+					detail: value
 				}));
 
 				if(this.currentTag.type == "group" && this.controlElements.length > 0){
 					// filter this.controlElements.........
 					console.log('filter control elements:', this.controlElements);
-					console.log('with value:', this.getInputValue());
+					console.log('with value:',value);
 				}
 			}
 		}

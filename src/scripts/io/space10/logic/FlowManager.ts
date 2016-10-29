@@ -11,7 +11,9 @@ namespace io.space10 {
 	export const FlowEvents = {
 		USER_INPUT_UPDATE: "cui-flow-user-input-update",
 		USER_INPUT_INVALID: "cui-flow-user-input-invalid",
+		//	detail: string
 		FLOW_UPDATE: "cui-flow-update",
+		//	detail: ITag | ITagGroup
 	}
 
 	// class
@@ -41,18 +43,24 @@ namespace io.space10 {
 		}
 
 		public userInputSubmit(event: CustomEvent){
+			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
+
 			// TODO: Handle flow things??
-			if(this.currentTag.setTagValueAndIsValid(<string | ITagGroup> event.detail)){
+			if(this.currentTag.setTagValueAndIsValid(<string | ITag> event.detail)){
+				Space10CUI.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, event.detail)
+
 				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-					detail: event.detail //input value
+					detail: event.detail //UserInput value
 				}));
 
 				// goto next step when user has answered
 				setTimeout(() => this.nextStep(), 1000);
 			}else{
-				console.warn("Value not valid!!!", event.detail);
+				Space10CUI.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail)
+
+				// Value not valid
 				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-					detail: event.detail //input value
+					detail: event.detail //UserInput value
 				}));
 			}
 		}
@@ -92,6 +100,8 @@ namespace io.space10 {
 		}
 
 		private showStep(){
+			Space10CUI.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag)
+
 			document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 				detail: this.currentTag
 			}));
