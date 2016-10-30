@@ -76,6 +76,11 @@
 
 		<script
 			type="text/javascript"
+			src="../build/io/space10/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
 			src="../build/io/space10/ui/UserInput.js"
 		></script>
 
@@ -99,6 +104,7 @@
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/s10cui.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-button.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-checkbox-button.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/s10cui-input.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat-response.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat.css"/>
@@ -185,15 +191,42 @@
 						<div class="fieldset">
 							<input type="hidden" name="billing[address_id]" value="" id="billing:address_id">
 							<ul>
+
+								<li class="control">
+									<label>
+										<input type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox"> Flueben 1
+									</label>
+									<label>
+										<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox"> Flueben 2
+									</label>
+									<label>
+										<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox"> Flueben 3
+									</label>
+									<label>
+										<input type="checkbox" name="account-information" id="account_information-flue-4" value="0" class="checkbox"> Flueben 4
+									</label>
+								</li>
+
 								<li class="fields">
 									<div class="field radiocontrol">
 										<label class="checkbox">
 											<input type="radio" class="v-middle" name="customer_or_business" value="0" checked="checked">
 											<span class="v-middle">Kunde</span>
 										</label>
+
 										<label class="checkbox">
 											<input type="radio" class="v-middle" name="customer_or_business" value="1">
 											<span class="v-middle">Business</span>
+										</label>
+
+										<label class="checkbox">
+											<input type="radio" class="v-middle" name="customer_or_business" value="1">
+											<span class="v-middle">Business & Kunde</span>
+										</label>
+
+										<label class="checkbox">
+											<input type="radio" class="v-middle" name="customer_or_business" value="1">
+											<span class="v-middle">None of the above</span>
 										</label>
 									</div>
 								</li>
@@ -211,15 +244,6 @@
 										</div>
 									</div>
 									</li>
-
-								<li class="control">
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-1" value="1" class="checkbox"> Flueben 1
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox"> Flueben 2
-									</label>
-								</li>
 								
 								<li class="fields"><div class="customer-name">
 					<div class="field name-firstname">

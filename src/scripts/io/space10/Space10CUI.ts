@@ -222,7 +222,7 @@ namespace io.space10 {
 			// Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
 			if(Space10CUI.ILLUSTRATE_APP_FLOW){
-				console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event type:", type);
+				console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event type:", eventType);
 				if(detail)
 					console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event detail:", detail);
 			}

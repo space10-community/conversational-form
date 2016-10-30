@@ -1,6 +1,7 @@
 /// <reference path="BasicElement.ts"/>
 /// <reference path="control-elements/Button.ts"/>
 /// <reference path="control-elements/RadioButton.ts"/>
+/// <reference path="control-elements/CheckboxButton.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
 
 // namespace
@@ -123,6 +124,9 @@ namespace io.space10 {
 						break;
 					case "checkbox" :
 						// TODO: add checkbox tag..
+						this.controlElements.push(new CheckboxButton({
+							referenceTag: tag
+						}));
 						console.log("UserInput buildControlElements:", "checkbox");
 						break;
 					case "select" :

@@ -38,7 +38,7 @@ namespace io.space10 {
 		private onControlElementsAddedToUserInput(event: CustomEvent){
 			const dto: ControlElementsDTO = event.detail;
 			console.log((<any>this.constructor).name, 'onControlElementsAddedToUserInput:', dto);
-			this.el.style.paddingBottom = (dto.height + 60) + "px";
+			this.el.style.paddingBottom = (dto.height + 40) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){

@@ -86,10 +86,10 @@ namespace io.space10 {
 				var tag: ITag = this.elements[i];
 				if(tag == value){
 					// console.log("TAG", tag)
-					if(groupType == "radio")
+					if(groupType == "radio" || groupType == "checkbox")
 						(<HTMLInputElement> tag.domElement).checked = true;
 				}else{
-					if(groupType == "radio")
+					if(groupType == "radio" || groupType == "checkbox")
 						(<HTMLInputElement> tag.domElement).checked = false;
 				}
 			}
