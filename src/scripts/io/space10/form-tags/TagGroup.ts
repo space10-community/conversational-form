@@ -84,13 +84,13 @@ namespace io.space10 {
 			const groupType: string = this.elements[0].type;
 			for (var i = 0; i < this.elements.length; i++) {
 				var tag: ITag = this.elements[i];
-				if(tag == value){
-					// console.log("TAG", tag)
-					if(groupType == "radio" || groupType == "checkbox")
-						(<HTMLInputElement> tag.domElement).checked = true;
-				}else{
-					if(groupType == "radio" || groupType == "checkbox")
-						(<HTMLInputElement> tag.domElement).checked = false;
+				switch(groupType){
+					case "radio" :
+						(<HTMLInputElement> tag.domElement).checked = tag == value;
+						break;
+					case "checkbox" :
+						(<HTMLInputElement> tag.domElement).checked = tag.value == "1";
+						break;
 				}
 			}
 

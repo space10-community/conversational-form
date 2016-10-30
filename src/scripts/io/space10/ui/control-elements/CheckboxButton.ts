@@ -8,15 +8,15 @@ namespace io.space10 {
 	export class CheckboxButton extends Button {
 
 		protected onClick(event: MouseEvent){
-			const checked: boolean = this.el.hasAttribute("checked");
-			console.log((<any>this.constructor).name, 'onClick:', this.el.hasAttribute("checked"));
+			const checked: boolean = this.referenceTag.value == "1";
 			if(checked)
 				this.el.removeAttribute("checked");
 			else
 				this.el.setAttribute("checked", "");
 			
+			this.referenceTag.setTagValueAndIsValid(!checked ? "1" : "0");
 			
-			// super.onClick(event);
+			super.onClick(event);
 		}
 
 		// override
