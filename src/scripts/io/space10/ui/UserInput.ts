@@ -226,8 +226,8 @@ namespace io.space10 {
 					// for NONE groups
 					this.doSubmit();
 				}else{
-					// TODO: When a group and enter is pressed?
-					// check if value has been choose? Can submit without any values..
+					// for groups, we expect that there is always a default value set
+					this.doSubmit();
 				}
 			}else{
 				Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
