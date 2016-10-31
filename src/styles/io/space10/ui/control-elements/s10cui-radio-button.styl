@@ -1,6 +1,7 @@
 @import "nib"
 @import "rupture"
+@import "../../s10cui-variables"
 
-// s10cui-radio-button.s10cui-button
-// 	&:hover
-// 		background inherit
+s10cui-radio-button.s10cui-button
+	&[checked="checked"]
+		background alpha($color-dark-blue, 10%)

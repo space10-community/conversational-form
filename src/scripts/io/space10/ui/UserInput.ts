@@ -70,16 +70,35 @@ namespace io.space10 {
 
 		public getInputValue():string{
 			let value: string | Array<string> = this.inputElement.value;
-			if(this.controlElements && this.controlElements.length > 0 && this.controlElements[0].type == "CheckboxButton"){
-				value = [];
-				for (var i = 0; i < this.controlElements.length; i++) {
-					var element: CheckboxButton = <CheckboxButton> this.controlElements[i];
-					if(element.checked)
-						value.push(element.value);
-				}
 
-				value = value.join(", ");
+			// check for values on control elements as they should overwrite the input value.
+			if(this.controlElements && this.controlElements.length > 0){
+				switch(this.controlElements[0].type){
+					case "CheckboxButton" :
+						value = [];
+						for (var i = 0; i < this.controlElements.length; i++) {
+							let element: CheckboxButton = <CheckboxButton> this.controlElements[i];
+							if(element.checked)
+								value.push(element.value);
+						}
+
+						value = value.join(", ");
+						break;
+
+					case "RadioButton" :
+						value = "";
+						for (var i = 0; i < this.controlElements.length; i++) {
+							let element: RadioButton = <RadioButton> this.controlElements[i];
+
+							if(element.checked)
+								value = <string> element.value;
+							// else
+							// 	element
+						}
+						break;
+				}
 			}
+
 			return value;
 		}
 
@@ -178,8 +197,19 @@ namespace io.space10 {
 			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
 			// when ex a RadioButton is clicked..
-			const tag: ITag = event.detail;
+			const controlElement: IControlElement = <IControlElement> event.detail;
 
+			console.log((<any>this.constructor).name, 'hmmmmm:', controlElement);
+			if(controlElement.type == "RadioButton"){
+				// uncheck other buttons...
+				for (let i = 0; i < this.controlElements.length; i++) {
+					let element: RadioButton = <RadioButton>this.controlElements[0];
+					if(element != controlElement)
+						element.checked = false;
+				}
+			}
+
+			const tag: ITag = controlElement.referenceTag;
 			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, tag);
 			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 				detail: tag

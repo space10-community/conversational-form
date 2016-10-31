@@ -40,7 +40,7 @@ namespace io.space10 {
 		public onChoose(){
 			Space10CUI.illustrateFlow(this, "dispatch", ControlElementEvents.SUBMIT_VALUE, this.referenceTag);
 			document.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
-				detail: this.referenceTag
+				detail: this
 			}));
 		}
 
