@@ -75,6 +75,7 @@ button.s10cui-input-button
 	background: white
 	border: 1px solid white
 	position: absolute
+	overflow hidden
 	right 12px
 	bottom 12px
 	z-index 2
@@ -90,5 +91,21 @@ button.s10cui-input-button
 		background: $color-chat-reponse-user-bg
 		border: 1px solid lighten($color-chat-reponse-user-text, 75%)
 
-		svg polygon
-			fill $color-dark-blue
+		svg
+			animation s10cui-arrow-up $anim-time $anim-easeInOut
+			polygon
+				fill $color-dark-blue
+
+@keyframes s10cui-arrow-up
+	0%
+		transform translateY(0px)
+	40%
+		transform translateY(-40px)
+	40.001%
+		transform translateY(40px)
+	80%
+		transform translateY(-5px)
+	90%
+		transform translateY(2px)
+	100%
+		transform translateY(0px)

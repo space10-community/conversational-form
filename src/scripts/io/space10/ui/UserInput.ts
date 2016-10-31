@@ -70,7 +70,7 @@ namespace io.space10 {
 
 		public getInputValue():string{
 			let value: string | Array<string> = this.inputElement.value;
-			if(this.controlElements && this.controlElements[0].type == "CheckboxButton"){
+			if(this.controlElements && this.controlElements.length > 0 && this.controlElements[0].type == "CheckboxButton"){
 				value = [];
 				for (var i = 0; i < this.controlElements.length; i++) {
 					var element: CheckboxButton = <CheckboxButton> this.controlElements[i];
