@@ -109,14 +109,14 @@ namespace io.space10 {
 		private inputInvalid(event: CustomEvent){
 			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
-			this.inputElement.setAttribute("error", "");
-			this.inputElement.setAttribute("disabled", "disabled");
+			this.el.setAttribute("error", "");
+			this.el.setAttribute("disabled", "disabled");
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
-				this.inputElement.removeAttribute("disabled");
-				this.inputElement.removeAttribute("error");
+				this.el.removeAttribute("disabled");
+				this.el.removeAttribute("error");
 				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 				this.inputElement.focus();
 			}, 2000);
@@ -126,8 +126,8 @@ namespace io.space10 {
 			Space10CUI.illustrateFlow(this, "receive", event.type, event.detail);
 
 			clearTimeout(this.errorTimer);
-			this.inputElement.removeAttribute("error");
-			this.inputElement.removeAttribute("disabled");
+			this.el.removeAttribute("error");
+			this.el.removeAttribute("disabled");
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
 			this.inputElement.focus();
@@ -246,7 +246,8 @@ namespace io.space10 {
 		private doSubmit(){
 			const value: string = this.getInputValue();
 
-			this.inputElement.setAttribute("disabled", "disabled");
+			this.el.setAttribute("disabled", "disabled");
+			this.el.removeAttribute("error");
 
 			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
 			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {

@@ -46,12 +46,24 @@ s10cui-input
 		&:-ms-input-placeholder
 			color currentColor
 
-		&[disabled="disabled"]
+		
+	&[disabled="disabled"]
+		input
 			background $color-chat-reponse-user-bg
 		
-		&[error]
+		.s10cui-input-button
+			pointer-events none
+
+	&[error]
+		input
 			background $color-input-error-bg
 			color $color-input-error-text
+
+		.s10cui-input-button
+			background $color-input-error-bg
+
+			svg polygon
+				fill $color-input-error-text
 
 s10cui-input-control-elements
 	display block
@@ -84,6 +96,7 @@ button.s10cui-input-button
 	transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut
 
 	svg polygon
+		fill #b9bcbe
 		will-change fill
 		transition fill $anim-time * 0.5 $anim-easeOut
 
