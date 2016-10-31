@@ -7,6 +7,10 @@ namespace io.space10 {
 	// class
 	export class CheckboxButton extends Button {
 
+		public get checked():boolean{
+			return this.el.hasAttribute("checked");
+		}
+
 		protected onClick(event: MouseEvent){
 			const checked: boolean = this.referenceTag.value == "1";
 			if(checked)
@@ -15,8 +19,6 @@ namespace io.space10 {
 				this.el.setAttribute("checked", "");
 			
 			this.referenceTag.setTagValueAndIsValid(!checked ? "1" : "0");
-			
-			super.onClick(event);
 		}
 
 		// override

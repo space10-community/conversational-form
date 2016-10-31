@@ -76,9 +76,9 @@ namespace io.space10 {
 		public setTagValueAndIsValid(value: string | ITag):boolean{
 			let isValid: boolean = true;
 
-			if(value == ""){
-				isValid = false;
-			}
+			// if(this.getGroupTagType() == "checkbox"){
+			// 	isValid = true;
+			// }
 
 			// TODO: Set value on fields
 			const groupType: string = this.elements[0].type;

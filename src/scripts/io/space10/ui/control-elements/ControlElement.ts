@@ -11,6 +11,8 @@ namespace io.space10 {
 
 	export interface IControlElement extends IBasicElement{
 		referenceTag: ITag;
+		type: string;
+		value: string;
 	}
 
 	export const ControlElementEvents = {
@@ -21,6 +23,14 @@ namespace io.space10 {
 	export class ControlElement extends BasicElement implements IControlElement{
 		public el: HTMLElement;
 		public referenceTag: ITag;
+
+		public get type():string{
+			return (<any>this.constructor).name;
+		}
+
+		public get value():string{
+			return this.el.innerText;
+		}
 
 		protected setData(options: IControlElementOptions){
 			this.referenceTag = options.referenceTag;

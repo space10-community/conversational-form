@@ -36,7 +36,7 @@ namespace io.space10 {
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
 		private errorTimer: number = 0;
-		private controlElements: Array<IBasicElement>;
+		private controlElements: Array<ControlElement>;
 		private controlElementsElement: HTMLElement;
 
 		private currentTag: ITag | ITagGroup;
@@ -69,7 +69,18 @@ namespace io.space10 {
 		}
 
 		public getInputValue():string{
-			return this.inputElement.value;
+			let value: string | Array<string> = this.inputElement.value;
+			if(this.controlElements && this.controlElements[0].type == "CheckboxButton"){
+				value = [];
+				for (var i = 0; i < this.controlElements.length; i++) {
+					var element: CheckboxButton = <CheckboxButton> this.controlElements[i];
+					if(element.checked)
+						value.push(element.value);
+				}
+
+				value = value.join(", ");
+			}
+			return value;
 		}
 
 		private onSubmitButtonClick(event: MouseEvent){
@@ -238,7 +249,7 @@ namespace io.space10 {
 		public getTemplate () : string {
 			return `<s10cui-input>
 				<s10cui-input-control-elements></s10cui-input-control-elements>
-				<button class="s10cui-input-button"></button>
+				<button class="s10cui-input-button"><svg viewBox="0 0 24 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill="#B9BCBE"><polygon transform="translate(12.257339, 11.185170) rotate(90.000000) translate(-12.257339, -11.185170) " points="10.2587994 9.89879989 14.2722074 5.85954869 12.4181046 3.92783101 5.07216899 11.1851701 12.4181046 18.4425091 14.2722074 16.5601737 10.2587994 12.5405503 19.4425091 12.5405503 19.4425091 9.89879989"></polygon></g></g></svg></button>
 				<input type='input'>
 			</s10cui-input>
 			`;
