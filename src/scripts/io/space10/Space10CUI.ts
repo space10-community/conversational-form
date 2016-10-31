@@ -184,6 +184,7 @@ namespace io.space10 {
 		}
 
 		private setupUI(){
+			console.log("%c💆 %c by Relax, we are the good guys %c 🏄", "background: none,", "background: black; color: white; font-weight: bold;", "background: none;");
 			console.log('Space10CUI start > these are the mapped DOM tags:', this.tags);
 			console.log('----------------------------------------------');
 

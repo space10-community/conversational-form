@@ -34,6 +34,7 @@ namespace io.space10 {
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
 		private onControlElementSubmitCallback: () => void;
+		private onSubmitButtonClickCallback: () => void;
 		private errorTimer: number = 0;
 		private controlElements: Array<IBasicElement>;
 		private controlElementsElement: HTMLElement;
@@ -61,10 +62,18 @@ namespace io.space10 {
 
 			this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this);
 			document.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+
+			const submitButton: HTMLButtonElement = <HTMLButtonElement> this.el.getElementsByClassName("s10cui-input-button")[0];
+			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
+			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
 		public getInputValue():string{
 			return this.inputElement.value;
+		}
+
+		private onSubmitButtonClick(event: MouseEvent){
+			this.doSubmit();
 		}
 
 		private inputInvalid(event: CustomEvent){
@@ -142,7 +151,6 @@ namespace io.space10 {
 				const element: IBasicElement = this.controlElements[this.controlElements.length - 1];
 				if(element)
 					this.controlElementsElement.appendChild(element.el);
-				
 			}
 
 			const controlElementsAddedDTO: ControlElementsDTO = {
@@ -175,12 +183,7 @@ namespace io.space10 {
 
 				if(this.currentTag.type != "group"){
 					// for NONE groups
-					this.inputElement.setAttribute("disabled", "disabled");
-
-					Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
-					document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
-						detail: value
-					}));
+					this.doSubmit();
 				}else{
 					// TODO: When a group and enter is pressed?
 					// check if value has been choose? Can submit without any values..
@@ -199,14 +202,43 @@ namespace io.space10 {
 			}
 		}
 
+		private doSubmit(){
+			const value: string = this.getInputValue();
+
+			this.inputElement.setAttribute("disabled", "disabled");
+
+			Space10CUI.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
+			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
+				detail: value
+			}));
+		}
+
 		private resetValue(){
 			this.inputElement.value = "";
+		}
+
+		public remove(){
+			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			this.flowUpdateCallback = null;
+
+			document.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+			this.inputInvalidCallback = null;
+
+			document.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+			this.onControlElementSubmitCallback = null;
+
+			const submitButton: HTMLButtonElement = <HTMLButtonElement> this.el.getElementsByClassName("s10cui-input-button")[0];
+			submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
+			this.onSubmitButtonClickCallback = null;
+
+			super.remove();
 		}
 
 		// override
 		public getTemplate () : string {
 			return `<s10cui-input>
 				<s10cui-input-control-elements></s10cui-input-control-elements>
+				<button class="s10cui-input-button"></button>
 				<input type='input'>
 			</s10cui-input>
 			`;
