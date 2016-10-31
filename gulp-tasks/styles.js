@@ -46,13 +46,13 @@ gulp.task('stylus', function() {
 gulp.task('styles-build', ['stylus'], function(){
 	var src = [
 		global.buildFolder + "**/*.css",
-		"!" + global.buildFolder + "space10-cui-dist.css",
-		"!" + global.buildFolder + "space10-cui-dist.min.css",
+		"!" + global.buildFolder + "cf-dist.css",
+		"!" + global.buildFolder + "cf-dist.min.css",
 	]
 	var dst = global.buildFolder;
 
 	var stream = gulp.src(src)
-		.pipe(concat('space10-cui-dist.css'))
+		.pipe(concat('cf-dist.css'))
 		.pipe(gulp.dest(dst))
 		.pipe(cssmin())
 		.pipe(rename({suffix: '.min'}))

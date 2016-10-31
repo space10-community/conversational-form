@@ -81,16 +81,16 @@ Link to google doc?
 ## DOM Element attributes
 
 
-#### cue-questions
+#### cf-questions
 * to map questions directly to a tag.
 * seperate by | to allow for more questions, app will shuffle.
 
-	<input type="text" cue-questions="What is your name?|Please tell me your name." ..
+	<input type="text" cf-questions="What is your name?|Please tell me your name." ..
 
-#### cue-validation
+#### cf-validation
 * set validation callback, be aware that eval is used to make the method available.
 
-	<input type="text" cue-validation="window.validateFunction" ..
+	<input type="text" cf-validation="window.validateFunction" ..
 
 
 ## Classes
@@ -113,7 +113,7 @@ represent DOM (virtual) tags
 **TagGroup** (contains x number of the above)  
 
 #### ui/*:
-Represent app views, like the User Inputfield or CUI radio buttons  
+Represent app views, like the User Inputfield or CF radio buttons  
 
 **UserInput**, handles user input and shows different kinds of interaction UI, like RadioButtons, SelectList etc.  
 **ChatList,** handles ChatResponses  
@@ -125,7 +125,7 @@ SUBMIT: when a value is submittet from the UserInput view
 KEY_CHANGE: when a key is used, 
 
 ##### FlowEvents:
-USER_INPUT_UPDATE: "cui-flow-user-input-update",
-USER_INPUT_INVALID: "cui-flow-user-input-invalid",
-FLOW_UPDATE: "cui-flow-update",
+USER_INPUT_UPDATE: "cf-flow-user-input-update",
+USER_INPUT_INVALID: "cf-flow-user-input-invalid",
+FLOW_UPDATE: "cf-flow-update",
 

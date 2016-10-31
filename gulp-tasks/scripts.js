@@ -61,13 +61,13 @@ gulp.task('scripts', function() {
 gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	var src = [
 		global.buildFolder + "**/*.js",
-		"!" + global.buildFolder + "space10-cui-dist.js",
-		"!" + global.buildFolder + "space10-cui-dist.min.js",
+		"!" + global.buildFolder + "ConversationalForm-dist.js",
+		"!" + global.buildFolder + "ConversationalForm-dist.min.js",
 	]
 	var dst = global.buildFolder;
 
 	var stream = gulp.src(src)
-		.pipe(concat('space10-cui-dist.js'))
+		.pipe(concat('ConversationalForm-dist.js'))
 		.pipe(gulp.dest(dst))
 		.pipe(jsmin())
 		.pipe(rename({suffix: '.min'}))

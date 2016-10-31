@@ -1,0 +1,126 @@
+@import "nib"
+@import "rupture"
+@import "../../cf-variables"
+
+$thumbArea = 38px
+
+cf-chat-response
+	display table
+	max-width 50%
+	min-width 105px
+	width auto
+	position relative
+	backface-visibility hidden
+	padding-left 50px
+	padding-top 20px
+	color $color-chat-reponse-default-text
+
+	&:nth-of-type(2n+2)// user..
+		margin-right 0px
+		margin-left auto
+		padding-left 0
+		padding-right 50px
+		color $color-chat-reponse-user-text
+
+		thumb
+			left auto
+			right 0px
+		
+		text
+			border-radius 20px 0px 20px 20px
+			background $color-chat-reponse-user-bg
+			transform-origin 100% 0%
+			transform translateY(-10px) translateX(-10px) scale(0.001, 0.001)
+
+	
+	text
+		display block
+		position relative
+		padding 20px
+		min-height 57px
+		background $color-chat-reponse-default-bg
+		border-radius 0px 20px 20px 20px
+		opacity 0
+		transform-origin 0% 0%
+		transform translateY(-10px) translateX(10px) scale(0.001, 0.001)
+		will-change transform, opacity, background
+		transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
+		backface-visibility hidden
+		height auto
+
+		&:after
+			content ""
+			display block
+			position absolute
+			top 50%
+			left 20px
+			transform translateY(-50%)
+			padding-right 20px
+
+		&[thinking]
+			font-size 150%
+
+			&:after
+				will-change auto
+				animation dot-progress 1s linear infinite
+
+
+
+	thumb
+		position absolute
+		top 0px
+		left 0px
+		display block
+		width $thumbArea
+		height $thumbArea
+		border-radius 50%
+		background alpha(white, 30%)
+		background-size cover
+		background-position 50% 50%
+		opacity 0
+		transform-origin 50% 50%
+		transform scale(0.001, 0.001) translateY(50px)
+		will-change transform, opacity
+		transition transform $anim-time * 0.5 $anim-easeOutBack $anim-time * 0.25, opacity $anim-time * 0.5 $anim-easeOut $anim-time * 0.25
+
+	&.show
+		text
+			transform translateY(0px) translateX(0px) scale(1, 1)
+			opacity 1
+			transition-timing-function $anim-easeOutBack, $anim-easeOut, $anim-easeOut
+			transition-delay $anim-time * 0.25, $anim-time * 0.25, 0s
+
+			&[value-added]
+				will-change auto
+				animation bounce $anim-time * 0.5 $anim-easeOutBack forwards
+
+		thumb
+			transform scale(1, 1) translateY(0px)
+			opacity 1
+			transition-delay 0s, 0s, 0s
+
+
+
+
+@keyframes dot-progress
+	0%
+		content ""
+	25%
+		content "."
+	50%
+		content ".."
+	75%
+		content "..."
+	100%
+		content "..."
+
+@keyframes bounce
+	0%
+		transform scale(1, 1)
+		opacity 1
+	50%
+		transform scale(1.1, 1.1)
+		opacity 0.85
+	100%
+		transform scale(1, 1)
+		opacity 1

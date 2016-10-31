@@ -3,111 +3,108 @@
 	<head>
 		<!--<script
 			type="text/javascript"
-			id="s10-cui"
-			src="../build/space10-cui-dist.js"
+			id="conversational-form"
+			src="../build/ConversationalForm-dist.js"
 			crossorigin
 		></script>-->
 
 
 		<script
-			id="s10-cui" 
+			id="conversational-form" 
 			type="text/javascript"
-			src="../build/io/space10/Space10CUI.js"
+			src="../build/cf/ConversationalForm.js"
 			development
 		></script>
 
-
-
-
 		<script
 			type="text/javascript"
-			src="../build/io/space10/logic/Helpers.js"
+			src="../build/cf/logic/Helpers.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/BasicElement.js"
+			src="../build/cf/ui/BasicElement.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/control-elements/ControlElement.js"
+			src="../build/cf/ui/control-elements/ControlElement.js"
 		></script>
 
 		<script 
 			type="text/javascript"
-			src="../build/io/space10/data/Dictionary.js"
+			src="../build/cf/data/Dictionary.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/form-tags/Tag.js"
+			src="../build/cf/form-tags/Tag.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/form-tags/TagGroup.js"
+			src="../build/cf/form-tags/TagGroup.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/form-tags/InputTag.js"
+			src="../build/cf/form-tags/InputTag.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/form-tags/SelectTag.js"
+			src="../build/cf/form-tags/SelectTag.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/form-tags/ButtonTag.js"
+			src="../build/cf/form-tags/ButtonTag.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/control-elements/Button.js"
+			src="../build/cf/ui/control-elements/Button.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/control-elements/RadioButton.js"
+			src="../build/cf/ui/control-elements/RadioButton.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/control-elements/CheckboxButton.js"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/UserInput.js"
+			src="../build/cf/ui/UserInput.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/chat/ChatResponse.js"
+			src="../build/cf/ui/chat/ChatResponse.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/ui/chat/ChatList.js"
+			src="../build/cf/ui/chat/ChatList.js"
 		></script>
 
 		<script
 			type="text/javascript"
-			src="../build/io/space10/logic/FlowManager.js"
+			src="../build/cf/logic/FlowManager.js"
 		></script>
 
 
 
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/s10cui.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-radio-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/control-elements/s10cui-checkbox-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/s10cui-input.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat-response.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/io/space10/ui/chat/s10cui-chat.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
 	</head>
 	<body>
 
@@ -138,20 +135,20 @@
 					for (var i = 0; i < fields.length; i++) {
 						var element = fields[i];
 						if(element.tagName.toLowerCase() == "input"){
-							tags.push(io.space10.Tag.createTag({
+							tags.push(cf.Tag.createTag({
 								domElement: element,
 								// label: i == 1 ? "Question/label set via option (constructor)" : null
 								questions: i == 1 ? ["Question/label set via option (constructor) - 1", "Question/label set via option (constructor) - 2"] : null
 								// validationCallback
 							}));
 						}else if(element.tagName.toLowerCase() == "select"){
-							tags.push(io.space10.Tag.createTag({
+							tags.push(cf.Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
 							}));
 						}else if(element.tagName.toLowerCase() == "button"){
-							tags.push(io.space10.Tag.createTag({
+							tags.push(cf.Tag.createTag({
 								domElement: element
 								// validationCallback
 								// questions: Array<String>
@@ -159,7 +156,7 @@
 						}
 					}
 
-					window.space10CUI = new io.space10.Space10CUI({
+					window.ConversationalForm = new cf.ConversationalForm({
 						formEl: formEl,
 						// dictionaryData: {},// empty will throw error
 						// dictionaryAI: {},
@@ -258,8 +255,8 @@
 								maxlength="255"
 								class="input-text required-entry"
 
-								cui-validation="window.testValidation"
-								cui-questions="Question/label set via tag-attribute - 1|Question/label set via tag-attribute - 2"
+								cf-validation="window.testValidation"
+								cf-questions="Question/label set via tag-attribute - 1|Question/label set via tag-attribute - 2"
 							>
 						</div>
 					</div>
@@ -289,7 +286,7 @@
 								class="input-text required-entry"
 								
 								pattern="^hello"
-								cui-questions="Question/LASTNAME tag-attribute - 1|Question/LASTNAME tag-attribute - 2"
+								cf-questions="Question/LASTNAME tag-attribute - 1|Question/LASTNAME tag-attribute - 2"
 							>
 							<!-- above pattern that only allows strings containing hello -->
 						</div>
