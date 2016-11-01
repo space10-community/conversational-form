@@ -14,7 +14,7 @@ namespace cf {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
 		private list: HTMLElement;
-		private listScrubButton: HTMLElement;
+		private listNavButtons: NodeListOf<Element>;
 		private onScrubListClickCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 
@@ -26,10 +26,11 @@ namespace cf {
 			this.el = options.el;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
-			this.listScrubButton = <HTMLElement> this.el.getElementsByTagName("cf-list-button")[0];
+			this.listNavButtons = this.el.getElementsByTagName("cf-list-button");
 			
 			this.onScrubListClickCallback = this.onScrubListClick.bind(this);
-			this.listScrubButton.addEventListener("click", this.onScrubListClickCallback, false);
+			this.listNavButtons[0].addEventListener("click", this.onScrubListClickCallback, false);
+			this.listNavButtons[1].addEventListener("click", this.onScrubListClickCallback, false);
 
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
@@ -65,8 +66,8 @@ namespace cf {
 			this.el.classList.remove("two-row");
 		}
 
-		public getValue(): string | ITag{
-			let value: string | ITag = "";
+		public getValue(): string | IControlElement{
+			let value: string | IControlElement = "";
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
@@ -76,7 +77,7 @@ namespace cf {
 							if(element.checked)
 								values.push(element.value);
 						}
-
+						
 						value = values.join(", ");
 						break;
 
@@ -86,7 +87,7 @@ namespace cf {
 							let element: RadioButton = <RadioButton> this.elements[i];
 
 							if(element.checked)
-								value = <ITag> element.referenceTag;
+								value = <IControlElement> element;
 							// else
 							// 	element
 						}
@@ -190,7 +191,8 @@ namespace cf {
 		}
 
 		public remove(){
-			this.listScrubButton.removeEventListener("click", this.onScrubListClickCallback, false);
+			this.listNavButtons[0].removeEventListener("click", this.onScrubListClickCallback, false);
+			this.listNavButtons[1].removeEventListener("click", this.onScrubListClickCallback, false);
 			this.onScrubListClickCallback = null;
 
 			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);

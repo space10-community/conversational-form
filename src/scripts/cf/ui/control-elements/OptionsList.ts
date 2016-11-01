@@ -48,11 +48,11 @@ namespace cf {
 			return w;
 		}
 
-		public getValue(): ITag {
+		public getValue(): IControlElement {
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: OptionButton = <OptionButton>this.elements[i];
 				if(element.selected)
-					return element.referenceTag;
+					return element;
 			}
 			return null;
 		}

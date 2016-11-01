@@ -72,7 +72,11 @@ namespace cf {
 
 			// check for values on control elements as they should overwrite the input value.
 			if(this.controlElements && this.controlElements.active){
-				value = this.controlElements.getValue();
+				let controlElementValue: string | IControlElement = this.controlElements.getValue();
+				if((<any>controlElementValue.constructor).name == "String")
+					value = <string> controlElementValue;
+				else
+					value = (<IControlElement> controlElementValue).value;
 			}
 
 			return value;
