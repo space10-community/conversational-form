@@ -10,9 +10,11 @@ namespace cf {
 	}
 
 	export interface IControlElement extends IBasicElement{
+		el: HTMLElement;
 		referenceTag: ITag;
 		type: string;
 		value: string;
+		remove(): void;
 	}
 
 	export const ControlElementEvents = {
@@ -35,6 +37,8 @@ namespace cf {
 		protected setData(options: IControlElementOptions){
 			this.referenceTag = options.referenceTag;
 			super.setData(options);
+
+			setTimeout(() => this.el.classList.add("show"), 0);
 		}
 
 		public onChoose(){
@@ -45,7 +49,7 @@ namespace cf {
 		}
 
 		public remove(){
-
+			super.remove();
 		}
 	}
 }

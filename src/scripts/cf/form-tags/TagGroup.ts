@@ -76,12 +76,8 @@ namespace cf {
 		public setTagValueAndIsValid(value: string | ITag):boolean{
 			let isValid: boolean = true;
 
-			// if(this.getGroupTagType() == "checkbox"){
-			// 	isValid = true;
-			// }
-
-			// TODO: Set value on fields
 			const groupType: string = this.elements[0].type;
+
 			for (var i = 0; i < this.elements.length; i++) {
 				var tag: ITag = this.elements[i];
 				switch(groupType){
@@ -91,6 +87,7 @@ namespace cf {
 					case "checkbox" :
 						(<HTMLInputElement> tag.domElement).checked = tag.value == "1";
 						break;
+					
 				}
 			}
 

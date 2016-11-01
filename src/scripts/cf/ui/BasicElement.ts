@@ -35,7 +35,7 @@ namespace cf {
 		public getTemplate () : string {return `template missing...`};
 
 		public remove(){
-
+			this.el.parentNode.removeChild(this.el);
 		}
 	}
 }

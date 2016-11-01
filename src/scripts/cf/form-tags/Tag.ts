@@ -2,6 +2,7 @@
 /// <reference path="InputTag.ts"/>
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="SelectTag.ts"/>
+/// <reference path="OptionTag.ts"/>
 
 // basic tag from form logic
 // types:
@@ -20,7 +21,7 @@
 namespace cf {
 	// interface
 	export interface ITag{
-		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
+		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		type: string,
 		name: string,
 		title: string,
@@ -31,7 +32,7 @@ namespace cf {
 	}
 
 	export interface ITagOptions{
-		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement,
+		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
 		validationCallback?: (value: string) => boolean,// can also be set through cf-validation attribute
@@ -39,7 +40,7 @@ namespace cf {
 
 	// class
 	export class Tag implements ITag {
-		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
+		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
 		protected defaultValue: string | number;
 		
@@ -109,7 +110,7 @@ namespace cf {
 			}
 		}
 
-		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement):boolean{
+		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
 
@@ -119,7 +120,10 @@ namespace cf {
 			if(element.style.visibility === "hidden")
 				return false;
 
-			
+			if(element.tagName.toLowerCase() == "option" && element.innerText.length > 1){
+				return true;
+			}
+		
 			if(element.tagName.toLowerCase() == "select")
 				return true
 			else
@@ -127,7 +131,7 @@ namespace cf {
 		}
 
 		public static createTag(options: ITagOptions): ITag{
-			const element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement = options.domElement;
+			const element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = options.domElement;
 			if(Tag.isTagValid(element)){
 				// ignore hidden tags
 				let tag: ITag;
@@ -145,6 +149,12 @@ namespace cf {
 					});
 				}else if(element.tagName.toLowerCase() == "button"){
 					tag = new ButtonTag({
+						domElement: element
+						// validationCallback
+						// questions: Array<String>
+					});
+				}else if(element.tagName.toLowerCase() == "option"){
+					tag = new OptionTag({
 						domElement: element
 						// validationCallback
 						// questions: Array<String>
@@ -181,7 +191,7 @@ namespace cf {
 			if(isValid){
 				this.domElement.value = value.toString();
 			}else{
-				// throw new Error("s10-cui: value:string is not valid. Value: "+value);
+				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}
 
 			return isValid;

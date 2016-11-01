@@ -2,23 +2,33 @@
 @import "rupture"
 @import "../../cf-variables"
 
-.cf-button
+.cf-button //use class because we share the styling on different elements
 	background white
 	cursor pointer
-	display inline-table
+	// display inline-table
 	border 1px solid alpha($color-dark-blue, 10%)
 	padding 15px 35px
 	border-radius 25px
 	color $color-chat-reponse-user-text
 	line-height 1
 
-	will-change background
-	transition background $anim-time $anim-easeOut
+	transform-origin 25% 100%
+	will-change transform, background
+	transition transform $anim-time * 0.5 $anim-easeOut, background $anim-time $anim-easeOut
+	transform: scale(0, 0)
+
+	for num in 1...15
+		&:nth-child({num})
+			transition-delay num * 0.05s, 0s
+
+	&.show
+		transition-timing-function: $anim-easeOutBack, $anim-easeOut
+		transform: scale(1, 1)
 
 	&:not(:last-child)
 		margin-right 15px
 
-	&:hover
+	&:hover, &[selected="selected"]
 		background alpha($color-dark-blue, 10%)
 
 	&:active

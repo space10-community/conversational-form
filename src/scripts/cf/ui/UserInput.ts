@@ -1,7 +1,5 @@
 /// <reference path="BasicElement.ts"/>
-/// <reference path="control-elements/Button.ts"/>
-/// <reference path="control-elements/RadioButton.ts"/>
-/// <reference path="control-elements/CheckboxButton.ts"/>
+/// <reference path="control-elements/ControlElements.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
 
 // namespace
@@ -36,8 +34,8 @@ namespace cf {
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
 		private errorTimer: number = 0;
-		private controlElements: Array<ControlElement>;
-		private controlElementsElement: HTMLElement;
+
+		private controlElements: ControlElements;
 
 		private currentTag: ITag | ITagGroup;
 
@@ -50,8 +48,9 @@ namespace cf {
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
-			this.controlElementsElement = <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0];
-			// console.log("======", document.getElementById("s10-cui"))
+			this.controlElements = new ControlElements({
+				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0]
+			})
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
@@ -72,31 +71,8 @@ namespace cf {
 			let value: string | Array<string> = this.inputElement.value;
 
 			// check for values on control elements as they should overwrite the input value.
-			if(this.controlElements && this.controlElements.length > 0){
-				switch(this.controlElements[0].type){
-					case "CheckboxButton" :
-						value = [];
-						for (var i = 0; i < this.controlElements.length; i++) {
-							let element: CheckboxButton = <CheckboxButton> this.controlElements[i];
-							if(element.checked)
-								value.push(element.value);
-						}
-
-						value = value.join(", ");
-						break;
-
-					case "RadioButton" :
-						value = "";
-						for (var i = 0; i < this.controlElements.length; i++) {
-							let element: RadioButton = <RadioButton> this.controlElements[i];
-
-							if(element.checked)
-								value = <string> element.value;
-							// else
-							// 	element
-						}
-						break;
-				}
+			if(this.controlElements && this.controlElements.active){
+				value = this.controlElements.getValue();
 			}
 
 			return value;
@@ -143,54 +119,7 @@ namespace cf {
 		}
 
 		private buildControlElements(tags: Array<ITag>){
-			// remove old elements
-			if(this.controlElements){
-				while(this.controlElements.length > 0)
-					this.controlElementsElement.removeChild(this.controlElements.pop().el);
-			}
-
-			this.controlElements = [];
-
-			for (var i = 0; i < tags.length; i++) {
-				var tag: ITag = tags[i];
-				
-				// console.log(this, 'UserInput > tag.type:', tag.type);
-				switch(tag.type){
-					case "radio" :
-						this.controlElements.push(new RadioButton({
-							referenceTag: tag
-						}));
-						break;
-					case "checkbox" :
-						// TODO: add checkbox tag..
-						this.controlElements.push(new CheckboxButton({
-							referenceTag: tag
-						}));
-						console.log("UserInput buildControlElements:", "checkbox");
-						break;
-					case "select" :
-						// TODO: add select sub tag..
-						console.log("UserInput buildControlElements:", "select list");
-						break;
-					default :
-						// nothing to add.
-						console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
-						break;
-				}
-
-				const element: IBasicElement = this.controlElements[this.controlElements.length - 1];
-				if(element)
-					this.controlElementsElement.appendChild(element.el);
-			}
-
-			const controlElementsAddedDTO: ControlElementsDTO = {
-				height: this.controlElementsElement.offsetHeight,
-			};
-
-			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
-			document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
-				detail: controlElementsAddedDTO
-			}));
+			this.controlElements.buildTags(tags);
 		}
 
 		private onControlElementSubmit(event: CustomEvent){
@@ -199,15 +128,7 @@ namespace cf {
 			// when ex a RadioButton is clicked..
 			const controlElement: IControlElement = <IControlElement> event.detail;
 
-			console.log((<any>this.constructor).name, 'hmmmmm:', controlElement);
-			if(controlElement.type == "RadioButton"){
-				// uncheck other buttons...
-				for (let i = 0; i < this.controlElements.length; i++) {
-					let element: RadioButton = <RadioButton>this.controlElements[0];
-					if(element != controlElement)
-						element.checked = false;
-				}
-			}
+			this.controlElements.updateStateOnElements(controlElement);
 
 			const tag: ITag = controlElement.referenceTag;
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, tag);
@@ -235,11 +156,11 @@ namespace cf {
 					detail: value
 				}));
 
-				if(this.currentTag.type == "group" && this.controlElements.length > 0){
-					// filter this.controlElements.........
-					console.log('filter control elements:', this.controlElements);
-					console.log('with value:',value);
-				}
+				// if(this.currentTag.type == "group" && this.controlElements.length > 0){
+				// 	// filter this.controlElements.........
+				// 	console.log('filter control elements:', this.controlElements);
+				// 	console.log('with value:',value);
+				// }
 			}
 		}
 
@@ -279,7 +200,12 @@ namespace cf {
 		// override
 		public getTemplate () : string {
 			return `<cf-input>
-				<cf-input-control-elements></cf-input-control-elements>
+				<cf-input-control-elements>
+					<cf-list-button>
+					</cf-list-button>
+					<ul></ul>
+					<ul></ul>
+				</cf-input-control-elements>
 				<button class="cf-input-button"><svg viewBox="0 0 24 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill="#B9BCBE"><polygon transform="translate(12.257339, 11.185170) rotate(90.000000) translate(-12.257339, -11.185170) " points="10.2587994 9.89879989 14.2722074 5.85954869 12.4181046 3.92783101 5.07216899 11.1851701 12.4181046 18.4425091 14.2722074 16.5601737 10.2587994 12.5405503 19.4425091 12.5405503 19.4425091 9.89879989"></polygon></g></g></svg></button>
 				<input type='input'>
 			</cf-input>
