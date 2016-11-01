@@ -23,6 +23,8 @@ cf-input
 		border-radius 0
 		border none
 		-webkit-appearance none
+		position relative
+		z-index 2
 
 		// styling
 		font-family 'Roboto', sans-serif
@@ -48,11 +50,13 @@ cf-input
 
 		
 	&[disabled="disabled"]
+		pointer-events none
+
 		input
 			background $color-chat-reponse-user-bg
 		
 		.cf-input-button
-			pointer-events none
+			background $color-chat-reponse-user-bg
 
 	&[error]
 		input
@@ -65,20 +69,6 @@ cf-input
 			svg polygon
 				fill $color-input-error-text
 
-cf-input-control-elements
-	display block
-	width 100%
-	height auto
-	// position absolute
-	// top -20px
-	// left 0px
-	// transform translateY(-100%)
-	padding 0px 15px
-	margin 10px 0px
-
-	.cf-button
-		margin-bottom 15px
-
 
 
 button.cf-input-button
@@ -90,7 +80,7 @@ button.cf-input-button
 	overflow hidden
 	right 12px
 	bottom 12px
-	z-index 2
+	z-index 3
 	border-radius 50%
 	will-change background, border
 	transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut
