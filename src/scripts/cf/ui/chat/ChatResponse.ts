@@ -71,7 +71,7 @@ namespace cf {
 					setTimeout(() => this.setValue(options.response), Helpers.lerp(Math.random(), 500, 900));
 				}else{
 					// show the 3 dots automatically
-					// setTimeout(() => this.visible = true, 1100);
+					setTimeout(() => this.el.classList.add("peak-thumb"), 1100);
 				}
 			}, 0);
 		}
