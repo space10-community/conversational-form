@@ -92,6 +92,11 @@ Link to google doc?
 
 	<input type="text" cf-validation="window.validateFunction" ..
 
+#### cf-error
+* to map error messages directly to a tag.
+* seperate by | to allow for more error, app will shuffle.
+
+	<input type="text" cf-error="field is wrong wrong wrong" ..
 
 ## Classes
 ========

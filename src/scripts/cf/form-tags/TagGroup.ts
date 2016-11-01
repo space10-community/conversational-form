@@ -22,6 +22,8 @@ namespace cf {
 
 	// class
 	export class TagGroup implements ITagGroup {
+
+		private errorMessages: Array<string>;
 		public elements: Array <InputTag | SelectTag | ButtonTag>;
 
 		public get type (): string{
@@ -60,12 +62,25 @@ namespace cf {
 			// TODO: fix value???
 			return "";
 		}
+		
+		public get errorMessage():string{
+			if(!this.errorMessages){
+				this.errorMessages = [Dictionary.get("input-placeholder-error")];
+				for (let i = 0; i < this.elements.length; i++) {
+					let element: ITag = <ITag>this.elements[i];
+					if(this.elements[i].domElement.getAttribute("cf-error")){
+						this.errorMessages = this.elements[i].domElement.getAttribute("cf-error").split("|");
+					}
+				}
+			}
+
+			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+		}
 
 		private onInputKeyChangeCallback: () => void;
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
-
 			console.log('TagGroup registered:', this.elements[0].type, this);
 		}
 

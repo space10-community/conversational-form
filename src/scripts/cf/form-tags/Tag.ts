@@ -27,6 +27,7 @@ namespace cf {
 		name: string,
 		title: string,
 		question: string,
+		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 
 		value:string;
@@ -44,7 +45,8 @@ namespace cf {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
 		protected defaultValue: string | number;
-		
+
+		private errorMessages: Array<string>;
 		private pattern: RegExp;
 		private _title: string;
 
@@ -79,6 +81,18 @@ namespace cf {
 			return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}
 
+		public get errorMessage():string{
+			if(!this.errorMessages){
+				// custom tag error messages
+				if(this.domElement.getAttribute("cf-error")){
+					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
+				}else{
+					this.errorMessages = [Dictionary.get("input-placeholder-error")];
+				}
+			}
+			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+		}
+
 		constructor(options: ITagOptions){
 			if(!Tag.isTagValid(options.domElement)){
 				return;
@@ -91,7 +105,7 @@ namespace cf {
 				this.questions = options.questions;
 
 			
-			// custom validation
+			// custom tag validation
 			if(this.validationCallback){
 				this.validationCallback = options.validationCallback;
 			}else if(this.domElement.getAttribute("cf-validation")){

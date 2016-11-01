@@ -141,8 +141,9 @@
 
 		<script>
 			var testValidation = function(value){
-				console.log("external method for validation (window)", value);
-				return true;
+				if(value.indexOf("world") != -1)
+					return true;
+				return false;
 			};
 
 			// Self-Invoking Anonymous Function to get started
@@ -229,6 +230,7 @@
 
 								cf-validation="window.testValidation"
 								cf-questions="Question/label set via tag-attribute - 1|Question/label set via tag-attribute - 2"
+								cf-error="This value goes through the window.javascript called testValidation, check that for guide.."
 							>
 						</div>
 					</div>
@@ -341,6 +343,7 @@
 								
 								pattern="^hello"
 								cf-questions="Question/LASTNAME tag-attribute - 1|Question/LASTNAME tag-attribute - 2"
+								cf-error="This element needs to contain the word 'Hello'|Include word 'Hello' ..."
 							>
 							<!-- above pattern that only allows strings containing hello -->
 						</div>

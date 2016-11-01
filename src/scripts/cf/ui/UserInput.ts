@@ -88,10 +88,12 @@ namespace cf {
 
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+			console.log((<any>this.constructor).name, '***** ASDSADSADS D SADSA:', this.currentTag);
 
 			this.el.setAttribute("error", "");
 			this.el.setAttribute("disabled", "disabled");
-			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder-error"));
+			// cf-error
+			this.inputElement.setAttribute("placeholder", this.currentTag.errorMessage);
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
