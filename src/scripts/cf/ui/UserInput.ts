@@ -88,7 +88,10 @@ namespace cf {
 
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
-			console.log((<any>this.constructor).name, '***** ASDSADSADS D SADSA:', this.currentTag);
+
+			this.inputElement.setAttribute("data-value", this.inputElement.value);
+			this.inputElement.value = "";
+			console.log((<any>this.constructor).name, 'this.inputElement.value:', this.inputElement.value);
 
 			this.el.setAttribute("error", "");
 			this.el.setAttribute("disabled", "disabled");
@@ -99,6 +102,8 @@ namespace cf {
 			this.errorTimer = setTimeout(() => {
 				this.el.removeAttribute("disabled");
 				this.el.removeAttribute("error");
+				this.inputElement.value = this.inputElement.getAttribute("data-value");
+				this.inputElement.setAttribute("data-value", "");
 				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 				this.inputElement.focus();
 			}, 2000);
@@ -109,6 +114,8 @@ namespace cf {
 
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
+			this.inputElement.setAttribute("data-value", "");
+			this.inputElement.value = "";
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
 			this.inputElement.focus();
@@ -177,6 +184,7 @@ namespace cf {
 
 			this.el.setAttribute("disabled", "disabled");
 			this.el.removeAttribute("error");
+			this.inputElement.setAttribute("data-value", "");
 
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
 			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
