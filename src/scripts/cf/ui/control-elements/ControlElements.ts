@@ -91,6 +91,10 @@ namespace cf {
 							// 	element
 						}
 						break;
+					case "OptionsList":
+						let element: OptionsList = <OptionsList> this.elements[0];
+						value = element.getValue();
+						break;
 				}
 			}
 
