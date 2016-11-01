@@ -1,4 +1,4 @@
-var gulp = require('gulp');
+global.gulp = require('gulp');
 var fs = require('fs');
 var livereload = require('./gulp-tasks/node_modules/gulp-livereload');
 
@@ -10,7 +10,6 @@ require("./gulp-tasks/scripts");
 require("./gulp-tasks/images");
 require("./gulp-tasks/bower");
 
-
 //options
 var srcFolder = './src/';
 global.srcFolder = srcFolder;
@@ -19,20 +18,20 @@ var buildFolder = './build/';
 global.buildFolder = buildFolder;
 
 // Watch Files For Changes
-gulp.task('watch', ['bower', 'typescript', 'stylus', 'copy-images'], function() {
+global.gulp.task('watch', ['bower', 'typescript', 'stylus', 'copy-images'], function() {
 	livereload.listen();
 
 	console.log("Watch task started");
 
-	gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript']);
+	global.gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript']);
 	
-	gulp.watch(srcFolder + '/scripts/**/*.js', ['scripts']);
+	global.gulp.watch(srcFolder + '/scripts/**/*.js', ['scripts']);
 
-	gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
+	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
 
-	gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
+	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
 });
 
 // Default Task
-gulp.task('default', ['watch']);
-gulp.task('build', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
+global.gulp.task('default', ['watch']);
+global.gulp.task('build', ['bower', 'scripts-build', 'styles-build', 'copy-images']);

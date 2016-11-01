@@ -1,4 +1,3 @@
-var gulp = require('gulp');
 var typescript = require('gulp-typescript');
 var flatten = require('gulp-flatten');
 var changed = require('gulp-changed');
@@ -16,14 +15,14 @@ function swallowError(error) {
 	this.emit('end');
 }
 
-gulp.task('typescript', function() {
+global.gulp.task('typescript', function() {
 	var src = [
 		global.srcFolder + "/scripts/**/*.ts",
 		"!" + global.srcFolder + "/scripts/typings/**/*.d.ts"
 		];
 	var dst = global.buildFolder;
 
-	var stream = gulp.src(src)
+	var stream = global.gulp.src(src)
 		// .pipe(flatten()) // flatten folder structure
 		.pipe(changed(dst,{
 			extension: '.js'
@@ -34,31 +33,31 @@ gulp.task('typescript', function() {
 			module: "none"//AMD... etc.
 		}))
 		.on('error', swallowError)
-		.pipe(gulp.dest(dst))
+		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
 		.pipe(notify("Typescript compiled."));
 
 	return stream
 });
 
-gulp.task('scripts', function() {
+global.gulp.task('scripts', function() {
 	var src = [
 		global.srcFolder + "/scripts/**/*.js",
 		"!" + global.srcFolder + "/scripts/typings/**/*.ts"
 	];
 	var dst = global.buildFolder;
 
-	var stream = gulp.src(src)
+	var stream = global.gulp.src(src)
 		// .pipe(flatten()) // flatten folder structure
 		.on('error', swallowError)
-		.pipe(gulp.dest(dst))
+		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
 		.pipe(notify("Typescript compiled."));
 
 	return stream
 });
 
-gulp.task('scripts-build', ['typescript', 'scripts'], function(){
+global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	var src = [
 		global.buildFolder + "**/*.js",
 		"!" + global.buildFolder + "ConversationalForm-dist.js",
@@ -66,12 +65,12 @@ gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	]
 	var dst = global.buildFolder;
 
-	var stream = gulp.src(src)
+	var stream = global.gulp.src(src)
 		.pipe(concat('ConversationalForm-dist.js'))
-		.pipe(gulp.dest(dst))
+		.pipe(global.gulp.dest(dst))
 		.pipe(jsmin())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dst));
+		.pipe(global.gulp.dest(dst));
 	
 	return stream;
 });

@@ -1,4 +1,3 @@
-var gulp = require('gulp');
 var rupture = require('rupture');
 var nib = require('nib');
 var stylus = require('gulp-stylus');
@@ -18,14 +17,14 @@ function swallowError(error) {
 	this.emit('end');
 }
 
-gulp.task('stylus', function() {
+global.gulp.task('stylus', function() {
 	var src = [
 		global.srcFolder + "/styles/**/*.styl",
 		"!" + global.srcFolder + "/styles/**/*-variables.styl"
 	]
 	var dst = global.buildFolder;
 
-	var stream = gulp.src(src)
+	var stream = global.gulp.src(src)
 		// .pipe(flatten()) // flatten folder structure
 		.pipe(changed(dst, {
 			extension: '.css'
@@ -36,14 +35,14 @@ gulp.task('stylus', function() {
 			compress: true
 		}))
 		.on('error', swallowError)
-		.pipe(gulp.dest(dst))
+		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
 		.pipe(notify("Stylus compiled."));
 
 	return stream;
 });
 
-gulp.task('styles-build', ['stylus'], function(){
+global.gulp.task('styles-build', ['stylus'], function(){
 	var src = [
 		global.buildFolder + "**/*.css",
 		"!" + global.buildFolder + "cf-dist.css",
@@ -51,12 +50,12 @@ gulp.task('styles-build', ['stylus'], function(){
 	]
 	var dst = global.buildFolder;
 
-	var stream = gulp.src(src)
+	var stream = global.gulp.src(src)
 		.pipe(concat('cf-dist.css'))
-		.pipe(gulp.dest(dst))
+		.pipe(global.gulp.dest(dst))
 		.pipe(cssmin())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dst));
+		.pipe(global.gulp.dest(dst));
 	
 	return stream;
 });
