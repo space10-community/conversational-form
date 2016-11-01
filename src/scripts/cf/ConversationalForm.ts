@@ -223,9 +223,10 @@ namespace cf {
 			// ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			if(ConversationalForm.ILLUSTRATE_APP_FLOW){
-				console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event type:", eventType);
+				const highlight: string = "font-weight: 900; background: pink; color: black; padding: 0px 5px;";
+				console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c"+(<any> classRef.constructor).name, "font-weight: 900;",highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
 				if(detail)
-					console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event detail:", detail);
+					console.log("** event flow detail:", detail);
 			}
 		}
 	}

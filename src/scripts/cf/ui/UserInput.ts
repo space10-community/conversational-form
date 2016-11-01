@@ -20,7 +20,7 @@ namespace cf {
 		KEY_CHANGE: "cf-input-key-change",
 		//	detail: string
 
-		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements added",
+		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
 		//	detail: string
 	}
 
