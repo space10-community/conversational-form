@@ -41,10 +41,11 @@ namespace cf {
 		}
 
 		private onInputKeyChange(event: CustomEvent){
-			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+			const dto: FlowDTO = event.detail;
+			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
 
 			if(this.currentResponse){
-				const inputFieldStr: string = event.detail;
+				const inputFieldStr: string = dto.text;
 				if(inputFieldStr.length == 0){
 					this.currentResponse.visible = false;
 				}else{
