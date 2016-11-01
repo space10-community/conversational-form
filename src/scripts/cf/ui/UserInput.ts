@@ -67,8 +67,8 @@ namespace cf {
 			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
-		public getInputValue():string{
-			let value: string | Array<string> = this.inputElement.value;
+		public getInputValue():string | ITag{
+			let value: string | ITag = this.inputElement.value;
 
 			// check for values on control elements as they should overwrite the input value.
 			if(this.controlElements && this.controlElements.active){
@@ -140,7 +140,7 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			const value: string = this.getInputValue();
+			const value: string | ITag = this.getInputValue();
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -167,7 +167,7 @@ namespace cf {
 		}
 
 		private doSubmit(){
-			const value: string = this.getInputValue();
+			const value: string | ITag = this.getInputValue();
 
 			this.el.setAttribute("disabled", "disabled");
 			this.el.removeAttribute("error");

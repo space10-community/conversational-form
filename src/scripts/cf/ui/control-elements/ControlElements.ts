@@ -65,19 +65,19 @@ namespace cf {
 			this.el.classList.remove("two-row");
 		}
 
-		public getValue(): string{
-			let value: string | Array <string> = "";
+		public getValue(): string | ITag{
+			let value: string | ITag = "";
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
-						value = [];
+						let values: Array<string> = [];
 						for (var i = 0; i < this.elements.length; i++) {
 							let element: CheckboxButton = <CheckboxButton> this.elements[i];
 							if(element.checked)
-								value.push(element.value);
+								values.push(element.value);
 						}
 
-						value = value.join(", ");
+						value = values.join(", ");
 						break;
 
 					case "RadioButton" :
@@ -86,7 +86,7 @@ namespace cf {
 							let element: RadioButton = <RadioButton> this.elements[i];
 
 							if(element.checked)
-								value = <string> element.value;
+								value = <ITag> element.referenceTag;
 							// else
 							// 	element
 						}
@@ -145,9 +145,12 @@ namespace cf {
 			}
 
 			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
+				const h: number = this.el.classList.contains("one-row") ? 65 : this.el.classList.contains("two-row") ? 125 : 0;
+
 				const controlElementsAddedDTO: ControlElementsDTO = {
-					height: parseInt(window.getComputedStyle(this.el).getPropertyValue("height"), 10),
+					height: h,
 				};
+
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
 					detail: controlElementsAddedDTO
