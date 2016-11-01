@@ -61,15 +61,20 @@ namespace cf {
 			const isMutiple: boolean = false;
 			if(!this.multiChoice){
 				// only one is selectable at the time.
+
 				for (let i = 0; i < this.elements.length; i++) {
 					let element: OptionButton = <OptionButton>this.elements[i];
-					if(element != event.detail && !this.multiChoice){
+					if(element != event.detail){
 						element.selected = false;
 					}else{
-						// TODO: Should we inject element:value to input field??
-						element.selected = this.multiChoice ? !element.selected : true;
+						element.selected = true;
 					}
 				}
+
+				ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.SUBMIT_VALUE, this.referenceTag);
+				document.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
+					detail: <OptionButton> event.detail
+				}));
 			}else{
 				(<OptionButton> event.detail).selected = !(<OptionButton> event.detail).selected;
 			}
