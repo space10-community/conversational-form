@@ -7,29 +7,36 @@ namespace cf {
 	// interface
 
 	export interface IOptionsListOptions{
-		topList: HTMLUListElement;
-		bottomList: HTMLUListElement;
+		context: HTMLElement;
 		referenceTag: ITag;
 	}
 
 	// class
-	// TODO: no need for this to be a ControlElement..
+	// builds x OptionsButton from the registered SelectTag
 	export class OptionsList {
 
-		private topList: HTMLUListElement;
-		private bottomList: HTMLUListElement;
+		private context: HTMLElement;
 		private referenceTag: ITag;
 		private elements: Array<OptionButton>;
 
 		constructor(options: IOptionsListOptions){
-			this.topList = options.topList;
-			this.bottomList = options.bottomList;
+			this.context = options.context;
 			this.referenceTag = options.referenceTag;
 			this.createElements();
 		}
 
 		public get type():string{
 			return "OptionsList";
+		}
+
+		public get width():number{
+			let w: number = 0;
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: OptionButton = <OptionButton>this.elements[i];
+				w += element.width;
+			}
+
+			return w;
 		}
 
 		private createElements(){
@@ -48,11 +55,7 @@ namespace cf {
 
 					this.elements.push(btn);
 
-					if(i % 2 == 0){
-						this.topList.appendChild(btn.el);
-					}else{
-						this.bottomList.appendChild(btn.el);
-					}
+					this.context.appendChild(btn.el);
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
+/// <reference path="../../../typings/es6-promise/es6-promise.d.ts"/>
 
 // namespace
 namespace cf {
@@ -11,6 +12,7 @@ namespace cf {
 	export class ControlElements {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
+		private list: HTMLElement;
 		private listScrubButton: HTMLElement;
 		private onScrubListClickCallback: () => void;
 
@@ -20,6 +22,7 @@ namespace cf {
 
 		constructor(options: IControlElementsOptions){
 			this.el = options.el;
+			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
 			this.listScrubButton = <HTMLElement> this.el.getElementsByTagName("cf-list-button")[0];
 			this.onScrubListClickCallback = this.onScrubListClick.bind(this);
@@ -33,6 +36,7 @@ namespace cf {
 		}
 
 		updateStateOnElements(controlElement: IControlElement){
+			this.list.classList.add("disabled");
 			if(controlElement.type == "RadioButton"){
 				// uncheck other buttons...
 				for (let i = 0; i < this.elements.length; i++) {
@@ -41,6 +45,11 @@ namespace cf {
 						element.checked = false;
 				}
 			}
+		}
+
+		public reset(){
+			this.el.classList.remove("one-row");
+			this.el.classList.remove("two-row");
 		}
 
 		public getValue(): string{
@@ -77,6 +86,7 @@ namespace cf {
 		}
 
 		public buildTags(tags: Array<ITag>){
+			this.list.classList.remove("disabled");
 			const topList: HTMLUListElement = (<HTMLUListElement > this.el.parentNode).getElementsByTagName("ul")[0];
 			const bottomList: HTMLUListElement = (<HTMLUListElement> this.el.parentNode).getElementsByTagName("ul")[1];
 
@@ -88,7 +98,6 @@ namespace cf {
 			}
 
 			this.elements = [];
-
 
 			for (var i = 0; i < tags.length; i++) {
 				var tag: ITag = tags[i];
@@ -108,8 +117,7 @@ namespace cf {
 					case "select" :
 						this.elements.push(new OptionsList({
 							referenceTag: tag,
-							topList: topList,
-							bottomList: bottomList,
+							context: this.list,
 						}));
 						break;
 					default :
@@ -120,23 +128,46 @@ namespace cf {
 
 				if(tag.type != "select" && this.elements.length > 0){
 					const element: IControlElement = <IControlElement> this.elements[this.elements.length - 1];
-					if(i % 2 == 0){
-						topList.appendChild(element.el);
+					this.list.appendChild(element.el);
+				}
+			}
+
+			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
+				const controlElementsAddedDTO: ControlElementsDTO = {
+					height: this.el.offsetHeight,
+				};
+				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
+				document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
+					detail: controlElementsAddedDTO
+				}));
+			});
+		}
+
+		public resize(resolve: any, reject: any){
+			// scrollbar things
+			// Element.offsetWidth - Element.clientWidth
+			this.list.style.width = "100%";
+			this.el.classList.remove("one-row");
+			this.el.classList.remove("two-row");
+
+			setTimeout(() => {
+				let w: number = 0;
+				if(this.elements.length > 0){
+					for (let i = 0; i < this.elements.length; i++) {
+						let element: any = <any>this.elements[i];
+						w += element.width;
+					}
+
+					if(w > this.el.offsetWidth){
+						this.el.classList.add("two-row");
+						this.list.style.width = Math.round((w / 2) + 50) + "px";
 					}else{
-						bottomList.appendChild(element.el);
+						this.el.classList.add("one-row");
 					}
 				}
 
-			}
-
-			const controlElementsAddedDTO: ControlElementsDTO = {
-				height: this.el.offsetHeight,
-			};
-
-			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
-			document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
-				detail: controlElementsAddedDTO
-			}));
+				resolve();
+			}, 0);
 		}
 
 		public remove(){

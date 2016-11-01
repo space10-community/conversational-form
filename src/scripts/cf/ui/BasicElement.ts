@@ -15,6 +15,11 @@ namespace cf {
 	export class BasicElement implements IBasicElement{
 		public el: HTMLElement;
 
+		public get width():number{
+			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
+			return this.el.offsetWidth + mr;
+		}
+
 		constructor(options: IBasicElementOptions){
 			this.setData(options);
 			this.createElement();
@@ -32,7 +37,7 @@ namespace cf {
 		}
 
 		// template, should be overwritten ...
-		public getTemplate () : string {return `template missing...`};
+		public getTemplate () : string {return `should be overwritten...`};
 
 		public remove(){
 			this.el.parentNode.removeChild(this.el);
