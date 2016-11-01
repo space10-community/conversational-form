@@ -207,7 +207,7 @@ namespace cf {
 			s10context.appendChild(this.cuiInput.el);
 
 			setTimeout(() => {
-				s10context.classList.add("--show")
+				s10context.classList.add("conversational-form--show")
 				this.flowManager.start();
 			}, 0);
 		}

@@ -103,7 +103,7 @@ namespace cf {
 			});
 			
 			this.el.appendChild(this.currentResponse.el);
-			this.el.scrollTo(0, 1000000000);
+			// this.el.scrollTop = 1000000000;
 		}
 
 		public getTemplate () : string {
