@@ -19,9 +19,10 @@ namespace cf {
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
-			let isValid: boolean = true;
+			let isValid: boolean = value.controlElements[0] != null;
 
-			this.domElement.value = (<OptionButton> value.controlElements[0]).referenceTag.value;
+			if(isValid)
+				this.domElement.value = (<OptionButton> value.controlElements[0]).referenceTag.value;
 
 			return isValid;
 		}

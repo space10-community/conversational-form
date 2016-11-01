@@ -63,11 +63,11 @@ namespace cf {
 				// only one is selectable at the time.
 				for (let i = 0; i < this.elements.length; i++) {
 					let element: OptionButton = <OptionButton>this.elements[i];
-					if(element != event.detail){
+					if(element != event.detail && !this.multiChoice){
 						element.selected = false;
 					}else{
 						// TODO: Should we inject element:value to input field??
-						element.selected = true;
+						element.selected = this.multiChoice ? !element.selected : true;
 					}
 				}
 			}else{

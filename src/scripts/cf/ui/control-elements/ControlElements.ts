@@ -104,7 +104,9 @@ namespace cf {
 					case "OptionsList":
 						let element: OptionsList = <OptionsList> this.elements[0];
 						dto.controlElements.push(element.getValue());
-						dto.text = dto.controlElements[0].value;
+						if(dto.controlElements && dto.controlElements[0])
+							dto.text = dto.controlElements[0].value;
+
 						break;
 				}
 			}
