@@ -3,6 +3,7 @@
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="SelectTag.ts"/>
 /// <reference path="OptionTag.ts"/>
+/// <reference path="../ConversationalForm.ts"/>
 
 // basic tag from form logic
 // types:
@@ -26,7 +27,7 @@ namespace cf {
 		name: string,
 		title: string,
 		question: string,
-		setTagValueAndIsValid(value: string | ITag):boolean;
+		setTagValueAndIsValid(value: FlowDTO):boolean;
 
 		value:string;
 	}
@@ -169,27 +170,26 @@ namespace cf {
 
 		}
 
-		public setTagValueAndIsValid(value: string | ITag):boolean{
+		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			// this sets the value of the tag in the DOM
 			// validation
 			let isValid: boolean = true;
+			let valueText: string = value.text;
+
 			if(this.pattern){
-				isValid = this.pattern.test(value.toString());
+				isValid = this.pattern.test(valueText);
 			}
 
 			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(value.toString());
+				isValid = this.validationCallback(valueText);
 			}
 
-			if(value == ""){
+			if(valueText == ""){
 				isValid = false;
 			}
 
-			// console.log(this, 'set value -> value:', value);
-			// console.log(this, 'set value -> isValid:', isValid);
-
 			if(isValid){
-				this.domElement.value = value.toString();
+				this.domElement.value = valueText;
 			}else{
 				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}

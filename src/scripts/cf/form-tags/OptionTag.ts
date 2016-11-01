@@ -19,10 +19,10 @@ namespace cf {
 			return (<HTMLOptionElement> this.domElement).selected;
 		}
 
-		public setTagValueAndIsValid(value: string | ITag):boolean{
+		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = true;
-			// this sets the value of the tag in the DOM
-			(<HTMLOptionElement> this.domElement).selected = value == "1";
+			// OBS: No need to set any validation og value for this tag type ..
+			// .. it is atm. only used to create pseudo elements in the OptionsList
 
 			return isValid;
 		}

@@ -20,7 +20,6 @@ namespace cf {
 
 		protected onClick(event: MouseEvent){
 			this.checked = !this.checked;
-			this.referenceTag.setTagValueAndIsValid(this.checked ? "1" : "0");
 		}
 
 		// override

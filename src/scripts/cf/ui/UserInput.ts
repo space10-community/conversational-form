@@ -67,16 +67,16 @@ namespace cf {
 			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
-		public getInputValue():string | ITag{
-			let value: string | ITag = this.inputElement.value;
+		public getInputValue():FlowDTO{
+			let value: FlowDTO;// = this.inputElement.value;
 
 			// check for values on control elements as they should overwrite the input value.
 			if(this.controlElements && this.controlElements.active){
-				let controlElementValue: string | IControlElement = this.controlElements.getValue();
-				if((<any>controlElementValue.constructor).name == "String")
-					value = <string> controlElementValue;
-				else
-					value = (<IControlElement> controlElementValue).value;
+				value = <FlowDTO> this.controlElements.getDTO();
+			}else{
+				value = <FlowDTO> {
+					text: this.inputElement.value
+				};
 			}
 
 			return value;
@@ -144,7 +144,7 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			const value: string | ITag = this.getInputValue();
+			const value: FlowDTO = this.getInputValue();
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -171,7 +171,7 @@ namespace cf {
 		}
 
 		private doSubmit(){
-			const value: string | ITag = this.getInputValue();
+			const value: FlowDTO = this.getInputValue();
 
 			this.el.setAttribute("disabled", "disabled");
 			this.el.removeAttribute("error");

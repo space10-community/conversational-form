@@ -1,5 +1,4 @@
 /// <reference path="Button.ts"/>
-/// <reference path="../../form-tags/OptionTag.ts"/>
 
 // namespace
 namespace cf {

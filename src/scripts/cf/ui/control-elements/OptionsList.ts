@@ -1,5 +1,4 @@
 /// <reference path="ControlElement.ts"/>
-/// <reference path="../../form-tags/OptionTag.ts"/>
 /// <reference path="OptionButton.ts"/>
 
 // namespace
@@ -81,7 +80,7 @@ namespace cf {
 			var optionTags: NodeListOf<HTMLOptionElement> = this.referenceTag.domElement.getElementsByTagName("option");
 			for (let i = 0; i < optionTags.length; i++) {
 				let element: HTMLOptionElement = <HTMLOptionElement>optionTags[i];
-				let tag: ITag = cf.Tag.createTag({
+				let tag: OptionTag = <OptionTag> cf.Tag.createTag({
 					domElement: element
 				});
 

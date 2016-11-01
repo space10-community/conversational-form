@@ -66,40 +66,50 @@ namespace cf {
 			this.el.classList.remove("two-row");
 		}
 
-		public getValue(): string | IControlElement{
-			let value: string | IControlElement = "";
+		public getDTO(): FlowDTO{
+			let dto: FlowDTO = {
+				text: undefined,
+				controlElements: [],
+			}
+
+			// generate text value for ChatReponse
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
 						let values: Array<string> = [];
+						;
 						for (var i = 0; i < this.elements.length; i++) {
 							let element: CheckboxButton = <CheckboxButton> this.elements[i];
-							if(element.checked)
+							if(element.checked){
 								values.push(element.value);
+								dto.controlElements.push(element);
+							}
 						}
 						
-						value = values.join(", ");
+						// TODO: Replace last , with dictionary {and}..
+						dto.text = values.join(", ");
+						
 						break;
 
 					case "RadioButton" :
-						value = "";
 						for (var i = 0; i < this.elements.length; i++) {
 							let element: RadioButton = <RadioButton> this.elements[i];
 
-							if(element.checked)
-								value = <IControlElement> element;
-							// else
-							// 	element
+							if(element.checked){
+								dto.text = element.value;
+								dto.controlElements.push(element);
+							}
 						}
 						break;
 					case "OptionsList":
 						let element: OptionsList = <OptionsList> this.elements[0];
-						value = element.getValue();
+						dto.controlElements.push(element.getValue());
+						dto.text = dto.controlElements[0].value;
 						break;
 				}
 			}
 
-			return value;
+			return dto;
 		}
 
 		public buildTags(tags: Array<ITag>){

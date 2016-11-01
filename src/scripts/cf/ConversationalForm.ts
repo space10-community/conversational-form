@@ -222,7 +222,7 @@ namespace cf {
 			// ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail);
 			// ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(ConversationalForm.ILLUSTRATE_APP_FLOW){
+			if(ConversationalForm.ILLUSTRATE_APP_FLOW && eventType == "cf-input-user-input-submit"){
 				console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event type:", eventType);
 				if(detail)
 					console.log("** event flow: " + type + " from: "+(<any> classRef.constructor).name+", event detail:", detail);

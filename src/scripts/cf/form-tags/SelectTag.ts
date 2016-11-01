@@ -18,11 +18,10 @@ namespace cf {
 			// this.setTagValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
 		}
 
-		public setTagValueAndIsValid(value: string | ITag):boolean{
+		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = true;
 
-			const optionTag: OptionTag = <OptionTag> value;
-			this.domElement.value = optionTag.value;
+			this.domElement.value = (<OptionButton> value.controlElements[0]).referenceTag.value;
 
 			return isValid;
 		}

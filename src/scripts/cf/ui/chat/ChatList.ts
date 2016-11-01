@@ -58,11 +58,8 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			if(this.currentResponse){
-				const response: string | ITag = event.detail;
-				if(response.toString() == "[object Object]")
-					this.currentResponse.setValue((<ITag> response).title);
-				else
-					this.currentResponse.setValue((<string> response));
+				const response: FlowDTO = event.detail;
+				this.currentResponse.setValue(response.text);
 			}
 			else{
 				// this should never happen..

@@ -3,6 +3,12 @@
 
 namespace cf {
 	// interface
+
+	export interface FlowDTO{
+		text: string;
+		controlElements?: Array <IControlElement>;
+	}
+
 	export interface FlowManagerOptions{
 		cuiReference: ConversationalForm;
 		tags: Array<ITag>;
@@ -45,21 +51,23 @@ namespace cf {
 		public userInputSubmit(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(this.currentTag.setTagValueAndIsValid(<string | ITag> event.detail)){
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, event.detail)
+			var appDTO: FlowDTO = event.detail;
+
+			if(this.currentTag.setTagValueAndIsValid(appDTO)){
+				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
 
 				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-					detail: event.detail //UserInput value
+					detail: appDTO //UserInput value
 				}));
 
 				// goto next step when user has answered
 				setTimeout(() => this.nextStep(), 1000);
 			}else{
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail)
+				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
 
 				// Value not valid
 				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-					detail: event.detail //UserInput value
+					detail: appDTO //UserInput value
 				}));
 			}
 		}

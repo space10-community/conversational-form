@@ -73,7 +73,7 @@ namespace cf {
 			return this.elements[0].type;
 		}
 
-		public setTagValueAndIsValid(value: string | ITag):boolean{
+		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = true;
 
 			const groupType: string = this.elements[0].type;
@@ -82,10 +82,16 @@ namespace cf {
 				var tag: ITag = this.elements[i];
 				switch(groupType){
 					case "radio" :
-						(<HTMLInputElement> tag.domElement).checked = tag == value;
+						(<HTMLInputElement> tag.domElement).checked = tag == (<IControlElement> value.controlElements[0]).referenceTag;
 						break;
 					case "checkbox" :
-						(<HTMLInputElement> tag.domElement).checked = tag.value == "1";
+						// set dom element to not checked by default and then map to IControlElement's value
+						(<HTMLInputElement> tag.domElement).checked = false;
+						for (let i = 0; i < value.controlElements.length; i++) {
+							let element: IControlElement = <IControlElement> value.controlElements[i];
+							if(tag.domElement == element.referenceTag.domElement)
+								(<HTMLInputElement> tag.domElement).checked = true;
+						}
 						break;
 					
 				}
