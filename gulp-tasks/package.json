@@ -1,9 +1,10 @@
 {
   "name": "space10",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "gulp": "*"
+  },
   "devDependencies": {
-    "gulp": "*",
     "gulp-bower": "*",
     "gulp-changed": "*",
     "gulp-concat": "^2.6.0",

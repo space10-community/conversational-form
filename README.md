@@ -26,6 +26,10 @@
 ### Gulp
 [Install](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
 
+Install local gulp from project root  
+
+	$ npm install gulp
+
 
 ### tsd
 [Install](https://github.com/DefinitelyTyped/tsd#install)
@@ -50,7 +54,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif
 
 ### install new packages for dev
 	
-	$ cd ./gulp-tasks
+	$ cd gulp-tasks
 	$ npm install --save-dev XX
 
 
