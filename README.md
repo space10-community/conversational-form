@@ -20,7 +20,7 @@
 [Install](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
 
 	$ cd gulp-tasks
-	$ npm install --save
+	$ npm install
 
 
 ### Gulp
@@ -37,7 +37,7 @@
 [Install](https://github.com/DefinitelyTyped/tsd#install)
 
 	$ cd src/scripts
-	$ tsd install
+	$ tsd update
 
 
 
