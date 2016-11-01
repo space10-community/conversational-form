@@ -27,12 +27,6 @@
 [Install](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
 
 
-
-### bower
-[Install](https://bower.io/#install-bower)
-
-
-
 ### tsd
 [Install](https://github.com/DefinitelyTyped/tsd#install)
 
