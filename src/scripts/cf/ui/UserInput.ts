@@ -153,6 +153,9 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
+			if(this.el.hasAttribute("disabled"))
+				return;
+
 			const value: FlowDTO = this.getInputValue();
 
 			if(event.keyCode == 13){
