@@ -34,6 +34,11 @@ namespace cf {
 			return this.el.innerText;
 		}
 
+		public get width():number{
+			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
+			return this.el.offsetWidth + mr;
+		}
+
 		protected setData(options: IControlElementOptions){
 			this.referenceTag = options.referenceTag;
 			super.setData(options);
