@@ -45,8 +45,15 @@ namespace cf {
 
 		private onScrubListClick(event: MouseEvent){
 			const centerChild: HTMLElement = <HTMLElement>this.el.children[this.el.children.length - 1];
-			console.log("onScrubListClick", centerChild.getBoundingClientRect());
-			console.log("onScrubListClick", centerChild.offsetLeft, centerChild.offsetWidth);
+			const curScrollLeft: number = this.el.scrollLeft;
+			const listWidth: number = centerChild.offsetWidth;
+			const dirClick: string = (<HTMLElement> event.currentTarget).getAttribute("direction");
+
+			console.log("onScrubListClick", curScrollLeft);
+			console.log("onScrubListClick", listWidth);
+			console.log("onScrubListClick", dirClick);
+
+			this.el.scrollLeft += 100 * (dirClick == "next" ? 1 : -1);
 		}
 
 		updateStateOnElements(controlElement: IControlElement){

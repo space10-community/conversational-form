@@ -46,7 +46,7 @@ namespace cf {
 
 			if(this.currentResponse){
 				const inputFieldStr: string = dto.text;
-				if(inputFieldStr.length == 0){
+				if(inputFieldStr && inputFieldStr.length == 0){
 					this.currentResponse.visible = false;
 				}else{
 					if(!this.currentResponse.visible)
