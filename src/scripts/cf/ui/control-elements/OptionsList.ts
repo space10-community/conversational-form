@@ -16,12 +16,21 @@ namespace cf {
 	export class OptionsList {
 
 		private context: HTMLElement;
+		private multiChoice: boolean;
 		private referenceTag: ITag;
 		private elements: Array<OptionButton>;
+		private onOptionButtonClickCallback: () => void;
 
 		constructor(options: IOptionsListOptions){
 			this.context = options.context;
 			this.referenceTag = options.referenceTag;
+
+			// check for multi choice select tag
+			this.multiChoice = this.referenceTag.domElement.hasAttribute("multiple");
+			
+			this.onOptionButtonClickCallback = this.onOptionButtonClick.bind(this);
+			document.addEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
+
 			this.createElements();
 		}
 
@@ -37,6 +46,34 @@ namespace cf {
 			}
 
 			return w;
+		}
+
+		public getValue(): ITag {
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: OptionButton = <OptionButton>this.elements[i];
+				if(element.selected)
+					return element.referenceTag;
+			}
+			return null;
+		}
+
+		private onOptionButtonClick(event: CustomEvent){
+			// if mutiple... then don remove selection on other buttons
+			const isMutiple: boolean = false;
+			if(!this.multiChoice){
+				// only one is selectable at the time.
+				for (let i = 0; i < this.elements.length; i++) {
+					let element: OptionButton = <OptionButton>this.elements[i];
+					if(element != event.detail){
+						element.selected = false;
+					}else{
+						// TODO: Should we inject vallue to input field??
+						element.selected = true;
+					}
+				}
+			}else{
+				(<OptionButton> event.detail).selected = !(<OptionButton> event.detail).selected;
+			}
 		}
 
 		private createElements(){
@@ -68,6 +105,9 @@ namespace cf {
 		}
 
 		public remove(){
+			document.removeEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
+			this.onOptionButtonClickCallback = null;
+
 			while(this.elements.length > 0)
 				this.elements.pop().remove();
 			this.elements = null;
