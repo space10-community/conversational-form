@@ -67,7 +67,7 @@ namespace cf {
 					if(element != event.detail){
 						element.selected = false;
 					}else{
-						// TODO: Should we inject vallue to input field??
+						// TODO: Should we inject element:value to input field??
 						element.selected = true;
 					}
 				}
