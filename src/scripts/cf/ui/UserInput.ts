@@ -110,9 +110,11 @@ namespace cf {
 
 			this.currentTag = <ITag | ITagGroup> event.detail;
 			if(this.currentTag.type == "group"){
+				//TODO: The buildControlElements should be chained together with AI Reponse.
 				console.log('UserInput > currentTag is a group of types:', (<ITagGroup> this.currentTag).elements[0].type);
 				this.buildControlElements((<ITagGroup> this.currentTag).elements);
 			}else{
+				//TODO: The buildControlElements should be chained together with AI Reponse.
 				console.log('UserInput > currentTag type:', this.currentTag.type);
 				this.buildControlElements([this.currentTag]);
 			}
@@ -134,11 +136,7 @@ namespace cf {
 
 			this.controlElements.updateStateOnElements(controlElement);
 
-			const tag: ITag = controlElement.referenceTag;
-			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, tag);
-			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
-				detail: tag
-			}));
+			this.doSubmit();
 		}
 
 		private onKeyUp(event: KeyboardEvent){

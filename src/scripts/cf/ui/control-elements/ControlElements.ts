@@ -2,6 +2,7 @@
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
+/// <reference path="../chat/ChatResponse.ts"/>
 /// <reference path="../../../typings/es6-promise/es6-promise.d.ts"/>
 
 // namespace
@@ -15,6 +16,7 @@ namespace cf {
 		private list: HTMLElement;
 		private listScrubButton: HTMLElement;
 		private onScrubListClickCallback: () => void;
+		private onChatAIReponseCallback: () => void;
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -25,8 +27,19 @@ namespace cf {
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
 			this.listScrubButton = <HTMLElement> this.el.getElementsByTagName("cf-list-button")[0];
+			
 			this.onScrubListClickCallback = this.onScrubListClick.bind(this);
 			this.listScrubButton.addEventListener("click", this.onScrubListClickCallback, false);
+
+			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
+			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+		}
+
+		private onChatAIReponse(event:CustomEvent){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ControlElement = <ControlElement>this.elements[i];
+				element.show();
+			}
 		}
 
 		private onScrubListClick(event: MouseEvent){
@@ -55,7 +68,6 @@ namespace cf {
 		public getValue(): string{
 			let value: string | Array <string> = "";
 			if(this.elements && this.elements.length > 0){
-				console.log((<any>this.constructor).name, 'get value...:', this.elements[0].type);
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
 						value = [];
@@ -134,7 +146,7 @@ namespace cf {
 
 			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
 				const controlElementsAddedDTO: ControlElementsDTO = {
-					height: this.el.offsetHeight,
+					height: parseInt(window.getComputedStyle(this.el).getPropertyValue("height"), 10),
 				};
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
@@ -173,6 +185,9 @@ namespace cf {
 		public remove(){
 			this.listScrubButton.removeEventListener("click", this.onScrubListClickCallback, false);
 			this.onScrubListClickCallback = null;
+
+			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+			this.onChatAIReponseCallback = null;
 		}
 	}
 }

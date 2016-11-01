@@ -1,5 +1,6 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
+/// <reference path="../../ConversationalForm.ts"/>
 
 // namespace
 namespace cf {
@@ -8,6 +9,10 @@ namespace cf {
 		response: string;
 		image: string;
 		isAIReponse: boolean;
+	}
+
+	export const ChatResponseEvents = {
+		AI_QUESTION_ASKED: "cf-on-ai-asked-question"
 	}
 
 	// class
@@ -38,7 +43,17 @@ namespace cf {
 				if(!this.visible){
 					this.visible = true;
 				}
+
+				if(this.isAIReponse){
+					// AI Reponse ready to ask question.
+
+					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.AI_QUESTION_ASKED, value);
+					document.dispatchEvent(new CustomEvent(ChatResponseEvents.AI_QUESTION_ASKED, {
+						detail: this
+					}));
+				}
 			}
+
 		}
 
 		protected setData(options: IChatResponseOptions):void{

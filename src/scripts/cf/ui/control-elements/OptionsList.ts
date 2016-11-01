@@ -60,6 +60,13 @@ namespace cf {
 			}
 		}
 
+		public show(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: OptionButton = <OptionButton>this.elements[i];
+				element.show();
+			}
+		}
+
 		public remove(){
 			while(this.elements.length > 0)
 				this.elements.pop().remove();

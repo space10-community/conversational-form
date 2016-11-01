@@ -37,8 +37,10 @@ namespace cf {
 		protected setData(options: IControlElementOptions){
 			this.referenceTag = options.referenceTag;
 			super.setData(options);
+		}
 
-			setTimeout(() => this.el.classList.add("show"), 0);
+		public show(){
+			this.el.classList.add("show");
 		}
 
 		public onChoose(){

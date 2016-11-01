@@ -101,7 +101,7 @@ namespace cf {
 				// image: null,
 				isAIReponse: isAIReponse,
 				response: value,// || input-response,
-				image: image
+				image: image,
 			});
 			
 			this.el.appendChild(this.currentResponse.el);
