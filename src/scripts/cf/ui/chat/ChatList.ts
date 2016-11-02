@@ -37,7 +37,7 @@ namespace cf {
 
 		private onControlElementsAddedToUserInput(event: CustomEvent){
 			const dto: ControlElementsDTO = event.detail;
-			this.el.style.paddingBottom = (dto.height + 65) + "px";
+			this.el.style.paddingBottom = (dto.height + 0) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
