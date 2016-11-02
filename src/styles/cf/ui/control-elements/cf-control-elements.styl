@@ -25,6 +25,7 @@ cf-input-control-elements
 		cf-list-button
 			opacity 0
 			pointer-events none
+
 	&.two-row
 		cf-list
 			height 102px
@@ -66,8 +67,8 @@ cf-list-button
 	height calc(100% - 16px)
 	width 38px
 	cursor pointer
-	will-change opacity
-	transition opacity $anim-time * 0.5 $anim-easeOut
+	will-change opacity, width
+	transition opacity $anim-time * 0.5 $anim-easeOut, width $anim-time * 0.5 $anim-easeOut
 
 	+above($breakpoint-1)
 		&:hover:nth-child(1)
@@ -81,7 +82,7 @@ cf-list-button
 	
 	&.hide
 		pointer-events none
-
+		width 15px
 		&:after
 			opacity 0.1
 
