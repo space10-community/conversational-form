@@ -75,13 +75,18 @@ namespace cf {
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 			// the type is not strong with this one..
 
+			let numItemsVisible: number = 0;
 			for (let i = 0; i < elements.length; i++) {
 				let element: ControlElement = <ControlElement>elements[i];
 				element.visible = element.value.toLowerCase().indexOf(inputValueLowerCase) != -1;
+				numItemsVisible += element.visible ? 1 : 0;
 			}
 
-			this.resize();
+			// set feedback text for filter..
+			const infoElement: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
+			infoElement.innerHTML = numItemsVisible == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
 
+			this.resize();
 		}
 
 		updateStateOnElements(controlElement: IControlElement){
