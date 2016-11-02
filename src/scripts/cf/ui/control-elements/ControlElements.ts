@@ -3,6 +3,7 @@
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
+/// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
 /// <reference path="../../../typings/es6-promise/es6-promise.d.ts"/>
 
@@ -15,37 +16,15 @@ namespace cf {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
 		private list: HTMLElement;
-		private listNavButtons: NodeListOf<Element>;
-		private onScrubListClickCallback: () => void;
+
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private elementWidth: number = 0;
 
+		private listScrollController: ScrollController;
+
 		private rAF: number;
-		private listX: number = 0;
 		private listWidth: number = 0;
-
-		private _listXTarget:number = 0;
-		private set listXTarget(value: number){
-			const min: number = 0;
-			const max: number = this.listWidth - this.elementWidth;
-			this._listXTarget = Math.max(min, Math.min(value, max));
-
-			if(this._listXTarget == min && !this.listNavButtons[0].classList.contains("hide"))
-				this.listNavButtons[0].classList.add("hide");
-
-			if(this._listXTarget != min && this.listNavButtons[0].classList.contains("hide"))
-				this.listNavButtons[0].classList.remove("hide");
-
-			if(this._listXTarget == max && !this.listNavButtons[1].classList.contains("hide"))
-				this.listNavButtons[1].classList.add("hide");
-
-			if(this._listXTarget != max && this.listNavButtons[1].classList.contains("hide"))
-				this.listNavButtons[1].classList.remove("hide");
-		}
-		private get listXTarget(): number {
-			return this._listXTarget;
-		}
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -55,17 +34,17 @@ namespace cf {
 			this.el = options.el;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
-			this.listNavButtons = this.el.getElementsByTagName("cf-list-button");
-			
-			this.onScrubListClickCallback = this.onScrubListClick.bind(this);
-			this.listNavButtons[0].addEventListener("click", this.onScrubListClickCallback, false);
-			this.listNavButtons[1].addEventListener("click", this.onScrubListClickCallback, false);
-
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+
+			this.listScrollController = new ScrollController({
+				interactionListener: this.el,
+				listToScroll: this.list,
+				listNavButtons: this.el.getElementsByTagName("cf-list-button"),
+			});
 		}
 
 		private onChatAIReponse(event:CustomEvent){
@@ -80,28 +59,6 @@ namespace cf {
 				const inputValue: string = (<FlowDTO> event.detail).inputValue;
 				this.filterElementsFrom(inputValue);
 			}
-		}
-
-		private onScrubListClick(event: MouseEvent){
-			const dirClick: string = (<HTMLElement> event.currentTarget).getAttribute("direction");
-			this.listXTarget += (this.elementWidth * 0.5) * (dirClick == "next" ? 1 : -1);
-			this.render();
-		}
-
-		private render(){
-			if(this.rAF)
-				cancelAnimationFrame(this.rAF);
-
-			this.listX += (this.listXTarget - this.listX) * 0.23;
-
-			const x: number = this.listX * -1;
-			(<any> this.list).style["-webkit-transform"] = "translateX("+x+"px)";
-			(<any> this.list).style["-moz-transform"] = "translateX("+x+"px)";
-			(<any> this.list).style["-ms-transform"] = "translateX("+x+"px)";
-			(<any> this.list).style["transform"] = "translateX("+x+"px)";
-
-			// cycle render
-			this.rAF = window.requestAnimationFrame(() => this.render());
 		}
 
 		private filterElementsFrom(value:string){
@@ -303,14 +260,16 @@ namespace cf {
 					// toggle nav button visiblity
 					cancelAnimationFrame(this.rAF);
 					if(isListWidthOverElementWidth){
-						this.render();
 						this.el.classList.remove("hide-nav-buttons");
 					}else{
 						this.el.classList.add("hide-nav-buttons");
 					}
 
 					this.elementWidth = elOffsetWidth;
-					this.listXTarget = 0;
+
+					// reset scroll
+					this.listScrollController.reset();
+					this.listScrollController.resize(this.listWidth, this.elementWidth);
 				}
 
 				if(resolve)
@@ -322,15 +281,13 @@ namespace cf {
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
 
-			this.listNavButtons[0].removeEventListener("click", this.onScrubListClickCallback, false);
-			this.listNavButtons[1].removeEventListener("click", this.onScrubListClickCallback, false);
-			this.onScrubListClickCallback = null;
-
 			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 			this.onChatAIReponseCallback = null;
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
+
+			this.listScrollController.remove();
 		}
 	}
 }

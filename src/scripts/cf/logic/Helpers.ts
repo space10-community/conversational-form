@@ -33,8 +33,19 @@ namespace cf {
 		}
 
 		public static getInnerTextOfElement(element: HTMLElement): string {
-			var safe_str = element.innerText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-			return safe_str;
+			// centralized place to handle the innerText return, let the [native] brain handle it
+			var div = document.createElement('div');
+			div.appendChild(document.createTextNode(element.innerText));
+			return div.innerHTML;
+		}
+
+		public static getMouseEvent(eventString: string): string{
+			let mappings: any = [];
+			mappings["mousedown"] = "ontouchstart" in window ? "touchstart" : "mousedown";
+			mappings["mouseup"] = "ontouchstart" in window ? "touchend" : "mouseup";
+			mappings["mousemove"] = "ontouchstart" in window ? "touchmove" : "mousemove";
+
+			return <string> mappings[eventString];
 		}
 	}
 }
