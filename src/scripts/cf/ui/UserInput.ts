@@ -157,6 +157,7 @@ namespace cf {
 				return;
 
 			const value: FlowDTO = this.getInputValue();
+			value.inputValue = this.inputElement.value;
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -169,9 +170,6 @@ namespace cf {
 					this.doSubmit();
 				}
 			}else{
-				if(value.text == "")
-					value.text = this.inputElement.value;
-
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: value

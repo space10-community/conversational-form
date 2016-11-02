@@ -1,4 +1,5 @@
 /// <reference path="Button.ts"/>
+/// <reference path="ControlElement.ts"/>
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
@@ -43,7 +44,7 @@ namespace cf {
 		private onChatAIReponse(event:CustomEvent){
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
-				element.show();
+				element.animateIn();
 			}
 		}
 
@@ -61,7 +62,26 @@ namespace cf {
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
-			console.log((<any>this.constructor).name, 'onUserInputKeyChange:', event.detail);
+			if(this.active){
+				const inputValue: string = (<FlowDTO> event.detail).inputValue;
+				this.filterElementsFrom(inputValue);
+			}
+		}
+
+		private filterElementsFrom(value:string){
+			const inputValueLowerCase: string = value.toLowerCase();
+
+			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+			// the type is not strong with this one..
+
+			for (let i = 0; i < elements.length; i++) {
+				let element: ControlElement = <ControlElement>elements[i];
+				element.visible = element.value.toLowerCase().indexOf(inputValueLowerCase) != -1;
+			}
+
+			this.resize();
+
 		}
 
 		updateStateOnElements(controlElement: IControlElement){
@@ -196,7 +216,7 @@ namespace cf {
 			});
 		}
 
-		public resize(resolve: any, reject: any){
+		public resize(resolve?: any, reject?: any){
 			// scrollbar things
 			// Element.offsetWidth - Element.clientWidth
 			this.list.style.width = "100%";
@@ -219,7 +239,8 @@ namespace cf {
 					}
 				}
 
-				resolve();
+				if(resolve)
+					resolve();
 			}, 0);
 		}
 
