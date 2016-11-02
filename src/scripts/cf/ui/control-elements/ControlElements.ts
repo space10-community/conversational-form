@@ -19,6 +19,7 @@ namespace cf {
 		private onScrubListClickCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
+		private onElementScrollCallback: () => void;
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -39,12 +40,22 @@ namespace cf {
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+
+			this.onElementScrollCallback = this.onElementScroll.bind(this);
+			this.el.addEventListener("scroll", this.onElementScrollCallback, false);
 		}
 
 		private onChatAIReponse(event:CustomEvent){
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
 				element.animateIn();
+			}
+		}
+
+		private onUserInputKeyChange(event: CustomEvent){
+			if(this.active){
+				const inputValue: string = (<FlowDTO> event.detail).inputValue;
+				this.filterElementsFrom(inputValue);
 			}
 		}
 
@@ -61,15 +72,22 @@ namespace cf {
 			this.el.scrollLeft += 100 * (dirClick == "next" ? 1 : -1);
 		}
 
-		private onUserInputKeyChange(event: CustomEvent){
-			if(this.active){
-				const inputValue: string = (<FlowDTO> event.detail).inputValue;
-				this.filterElementsFrom(inputValue);
-			}
+		/**
+		* @name onElementScroll
+		* when cf-control-elements is scrolling vertically
+		*/
+		private onElementScroll(event: Event): void {
+			const curScrollLeft: number = this.el.scrollLeft;
+			console.log((<any>this.constructor).name, 'onElementScroll:', curScrollLeft);
+
 		}
 
 		private filterElementsFrom(value:string){
-			const inputValueLowerCase: string = value.toLowerCase();
+			const inputValuesLowerCase: Array<string> = value.toLowerCase().split(" ");
+			if(inputValuesLowerCase.indexOf("") != -1)
+				inputValuesLowerCase.splice(inputValuesLowerCase.indexOf(""), 1);
+			
+			console.log((<any>this.constructor).name, 'inputValuesLowerCase:', inputValuesLowerCase);
 
 			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
@@ -78,8 +96,20 @@ namespace cf {
 			let numItemsVisible: number = 0;
 			for (let i = 0; i < elements.length; i++) {
 				let element: ControlElement = <ControlElement>elements[i];
-				element.visible = element.value.toLowerCase().indexOf(inputValueLowerCase) != -1;
-				numItemsVisible += element.visible ? 1 : 0;
+				let elementVisibility: boolean = true;
+				
+				// check for all words of input
+				for (let i = 0; i < inputValuesLowerCase.length; i++) {
+					let inputWord: string = <string>inputValuesLowerCase[i];
+					if(elementVisibility){
+						elementVisibility = element.value.toLowerCase().indexOf(inputWord) != -1;
+					}
+				}
+
+				// set element visibility.
+				element.visible = elementVisibility;
+				if(elementVisibility) 
+					numItemsVisible += element.visible ? 1 : 0;
 			}
 
 			// set feedback text for filter..
@@ -236,12 +266,24 @@ namespace cf {
 						w += element.width;
 					}
 
-					if(w > this.el.offsetWidth){
+					const elOffsetWidth: number = this.el.offsetWidth;
+					let isListWidthOverElementWidth: boolean = w > elOffsetWidth;
+					if(isListWidthOverElementWidth){
 						this.el.classList.add("two-row");
-						this.list.style.width = Math.round((w / 2) + 50) + "px";
+						w = Math.round((w / 2) + 50);
+						this.list.style.width = w + "px";
 					}else{
 						this.el.classList.add("one-row");
 					}
+
+					// check again after classes are set.
+					isListWidthOverElementWidth = w > elOffsetWidth;
+					
+					// toggle nav button visiblity
+					if(isListWidthOverElementWidth)
+						this.el.classList.remove("hide-nav-buttons");
+					else
+						this.el.classList.add("hide-nav-buttons");
 				}
 
 				if(resolve)
@@ -259,6 +301,9 @@ namespace cf {
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
+
+			this.el.removeEventListener("scroll", this.onElementScrollCallback, false);
+			this.onElementScrollCallback = null;
 		}
 	}
 }

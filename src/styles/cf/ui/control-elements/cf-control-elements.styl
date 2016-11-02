@@ -7,7 +7,7 @@ cf-input-control-elements
 	height auto
 	overflow hidden
 	display block
-	margin 0px 15px
+	padding 0px 15px
 	position relative
 	overflow-x scroll
 	margin-bottom -15px // hide scrollbar under input field!
@@ -26,11 +26,21 @@ cf-input-control-elements
 		transition height $anim-time * 0.5 $anim-easeOut
 
 	&.one-row
-		cf-list, cf-list-button
+		cf-list
 			height 65px
+		cf-list-button
+			height 65px - 18
+			opacity 0
 	&.two-row
-		cf-list, cf-list-button
+		cf-list
 			height 125px
+		cf-list-button
+			height 125px - 21
+	
+	&.hide-nav-buttons
+		cf-list-button
+			pointer-events none
+			opacity 0
 	
 	cf-list
 		display block
@@ -59,6 +69,8 @@ cf-input-control-elements
 		height 0px
 		width 50px
 		cursor pointer
+		will-change opacity, height
+		transition opacity $anim-time * 0.5 $anim-easeOut, height $anim-time * 0.5 $anim-easeOut
 
 		&:nth-child(1)
 			background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
