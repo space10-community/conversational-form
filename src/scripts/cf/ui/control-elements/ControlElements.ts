@@ -291,7 +291,7 @@ namespace cf {
 					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
 					if(isListWidthOverElementWidth){
 						this.el.classList.add("two-row");
-						this.listWidth = Math.round((this.listWidth / 2) + 50);
+						this.listWidth = Math.max(elOffsetWidth, Math.round((this.listWidth / 2) + 50));
 						this.list.style.width = this.listWidth + "px";
 					}else{
 						this.el.classList.add("one-row");
