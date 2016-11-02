@@ -169,16 +169,13 @@ namespace cf {
 					this.doSubmit();
 				}
 			}else{
+				if(value.text == "")
+					value.text = this.inputElement.value;
+
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: value
 				}));
-
-				// if(this.currentTag.type == "group" && this.controlElements.length > 0){
-				// 	// filter this.controlElements.........
-				// 	console.log('filter control elements:', this.controlElements);
-				// 	console.log('with value:',value);
-				// }
 			}
 		}
 

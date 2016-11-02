@@ -17,6 +17,7 @@ namespace cf {
 		private listNavButtons: NodeListOf<Element>;
 		private onScrubListClickCallback: () => void;
 		private onChatAIReponseCallback: () => void;
+		private onUserInputKeyChangeCallback: () => void;
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -34,6 +35,9 @@ namespace cf {
 
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+
+			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
+			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 		}
 
 		private onChatAIReponse(event:CustomEvent){
@@ -54,6 +58,10 @@ namespace cf {
 			console.log("onScrubListClick", dirClick);
 
 			this.el.scrollLeft += 100 * (dirClick == "next" ? 1 : -1);
+		}
+
+		private onUserInputKeyChange(event: CustomEvent){
+			console.log((<any>this.constructor).name, 'onUserInputKeyChange:', event.detail);
 		}
 
 		updateStateOnElements(controlElement: IControlElement){
@@ -222,6 +230,9 @@ namespace cf {
 
 			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 			this.onChatAIReponseCallback = null;
+
+			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+			this.onUserInputKeyChangeCallback = null;
 		}
 	}
 }
