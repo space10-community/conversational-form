@@ -62,6 +62,7 @@ namespace cf {
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Type your answer here ...",
 			"input-placeholder-error": "Your input is not correct ...",
+			"user-reponse-and": " and ",
 		}
 
 		// default...

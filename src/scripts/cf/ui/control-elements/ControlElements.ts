@@ -94,7 +94,15 @@ namespace cf {
 						}
 						
 						// TODO: Replace last , with dictionary {and}..
-						dto.text = values.join(", ");
+						dto.text = "";
+						for (let i = 0; i < values.length; i++) {
+							let str: string = <string>values[i];
+							let sym: string = (values.length > 1 && i == values.length - 2 ? Dictionary.get("user-reponse-and") : ", ");
+							dto.text += str + (i < values.length - 1 ? sym : "");
+							console.log((<any>this.constructor).name, 'sym:', str, sym);
+						}
+
+						console.log((<any>this.constructor).name, 'SYMBOL! dto.text:', dto.text, values, values.length);
 						
 						break;
 
