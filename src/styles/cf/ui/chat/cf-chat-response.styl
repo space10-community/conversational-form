@@ -2,24 +2,24 @@
 @import "rupture"
 @import "../../cf-variables"
 
-$thumbArea = 38px
+$thumbArea = 24px
 
 cf-chat-response
 	display table
 	max-width 50%
-	min-width 105px
+	min-width 120px
 	width auto
 	position relative
 	backface-visibility hidden
-	padding-left 50px
-	padding-top 20px
+	padding-left 34px
+	padding-top 16px
 	color $color-chat-reponse-default-text
 
 	&:nth-of-type(2n+2)// user..
 		margin-right 0px
 		margin-left auto
 		padding-left 0
-		padding-right 50px
+		padding-right 34px
 		color $color-chat-reponse-user-text
 
 		thumb
@@ -42,8 +42,8 @@ cf-chat-response
 	text
 		display block
 		position relative
-		padding 20px
-		min-height 57px
+		padding 12px 12px 12px 24px
+		min-height 40px
 		background $color-chat-reponse-default-bg
 		border-radius 0px 20px 20px 20px
 		opacity 0
