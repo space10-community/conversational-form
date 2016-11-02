@@ -3,6 +3,25 @@
 @import "../../cf-variables"
 
 cf-radio-button.cf-button
+	+above($breakpoint-1)
+		&:hover
+			cf-radio
+				background $color-chat-reponse-user-text
+
+	cf-radio
+		display block
+		float left
+		width 14px
+		height 14px
+		border-radius 50%
+		background $color-chat-reponse-user-bg
+		will-change background
+		transition background $anim-time * 0.5 $anim-easeOut
+		margin-right 10px
+		margin-left -10px
+		position relative
+
 	&[checked="checked"]
-		background alpha($color-dark-blue, 10%)
-		pointer-events none
+		cf-radio
+			background $color-chat-reponse-user-text
+			pointer-events none
