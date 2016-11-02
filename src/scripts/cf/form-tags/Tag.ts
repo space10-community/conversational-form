@@ -139,7 +139,7 @@ namespace cf {
 				return false;
 			}
 		
-			if(element.tagName.toLowerCase() == "select")
+			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
 			else
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);

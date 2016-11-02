@@ -21,8 +21,17 @@ namespace cf {
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = value.controlElements[0] != null;
 
-			if(isValid)
-				this.domElement.value = (<OptionButton> value.controlElements[0]).referenceTag.value;
+			// select tag values are set via selected attribute on option tag
+			if(isValid){
+				let selectTagValue: string = "";
+				// value.controlElements.length == 1
+				// for (let i = 0; i < value.controlElements.length; i++) {
+				// 	let element: OptionButton = <OptionButton>value.controlElements[i];
+				// 	selectTagValue += element.referenceTag.value + (i < value.controlElements.length - 1 ? "," : "");
+				// }
+
+				// this.domElement.value = selectTagValue;
+			}
 
 			return isValid;
 		}
