@@ -23,6 +23,8 @@ namespace cf {
 
 	// class
 	export class ControlElement extends BasicElement implements IControlElement{
+		private _visible: boolean = true;
+
 		public el: HTMLElement;
 		public referenceTag: ITag;
 
@@ -35,8 +37,22 @@ namespace cf {
 		}
 
 		public get width():number{
+			if(!this.visible)
+				return 0;
+
 			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
 			return this.el.offsetWidth + mr;
+		}
+	
+		public get visible(): boolean{
+			return !this.el.classList.contains("hide");
+		}
+
+		public set visible(value: boolean){
+			if(value)
+				this.el.classList.remove("hide");
+			else
+				this.el.classList.add("hide");
 		}
 
 		protected setData(options: IControlElementOptions){
@@ -44,8 +60,8 @@ namespace cf {
 			super.setData(options);
 		}
 
-		public show(){
-			this.el.classList.add("show");
+		public animateIn(){
+			this.el.classList.add("animate-in");
 		}
 
 		public onChoose(){

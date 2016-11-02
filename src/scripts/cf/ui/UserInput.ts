@@ -157,6 +157,7 @@ namespace cf {
 				return;
 
 			const value: FlowDTO = this.getInputValue();
+			value.inputValue = this.inputElement.value;
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -173,12 +174,6 @@ namespace cf {
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: value
 				}));
-
-				// if(this.currentTag.type == "group" && this.controlElements.length > 0){
-				// 	// filter this.controlElements.........
-				// 	console.log('filter control elements:', this.controlElements);
-				// 	console.log('with value:',value);
-				// }
 			}
 		}
 

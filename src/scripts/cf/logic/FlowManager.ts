@@ -6,6 +6,7 @@ namespace cf {
 
 	export interface FlowDTO{
 		text: string;
+		inputValue?: string,
 		controlElements?: Array <IControlElement>;
 	}
 

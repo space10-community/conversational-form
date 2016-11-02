@@ -14,10 +14,10 @@ namespace cf {
 	// builds x OptionsButton from the registered SelectTag
 	export class OptionsList {
 
+		public elements: Array<OptionButton>;
 		private context: HTMLElement;
 		private multiChoice: boolean;
 		private referenceTag: ITag;
-		private elements: Array<OptionButton>;
 		private onOptionButtonClickCallback: () => void;
 
 		constructor(options: IOptionsListOptions){
@@ -108,10 +108,10 @@ namespace cf {
 			}
 		}
 
-		public show(){
+		public animateIn(){
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: OptionButton = <OptionButton>this.elements[i];
-				element.show();
+				element.animateIn();
 			}
 		}
 

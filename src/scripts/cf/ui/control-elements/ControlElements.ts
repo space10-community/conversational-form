@@ -1,4 +1,5 @@
 /// <reference path="Button.ts"/>
+/// <reference path="ControlElement.ts"/>
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
@@ -17,6 +18,7 @@ namespace cf {
 		private listNavButtons: NodeListOf<Element>;
 		private onScrubListClickCallback: () => void;
 		private onChatAIReponseCallback: () => void;
+		private onUserInputKeyChangeCallback: () => void;
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -34,12 +36,15 @@ namespace cf {
 
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+
+			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
+			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 		}
 
 		private onChatAIReponse(event:CustomEvent){
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
-				element.show();
+				element.animateIn();
 			}
 		}
 
@@ -54,6 +59,29 @@ namespace cf {
 			console.log("onScrubListClick", dirClick);
 
 			this.el.scrollLeft += 100 * (dirClick == "next" ? 1 : -1);
+		}
+
+		private onUserInputKeyChange(event: CustomEvent){
+			if(this.active){
+				const inputValue: string = (<FlowDTO> event.detail).inputValue;
+				this.filterElementsFrom(inputValue);
+			}
+		}
+
+		private filterElementsFrom(value:string){
+			const inputValueLowerCase: string = value.toLowerCase();
+
+			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+			// the type is not strong with this one..
+
+			for (let i = 0; i < elements.length; i++) {
+				let element: ControlElement = <ControlElement>elements[i];
+				element.visible = element.value.toLowerCase().indexOf(inputValueLowerCase) != -1;
+			}
+
+			this.resize();
+
 		}
 
 		updateStateOnElements(controlElement: IControlElement){
@@ -188,7 +216,7 @@ namespace cf {
 			});
 		}
 
-		public resize(resolve: any, reject: any){
+		public resize(resolve?: any, reject?: any){
 			// scrollbar things
 			// Element.offsetWidth - Element.clientWidth
 			this.list.style.width = "100%";
@@ -211,7 +239,8 @@ namespace cf {
 					}
 				}
 
-				resolve();
+				if(resolve)
+					resolve();
 			}, 0);
 		}
 
@@ -222,6 +251,9 @@ namespace cf {
 
 			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 			this.onChatAIReponseCallback = null;
+
+			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+			this.onUserInputKeyChangeCallback = null;
 		}
 	}
 }
