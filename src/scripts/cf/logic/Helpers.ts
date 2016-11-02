@@ -30,6 +30,11 @@ namespace cf {
 			}else{
 				return {x: (<MouseEvent> event).pageX, y: (<MouseEvent> event).pageY, touches: null};
 			}
-		};
+		}
+
+		public static getInnerTextOfElement(element: HTMLElement): string {
+			var safe_str = element.innerText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+			return safe_str;
+		}
 	}
 }

@@ -135,7 +135,8 @@ namespace cf {
 			if(element.style.visibility === "hidden")
 				return false;
 
-			if(element.tagName.toLowerCase() == "option" && (element.innerText == "" || element.innerText == " ")){
+			const innerText: string = Helpers.getInnerTextOfElement(element);
+			if(element.tagName.toLowerCase() == "option" && (innerText == "" || innerText == " ")){
 				return false;
 			}
 		
@@ -232,8 +233,8 @@ namespace cf {
 					let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
 					if(labels.length == 0){
-						// check for innerText 
-						const innerText: string = (<any>parentDomNode).innerText;
+						// check for innerText
+						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
 							labels = [(<HTMLLabelElement>parentDomNode)];
 					}
@@ -244,7 +245,7 @@ namespace cf {
 						for (var i = 0; i < labels.length; i++) {
 							var label: HTMLLabelElement = labels[i];
 							if(elId && (elId && label.getAttribute("for") == elId)){
-								this.questions.push(label.innerText);
+								this.questions.push(Helpers.getInnerTextOfElement(label));
 							}
 						}
 					}else{
@@ -254,7 +255,7 @@ namespace cf {
 
 					// if title is not set from the title attribute then set it to the label...
 					if(!this._title){
-						this._title = this.questions && this.questions.length > 0 ? this.questions[0] : labels[0].innerText;
+						this._title = this.questions && this.questions.length > 0 ? this.questions[0] : Helpers.getInnerTextOfElement(labels[0]);
 					}
 				}
 			}

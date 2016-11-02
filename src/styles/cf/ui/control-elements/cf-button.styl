@@ -16,11 +16,12 @@
 	transform-origin 25% 100%
 	will-change transform, background
 	transition transform $anim-time * 0.5 $anim-easeOut, background $anim-time $anim-easeOut
-	transform: scale(0, 0)
+	transform scale(0, 0)
 
-	for num in 1...15
-		&:nth-child({num})
-			transition-delay num * 0.05s, 0s
+	&:nth-child(even)
+		transition-delay 0.05s, 0s
+	&:nth-child(odd)
+		transition-delay 0.1s, 0s
 
 	&.animate-in
 		transition-timing-function: $anim-easeOutBack, $anim-easeOut

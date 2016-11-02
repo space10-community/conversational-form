@@ -33,7 +33,7 @@ namespace cf {
 		}
 
 		public get value():string{
-			return this.el.innerText;
+			return Helpers.getInnerTextOfElement(this.el);
 		}
 
 		public get width():number{
