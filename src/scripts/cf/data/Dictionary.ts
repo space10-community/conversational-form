@@ -47,6 +47,17 @@ namespace cf {
 			return value;
 		}
 
+		public static parseAndGetMultiValueString(arr: Array<string>):string{
+			let value: string = "";
+			for (let i = 0; i < arr.length; i++) {
+				let str: string = <string>arr[i];
+				let sym: string = (arr.length > 1 && i == arr.length - 2 ? Dictionary.get("user-reponse-and") : ", ");
+				value += str + (i < arr.length - 1 ? sym : "");
+			}
+
+			return value;
+		}
+
 		private validateAndSetNewData(data: any){
 			if(!data["entry-not-found"])
 				throw new Error("Conversational Form Dictionary Error, 'entry-not-found' is undefined");

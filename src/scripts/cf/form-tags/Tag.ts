@@ -135,11 +135,11 @@ namespace cf {
 			if(element.style.visibility === "hidden")
 				return false;
 
-			if(element.tagName.toLowerCase() == "option" && element.innerText.length > 1){
-				return true;
+			if(element.tagName.toLowerCase() == "option" && (element.innerText == "" || element.innerText == " ")){
+				return false;
 			}
 		
-			if(element.tagName.toLowerCase() == "select")
+			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
 			else
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);

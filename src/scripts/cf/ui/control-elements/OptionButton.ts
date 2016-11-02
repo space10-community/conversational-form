@@ -15,10 +15,15 @@ namespace cf {
 		}
 
 		public set selected(value: boolean){
-			if(value)
+			if(value){
 				this.el.setAttribute("selected", "selected");
-			else
+				// set selected state on option tag
+				this.referenceTag.domElement.setAttribute("selected", "selected");
+			}else{
 				this.el.removeAttribute("selected");
+				// remove selected state on option tag
+				this.referenceTag.domElement.removeAttribute("selected");
+			}
 		}
 
 		protected onClick(event: MouseEvent){

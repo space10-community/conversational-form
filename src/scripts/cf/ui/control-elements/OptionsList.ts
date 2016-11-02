@@ -47,13 +47,18 @@ namespace cf {
 			return w;
 		}
 
-		public getValue(): IControlElement {
+		public getValue(): Array<IControlElement> {
+			let arr: Array<IControlElement> = [];
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: OptionButton = <OptionButton>this.elements[i];
-				if(element.selected)
-					return element;
+				if(!this.multiChoice && element.selected){
+					arr.push(element);
+					return arr;
+				}else if(this.multiChoice && element.selected){
+					arr.push(element);
+				}
 			}
-			return null;
+			return arr;
 		}
 
 		private onOptionButtonClick(event: CustomEvent){
@@ -97,6 +102,8 @@ namespace cf {
 					this.elements.push(btn);
 
 					this.context.appendChild(btn.el);
+				}else{
+					console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
 				}
 			}
 		}

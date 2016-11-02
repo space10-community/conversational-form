@@ -83,8 +83,7 @@ namespace cf {
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
-						let values: Array<string> = [];
-						;
+						var values: Array<string> = [];
 						for (var i = 0; i < this.elements.length; i++) {
 							let element: CheckboxButton = <CheckboxButton> this.elements[i];
 							if(element.checked){
@@ -93,16 +92,7 @@ namespace cf {
 							}
 						}
 						
-						// TODO: Replace last , with dictionary {and}..
-						dto.text = "";
-						for (let i = 0; i < values.length; i++) {
-							let str: string = <string>values[i];
-							let sym: string = (values.length > 1 && i == values.length - 2 ? Dictionary.get("user-reponse-and") : ", ");
-							dto.text += str + (i < values.length - 1 ? sym : "");
-							console.log((<any>this.constructor).name, 'sym:', str, sym);
-						}
-
-						console.log((<any>this.constructor).name, 'SYMBOL! dto.text:', dto.text, values, values.length);
+						dto.text = Dictionary.parseAndGetMultiValueString(values);
 						
 						break;
 
@@ -118,9 +108,17 @@ namespace cf {
 						break;
 					case "OptionsList":
 						let element: OptionsList = <OptionsList> this.elements[0];
-						dto.controlElements.push(element.getValue());
-						if(dto.controlElements && dto.controlElements[0])
-							dto.text = dto.controlElements[0].value;
+						dto.controlElements = element.getValue();
+
+						var values: Array<string> = [];
+						if(dto.controlElements && dto.controlElements[0]){
+							for (let i = 0; i < dto.controlElements.length; i++) {
+								let element: IControlElement = <IControlElement>dto.controlElements[i];
+								values.push(dto.controlElements[i].value);
+							}
+						}
+
+						dto.text = Dictionary.parseAndGetMultiValueString(values);
 
 						break;
 				}
