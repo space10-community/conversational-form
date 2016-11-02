@@ -135,8 +135,8 @@ namespace cf {
 			if(element.style.visibility === "hidden")
 				return false;
 
-			if(element.tagName.toLowerCase() == "option" && element.innerText.length > 1){
-				return true;
+			if(element.tagName.toLowerCase() == "option" && (element.innerText == "" || element.innerText == " ")){
+				return false;
 			}
 		
 			if(element.tagName.toLowerCase() == "select")
