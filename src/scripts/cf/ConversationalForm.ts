@@ -1,4 +1,5 @@
 /// <reference path="ui/UserInput.ts"/>
+/// <reference path="ui/ProgressText.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
@@ -32,8 +33,9 @@ namespace cf {
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
-		private cuiInput: UserInput;
 		private chatList: ChatList;
+		private userInput: UserInput;
+		private progressText: ProgressText;
 
 		constructor(options: ConversationalFormOptions){
 			console.log("Space10 Conversational User Interface.");
@@ -199,12 +201,17 @@ namespace cf {
 			s10context.className = "conversational-form";
 			this.context.appendChild(s10context);
 
+			// Conversational Form UI
 			this.chatList = new ChatList({});
 			s10context.appendChild(this.chatList.el);
 
-			// CUI UI
-			this.cuiInput = new UserInput({});
-			s10context.appendChild(this.cuiInput.el);
+			this.userInput = new UserInput({});
+			s10context.appendChild(this.userInput.el);
+
+			// Progress UI
+			this.progressText = new ProgressText({});
+			console.log((<any>this.constructor).name, 'this.progressText:', this.progressText);
+			s10context.appendChild(this.progressText.el);
 
 			setTimeout(() => {
 				s10context.classList.add("conversational-form--show")

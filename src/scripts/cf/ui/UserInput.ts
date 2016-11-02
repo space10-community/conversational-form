@@ -5,9 +5,6 @@
 // namespace
 namespace cf {
 	// interface
-	// export interface IUserInputOptions extends IBasicElementOptions{
-
-	// }
 	
 	export interface ControlElementsDTO{
 		height: number;
@@ -26,6 +23,7 @@ namespace cf {
 
 	// class
 	export class UserInput extends BasicElement {
+		public static ERROR_TIME: number = 2000;
 		public el: HTMLElement;
 
 		private inputElement: HTMLInputElement;
@@ -106,7 +104,7 @@ namespace cf {
 				this.inputElement.setAttribute("data-value", "");
 				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 				this.inputElement.focus();
-			}, 2000);
+			}, UserInput.ERROR_TIME);
 		}
 
 		private onFlowUpdate(event: CustomEvent){
@@ -215,9 +213,9 @@ namespace cf {
 		public getTemplate () : string {
 			return `<cf-input>
 				<cf-input-control-elements>
-					<cf-list-button direction="prev">
+					<cf-list-button class="hide" direction="prev">
 					</cf-list-button>
-					<cf-list-button direction="next">
+					<cf-list-button class="hide" direction="next">
 					</cf-list-button>
 					<cf-list>
 						<cf-info></cf-info>

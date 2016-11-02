@@ -176,6 +176,8 @@ namespace cf {
 			this.inputAccerlation = 0;
 			this.x = 20; // overflow bounce.. could be made nicer
 			this.render();
+			this.listNavButtons[0].classList.add("hide");
+			this.listNavButtons[1].classList.add("hide");
 		}
 
 		public resize(listWidth: number, visibleAreaWidth: number){
