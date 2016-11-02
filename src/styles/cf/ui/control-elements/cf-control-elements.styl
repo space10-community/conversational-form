@@ -20,10 +20,6 @@ cf-input-control-elements
 
 		&.hide
 			display none
-	
-	cf-list, cf-list-button
-		will-change height
-		transition height $anim-time * 0.5 $anim-easeOut
 
 	&.one-row
 		cf-list
@@ -41,51 +37,112 @@ cf-input-control-elements
 		cf-list-button
 			pointer-events none
 			opacity 0
-	
-	cf-list
-		display block
-		height 0px
 
-		&.disabled
-			pointer-events none
+cf-list, cf-list-button
+	will-change height
+	transition height $anim-time * 0.5 $anim-easeOut
 	
-	cf-info
-		position absolute
+cf-list
+	display block
+	height 0px
+
+	&.disabled
 		pointer-events none
-		z-index 0
-		left 15px
-		top 50%
-		height 20px
-		width 400px
-		transform translateY(-50%)
-
-		strong
-			font-weight 900
 	
-	cf-list-button
-		display block
-		position fixed
-		z-index 2
-		height 0px
-		width 50px
-		cursor pointer
-		will-change opacity, height
-		transition opacity $anim-time * 0.5 $anim-easeOut, height $anim-time * 0.5 $anim-easeOut
+cf-info
+	position absolute
+	pointer-events none
+	z-index 0
+	left 15px
+	top 50%
+	height 20px
+	width 400px
+	transform translateY(-50%)
 
-		&:nth-child(1)
-			background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
-			left 0px
+	strong
+		font-weight 900
 
-		&:nth-child(2)
-			right 0px
-			background linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
+cf-list-button
+	display block
+	position fixed
+	z-index 2
+	height 0px
+	width 50px
+	cursor pointer
+	will-change opacity, height
+	transition opacity $anim-time * 0.5 $anim-easeOut, height $anim-time * 0.5 $anim-easeOut
+
+	+above(768px)
+		&:hover:nth-child(1)
+			background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%)
+			&:after
+				animation cf-arrow-left $anim-time $anim-easeInOut
+		&:hover:nth-child(2)
+			background linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%)
+			&:after
+				animation cf-arrow-right $anim-time $anim-easeInOut
+
+	&:nth-child(1)
+		background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
+		left 0px
 
 		&:after
-			content ""
-			display block
-			width 20px
-			height 20px
-			position absolute
-			background red
-			top calc(50% - 10px)
-			left calc(50% - 10px)
+			background-image url("data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgdmlld0JveD0iMCAwIDYgMTAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIzMC4wMDAwMDAsIC01NjcuMDAwMDAwKSIgZmlsbD0iIzBEODNGRiI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDczOC4wMDAwMDAsIDE3OC4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMDAwMDAwLCAzNDAuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDY2LjAwMDAwMCwgMC4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICAgICAgPHBvbHlnb24gdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjkuMDAwMDAwLCA1NC4wMDAwMDApIHJvdGF0ZSgtMTgwLjAwMDAwMCkgdHJhbnNsYXRlKC0yOS4wMDAwMDAsIC01NC4wMDAwMDApICIgcG9pbnRzPSIyNiA1MC4xNTM4NDYyIDI3LjEyNSA0OSAzMiA1NCAyNy4xMjUgNTkgMjYgNTcuODQ2MTUzOCAyOS43NSA1NCI+PC9wb2x5Z29uPgogICAgICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+")
+
+	&:nth-child(2)
+		right 0px
+		background linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
+
+		&:after
+			background-image url("data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgdmlld0JveD0iMCAwIDYgMTAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTIzMC4wMDAwMDAsIC01NjcuMDAwMDAwKSIgZmlsbD0iIzBEODNGRiI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDczOC4wMDAwMDAsIDE3OC4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMDAwMDAwLCAzNDAuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDY2LjAwMDAwMCwgMC4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICAgICAgPHBvbHlnb24gcG9pbnRzPSIyNiA1MC4xNTM4NDYyIDI3LjEyNSA0OSAzMiA1NCAyNy4xMjUgNTkgMjYgNTcuODQ2MTUzOCAyOS43NSA1NCI+PC9wb2x5Z29uPgogICAgICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+")
+
+	&:after
+		content ""
+		display block
+		width 6px
+		height 10px
+		position absolute
+		background-size 6px 10px
+		background-repeat no-repeat
+		top calc(50% - 5px)
+		left calc(50% - 3px)
+
+@keyframes cf-arrow-right
+	0%
+		transform translateX(0px)
+		opacity 1
+	40%
+		transform translateX(20px)
+		opacity 0
+	40.001%
+		transform translateX(-20px)
+		opacity 0
+	80%
+		transform translateX(4px)
+		opacity 1
+	90%
+		transform translateX(-2px)
+		opacity 1
+	100%
+		transform translateX(0px)
+		opacity 1
+
+@keyframes cf-arrow-left
+	0%
+		transform translateX(0px)
+		opacity 1
+	40%
+		transform translateX(-20px)
+		opacity 0
+	40.001%
+		transform translateX(20px)
+		opacity 0
+	80%
+		transform translateX(-4px)
+		opacity 1
+	90%
+		transform translateX(2px)
+		opacity 1
+	100%
+		transform translateX(0px)
+		opacity 1
