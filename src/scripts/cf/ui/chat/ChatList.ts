@@ -45,7 +45,7 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
 
 			if(this.currentResponse){
-				const inputFieldStr: string = dto.text;
+				const inputFieldStr: string = dto.text || dto.inputValue;
 				if(!inputFieldStr || inputFieldStr.length == 0){
 					this.currentResponse.visible = false;
 				}else{
