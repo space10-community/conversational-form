@@ -69,8 +69,6 @@ cf-input
 			svg polygon
 				fill $color-input-error-text
 
-
-
 button.cf-input-button
 	width 45px
 	height 45px
@@ -89,15 +87,20 @@ button.cf-input-button
 		fill #b9bcbe
 		will-change fill
 		transition fill $anim-time * 0.5 $anim-easeOut
-
-	&:hover
-		background: $color-chat-reponse-user-bg
-		border: 1px solid lighten($color-chat-reponse-user-text, 75%)
-
+	
+	&:active
 		svg
-			animation cf-arrow-up $anim-time $anim-easeInOut
-			polygon
-				fill $color-dark-blue
+			transform scale(0.75, 0.75)
+
+	+above($breakpoint-1)
+		&:hover
+			background: $color-chat-reponse-user-bg
+			border: 1px solid lighten($color-chat-reponse-user-text, 75%)
+
+			svg
+				animation cf-arrow-up $anim-time $anim-easeInOut
+				polygon
+					fill $color-dark-blue
 
 @keyframes cf-arrow-up
 	0%

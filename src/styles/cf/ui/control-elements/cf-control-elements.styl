@@ -9,8 +9,6 @@ cf-input-control-elements
 	display block
 	padding 0px 15px
 	position relative
-	overflow-x scroll
-	margin-bottom -15px // hide scrollbar under input field!
 	position relative
 	z-index 0
 
@@ -72,7 +70,7 @@ cf-list-button
 	will-change opacity, height
 	transition opacity $anim-time * 0.5 $anim-easeOut, height $anim-time * 0.5 $anim-easeOut
 
-	+above(768px)
+	+above($breakpoint-1)
 		&:hover:nth-child(1)
 			background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%)
 			&:after
@@ -81,6 +79,16 @@ cf-list-button
 			background linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%)
 			&:after
 				animation cf-arrow-right $anim-time $anim-easeInOut
+	
+	&.hide
+		pointer-events none
+
+		&:after
+			opacity 0.1
+
+	&:active
+		&:after
+			transform scale(0.75, 0.75)
 
 	&:nth-child(1)
 		background linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)
@@ -106,6 +114,8 @@ cf-list-button
 		background-repeat no-repeat
 		top calc(50% - 5px)
 		left calc(50% - 3px)
+		will-change opacity
+		transition opacity $anim-time * 0.5 $anim-easeOut
 
 @keyframes cf-arrow-right
 	0%

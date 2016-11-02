@@ -19,7 +19,33 @@ namespace cf {
 		private onScrubListClickCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
-		private onElementScrollCallback: () => void;
+		private elementWidth: number = 0;
+
+		private rAF: number;
+		private listX: number = 0;
+		private listWidth: number = 0;
+
+		private _listXTarget:number = 0;
+		private set listXTarget(value: number){
+			const min: number = 0;
+			const max: number = this.listWidth - this.elementWidth;
+			this._listXTarget = Math.max(min, Math.min(value, max));
+
+			if(this._listXTarget == min && !this.listNavButtons[0].classList.contains("hide"))
+				this.listNavButtons[0].classList.add("hide");
+
+			if(this._listXTarget != min && this.listNavButtons[0].classList.contains("hide"))
+				this.listNavButtons[0].classList.remove("hide");
+
+			if(this._listXTarget == max && !this.listNavButtons[1].classList.contains("hide"))
+				this.listNavButtons[1].classList.add("hide");
+
+			if(this._listXTarget != max && this.listNavButtons[1].classList.contains("hide"))
+				this.listNavButtons[1].classList.remove("hide");
+		}
+		private get listXTarget(): number {
+			return this._listXTarget;
+		}
 
 		public get active():boolean{
 			return this.elements.length > 0;
@@ -40,9 +66,6 @@ namespace cf {
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
-
-			this.onElementScrollCallback = this.onElementScroll.bind(this);
-			this.el.addEventListener("scroll", this.onElementScrollCallback, false);
 		}
 
 		private onChatAIReponse(event:CustomEvent){
@@ -60,34 +83,31 @@ namespace cf {
 		}
 
 		private onScrubListClick(event: MouseEvent){
-			const centerChild: HTMLElement = <HTMLElement>this.el.children[this.el.children.length - 1];
-			const curScrollLeft: number = this.el.scrollLeft;
-			const listWidth: number = centerChild.offsetWidth;
 			const dirClick: string = (<HTMLElement> event.currentTarget).getAttribute("direction");
-
-			console.log("onScrubListClick", curScrollLeft);
-			console.log("onScrubListClick", listWidth);
-			console.log("onScrubListClick", dirClick);
-
-			this.el.scrollLeft += 100 * (dirClick == "next" ? 1 : -1);
+			this.listXTarget += (this.elementWidth * 0.5) * (dirClick == "next" ? 1 : -1);
+			this.render();
 		}
 
-		/**
-		* @name onElementScroll
-		* when cf-control-elements is scrolling vertically
-		*/
-		private onElementScroll(event: Event): void {
-			const curScrollLeft: number = this.el.scrollLeft;
-			console.log((<any>this.constructor).name, 'onElementScroll:', curScrollLeft);
+		private render(){
+			if(this.rAF)
+				cancelAnimationFrame(this.rAF);
 
+			this.listX += (this.listXTarget - this.listX) * 0.23;
+
+			const x: number = this.listX * -1;
+			(<any> this.list).style["-webkit-transform"] = "translateX("+x+"px)";
+			(<any> this.list).style["-moz-transform"] = "translateX("+x+"px)";
+			(<any> this.list).style["-ms-transform"] = "translateX("+x+"px)";
+			(<any> this.list).style["transform"] = "translateX("+x+"px)";
+
+			// cycle render
+			this.rAF = window.requestAnimationFrame(() => this.render());
 		}
 
 		private filterElementsFrom(value:string){
 			const inputValuesLowerCase: Array<string> = value.toLowerCase().split(" ");
 			if(inputValuesLowerCase.indexOf("") != -1)
 				inputValuesLowerCase.splice(inputValuesLowerCase.indexOf(""), 1);
-			
-			console.log((<any>this.constructor).name, 'inputValuesLowerCase:', inputValuesLowerCase);
 
 			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
@@ -257,33 +277,40 @@ namespace cf {
 			this.list.style.width = "100%";
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
+			this.elementWidth = 0;
 
 			setTimeout(() => {
-				let w: number = 0;
+				this.listWidth = 0;
 				if(this.elements.length > 0){
 					for (let i = 0; i < this.elements.length; i++) {
 						let element: any = <any>this.elements[i];
-						w += element.width;
+						this.listWidth += element.width;
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
-					let isListWidthOverElementWidth: boolean = w > elOffsetWidth;
+					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
 					if(isListWidthOverElementWidth){
 						this.el.classList.add("two-row");
-						w = Math.round((w / 2) + 50);
-						this.list.style.width = w + "px";
+						this.listWidth = Math.round((this.listWidth / 2) + 50);
+						this.list.style.width = this.listWidth + "px";
 					}else{
 						this.el.classList.add("one-row");
 					}
 
 					// check again after classes are set.
-					isListWidthOverElementWidth = w > elOffsetWidth;
+					isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
 					
 					// toggle nav button visiblity
-					if(isListWidthOverElementWidth)
+					cancelAnimationFrame(this.rAF);
+					if(isListWidthOverElementWidth){
+						this.render();
 						this.el.classList.remove("hide-nav-buttons");
-					else
+					}else{
 						this.el.classList.add("hide-nav-buttons");
+					}
+
+					this.elementWidth = elOffsetWidth;
+					this.listXTarget = 0;
 				}
 
 				if(resolve)
@@ -292,6 +319,9 @@ namespace cf {
 		}
 
 		public remove(){
+			cancelAnimationFrame(this.rAF);
+			this.rAF = null;
+
 			this.listNavButtons[0].removeEventListener("click", this.onScrubListClickCallback, false);
 			this.listNavButtons[1].removeEventListener("click", this.onScrubListClickCallback, false);
 			this.onScrubListClickCallback = null;
@@ -301,9 +331,6 @@ namespace cf {
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
-
-			this.el.removeEventListener("scroll", this.onElementScrollCallback, false);
-			this.onElementScrollCallback = null;
 		}
 	}
 }

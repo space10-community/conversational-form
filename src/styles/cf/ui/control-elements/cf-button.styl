@@ -28,7 +28,11 @@
 	&:not(:last-child)
 		margin-right 15px
 
-	&:hover, &[selected="selected"]
+	+above($breakpoint-1)
+		&:hover
+			background alpha($color-dark-blue, 10%)
+
+	&[selected="selected"]
 		background alpha($color-dark-blue, 10%)
 
 	&:active
