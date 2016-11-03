@@ -12,7 +12,7 @@ namespace cf {
 		}
 
 		public get title (): string{
-			return this.domElement.innerText;
+			return Helpers.getInnerTextOfElement(this.domElement);
 		}
 		
 		public get selected (): boolean{

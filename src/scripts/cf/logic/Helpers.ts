@@ -33,10 +33,9 @@ namespace cf {
 		}
 
 		public static getInnerTextOfElement(element: HTMLElement): string {
-			// centralized place to handle the innerText return, let the [native] brain handle it
-			var div = document.createElement('div');
-			div.appendChild(document.createTextNode(element.innerText));
-			return div.innerHTML;
+			var tmp = document.createElement("DIV");
+			tmp.innerHTML = element.innerHTML;
+			return tmp.textContent || tmp.innerText || "";
 		}
 
 		public static getMouseEvent(eventString: string): string{
