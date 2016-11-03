@@ -60,7 +60,7 @@ namespace cf {
 		public get name (): string{
 			return this.domElement.getAttribute("name");
 		}
-		
+
 		public get title (): string{
 			if(!this._title){
 				this._title = this.domElement.getAttribute("title");
@@ -230,32 +230,36 @@ namespace cf {
 				if(parentDomNode){
 					const elId: string = this.domElement.getAttribute("id");
 					// step backwards and check for label tag.
-					let labels: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
+					let labelTags: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
-					if(labels.length == 0){
+					if(labelTags.length == 0){
 						// check for innerText
 						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
-							labels = [(<HTMLLabelElement>parentDomNode)];
+							labelTags = [(<HTMLLabelElement>parentDomNode)];
 					}
 
-					if(labels.length > 0){
+					if(labelTags.length > 0){
 						// if <label> are found then add them to the questions array
 						this.questions = [];
-						for (var i = 0; i < labels.length; i++) {
-							var label: HTMLLabelElement = labels[i];
+						for (var i = 0; i < labelTags.length; i++) {
+							var label: HTMLLabelElement = labelTags[i];
 							if(elId && (elId && label.getAttribute("for") == elId)){
 								this.questions.push(Helpers.getInnerTextOfElement(label));
 							}
 						}
 					}else{
-						// no labels found, so set default
+						// no labelTags found, so set default
 						this.questions = [Dictionary.getAIResponse(this.type)];
 					}
 
 					// if title is not set from the title attribute then set it to the label...
 					if(!this._title){
-						this._title = this.questions && this.questions.length > 0 ? this.questions[0] : Helpers.getInnerTextOfElement(labels[0]);
+						// checl first for optional label set on the Tag
+						if(this.domElement.getAttribute("cf-label"))
+							this._title = this.domElement.getAttribute("cf-label");
+						else
+							this._title = this.questions && this.questions.length > 0 ? this.questions[0] : Helpers.getInnerTextOfElement(labelTags[0]);
 					}
 				}
 			}
