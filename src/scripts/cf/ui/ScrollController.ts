@@ -120,7 +120,6 @@ namespace cf {
 			if(this.x > 0)
 				this.x += (0 - this.x) * 0.3;
 
-			
 			if(this.x < this.max)
 				this.x += (this.max - this.x) * 0.3;
 
@@ -145,7 +144,8 @@ namespace cf {
 			(<any> this.listToScroll).style["transform"] = "translateX("+xx+"px)";
 
 			// cycle render
-			this.rAF = window.requestAnimationFrame(() => this.render());
+			if(this.interacting || (Math.abs(this.inputAccerlation) > 0.02 && !this.interacting))
+				this.rAF = window.requestAnimationFrame(() => this.render());
 		}
 
 		public pushDirection(dir: number){
