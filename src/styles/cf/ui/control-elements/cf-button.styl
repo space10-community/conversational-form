@@ -18,7 +18,6 @@
 	transition transform 0s $anim-easeOut, background $anim-time $anim-easeOut
 	transform scale(0, 0)
 
-
 	&.animate-in
 		&:nth-child(even)
 			transition-delay 0.05s, 0s
@@ -28,7 +27,6 @@
 		transition-duration $anim-time * 0.5, $anim-time
 		transition-timing-function $anim-easeOutBack, $anim-easeOut
 		transform scale(1, 1)
-
 
 	&:not(:last-child)
 		margin-right 10px
@@ -42,6 +40,3 @@
 
 	&:active
 		background alpha($color-dark-blue, 20%)
-
-.cf-button.--disabled
-	pointer-events none
