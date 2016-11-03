@@ -69,12 +69,12 @@ cf-input
 				fill $color-input-error-text
 	
 	&[tag-type="file"]
-		.cf-input-button
-			background white !important
-
+		cf-input-button.cf-input-button
 			svg.cf-icon-attachment
+				transform rotateX(0deg)
 				opacity 1
 			svg.cf-icon-progress
+				transform rotateX(-90deg)
 				opacity 0
 
 cf-input-button.cf-input-button
@@ -91,21 +91,30 @@ cf-input-button.cf-input-button
 	border-radius 50%
 	will-change background, border
 	transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut
+	perspective 2000px
 
 	svg
 		position absolute
 		width 100%
 		height auto
 		transform-origin 50% 50%
+		will-change transform, opacity
+		transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
+
 
 	svg.cf-icon-attachment
+		transform rotateX(90deg)
 		opacity 0
+
 		path
 			stroke #b9bcbe
 			will-change stroke
 			transition stroke $anim-time * 0.5 $anim-easeOut
 
 	svg.cf-icon-progress
+		transform rotateX(0deg)
+		opacity 1
+
 		polygon
 			fill #b9bcbe
 			will-change fill
