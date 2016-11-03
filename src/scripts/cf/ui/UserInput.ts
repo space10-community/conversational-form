@@ -172,7 +172,7 @@ namespace cf {
 			// we need to check if current tag is file
 			if(this.currentTag.type == "file"){
 				// trigger <input type="file"
-				(<InputFileTag> this.currentTag).triggerFileSelect();
+				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
 			}else{
 				// for groups, we expect that there is always a default value set
 				this.doSubmit();

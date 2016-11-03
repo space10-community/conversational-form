@@ -3,7 +3,6 @@
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="SelectTag.ts"/>
 /// <reference path="OptionTag.ts"/>
-/// <reference path="InputFileTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
 
 // basic tag from form logic
@@ -157,15 +156,9 @@ namespace cf {
 				// ignore hidden tags
 				let tag: ITag;
 				if(element.tagName.toLowerCase() == "input"){
-					if(element.getAttribute("type") == "file"){
-						tag = new InputFileTag({
-							domElement: element
-						});
-					}else{
-						tag = new InputTag({
-							domElement: element
-						});
-					}
+					tag = new InputTag({
+						domElement: element
+					});
 				}else if(element.tagName.toLowerCase() == "select"){
 					tag = new SelectTag({
 						domElement: element

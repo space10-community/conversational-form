@@ -1,16 +1,17 @@
-/// <reference path="Tag.ts"/>
+/// <reference path="Button.ts"/>
+/// <reference path="../../logic/Helpers.ts"/>
 
 // namespace
 namespace cf {
 	// interface
 
 	// class
-	export class InputFileTag extends Tag {
-		constructor(options: ITagOptions){
+	export class UploadFileUI extends Button {
+		constructor(options: IControlElementOptions){
 			super(options);
 
 			if(Helpers.caniuse.fileReader()){
-				this.domElement.addEventListener("change", (event: any) => {
+				this.referenceTag.domElement.addEventListener("change", (event: any) => {
 					console.log((<any>this.constructor).name, '123:', event);
 
 					var reader: FileReader = new FileReader();
@@ -35,14 +36,29 @@ namespace cf {
 			}
 		}
 
-		public triggerFileSelect(){
-			this.domElement.click();
+		protected onClick(event: MouseEvent){
+			// super.onClick(event);
 		}
 
+		public triggerFileSelect(){
+			// trigger file prompt
+			this.referenceTag.domElement.click();
+		}
+
+		// override
+
 		public dealloc(){
-			// TODO: Unbind listeners to dom element!
+			// TODO: remove listeners on this.referenceTag.domElement
 			super.dealloc();
+		}
+
+		public getTemplate () : string {
+			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
+			return `<cf-radio-button class="cf-button" checked=`+(isChecked ? "checked" : "")+`>
+				<cf-radio></cf-radio>
+				` + this.referenceTag.title + `
+			</cf-radio-button>
+			`;
 		}
 	}
 }
-
