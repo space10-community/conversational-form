@@ -48,10 +48,7 @@ namespace cf {
 		}
 
 		private onChatAIReponse(event:CustomEvent){
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ControlElement = <ControlElement>this.elements[i];
-				element.animateIn();
-			}
+			this.animateElementsIn();
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
@@ -94,9 +91,18 @@ namespace cf {
 			infoElement.innerHTML = numItemsVisible == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
 
 			this.resize();
+
+			this.animateElementsIn();
 		}
 
-		updateStateOnElements(controlElement: IControlElement){
+		private animateElementsIn(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ControlElement = <ControlElement>this.elements[i];
+				element.animateIn();
+			}
+		}
+
+		public updateStateOnElements(controlElement: IControlElement){
 			this.list.classList.add("disabled");
 			if(controlElement.type == "RadioButton"){
 				// uncheck other radio buttons...

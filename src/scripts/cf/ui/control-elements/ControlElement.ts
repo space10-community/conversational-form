@@ -27,6 +27,7 @@ namespace cf {
 
 		public el: HTMLElement;
 		public referenceTag: ITag;
+		private animateInTimer: number = 0;
 
 		public get type():string{
 			return (<any>this.constructor).name;
@@ -61,7 +62,13 @@ namespace cf {
 		}
 
 		public animateIn(){
-			this.el.classList.add("animate-in");
+			clearTimeout(this.animateInTimer);
+			if(this.el.classList.contains("animate-in")){
+				this.el.classList.remove("animate-in");
+				this.animateInTimer = setTimeout(() => this.el.classList.add("animate-in"), 0);
+			}else{
+				this.el.classList.add("animate-in");
+			}
 		}
 
 		public onChoose(){

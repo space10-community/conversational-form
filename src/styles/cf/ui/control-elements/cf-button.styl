@@ -15,17 +15,20 @@
 
 	transform-origin 25% 100%
 	will-change transform, background
-	transition transform $anim-time * 0.5 $anim-easeOut, background $anim-time $anim-easeOut
+	transition transform 0s $anim-easeOut, background $anim-time $anim-easeOut
 	transform scale(0, 0)
 
-	&:nth-child(even)
-		transition-delay 0.05s, 0s
-	&:nth-child(odd)
-		transition-delay 0.15s, 0s
 
 	&.animate-in
-		transition-timing-function: $anim-easeOutBack, $anim-easeOut
-		transform: scale(1, 1)
+		&:nth-child(even)
+			transition-delay 0.05s, 0s
+		&:nth-child(odd)
+			transition-delay 0.15s, 0s
+
+		transition-duration $anim-time * 0.5, $anim-time
+		transition-timing-function $anim-easeOutBack, $anim-easeOut
+		transform scale(1, 1)
+
 
 	&:not(:last-child)
 		margin-right 10px

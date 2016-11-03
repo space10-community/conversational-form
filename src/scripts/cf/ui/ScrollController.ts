@@ -174,7 +174,7 @@ namespace cf {
 			this.startX = 0;
 			this.startXTarget = this.startX;
 			this.inputAccerlation = 0;
-			this.x = 20; // overflow bounce.. could be made nicer
+			this.x = 0;
 			this.render();
 			this.listNavButtons[0].classList.add("hide");
 			this.listNavButtons[1].classList.add("hide");
