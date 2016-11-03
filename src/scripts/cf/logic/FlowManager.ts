@@ -92,7 +92,7 @@ namespace cf {
 			// TODO: fix this
 		}
 
-		public remove(){
+		public dealloc(){
 			document.removeEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 			this.userInputSubmitCallback = null;
 		}

@@ -116,12 +116,12 @@ namespace cf {
 			}
 		}
 
-		public remove(){
+		public dealloc(){
 			document.removeEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
 			this.onOptionButtonClickCallback = null;
 
 			while(this.elements.length > 0)
-				this.elements.pop().remove();
+				this.elements.pop().dealloc();
 			this.elements = null;
 		}
 	}

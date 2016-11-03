@@ -9,6 +9,7 @@ namespace cf {
 		el: HTMLElement;
 		// template, can be overwritten ...
 		getTemplate(): string;
+		dealloc(): void;
 	}
 
 	// class
@@ -34,7 +35,7 @@ namespace cf {
 		// template, should be overwritten ...
 		public getTemplate () : string {return `should be overwritten...`};
 
-		public remove(){
+		public dealloc(){
 			this.el.parentNode.removeChild(this.el);
 		}
 	}

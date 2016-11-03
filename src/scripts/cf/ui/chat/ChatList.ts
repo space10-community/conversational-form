@@ -104,7 +104,7 @@ namespace cf {
 					</cf-chat>`;
 		}
 
-		public remove(){
+		public dealloc(){
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
@@ -113,7 +113,7 @@ namespace cf {
 			this.onInputKeyChangeCallback = null
 			document.removeEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
 			this.onControlElementsAddedToUserInputCallback = null
-			super.remove();
+			super.dealloc();
 		}
 	}
 }

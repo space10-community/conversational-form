@@ -3,6 +3,7 @@
 /// <reference path="RadioButton.ts"/>
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
+/// <reference path="UploadFileUI.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
 /// <reference path="../../../typings/es6-promise/es6-promise.d.ts"/>
@@ -124,6 +125,10 @@ namespace cf {
 			this.el.classList.remove("two-row");
 		}
 
+		public getElement(index: number):IControlElement | OptionsList{
+			return this.elements[index];
+		}
+
 		public getDTO(): FlowDTO{
 			let dto: FlowDTO = {
 				text: undefined,
@@ -186,7 +191,7 @@ namespace cf {
 			// remove old elements
 			if(this.elements ){
 				while(this.elements.length > 0){
-					this.elements.pop().remove();
+					this.elements.pop().dealloc();
 				}
 			}
 
@@ -213,7 +218,14 @@ namespace cf {
 							context: this.list,
 						}));
 						break;
+					
+					case "input" :
 					default :
+						if(tag.type == "file"){
+							this.elements.push(new UploadFileUI({
+								referenceTag: tag,
+							}));
+						}
 						// nothing to add.
 						console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
 						break;
@@ -288,7 +300,7 @@ namespace cf {
 			}, 0);
 		}
 
-		public remove(){
+		public dealloc(){
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
 
@@ -298,7 +310,7 @@ namespace cf {
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
 
-			this.listScrollController.remove();
+			this.listScrollController.dealloc();
 		}
 	}
 }

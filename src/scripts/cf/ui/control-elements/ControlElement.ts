@@ -14,7 +14,7 @@ namespace cf {
 		referenceTag: ITag;
 		type: string;
 		value: string;
-		remove(): void;
+		dealloc(): void;
 	}
 
 	export const ControlElementEvents = {
@@ -78,8 +78,8 @@ namespace cf {
 			}));
 		}
 
-		public remove(){
-			super.remove();
+		public dealloc(){
+			super.dealloc();
 		}
 	}
 }

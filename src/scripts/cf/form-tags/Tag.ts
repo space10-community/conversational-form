@@ -29,7 +29,7 @@ namespace cf {
 		question: string,
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
-
+		dealloc():void;
 		value:string;
 	}
 
@@ -125,6 +125,10 @@ namespace cf {
 			}
 		}
 
+		public dealloc(){
+			// TODO: Handle deallocation of element
+		}
+
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
@@ -154,26 +158,18 @@ namespace cf {
 				if(element.tagName.toLowerCase() == "input"){
 					tag = new InputTag({
 						domElement: element
-						// validationCallback
-						// questions: Array<String>
 					});
 				}else if(element.tagName.toLowerCase() == "select"){
 					tag = new SelectTag({
 						domElement: element
-						// validationCallback
-						// questions: Array<String>
 					});
 				}else if(element.tagName.toLowerCase() == "button"){
 					tag = new ButtonTag({
 						domElement: element
-						// validationCallback
-						// questions: Array<String>
 					});
 				}else if(element.tagName.toLowerCase() == "option"){
 					tag = new OptionTag({
 						domElement: element
-						// validationCallback
-						// questions: Array<String>
 					});
 				}
 
@@ -204,7 +200,9 @@ namespace cf {
 			}
 
 			if(isValid){
-				this.domElement.value = valueText;
+				// we cannot set the dom element value when type is file
+				if(this.type != "file")
+					this.domElement.value = valueText;
 			}else{
 				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}
