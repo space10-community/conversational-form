@@ -200,7 +200,9 @@ namespace cf {
 			}
 
 			if(isValid){
-				this.domElement.value = valueText;
+				// we cannot set the dom element value when type is file
+				if(this.type != "file")
+					this.domElement.value = valueText;
 			}else{
 				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}

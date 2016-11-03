@@ -29,6 +29,7 @@ namespace cf {
 					}
 					reader.onload = (event: any) => {
 						console.log("onload", event);
+						this.onChoose();
 					}
 
 					reader.readAsBinaryString(event.target.files[0]);
