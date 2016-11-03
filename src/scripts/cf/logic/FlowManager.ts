@@ -5,7 +5,8 @@ namespace cf {
 	// interface
 
 	export interface FlowDTO{
-		text: string;
+		text?: string;
+		errorText?: string;
 		inputValue?: string,
 		controlElements?: Array <IControlElement>;
 	}

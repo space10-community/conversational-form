@@ -31,11 +31,19 @@ namespace cf {
 		private inputInvalidCallback: () => void;
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
+		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 
 		private controlElements: ControlElements;
 
 		private currentTag: ITag | ITagGroup;
+
+		private set disabled(value: boolean){
+			if(value)
+				this.el.setAttribute("disabled", "disabled");
+			else
+				this.el.removeAttribute("disabled");
+		}
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -59,6 +67,9 @@ namespace cf {
 
 			this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this);
 			document.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+
+			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
+			document.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
 
 			const submitButton: HTMLButtonElement = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
@@ -89,13 +100,13 @@ namespace cf {
 			console.log((<any>this.constructor).name, 'this.inputElement.value:', this.inputElement.value);
 
 			this.el.setAttribute("error", "");
-			this.el.setAttribute("disabled", "disabled");
+			this.disabled = true;
 			// cf-error
 			this.inputElement.setAttribute("placeholder", dto.errorText || this.currentTag.errorMessage);
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
-				this.el.removeAttribute("disabled");
+				this.disabled = false;
 				this.el.removeAttribute("error");
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
@@ -129,8 +140,16 @@ namespace cf {
 			}
 
 			setTimeout(() => {
-				this.el.removeAttribute("disabled");
+				this.disabled = false;
 			}, 1000)
+		}
+
+		private onControlElementProgressChange(event: CustomEvent){
+			const status: string = event.detail;
+			this.disabled = status == ControlElementProgressStates.BUSY;
+			// if(status == ControlElementProgressStates.READY)
+
+			console.log((<any>this.constructor).name, 'onControlElementProgressChange:', status);
 		}
 
 		private buildControlElements(tags: Array<ITag>){
@@ -184,7 +203,7 @@ namespace cf {
 		private doSubmit(){
 			const value: FlowDTO = this.getInputValue();
 
-			this.el.setAttribute("disabled", "disabled");
+			this.disabled = true;
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
 

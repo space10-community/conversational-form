@@ -9,6 +9,15 @@ namespace cf {
 	export class UploadFileUI extends Button {
 		private maxFileSize: number = 100000000000;
 		private onDomElementChangeCallback: () => void;
+		private progressBar: HTMLElement;
+		private loading: boolean = false;
+		private submitTimer: number = 0;
+		private fileName: string = "";
+
+		public get value():string{
+			return this.fileName;
+		}
+
 		constructor(options: IControlElementOptions){
 			super(options);
 
@@ -18,6 +27,8 @@ namespace cf {
 					const maxFileSize: number = parseInt(maxFileSizeStr, 10);
 					this.maxFileSize = maxFileSize;
 				}
+
+				this.progressBar = <HTMLElement> this.el.getElementsByTagName("cf-upload-file-progress-bar")[0];
 
 				this.onDomElementChangeCallback = this.onDomElementChange.bind(this);
 				this.referenceTag.domElement.addEventListener("change", this.onDomElementChangeCallback, false);
@@ -31,16 +42,18 @@ namespace cf {
 			reader.onerror = (event: any) => {
 				console.log("onerror", event);
 			}
-			reader.onprogress = (event: any) => {
+			reader.onprogress = (event: ProgressEvent) => {
 				console.log("onprogress", event);
+
+				this.progressBar.style.width = ((event.loaded / event.total) * 100) + "%";
 			}
 			reader.onabort = (event: any) => {
 				console.log("onabort", event);
 			}
 			reader.onloadstart = (event: any) => {
-
 				// check for file size
-				const fileSize: number = (<HTMLInputElement> this.referenceTag.domElement).files[0].size;
+				const file: File = (<HTMLInputElement> this.referenceTag.domElement).files[0];
+				const fileSize: number = file ? file.size : this.maxFileSize + 1;// if file is undefined then abort ...
 				if(fileSize > this.maxFileSize){
 					reader.abort();
 					const dto: FlowDTO = {
@@ -51,23 +64,43 @@ namespace cf {
 					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
 						detail: dto
 					}));
+				}else{
+					// good to go
+					this.fileName = file.name;
+					this.loading = true;
+					this.animateIn();
+					// set text
+					let sizeConversion: number = Math.floor( Math.log(fileSize) / Math.log(1024) );
+					const sizeChart: Array<string> = ["b", "kb", "mb", "gb"];
+					sizeConversion = Math.min(sizeChart.length - 1, sizeConversion);
+					const humanSizeString: string = Number((fileSize / Math.pow(1024, sizeConversion)).toFixed(2)) * 1 + " " + sizeChart[sizeConversion];
+					
+					const text: string = file.name + " ("+humanSizeString+")";
+					this.el.getElementsByTagName("cf-upload-file-text")[0].innerHTML = text;
 
+					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+						detail: ControlElementProgressStates.BUSY
+					}));
 				}
-
-				// var fileSize = fileInput.get(0).files[0].size; // in bytes
-				// if(fileSize>maxSize){
-				// 	alert('file size is more then' + maxSize + ' bytes');
-				// 	return false;
-				// }else{
-				// 	alert('file size is correct- '+fileSize+' bytes');
-				// }
 			}
 			reader.onload = (event: any) => {
-				// console.log("onload", event);
-				this.onChoose(); // submit the file
+				this.progressBar.classList.add("loaded");
+				this.submitTimer = setTimeout(() =>{
+					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+						detail: ControlElementProgressStates.READY
+					}));
+
+					this.el.classList.remove("animate-in");
+					this.onChoose(); // submit the file
+				}, 2000);
 			}
 
 			reader.readAsBinaryString(event.target.files[0]);
+		}
+
+		public animateIn(){
+			if(this.loading)
+				super.animateIn();
 		}
 
 		protected onClick(event: MouseEvent){
@@ -82,6 +115,8 @@ namespace cf {
 		// override
 
 		public dealloc(){
+			clearTimeout(this.submitTimer);
+			this.progressBar = null;
 			if(this.onDomElementChangeCallback){
 				this.referenceTag.domElement.removeEventListener("change", this.onDomElementChangeCallback, false);
 				this.onDomElementChangeCallback = null;
@@ -93,7 +128,10 @@ namespace cf {
 		public getTemplate () : string {
 			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
 			return `<cf-upload-file-ui>
-				` + this.referenceTag.title + `
+				<cf-upload-file-text></cf-upload-file-text>
+				<cf-upload-file-progress>
+					<cf-upload-file-progress-bar></cf-upload-file-progress-bar>
+				</cf-upload-file-progress>
 			</cf-upload-file-ui>
 			`;
 		}

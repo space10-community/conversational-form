@@ -1,0 +1,83 @@
+@import "nib"
+@import "rupture"
+@import "../../cf-variables"
+
+cf-upload-file-ui
+	display block
+	width 100%
+	height $input-field-height
+	position absolute
+	top 0px
+	padding-right 30px
+
+	opacity 0
+	transform translateY(20px) rotateX(30deg)
+	will-change opacity, transform
+	transition opacity $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOut
+
+	&.animate-in
+		transition-timing-function $anim-easeOut, $anim-easeOutBack
+		opacity 1
+		transform translateY(0px) rotateX(0deg)
+
+
+	// &:after
+	// 	content ""
+	// 	display block
+	// 	clear both
+
+cf-upload-file-text
+	display block
+	float left
+	width auto
+	height 100%
+	// max-width 40%
+	padding-left 40px
+	padding-right 30px
+	padding-top 17px
+	position relative
+	color $color-chat-reponse-user-text
+
+	&:before
+		content ""
+		display inline-block
+		position absolute
+		top 17px
+		left 23px
+		width 10px
+		height 14px
+		background-image url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAgMTQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGcgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTc1Ni4wMDAwMDAsIC01NDkuMDAwMDAwKSIgZmlsbD0iIzBEODNGRiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzM2LjAwMDAwMCwgMTI3LjAwMDAwMCkiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMDAwMDAwLCA0MDYuMDAwMDAwKSI+PHBvbHlnb24gcG9pbnRzPSIyMCAxNiAyNi4wMDMwNzk5IDE2IDMwIDE5Ljk5OTk0IDMwIDMwIDIwIDMwIj48L3BvbHlnb24+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==")
+		background-repeat no-repeat
+		background-size 10px 14px
+
+cf-upload-file-progress
+	display block
+	height 100%
+	overflow hidden
+	position relative
+	padding-right 30px
+
+	&:after
+		content ""
+		width 100%
+		background #e6f2ff
+		border-radius 7px
+
+	&:after, cf-upload-file-progress-bar
+		display block
+		height 10px
+		position absolute
+		top 19px
+		z-index 1
+	
+	cf-upload-file-progress-bar
+		width 0%
+		will-change width, border-radius
+		transition width $anim-time * 0.2 linear, border-radius $anim-time * 0.5 $anim-easeOut
+		background #0288fd
+		z-index 2
+		border-radius 7px 0px 0px 7px
+
+		&.loaded
+			border-radius 7px 7px 7px 7px
+	

@@ -18,7 +18,13 @@ namespace cf {
 	}
 
 	export const ControlElementEvents = {
-		SUBMIT_VALUE: "cf-basic-element-submit"
+		SUBMIT_VALUE: "cf-basic-element-submit",
+		PROGRESS_CHANGE: "cf-basic-element-progress", // busy, ready
+	}
+
+	export const ControlElementProgressStates = {
+		BUSY: "cf-control-element-progress-BUSY",
+		READY: "cf-control-element-progress-READY",
 	}
 
 	// class

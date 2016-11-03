@@ -84,10 +84,14 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
+				
 				if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
 				}else{
-					this.errorMessages = [Dictionary.get("input-placeholder-error")];
+					if(this.type == "file")
+						this.errorMessages = [Dictionary.get("input-placeholder-file-error")];
+					else
+						this.errorMessages = [Dictionary.get("input-placeholder-error")];
 				}
 			}
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];

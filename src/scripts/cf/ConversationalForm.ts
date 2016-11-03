@@ -210,6 +210,12 @@ namespace cf {
 				s10context.classList.add("conversational-form--show")
 				this.flowManager.start();
 			}, 0);
+
+			// s10context.addEventListener('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+			// 	e.preventDefault();
+			// 	e.stopPropagation();
+			// 	console.log(e);
+			// })
 		}
 
 		public remove(){

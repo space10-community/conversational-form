@@ -163,7 +163,7 @@ namespace cf {
 						}
 						break;
 					case "OptionsList":
-						let element: OptionsList = <OptionsList> this.elements[0];
+						var element: OptionsList = <OptionsList> this.elements[0];
 						dto.controlElements = element.getValue();
 
 						var values: Array<string> = [];
@@ -176,6 +176,10 @@ namespace cf {
 
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 
+						break;
+					
+					case "UploadFileUI":
+						dto.text = (<UploadFileUI> this.elements[0]).value;//Dictionary.parseAndGetMultiValueString(values);
 						break;
 				}
 			}
