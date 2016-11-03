@@ -7,34 +7,38 @@ namespace cf {
 
 	// class
 	export class UploadFileUI extends Button {
+		private onDomElementChangeCallback: () => void;
 		constructor(options: IControlElementOptions){
 			super(options);
 
 			if(Helpers.caniuse.fileReader()){
-				this.referenceTag.domElement.addEventListener("change", (event: any) => {
-					console.log((<any>this.constructor).name, '123:', event);
-
-					var reader: FileReader = new FileReader();
-					reader.onerror = (event: any) => {
-						console.log("onerror", event);
-					}
-					reader.onprogress = (event: any) => {
-						console.log("onprogress", event);
-					}
-					reader.onabort = (event: any) => {
-						console.log("onabort", event);
-					}
-					reader.onloadstart = (event: any) => {
-						console.log("onloadstart", event);
-					}
-					reader.onload = (event: any) => {
-						console.log("onload", event);
-						this.onChoose();
-					}
-
-					reader.readAsBinaryString(event.target.files[0]);
-				}, false);
+				this.onDomElementChangeCallback = this.onDomElementChange.bind(this);
+				this.referenceTag.domElement.addEventListener("change", this.onDomElementChangeCallback, false);
+			}else{
+				// TODO: What to do when fileReader is not supported?
 			}
+		}
+
+		private onDomElementChange(event: any){
+			var reader: FileReader = new FileReader();
+			reader.onerror = (event: any) => {
+				console.log("onerror", event);
+			}
+			reader.onprogress = (event: any) => {
+				console.log("onprogress", event);
+			}
+			reader.onabort = (event: any) => {
+				console.log("onabort", event);
+			}
+			reader.onloadstart = (event: any) => {
+				console.log("onloadstart", event);
+			}
+			reader.onload = (event: any) => {
+				console.log("onload", event);
+				this.onChoose(); // submit the file..
+			}
+
+			reader.readAsBinaryString(event.target.files[0]);
 		}
 
 		protected onClick(event: MouseEvent){
@@ -49,7 +53,11 @@ namespace cf {
 		// override
 
 		public dealloc(){
-			// TODO: remove listeners on this.referenceTag.domElement
+			if(this.onDomElementChangeCallback){
+				this.referenceTag.domElement.removeEventListener("change", this.onDomElementChangeCallback, false);
+				this.onDomElementChangeCallback = null;
+			}
+
 			super.dealloc();
 		}
 
