@@ -125,16 +125,16 @@ namespace cf {
 				this.x += (this.max - this.x) * 0.3;
 
 			// toggle visibility on nav arrows
-			if(this.x >= 0 && !this.listNavButtons[0].classList.contains("hide"))
+			if(this.x >= -10 && !this.listNavButtons[0].classList.contains("hide"))
 				this.listNavButtons[0].classList.add("hide");
 
-			if(this.x < 0 && this.listNavButtons[0].classList.contains("hide"))
+			if(this.x < -10 && this.listNavButtons[0].classList.contains("hide"))
 				this.listNavButtons[0].classList.remove("hide");
 
-			if(this.x <= this.max && !this.listNavButtons[1].classList.contains("hide"))
+			if(this.x <= this.max + 10 && !this.listNavButtons[1].classList.contains("hide"))
 				this.listNavButtons[1].classList.add("hide");
 
-			if(this.x > this.max && this.listNavButtons[1].classList.contains("hide"))
+			if(this.x > this.max + 10 && this.listNavButtons[1].classList.contains("hide"))
 				this.listNavButtons[1].classList.remove("hide");
 
 			// set css transforms
