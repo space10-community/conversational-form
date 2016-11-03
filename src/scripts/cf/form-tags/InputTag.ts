@@ -9,20 +9,20 @@ namespace cf {
 		constructor(options: ITagOptions){
 			super(options);
 
-			if(this.domElement.getAttribute("type") == "text"){
+			if(this.type == "text"){
 
-			}else if(this.domElement.getAttribute("type") == "email"){
+			}else if(this.type == "email"){
 
-			}else if(this.domElement.getAttribute("type") == "tel"){
+			}else if(this.type == "tel"){
 
-			}else if(this.domElement.getAttribute("type") == "checkbox"){
+			}else if(this.type == "checkbox"){
 
-			}else if(this.domElement.getAttribute("type") == "radio"){
+			}else if(this.type == "radio"){
 
-			}else if(this.domElement.getAttribute("type") == "password"){
+			}else if(this.type == "password"){
 
-			}else if(this.domElement.getAttribute("type") == "file"){
-
+			}else if(this.type == "file"){
+				// check InputFileTag.ts
 			}
 		}
 

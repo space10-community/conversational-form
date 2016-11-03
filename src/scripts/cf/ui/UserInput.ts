@@ -80,10 +80,6 @@ namespace cf {
 			return value;
 		}
 
-		private onSubmitButtonClick(event: MouseEvent){
-			this.doSubmit();
-		}
-
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
@@ -150,6 +146,10 @@ namespace cf {
 			this.doSubmit();
 		}
 
+		private onSubmitButtonClick(event: MouseEvent){
+			this.onEnterOrSubmitButtonSubmit();
+		}
+
 		private onKeyUp(event: KeyboardEvent){
 			if(this.el.hasAttribute("disabled"))
 				return;
@@ -159,19 +159,23 @@ namespace cf {
 
 			if(event.keyCode == 13){
 				// ENTER key
-
-				if(this.currentTag.type != "group"){
-					// for NONE groups
-					this.doSubmit();
-				}else{
-					// for groups, we expect that there is always a default value set
-					this.doSubmit();
-				}
+				this.onEnterOrSubmitButtonSubmit();
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: value
 				}));
+			}
+		}
+
+		private onEnterOrSubmitButtonSubmit(){
+			// we need to check if current tag is file
+			if(this.currentTag.type == "file"){
+				// trigger <input type="file"
+				(<InputFileTag> this.currentTag).triggerFileSelect();
+			}else{
+				// for groups, we expect that there is always a default value set
+				this.doSubmit();
 			}
 		}
 
@@ -192,7 +196,7 @@ namespace cf {
 			this.inputElement.value = "";
 		}
 
-		public remove(){
+		public dealloc(){
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 
@@ -206,7 +210,7 @@ namespace cf {
 			submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
 			this.onSubmitButtonClickCallback = null;
 
-			super.remove();
+			super.dealloc();
 		}
 
 		// override

@@ -47,5 +47,14 @@ namespace cf {
 
 			return <string> mappings[eventString];
 		}
+
+		public static caniuse = {
+			fileReader: () => {
+				if((<any>window).File && (<any>window).FileReader && (<any>window).FileList && window.Blob)
+					return true;
+				
+				return false;
+			}
+		}
 	}
 }
