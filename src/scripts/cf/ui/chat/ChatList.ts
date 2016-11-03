@@ -37,8 +37,8 @@ namespace cf {
 
 		private onControlElementsAddedToUserInput(event: CustomEvent){
 			const dto: ControlElementsDTO = event.detail;
-			const progressTextHeight: number = 60;
-			this.el.style.paddingBottom = (dto.height + progressTextHeight) + "px";
+			const paddingBottom: number = 20;
+			this.el.style.paddingBottom = (dto.height + paddingBottom) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -78,16 +78,8 @@ namespace cf {
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
 			let aiReponse: string = "";
 
-			// if(currentTag.type == "group"){
-			// 	console.log("AI group reponse....:", currentTag);
-			// 	const groupTagType: string = (<ITagGroup> currentTag).getGroupTagType();
-			// 	aiReponse = Dictionary.getAIResponse(groupTagType);
-			// }else{
-			// 	console.log("AI tag reponse....:", currentTag);
-			// 	aiReponse = Dictionary.getAIResponse(currentTag.type);
-			// }
-
-			aiReponse = "ChatList: " + (currentTag.name || currentTag.title) + " : " + currentTag.question;
+			// aiReponse = (currentTag.name || currentTag.title) + " : " + currentTag.question;
+			aiReponse = currentTag.question;
 			
 			this.createResponse(true, aiReponse, aiThumb);
 

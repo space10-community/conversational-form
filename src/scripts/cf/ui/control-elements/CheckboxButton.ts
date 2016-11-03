@@ -25,10 +25,10 @@ namespace cf {
 		// override
 		public getTemplate () : string {
 			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
-			return `<cf-checkbox-button class="cf-button" checked=`+(isChecked ? "checked" : "")+`>
+			return `<cf-button class="cf-button cf-checkbox-button" checked=`+(isChecked ? "checked" : "")+`>
 				<cf-checkbox></cf-checkbox>
 				` + this.referenceTag.title + `
-			</cf-checkbox-button>
+			</cf-button>
 			`;
 		}
 	}
