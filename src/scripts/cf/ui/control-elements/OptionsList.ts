@@ -109,6 +109,13 @@ namespace cf {
 			}
 		}
 
+		public animateOut(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: OptionButton = <OptionButton>this.elements[i];
+				element.animateOut();
+			}
+		}
+
 		public dealloc(){
 			document.removeEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
 			this.onOptionButtonClickCallback = null;

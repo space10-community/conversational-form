@@ -63,7 +63,7 @@ namespace cf {
 				}));
 
 				// goto next step when user has answered
-				setTimeout(() => this.nextStep(), 1000);
+				setTimeout(() => this.nextStep(), 250);
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
 

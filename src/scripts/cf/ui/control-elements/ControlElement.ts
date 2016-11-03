@@ -77,6 +77,10 @@ namespace cf {
 			}
 		}
 
+		public animateOut(){
+			this.el.classList.add("animate-out");
+		}
+
 		public onChoose(){
 			ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.SUBMIT_VALUE, this.referenceTag);
 			document.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {

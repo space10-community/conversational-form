@@ -14,6 +14,7 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
+		private flowDTOFromUserInputUpdate: FlowDTO;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -61,7 +62,7 @@ namespace cf {
 
 			if(this.currentResponse){
 				const response: FlowDTO = event.detail;
-				this.currentResponse.setValue(response);
+				this.flowDTOFromUserInputUpdate = response;
 			}
 			else{
 				// this should never happen..
@@ -71,6 +72,9 @@ namespace cf {
 
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+
+			if(this.flowDTOFromUserInputUpdate)
+				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
 
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 

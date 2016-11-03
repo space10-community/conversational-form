@@ -18,6 +18,7 @@ namespace cf {
 		private el: HTMLElement;
 		private list: HTMLElement;
 
+		private userInputUpdateCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private elementWidth: number = 0;
@@ -41,6 +42,10 @@ namespace cf {
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 
+			// user input update
+			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
+			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+
 			this.listScrollController = new ScrollController({
 				interactionListener: this.el,
 				listToScroll: this.list,
@@ -56,6 +61,16 @@ namespace cf {
 			if(this.active){
 				const inputValue: string = (<FlowDTO> event.detail).inputValue;
 				this.filterElementsFrom(inputValue);
+			}
+		}
+
+		private onUserInputUpdate(event: CustomEvent){
+			if(this.elements){
+				for (var i = 0; i < this.elements.length; i++) {
+					let element: ControlElement = <ControlElement>this.elements[i];
+					console.log((<any>this.constructor).name, 'elementelement:', element);
+					element.animateOut();
+				}
 			}
 		}
 
