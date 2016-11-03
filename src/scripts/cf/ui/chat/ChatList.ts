@@ -78,16 +78,8 @@ namespace cf {
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
 			let aiReponse: string = "";
 
-			// if(currentTag.type == "group"){
-			// 	console.log("AI group reponse....:", currentTag);
-			// 	const groupTagType: string = (<ITagGroup> currentTag).getGroupTagType();
-			// 	aiReponse = Dictionary.getAIResponse(groupTagType);
-			// }else{
-			// 	console.log("AI tag reponse....:", currentTag);
-			// 	aiReponse = Dictionary.getAIResponse(currentTag.type);
-			// }
-
-			aiReponse = "ChatList: " + (currentTag.name || currentTag.title) + " : " + currentTag.question;
+			// aiReponse = (currentTag.name || currentTag.title) + " : " + currentTag.question;
+			aiReponse = currentTag.question;
 			
 			this.createResponse(true, aiReponse, aiThumb);
 

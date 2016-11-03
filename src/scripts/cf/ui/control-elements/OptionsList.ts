@@ -95,8 +95,9 @@ namespace cf {
 				});
 
 				if(tag){
-					const btn: OptionButton = new OptionButton({
-						referenceTag: tag
+					const btn: OptionButton = new OptionButton(<IOptionButtonOptions> {
+						referenceTag: tag,
+						isMultiChoice: (<SelectTag>this.referenceTag).multipleChoice,
 					});
 
 					this.elements.push(btn);

@@ -11,6 +11,10 @@ namespace cf {
 			return "select";
 		}
 
+		public get multipleChoice(): boolean{
+			return this.domElement.hasAttribute("multiple");
+		}
+
 		constructor(options: ITagOptions){
 			super(options);
 

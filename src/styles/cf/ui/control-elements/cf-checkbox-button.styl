@@ -2,7 +2,7 @@
 @import "rupture"
 @import "../../cf-variables"
 
-cf-checkbox-button.cf-button
+.cf-button.cf-checkbox-button
 	+above($breakpoint-1)
 		&:hover
 			cf-checkbox
@@ -37,7 +37,7 @@ cf-checkbox-button.cf-button
 			transition transform $anim-time * 0.5 $anim-easeOut
 			transform scale(0, 0)
 	
-	&[checked="checked"]
+	&[checked="checked"], &[selected="selected"]
 		cf-checkbox
 			background alpha($color-chat-reponse-user-bg, 0)
 
