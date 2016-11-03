@@ -98,26 +98,11 @@ namespace cf {
 					const element = fields[i];
 					if(Tag.isTagValid(element)){
 						// ignore hidden tags
-						if(element.tagName.toLowerCase() == "input"){
-							this.tags.push(Tag.createTag({
-								domElement: element
-								// validationCallback
-								// questions: Array<String>
-							}));
-							
-						}else if(element.tagName.toLowerCase() == "select"){
-							this.tags.push(Tag.createTag({
-								domElement: element
-								// validationCallback
-								// questions: Array<String>
-							}));
-						}else if(element.tagName.toLowerCase() == "button"){
-							this.tags.push(Tag.createTag({
-								domElement: element
-								// validationCallback
-								// questions: Array<String>
-							}));
-						}
+						this.tags.push(Tag.createTag({
+							domElement: element
+							// validationCallback
+							// questions: Array<String>
+						}));
 					}
 				}
 			}else{
@@ -218,9 +203,20 @@ namespace cf {
 			// })
 		}
 
+		public doSubmitForm(){
+			this.formEl.submit();
+			this.remove();
+		}
+
 		public remove(){
+			this.userInput.dealloc();
+			this.chatList.dealloc();
+
+			this.userInput = null;
+			this.chatList = null;
 			console.log(this, 'remove() Conversational Form');
 		}
+
 
 		// to illustrate the event flow of the app
 		public static ILLUSTRATE_APP_FLOW: boolean = true;
