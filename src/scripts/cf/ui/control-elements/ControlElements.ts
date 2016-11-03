@@ -186,7 +186,7 @@ namespace cf {
 			// remove old elements
 			if(this.elements ){
 				while(this.elements.length > 0){
-					this.elements.pop().remove();
+					this.elements.pop().dealloc();
 				}
 			}
 
@@ -288,7 +288,7 @@ namespace cf {
 			}, 0);
 		}
 
-		public remove(){
+		public dealloc(){
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
 
@@ -298,7 +298,7 @@ namespace cf {
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
 
-			this.listScrollController.remove();
+			this.listScrollController.dealloc();
 		}
 	}
 }

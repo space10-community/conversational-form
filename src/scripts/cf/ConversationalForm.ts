@@ -213,7 +213,7 @@ namespace cf {
 		}
 
 		public remove(){
-			console.log(this, 'remove() Space10 CUI');
+			console.log(this, 'remove() Conversational Form');
 		}
 
 		// to illustrate the event flow of the app

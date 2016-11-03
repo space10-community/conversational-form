@@ -19,11 +19,11 @@ namespace cf {
 			this.onChoose();
 		}
 
-		public remove(){
+		public dealloc(){
 			this.el.removeEventListener("click", this.clickCallback, false);
 			this.clickCallback = null;
 
-			super.remove();
+			super.dealloc();
 		}
 
 		// override

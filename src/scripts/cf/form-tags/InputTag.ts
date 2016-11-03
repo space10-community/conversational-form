@@ -25,6 +25,10 @@ namespace cf {
 
 			}
 		}
+
+		public dealloc(){
+			super.dealloc();
+		}
 	}
 }
 

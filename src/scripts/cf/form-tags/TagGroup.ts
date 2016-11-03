@@ -18,6 +18,7 @@ namespace cf {
 	export interface ITagGroup extends ITag{
 		elements: Array <InputTag | SelectTag | ButtonTag>;
 		getGroupTagType: () => string;
+		dealloc():void;
 	}
 
 	// class
@@ -82,6 +83,10 @@ namespace cf {
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
 			console.log('TagGroup registered:', this.elements[0].type, this);
+		}
+
+		public dealloc(){
+			// TODO: Handle deallocation of group
 		}
 
 		public getGroupTagType():string{

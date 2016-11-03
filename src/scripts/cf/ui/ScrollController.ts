@@ -153,7 +153,7 @@ namespace cf {
 			this.render();
 		}
 
-		public remove(){
+		public dealloc(){
 			this.listNavButtons[0].removeEventListener("click", this.onListNavButtonsClickCallback, false);
 			this.listNavButtons[1].removeEventListener("click", this.onListNavButtonsClickCallback, false);
 			this.onListNavButtonsClickCallback = null;

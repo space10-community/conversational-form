@@ -29,7 +29,7 @@ namespace cf {
 		question: string,
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
-
+		dealloc():void;
 		value:string;
 	}
 
@@ -123,6 +123,10 @@ namespace cf {
 			if(this.type != "group"){
 				console.log('Tag registered:', this.type);
 			}
+		}
+
+		public dealloc(){
+			// TODO: Handle deallocation of element
 		}
 
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
