@@ -99,11 +99,12 @@ namespace cf {
 		updateStateOnElements(controlElement: IControlElement){
 			this.list.classList.add("disabled");
 			if(controlElement.type == "RadioButton"){
-				// uncheck other buttons...
+				// uncheck other radio buttons...
 				for (let i = 0; i < this.elements.length; i++) {
-					let element: RadioButton = <RadioButton>this.elements[0];
-					if(element != controlElement)
+					let element: RadioButton = <RadioButton>this.elements[i];
+					if(element != controlElement){
 						element.checked = false;
+					}
 				}
 			}
 		}
