@@ -37,8 +37,8 @@ namespace cf {
 
 		private onControlElementsAddedToUserInput(event: CustomEvent){
 			const dto: ControlElementsDTO = event.detail;
-			const progressTextHeight: number = 60;
-			this.el.style.paddingBottom = (dto.height + progressTextHeight) + "px";
+			const paddingBottom: number = 20;
+			this.el.style.paddingBottom = (dto.height + paddingBottom) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
