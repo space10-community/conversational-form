@@ -70,9 +70,25 @@ cf-input
 	
 	&[tag-type="file"]
 		cf-input-button.cf-input-button
+			&:after
+				content ""
+				display block
+				width 100%
+				height 100%
+			
+				border 1px solid alpha(#b9bcbe, 50%)
+				border-radius 50%
+				border-left 0
+				border-top 0
+				animation cf-spin 1s linear infinite
+				will-change opacity
+				transition opacity $anim-time * 0.5 $anim-easeOut
+
 			svg.cf-icon-attachment
 				transform rotateX(0deg)
 				opacity 1
+				
+
 			svg.cf-icon-progress
 				transform rotateX(-90deg)
 				opacity 0
@@ -101,10 +117,10 @@ cf-input-button.cf-input-button
 		will-change transform, opacity
 		transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
 
-
 	svg.cf-icon-attachment
 		transform rotateX(90deg)
 		opacity 0
+
 
 		path
 			stroke #b9bcbe
@@ -121,6 +137,9 @@ cf-input-button.cf-input-button
 			transition fill $anim-time * 0.5 $anim-easeOut
 	
 	&:active
+		&:after
+			opacity 0
+
 		svg
 			transform scale(0.75, 0.75)
 
@@ -128,6 +147,8 @@ cf-input-button.cf-input-button
 		&:hover
 			background: $color-chat-reponse-user-bg
 			border: 1px solid lighten($color-chat-reponse-user-text, 75%)
+			&:after
+				opacity 0
 
 			svg.cf-icon-progress
 				animation cf-arrow-up $anim-time $anim-easeInOut
@@ -137,6 +158,13 @@ cf-input-button.cf-input-button
 			svg.cf-icon-attachment
 				path
 					stroke $color-dark-blue
+
+@keyframes cf-spin
+	0%
+		transform rotate(0deg)
+	100%
+		transform rotate(360deg)
+
 
 @keyframes cf-arrow-up
 	0%
