@@ -82,6 +82,7 @@ namespace cf {
 
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+			const dto: FlowDTO = event.detail;
 
 			this.inputElement.setAttribute("data-value", this.inputElement.value);
 			this.inputElement.value = "";
@@ -90,7 +91,7 @@ namespace cf {
 			this.el.setAttribute("error", "");
 			this.el.setAttribute("disabled", "disabled");
 			// cf-error
-			this.inputElement.setAttribute("placeholder", this.currentTag.errorMessage);
+			this.inputElement.setAttribute("placeholder", dto.errorText || this.currentTag.errorMessage);
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {

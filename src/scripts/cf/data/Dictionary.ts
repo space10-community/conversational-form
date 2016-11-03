@@ -81,6 +81,8 @@ namespace cf {
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Type your answer here ...",
 			"input-placeholder-error": "Your input is not correct ...",
+			"input-placeholder-file-error": "File upload was wrongly done ...",
+			"input-placeholder-file-size-error": "File size to big ...",
 			"input-no-filter": "No results found for <strong>{input-value}</strong>",
 			"user-reponse-and": " and ",
 			"general": "General type1|General type2",
