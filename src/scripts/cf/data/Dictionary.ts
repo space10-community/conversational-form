@@ -84,22 +84,6 @@ namespace cf {
 			"input-no-filter": "No results found for <strong>{input-value}</strong>",
 			"user-reponse-and": " and ",
 			"general": "General type1|General type2",
-			"progress-text": "Text type1|Text type2",
-			"progress-name": "Name type1|Name type2",
-			"progress-email": "Email type1|Email type2",
-			"progress-password": "Password type1|Password type2",
-			"progress-tel": "Tel type1|Tel type2",
-			"progress-radio": "Radio type1|Radio type2",
-			"progress-checkbox": "Checkbox type1|Checkbox type2",
-			"progress-select": "Select type1|Select type2",
-			"progress-text-error": "Error Text type1|Error Text type2",
-			"progress-name-error": "Error Name type1|Error Name type2",
-			"progress-email-error": "Error Email type1|Error Email type2",
-			"progress-password-error": "Error Password type1|Error Password type2",
-			"progress-tel-error": "Error Tel type1|Error Tel type2",
-			"progress-radio-error": "Error Radio type1|Error Radio type2",
-			"progress-checkbox-error": "Error Checkbox type1|Error Checkbox type2",
-			"progress-select-error": "Error Select type1|Error Select type2",
 		}
 
 		// default...
