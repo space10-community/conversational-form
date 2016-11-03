@@ -29,16 +29,28 @@ namespace cf {
 			}
 		}
 
-		public setValue(value: string){
-			this.response = value;
+		public setValue(dto: FlowDTO = null){
+			this.response = dto ? dto.text : "";
 			const text: Element = this.el.getElementsByTagName("text")[0];
-			text.innerHTML = value;
+			text.innerHTML = this.response;
 
 			if(!this.response || this.response.length == 0){
 				text.setAttribute("thinking", "");
 			}else{
 				text.setAttribute("value-added", "");
 				text.removeAttribute("thinking");
+
+				// check for if reponse type is file upload...
+				if(dto.controlElements && dto.controlElements[0]){
+					switch(dto.controlElements[0].type){
+						case "UploadFileUI" :
+							text.classList.add("file-icon");
+							var icon = document.createElement("span");
+							icon.innerHTML = Dictionary.get("icon-type-file");
+							text.insertBefore(icon.children[0], text.firstChild)
+							break;
+					}
+				}
 
 				if(!this.visible){
 					this.visible = true;
@@ -47,7 +59,7 @@ namespace cf {
 				if(this.isAIReponse){
 					// AI Reponse ready to ask question.
 
-					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.AI_QUESTION_ASKED, value);
+					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.AI_QUESTION_ASKED, this.response);
 					document.dispatchEvent(new CustomEvent(ChatResponseEvents.AI_QUESTION_ASKED, {
 						detail: this
 					}));
@@ -64,11 +76,11 @@ namespace cf {
 
 			setTimeout(() => {
 				this.visible = this.isAIReponse || (this.response && this.response.length > 0);
-				this.setValue("");
+				this.setValue(null);
 
 				if(this.isAIReponse){
 					// AI is pseudo thinking
-					setTimeout(() => this.setValue(options.response), Helpers.lerp(Math.random(), 500, 900));
+					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), Helpers.lerp(Math.random(), 500, 900));
 				}else{
 					// show the 3 dots automatically
 					setTimeout(() => this.el.classList.add("peak-thumb"), 1100);

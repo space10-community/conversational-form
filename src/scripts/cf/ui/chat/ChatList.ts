@@ -61,7 +61,7 @@ namespace cf {
 
 			if(this.currentResponse){
 				const response: FlowDTO = event.detail;
-				this.currentResponse.setValue(response.text);
+				this.currentResponse.setValue(response);
 			}
 			else{
 				// this should never happen..

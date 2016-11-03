@@ -180,6 +180,7 @@ namespace cf {
 					
 					case "UploadFileUI":
 						dto.text = (<UploadFileUI> this.elements[0]).value;//Dictionary.parseAndGetMultiValueString(values);
+						dto.controlElements.push(<UploadFileUI> this.elements[0]);
 						break;
 				}
 			}
