@@ -89,6 +89,10 @@ namespace cf {
 			// set feedback text for filter..
 			const infoElement: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
 			infoElement.innerHTML = numItemsVisible == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
+			if(numItemsVisible == 0)
+				infoElement.classList.add("show");
+			else
+				infoElement.classList.remove("show");
 
 			this.resize();
 

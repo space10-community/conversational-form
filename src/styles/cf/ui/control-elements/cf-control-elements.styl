@@ -57,6 +57,12 @@ cf-info
 	width 400px
 	transform translateY(-50%)
 	color $color-input-text
+	opacity 0
+	will-change opacity
+
+	&.show
+		transition opacity $anim-time $anim-easeOut
+		opacity 1
 
 	strong
 		font-weight 900
