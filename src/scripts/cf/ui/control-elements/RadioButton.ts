@@ -11,17 +11,15 @@ namespace cf {
 		}
 
 		public set checked(value: boolean){
-			if(!value)
+			if(!value){
 				this.el.removeAttribute("checked");
-			else
+			}else{
 				this.el.setAttribute("checked", "checked");
+			}
 		}
 
 		protected onClick(event: MouseEvent){
-			if(this.checked)
-				this.el.removeAttribute("checked");
-			else
-				this.el.setAttribute("checked", "checked");
+			this.checked = !this.checked;
 
 			super.onClick(event);
 		}

@@ -23,12 +23,8 @@ namespace cf {
 		public set selected(value: boolean){
 			if(value){
 				this.el.setAttribute("selected", "selected");
-				// set selected state on option tag
-				this.referenceTag.domElement.setAttribute("selected", "selected");
 			}else{
 				this.el.removeAttribute("selected");
-				// remove selected state on option tag
-				this.referenceTag.domElement.removeAttribute("selected");
 			}
 		}
 
@@ -38,7 +34,6 @@ namespace cf {
 		}
 
 		protected onClick(event: MouseEvent){
-			// super.onClick(event);
 			ConversationalForm.illustrateFlow(this, "dispatch", OptionButtonEvents.CLICK, this);
 			document.dispatchEvent(new CustomEvent(OptionButtonEvents.CLICK, {
 				detail: this

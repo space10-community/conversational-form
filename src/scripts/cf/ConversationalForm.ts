@@ -146,13 +146,10 @@ namespace cf {
 
 			if(Object.keys(groups).length > 0){
 				for (let group in groups){
-					if(groups[group].length > 1){
-						// only if more elements with same name..
+					if(groups[group].length > 0){
+						// always build groupd when radio or checkbox
 						const tagGroup: TagGroup = new TagGroup({
 							elements: groups[group]
-							// el: element
-							// validationCallback
-							// questions: Array<String>
 						});
 
 						// remove the tags as they are now apart of a group

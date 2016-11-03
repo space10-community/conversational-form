@@ -7,6 +7,8 @@ namespace cf {
 	// class
 	export class SelectTag extends Tag {
 
+		public optionTags: Array<OptionTag>;
+
 		public get type (): string{
 			return "select";
 		}
@@ -18,8 +20,21 @@ namespace cf {
 		constructor(options: ITagOptions){
 			super(options);
 
-			var optionTags = this.domElement.getElementsByTagName("option");
-			// this.setTagValue(optionTags[Math.floor(Math.random() * optionTags.length)].value);
+			// build the option tags
+			this.optionTags = [];
+			var domOptionTags: NodeListOf<HTMLOptionElement> = this.domElement.getElementsByTagName("option");
+			for (let i = 0; i < domOptionTags.length; i++) {
+				let element: HTMLOptionElement = <HTMLOptionElement>domOptionTags[i];
+				let tag: OptionTag = <OptionTag> cf.Tag.createTag({
+					domElement: element
+				});
+
+				if(tag){
+					this.optionTags.push(tag);
+				}else{
+					// console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
+				}
+			}
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
@@ -28,13 +43,18 @@ namespace cf {
 			// select tag values are set via selected attribute on option tag
 			if(isValid){
 				let selectTagValue: string = "";
-				// value.controlElements.length == 1
-				// for (let i = 0; i < value.controlElements.length; i++) {
-				// 	let element: OptionButton = <OptionButton>value.controlElements[i];
-				// 	selectTagValue += element.referenceTag.value + (i < value.controlElements.length - 1 ? "," : "");
-				// }
 
-				// this.domElement.value = selectTagValue;
+				for (let i = 0; i < this.optionTags.length; i++) {
+					let tag: OptionTag = <OptionTag>this.optionTags[i];
+
+					for (let j = 0; j < value.controlElements.length; j++) {
+						let controllerElement: OptionButton = <OptionButton>value.controlElements[j];
+						if(controllerElement.referenceTag == tag){
+							// tag match found, so set value
+							tag.selected = controllerElement.selected;
+						}
+					}
+				}
 			}
 
 			return isValid;

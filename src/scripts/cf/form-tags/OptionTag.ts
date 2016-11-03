@@ -19,6 +19,13 @@ namespace cf {
 			return (<HTMLOptionElement> this.domElement).selected;
 		}
 
+		public set selected (value: boolean){
+			if(value)
+				this.domElement.setAttribute("selected", "selected");
+			else
+				this.domElement.removeAttribute("selected");
+		}
+
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = true;
 			// OBS: No need to set any validation og value for this tag type ..

@@ -47,8 +47,8 @@ namespace cf {
 			return w;
 		}
 
-		public getValue(): Array<IControlElement> {
-			let arr: Array<IControlElement> = [];
+		public getValue(): Array<OptionButton> {
+			let arr: Array<OptionButton> = [];
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: OptionButton = <OptionButton>this.elements[i];
 				if(!this.multiChoice && element.selected){
@@ -87,25 +87,18 @@ namespace cf {
 
 		private createElements(){
 			this.elements = [];
-			var optionTags: NodeListOf<HTMLOptionElement> = this.referenceTag.domElement.getElementsByTagName("option");
+			var optionTags: Array<OptionTag> = (<SelectTag>this.referenceTag).optionTags;
 			for (let i = 0; i < optionTags.length; i++) {
-				let element: HTMLOptionElement = <HTMLOptionElement>optionTags[i];
-				let tag: OptionTag = <OptionTag> cf.Tag.createTag({
-					domElement: element
+				let tag: OptionTag = optionTags[i];
+
+				const btn: OptionButton = new OptionButton(<IOptionButtonOptions> {
+					referenceTag: tag,
+					isMultiChoice: (<SelectTag>this.referenceTag).multipleChoice,
 				});
 
-				if(tag){
-					const btn: OptionButton = new OptionButton(<IOptionButtonOptions> {
-						referenceTag: tag,
-						isMultiChoice: (<SelectTag>this.referenceTag).multipleChoice,
-					});
+				this.elements.push(btn);
 
-					this.elements.push(btn);
-
-					this.context.appendChild(btn.el);
-				}else{
-					console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
-				}
+				this.context.appendChild(btn.el);
 			}
 		}
 

@@ -102,15 +102,14 @@ namespace cf {
 				var tag: ITag = this.elements[i];
 				switch(groupType){
 					case "radio" :
-						(<HTMLInputElement> tag.domElement).checked = tag == (<IControlElement> value.controlElements[0]).referenceTag;
-						break;
 					case "checkbox" :
+						
 						// set dom element to not checked by default and then map to IControlElement's value
 						(<HTMLInputElement> tag.domElement).checked = false;
 						for (let i = 0; i < value.controlElements.length; i++) {
-							let element: IControlElement = <IControlElement> value.controlElements[i];
+							let element: CheckboxButton | RadioButton = <CheckboxButton | RadioButton> value.controlElements[i];
 							if(tag.domElement == element.referenceTag.domElement)
-								(<HTMLInputElement> tag.domElement).checked = true;
+								(<HTMLInputElement> tag.domElement).checked = element.checked;
 						}
 						break;
 					

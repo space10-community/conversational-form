@@ -144,8 +144,9 @@ namespace cf {
 							let element: CheckboxButton = <CheckboxButton> this.elements[i];
 							if(element.checked){
 								values.push(element.value);
-								dto.controlElements.push(element);
 							}
+
+							dto.controlElements.push(element);
 						}
 						
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
@@ -158,8 +159,9 @@ namespace cf {
 
 							if(element.checked){
 								dto.text = element.value;
-								dto.controlElements.push(element);
 							}
+
+							dto.controlElements.push(element);
 						}
 						break;
 					case "OptionsList":

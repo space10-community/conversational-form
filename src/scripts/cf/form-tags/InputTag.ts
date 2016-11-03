@@ -26,6 +26,15 @@ namespace cf {
 			}
 		}
 
+		public setTagValueAndIsValid(value: FlowDTO):boolean{
+			if(this.type == "checkbox"){
+				// checkbox is always true..
+				return true;
+			}else{
+				return super.setTagValueAndIsValid(value);
+			}
+		}
+
 		public dealloc(){
 			super.dealloc();
 		}
