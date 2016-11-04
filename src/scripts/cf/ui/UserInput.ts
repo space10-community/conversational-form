@@ -124,6 +124,11 @@ namespace cf {
 
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+
+			// animate input field in
+			if(!this.el.classList.contains("animate-in"))
+				this.el.classList.add("animate-in")
+
 			this.currentTag = <ITag | ITagGroup> event.detail;
 
 			this.el.setAttribute("tag-type", this.currentTag.type);
