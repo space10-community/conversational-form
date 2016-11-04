@@ -5,6 +5,11 @@
 // namespace
 namespace cf {
 	// interface
+	export interface ControlElementVector{
+		width: number,
+		left: number,
+	}
+
 	export interface IControlElementOptions extends IBasicElementOptions{
 		referenceTag: ITag;
 	}
@@ -14,6 +19,7 @@ namespace cf {
 		referenceTag: ITag;
 		type: string;
 		value: string;
+		rect: ControlElementVector;
 		dealloc(): void;
 	}
 
@@ -43,12 +49,20 @@ namespace cf {
 			return Helpers.getInnerTextOfElement(this.el);
 		}
 
-		public get width():number{
+		public get rect():ControlElementVector{
 			if(!this.visible)
-				return 0;
-
+				return {width: 0, left: 0};
+			
 			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
-			return this.el.offsetWidth + mr;
+			// try not to do this to often, re-paint whammy!
+			return <ControlElementVector> {
+				width: this.el.offsetWidth + mr,
+				left: this.el.offsetLeft,
+			}
+		}
+
+		public set tabIndex(value: number){
+			this.el.tabIndex = value;
 		}
 	
 		public get visible(): boolean{

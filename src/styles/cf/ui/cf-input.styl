@@ -2,12 +2,23 @@
 @import "rupture"
 @import "../cf-variables"
 
+$introDelay = 1.4s
+
 cf-input
 	display block
 	position absolute
 	width calc(100% - 40px)
 	height auto
 	bottom 20px
+	perspective 2000px
+
+	&.animate-in
+		input
+			opacity 1
+			transform translateY(0px) rotateX(0deg)
+		
+		cf-input-button.cf-input-button
+			transform scale(1, 1)
 
 	input
 		// resets..
@@ -33,11 +44,13 @@ cf-input
 		width 100%
 		height $input-field-height
 		color $color-input-text
-		will-change box-shadow, background, color
-		transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut
+		will-change box-shadow, background, color, transform, opacity
+		transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack $introDelay, opacity $anim-time * 0.5 $anim-easeOut $introDelay
 		background white
 		box-shadow 0px 0px 1px rgba(0,0,0,0.15)
 		padding 5px 5px 5px 15px
+		opacity 0
+		transform translateY(40px) rotateX(-40deg)
 
 		&::-webkit-input-placeholder
 			color currentColor
@@ -106,8 +119,10 @@ cf-input-button.cf-input-button
 	cursor pointer
 	border-radius 50%
 	will-change background, border
-	transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut
+	transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack $introDelay + 0.35
 	perspective 2000px
+	transform-origin 50% 50%
+	transform scale(0, 0)
 
 	svg
 		position absolute

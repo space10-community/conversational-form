@@ -30,6 +30,12 @@ namespace cf {
 		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
 
+		// elements traverse indexes..
+		private rowBreakIndex: number = 0;
+		private rowIndex: number = 0;
+		private columnIndex: number = 0;
+		private currentTraversedElement: IControlElement;
+
 		private rAF: number;
 		private listWidth: number = 0;
 
@@ -63,10 +69,55 @@ namespace cf {
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
+			const dto: InputKeyChangeDTO = event.detail;
 			if(this.active){
-				const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
-				const inputValue: string = dto.input.getInputValue();
-				this.filterElementsFrom(inputValue);
+				let shouldFilter: boolean = dto.inputFieldActive;
+				if(!shouldFilter){
+					if(this.currentTraversedElement){
+						// but only if current element is already set, else we just reset to 0, 0
+						// input field is not active so we should traverse over elements
+						if(dto.keyCode == 38){
+							//up
+							this.rowIndex--;
+						}else if(dto.keyCode == 40){
+							//down
+							this.rowIndex++;
+						}else if(dto.keyCode == 37){
+							//left
+							this.columnIndex--;
+						}else if(dto.keyCode == 39){
+							//right
+							this.columnIndex++;
+						}else{
+							// filter anyway..
+							shouldFilter = true;
+						}
+					}else{
+						this.rowIndex = 0;
+						this.columnIndex = 0;
+					}
+
+					// validate numbers
+					this.rowIndex %= this.el.classList.contains("two-row") ? 2 : 1;
+					this.rowIndex = Math.abs(this.rowIndex);
+					this.columnIndex %= this.rowBreakIndex;
+					this.columnIndex = Math.abs(this.columnIndex);
+
+					console.log("**** rowIndex:", this.rowIndex);
+					console.log("**** colunmIndex:", this.columnIndex);
+					console.log("**** rowBreakIndex:", this.rowBreakIndex);
+
+					const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+					const elementsToTraverse: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+					this.currentTraversedElement = elementsToTraverse[(this.rowIndex * this.rowBreakIndex) + this.columnIndex];
+				}
+
+				if(shouldFilter){
+					// input field is active, so we should filter..
+					const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
+					const inputValue: string = dto.input.getInputValue();
+					this.filterElementsFrom(inputValue);
+				}
 			}
 		}
 
@@ -125,6 +176,9 @@ namespace cf {
 		}
 
 		private animateElementsIn(){
+			if(!this.el.classList.contains("animate-in"))
+				this.el.classList.add("animate-in");
+
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
 				element.animateIn();
@@ -145,6 +199,9 @@ namespace cf {
 		}
 
 		public reset(){
+			this.rowIndex = 0;
+			this.columnIndex = 0;
+			this.currentTraversedElement = null;
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
 		}
@@ -296,10 +353,14 @@ namespace cf {
 
 			setTimeout(() => {
 				this.listWidth = 0;
-				if(this.elements.length > 0){
-					for (let i = 0; i < this.elements.length; i++) {
-						let element: any = <any>this.elements[i];
-						this.listWidth += element.width;
+				const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+				const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+				if(elements.length > 0){
+					
+					for (let i = 0; i < elements.length; i++) {
+						let element: IControlElement = <IControlElement>elements[i];
+						let rect: ControlElementVector = element.rect;
+						this.listWidth += rect.width;
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
@@ -310,6 +371,14 @@ namespace cf {
 						this.list.style.width = this.listWidth + "px";
 					}else{
 						this.el.classList.add("one-row");
+					}
+
+					// double whammy to find row break index :(
+					for (let i = 0; i < elements.length; i++) {
+						let element: ControlElement = <ControlElement>elements[i];
+						element.tabIndex = 2 + i;
+						if(element.rect.left == 0)
+							this.rowBreakIndex = i;
 					}
 
 					// check again after classes are set.
@@ -325,8 +394,7 @@ namespace cf {
 
 					this.elementWidth = elOffsetWidth;
 
-					// reset scroll
-					this.listScrollController.reset();
+					// resize scroll
 					this.listScrollController.resize(this.listWidth, this.elementWidth);
 				}
 

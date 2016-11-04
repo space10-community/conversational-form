@@ -181,9 +181,11 @@ namespace cf {
 		}
 
 		public resize(listWidth: number, visibleAreaWidth: number){
+			this.reset();
 			this.visibleAreaWidth = visibleAreaWidth;
 			this.listWidth = Math.max(visibleAreaWidth, listWidth);
 			this.max = (this.listWidth - this.visibleAreaWidth) * -1;
+			this.render();
 		}
 	}
 } 

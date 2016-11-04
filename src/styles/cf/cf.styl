@@ -9,6 +9,7 @@
 .conversational-form
 	*, *:before, *:after
 		box-sizing border-box
+		outline none
 
 	button
 		border none
@@ -60,7 +61,7 @@
 
 	opacity 0
 	will-change opacity
-	transition opacity $anim-time * 0.5 $anim-easeOut
+	transition opacity $anim-time * 0.25 $anim-easeOut
 
 	// test
 	transform translateX(50%)
