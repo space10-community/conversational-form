@@ -69,6 +69,7 @@ namespace cf {
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
+			// TODO: Delete all this???????
 			const dto: InputKeyChangeDTO = event.detail;
 			if(this.active){
 				let shouldFilter: boolean = dto.inputFieldActive;
@@ -166,11 +167,12 @@ namespace cf {
 			else
 				infoElement.classList.remove("show");
 
-			this.resize();
 			// crude way of checking if list has changed...
 			const hasListChanged: boolean = this.filterListNumberOfVisible != numItemsVisible;
-			if(hasListChanged)
+			if(hasListChanged){
+				this.resize();
 				this.animateElementsIn();
+			}
 			
 			this.filterListNumberOfVisible = numItemsVisible;
 		}
