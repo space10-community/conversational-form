@@ -27,7 +27,7 @@ namespace cf {
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private elementWidth: number = 0;
-
+		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
 
 		private rAF: number;
@@ -116,8 +116,12 @@ namespace cf {
 				infoElement.classList.remove("show");
 
 			this.resize();
-
-			this.animateElementsIn();
+			// crude way of checking if list has changed...
+			const hasListChanged: boolean = this.filterListNumberOfVisible != numItemsVisible;
+			if(hasListChanged)
+				this.animateElementsIn();
+			
+			this.filterListNumberOfVisible = numItemsVisible;
 		}
 
 		private animateElementsIn(){
