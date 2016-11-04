@@ -52,21 +52,17 @@ namespace cf {
 						// tag match found, so set value
 						tag.selected = controllerElement.selected;
 
-						if(controllerElement.visible)
-							numberOptionButtonsVisible.push(controllerElement);
-
 						// check for minimum one selected
 						if(!isValid && tag.selected)
 							isValid = true;
 
-						// if(controllerElement.visible)
-						// if(controllerElement.visible)
-						//TODO: use same logic as in TagGroup Radio buttons.. check for one element only etc.
+						if(controllerElement.visible)
+							numberOptionButtonsVisible.push(controllerElement);
 					}
 				}
 			}
 
-			// special case 1, only one radio button visible from a filter
+			// special case 1, only one checkbox visible from a filter
 			if(!isValid && numberOptionButtonsVisible.length == 1){
 				let element: OptionButton = numberOptionButtonsVisible[0];
 				let tag: OptionTag = this.optionTags[this.optionTags.indexOf(<OptionTag> element.referenceTag)];
