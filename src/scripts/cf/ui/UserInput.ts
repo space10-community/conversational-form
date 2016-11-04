@@ -5,9 +5,10 @@
 // namespace
 namespace cf {
 	// interface
-	
-	export interface ControlElementsDTO{
-		height: number;
+
+	export interface InputKeyChangeDTO{
+		dto: FlowDTO,
+		keyCode: number,
 	}
 
 	export const UserInputEvents = {
@@ -33,9 +34,9 @@ namespace cf {
 		private onSubmitButtonClickCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
+		private keyUpCallback: () => void;
 
 		private controlElements: ControlElements;
-
 		private currentTag: ITag | ITagGroup;
 
 		private set disabled(value: boolean){
@@ -49,8 +50,6 @@ namespace cf {
 			super(options);
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
-
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
@@ -58,7 +57,10 @@ namespace cf {
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0]
 			})
 
-			// flow update
+			// setup event listeners
+			this.keyUpCallback = this.onKeyUp.bind(this);
+			document.addEventListener("keyup", this.keyUpCallback, false);
+
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
@@ -76,7 +78,11 @@ namespace cf {
 			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
-		public getInputValue():FlowDTO{
+		public getInputValue():string{
+			return this.inputElement.value;
+		}
+
+		public getFlowDTO():FlowDTO{
 			let value: FlowDTO;// = this.inputElement.value;
 
 			// check for values on control elements as they should overwrite the input value.
@@ -84,9 +90,11 @@ namespace cf {
 				value = <FlowDTO> this.controlElements.getDTO();
 			}else{
 				value = <FlowDTO> {
-					text: this.inputElement.value
+					text: this.getInputValue()
 				};
 			}
+
+			value.input = this;
 
 			return value;
 		}
@@ -97,7 +105,6 @@ namespace cf {
 
 			this.inputElement.setAttribute("data-value", this.inputElement.value);
 			this.inputElement.value = "";
-			console.log((<any>this.constructor).name, 'this.inputElement.value:', this.inputElement.value);
 
 			this.el.setAttribute("error", "");
 			this.disabled = true;
@@ -147,9 +154,6 @@ namespace cf {
 		private onControlElementProgressChange(event: CustomEvent){
 			const status: string = event.detail;
 			this.disabled = status == ControlElementProgressStates.BUSY;
-			// if(status == ControlElementProgressStates.READY)
-
-			console.log((<any>this.constructor).name, 'onControlElementProgressChange:', status);
 		}
 
 		private buildControlElements(tags: Array<ITag>){
@@ -175,8 +179,7 @@ namespace cf {
 			if(this.el.hasAttribute("disabled"))
 				return;
 
-			const value: FlowDTO = this.getInputValue();
-			value.inputValue = this.inputElement.value;
+			const value: FlowDTO = this.getFlowDTO();
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -184,7 +187,10 @@ namespace cf {
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
-					detail: value
+					detail: <InputKeyChangeDTO> {
+						dto: value,
+						keyCode: event.keyCode,
+					}
 				}));
 			}
 		}
@@ -201,7 +207,7 @@ namespace cf {
 		}
 
 		private doSubmit(){
-			const value: FlowDTO = this.getInputValue();
+			const value: FlowDTO = this.getFlowDTO();
 
 			this.disabled = true;
 			this.el.removeAttribute("error");
@@ -218,6 +224,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			document.removeEventListener("keyup", this.keyUpCallback, false);
+			this.keyUpCallback = null;
+
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 

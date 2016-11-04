@@ -38,23 +38,41 @@ namespace cf {
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
-			let isValid: boolean = value.controlElements[0] != null;
+			let isValid: boolean = false;
 
 			// select tag values are set via selected attribute on option tag
-			if(isValid){
-				let selectTagValue: string = "";
+			let numberOptionButtonsVisible: Array <OptionButton> = [];
 
-				for (let i = 0; i < this.optionTags.length; i++) {
-					let tag: OptionTag = <OptionTag>this.optionTags[i];
+			for (let i = 0; i < this.optionTags.length; i++) {
+				let tag: OptionTag = <OptionTag>this.optionTags[i];
 
-					for (let j = 0; j < value.controlElements.length; j++) {
-						let controllerElement: OptionButton = <OptionButton>value.controlElements[j];
-						if(controllerElement.referenceTag == tag){
-							// tag match found, so set value
-							tag.selected = controllerElement.selected;
-						}
+				for (let j = 0; j < value.controlElements.length; j++) {
+					let controllerElement: OptionButton = <OptionButton>value.controlElements[j];
+					if(controllerElement.referenceTag == tag){
+						// tag match found, so set value
+						tag.selected = controllerElement.selected;
+
+						if(controllerElement.visible)
+							numberOptionButtonsVisible.push(controllerElement);
+
+						// check for minimum one selected
+						if(!isValid && tag.selected)
+							isValid = true;
+
+						// if(controllerElement.visible)
+						// if(controllerElement.visible)
+						//TODO: use same logic as in TagGroup Radio buttons.. check for one element only etc.
 					}
 				}
+			}
+
+			// special case 1, only one radio button visible from a filter
+			if(!isValid && numberOptionButtonsVisible.length == 1){
+				let element: OptionButton = numberOptionButtonsVisible[0];
+				let tag: OptionTag = this.optionTags[this.optionTags.indexOf(<OptionTag> element.referenceTag)];
+				element.selected = true;
+				tag.selected = true;
+				isValid = true;
 			}
 
 			return isValid;

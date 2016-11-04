@@ -2,6 +2,14 @@
 @import "rupture"
 @import "../cf-variables"
 
+cf-input-control-elements.hide-nav-buttons
+	cf-list-button
+		pointer-events none
+		width 15px !important
+
+		&:after
+			opacity 0.1 !important
+
 cf-list-button
 	display block
 	position absolute

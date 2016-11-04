@@ -7,7 +7,7 @@ namespace cf {
 	export interface FlowDTO{
 		text?: string;
 		errorText?: string;
-		inputValue?: string,
+		input?: UserInput,
 		controlElements?: Array <IControlElement>;
 	}
 
@@ -57,6 +57,9 @@ namespace cf {
 
 			if(this.currentTag.setTagValueAndIsValid(appDTO)){
 				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
+
+				// update to latest DTO because values can be changed in validation flow...
+				appDTO = appDTO.input.getFlowDTO();
 
 				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
 					detail: appDTO //UserInput value

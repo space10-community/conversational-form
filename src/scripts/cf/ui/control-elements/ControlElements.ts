@@ -10,9 +10,14 @@
 
 // namespace
 namespace cf {
+	export interface ControlElementsDTO{
+		height: number;
+	}
+
 	export interface IControlElementsOptions{
 		el: HTMLElement;
 	}
+
 	export class ControlElements {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
@@ -22,7 +27,7 @@ namespace cf {
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private elementWidth: number = 0;
-
+		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
 
 		private rAF: number;
@@ -59,7 +64,8 @@ namespace cf {
 
 		private onUserInputKeyChange(event: CustomEvent){
 			if(this.active){
-				const inputValue: string = (<FlowDTO> event.detail).inputValue;
+				const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
+				const inputValue: string = dto.input.getInputValue();
 				this.filterElementsFrom(inputValue);
 			}
 		}
@@ -68,7 +74,6 @@ namespace cf {
 			if(this.elements){
 				for (var i = 0; i < this.elements.length; i++) {
 					let element: ControlElement = <ControlElement>this.elements[i];
-					console.log((<any>this.constructor).name, 'elementelement:', element);
 					element.animateOut();
 				}
 			}
@@ -111,8 +116,12 @@ namespace cf {
 				infoElement.classList.remove("show");
 
 			this.resize();
-
-			this.animateElementsIn();
+			// crude way of checking if list has changed...
+			const hasListChanged: boolean = this.filterListNumberOfVisible != numItemsVisible;
+			if(hasListChanged)
+				this.animateElementsIn();
+			
+			this.filterListNumberOfVisible = numItemsVisible;
 		}
 
 		private animateElementsIn(){
@@ -151,6 +160,7 @@ namespace cf {
 			}
 
 			// generate text value for ChatReponse
+
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
@@ -190,6 +200,9 @@ namespace cf {
 								values.push(dto.controlElements[i].value);
 							}
 						}
+
+						// after value is created then set to all elements
+						dto.controlElements = element.elements;
 
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 
