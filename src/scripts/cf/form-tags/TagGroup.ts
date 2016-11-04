@@ -94,7 +94,7 @@ namespace cf {
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
-			let isValid: boolean = true;
+			let isValid: boolean = false;
 
 			const groupType: string = this.elements[0].type;
 
@@ -107,17 +107,21 @@ namespace cf {
 							let element: CheckboxButton | RadioButton = <CheckboxButton | RadioButton> value.controlElements[i];
 							if(tag.domElement == element.referenceTag.domElement){
 								(<HTMLInputElement> tag.domElement).checked = element.checked;
-								// a radio button was checked, 
+								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
 							}
 						}
 
 						// a radio button needs to be checked of
-						isValid = wasRadioButtonChecked;
+						if(!isValid && wasRadioButtonChecked)
+							isValid = wasRadioButtonChecked;
 						break;
 
 					case "checkbox" :
+						// checkbox is always valid
+						isValid = true;
+
 						for (let i = 0; i < value.controlElements.length; i++) {
 							let element: CheckboxButton | RadioButton = <CheckboxButton | RadioButton> value.controlElements[i];
 							if(tag.domElement == element.referenceTag.domElement)
