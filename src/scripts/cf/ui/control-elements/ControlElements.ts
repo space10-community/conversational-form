@@ -160,6 +160,7 @@ namespace cf {
 			}
 
 			// generate text value for ChatReponse
+
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
@@ -199,6 +200,9 @@ namespace cf {
 								values.push(dto.controlElements[i].value);
 							}
 						}
+
+						// after value is created then set to all elements
+						dto.controlElements = element.elements;
 
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 

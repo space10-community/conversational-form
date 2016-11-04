@@ -117,8 +117,6 @@ namespace cf {
 						}
 					}
 
-					console.log((<any>this.constructor).name, 'numberRadioButtonsVisiblenumberRadioButtonsVisiblenumberRadioButtonsVisible:', numberRadioButtonsVisible);
-
 					// special case 1, only one radio button visible from a filter
 					if(!isValid && numberRadioButtonsVisible.length == 1){
 						let element: RadioButton = numberRadioButtonsVisible[0];
@@ -142,6 +140,7 @@ namespace cf {
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
 						(<HTMLInputElement> tag.domElement).checked = element.checked;
 					}
+
 					break;
 			}
 
