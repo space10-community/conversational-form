@@ -19,7 +19,6 @@ namespace cf {
 		referenceTag: ITag;
 		type: string;
 		value: string;
-		highlight: boolean;
 		rect: ControlElementVector;
 		dealloc(): void;
 	}
@@ -61,6 +60,10 @@ namespace cf {
 				left: this.el.offsetLeft,
 			}
 		}
+
+		public set tabIndex(value: number){
+			this.el.tabIndex = value;
+		}
 	
 		public get visible(): boolean{
 			return !this.el.classList.contains("hide");
@@ -71,13 +74,6 @@ namespace cf {
 				this.el.classList.remove("hide");
 			else
 				this.el.classList.add("hide");
-		}
-
-		public set highlight(value: boolean){
-			if(value)
-				this.el.classList.add("highlight");
-			else
-				this.el.classList.remove("highlight");
 		}
 
 		protected setData(options: IControlElementOptions){

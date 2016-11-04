@@ -53,6 +53,7 @@ namespace cf {
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.inputElement = this.el.getElementsByTagName("input")[0];
+			this.inputElement.tabIndex = 1;
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
@@ -189,7 +190,8 @@ namespace cf {
 				return;
 
 			// prevent normal behaviour, we are not here to take part, we are here to take over!
-			event.preventDefault();
+			// if(this.inputElement !== document.activeElement)
+			// 	event.preventDefault();
 		}
 
 		private onKeyUp(event: KeyboardEvent){
@@ -201,16 +203,6 @@ namespace cf {
 			if(event.keyCode == 13){
 				// ENTER key
 				this.onEnterOrSubmitButtonSubmit();
-			}else if(event.keyCode == 9){
-				// TAB key
-
-				if(this.inputElement !== document.activeElement)
-					// if input is NOT in focus, then
-					this.inputElement.focus();
-				else
-					// if input IS in focus, then
-					this.inputElement.blur();
-					// TOOD: highlight first element?
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {

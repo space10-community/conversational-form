@@ -2,6 +2,10 @@
 @import "rupture"
 @import "../cf-variables"
 
+cf-input-control-elements.animate-in
+	cf-list-button
+		opacity 1
+
 cf-input-control-elements.hide-nav-buttons
 	cf-list-button
 		pointer-events none
@@ -17,6 +21,7 @@ cf-list-button
 	height calc(100% - 16px)
 	width 38px
 	cursor pointer
+	opacity 0
 	will-change opacity, width
 	transition opacity $anim-time * 0.5 $anim-easeOut, width $anim-time * 0.5 $anim-easeOut
 

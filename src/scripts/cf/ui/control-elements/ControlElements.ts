@@ -103,10 +103,6 @@ namespace cf {
 					this.columnIndex %= this.rowBreakIndex;
 					this.columnIndex = Math.abs(this.columnIndex);
 
-					if(this.currentTraversedElement){
-						this.currentTraversedElement.highlight = false;
-					}
-
 					console.log("**** rowIndex:", this.rowIndex);
 					console.log("**** colunmIndex:", this.columnIndex);
 					console.log("**** rowBreakIndex:", this.rowBreakIndex);
@@ -114,7 +110,6 @@ namespace cf {
 					const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
 					const elementsToTraverse: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 					this.currentTraversedElement = elementsToTraverse[(this.rowIndex * this.rowBreakIndex) + this.columnIndex];
-					this.currentTraversedElement.highlight = true;
 				}
 
 				if(shouldFilter){
@@ -181,6 +176,9 @@ namespace cf {
 		}
 
 		private animateElementsIn(){
+			if(!this.el.classList.contains("animate-in"))
+				this.el.classList.add("animate-in");
+
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
 				element.animateIn();
@@ -377,7 +375,8 @@ namespace cf {
 
 					// double whammy to find row break index :(
 					for (let i = 0; i < elements.length; i++) {
-						let element: IControlElement = <IControlElement>elements[i];
+						let element: ControlElement = <ControlElement>elements[i];
+						element.tabIndex = 2 + i;
 						if(element.rect.left == 0)
 							this.rowBreakIndex = i;
 					}
@@ -395,8 +394,7 @@ namespace cf {
 
 					this.elementWidth = elOffsetWidth;
 
-					// reset scroll
-					this.listScrollController.reset();
+					// resize scroll
 					this.listScrollController.resize(this.listWidth, this.elementWidth);
 				}
 
