@@ -83,7 +83,7 @@ namespace cf {
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), Helpers.lerp(Math.random(), 500, 900));
 				}else{
 					// show the 3 dots automatically
-					setTimeout(() => this.el.classList.add("peak-thumb"), 1100);
+					setTimeout(() => this.el.classList.add("peak-thumb"), 1400);
 				}
 			}, 0);
 		}
