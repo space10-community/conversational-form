@@ -5,9 +5,10 @@
 // namespace
 namespace cf {
 	// interface
-	
-	export interface ControlElementsDTO{
-		height: number;
+
+	export interface InputKeyChangeDTO{
+		dto: FlowDTO,
+		keyCode: number,
 	}
 
 	export const UserInputEvents = {
@@ -33,9 +34,9 @@ namespace cf {
 		private onSubmitButtonClickCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
+		private keyUpCallback: () => void;
 
 		private controlElements: ControlElements;
-
 		private currentTag: ITag | ITagGroup;
 
 		private set disabled(value: boolean){
@@ -49,8 +50,6 @@ namespace cf {
 			super(options);
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-			this.el.addEventListener("keyup", this.onKeyUp.bind(this), false);
-
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
@@ -58,7 +57,10 @@ namespace cf {
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0]
 			})
 
-			// flow update
+			// setup event listeners
+			this.keyUpCallback = this.onKeyUp.bind(this);
+			document.addEventListener("keyup", this.keyUpCallback, false);
+
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
@@ -184,7 +186,10 @@ namespace cf {
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
-					detail: value
+					detail: <InputKeyChangeDTO> {
+						dto: value,
+						keyCode: event.keyCode,
+					}
 				}));
 			}
 		}
@@ -218,6 +223,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			document.removeEventListener("keyup", this.keyUpCallback, false);
+			this.keyUpCallback = null;
+
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 
