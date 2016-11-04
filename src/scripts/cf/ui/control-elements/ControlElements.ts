@@ -74,7 +74,6 @@ namespace cf {
 			if(this.elements){
 				for (var i = 0; i < this.elements.length; i++) {
 					let element: ControlElement = <ControlElement>this.elements[i];
-					console.log((<any>this.constructor).name, 'elementelement:', element);
 					element.animateOut();
 				}
 			}
