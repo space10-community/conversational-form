@@ -62,7 +62,7 @@ namespace cf {
 				}
 			}
 
-			// special case 1, only one checkbox visible from a filter
+			// special case 1, only one optiontag visible from a filter
 			if(!isValid && numberOptionButtonsVisible.length == 1){
 				let element: OptionButton = numberOptionButtonsVisible[0];
 				let tag: OptionTag = this.optionTags[this.optionTags.indexOf(<OptionTag> element.referenceTag)];
