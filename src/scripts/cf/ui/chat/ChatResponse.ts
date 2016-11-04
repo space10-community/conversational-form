@@ -76,7 +76,7 @@ namespace cf {
 
 			setTimeout(() => {
 				this.visible = this.isAIReponse || (this.response && this.response.length > 0);
-				this.setValue(null);
+				this.setValue();
 
 				if(this.isAIReponse){
 					// AI is pseudo thinking

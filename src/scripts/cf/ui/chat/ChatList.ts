@@ -47,7 +47,7 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
 
 			if(this.currentResponse){
-				const inputFieldStr: string = dto.text || dto.inputValue;
+				const inputFieldStr: string = dto.text || dto.input.getInputValue();
 				if(!inputFieldStr || inputFieldStr.length == 0){
 					this.currentResponse.visible = false;
 				}else{
@@ -73,8 +73,14 @@ namespace cf {
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(this.flowDTOFromUserInputUpdate)
+			// event.detail = ITag
+
+			if(this.flowDTOFromUserInputUpdate){
+				// validate text..
+				if(!this.flowDTOFromUserInputUpdate.text)
+					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
 				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
+			}
 
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 

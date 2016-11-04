@@ -12,11 +12,11 @@
 namespace cf {
 	// interface
 	export interface ITagGroupOptions{
-		elements: Array <InputTag | SelectTag | ButtonTag>;
+		elements: Array <ITag>;
 	}
 
 	export interface ITagGroup extends ITag{
-		elements: Array <InputTag | SelectTag | ButtonTag>;
+		elements: Array <ITag>;
 		getGroupTagType: () => string;
 		dealloc():void;
 	}
@@ -25,7 +25,7 @@ namespace cf {
 	export class TagGroup implements ITagGroup {
 
 		private errorMessages: Array<string>;
-		public elements: Array <InputTag | SelectTag | ButtonTag>;
+		public elements: Array <ITag>;
 
 		public get type (): string{
 			return "group";
@@ -98,38 +98,51 @@ namespace cf {
 
 			const groupType: string = this.elements[0].type;
 
-			for (var i = 0; i < this.elements.length; i++) {
-				var tag: ITag = this.elements[i];
-				switch(groupType){
-					case "radio" :
-						let wasRadioButtonChecked: boolean = false;
-						for (let i = 0; i < value.controlElements.length; i++) {
-							let element: CheckboxButton | RadioButton = <CheckboxButton | RadioButton> value.controlElements[i];
-							if(tag.domElement == element.referenceTag.domElement){
+			switch(groupType){
+				case "radio" :
+					let numberRadioButtonsVisible: Array <RadioButton> = [];
+					let wasRadioButtonChecked: boolean = false;
+					for (let i = 0; i < value.controlElements.length; i++) {
+						let element: RadioButton = <RadioButton> value.controlElements[i];
+						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
+						if(element.visible){
+							numberRadioButtonsVisible.push(element);
+
+							if(tag == element.referenceTag){
 								(<HTMLInputElement> tag.domElement).checked = element.checked;
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
 							}
 						}
+					}
 
-						// a radio button needs to be checked of
-						if(!isValid && wasRadioButtonChecked)
-							isValid = wasRadioButtonChecked;
-						break;
+					console.log((<any>this.constructor).name, 'numberRadioButtonsVisiblenumberRadioButtonsVisiblenumberRadioButtonsVisible:', numberRadioButtonsVisible);
 
-					case "checkbox" :
-						// checkbox is always valid
+					// special case 1, only one radio button visible from a filter
+					if(!isValid && numberRadioButtonsVisible.length == 1){
+						let element: RadioButton = numberRadioButtonsVisible[0];
+						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
+						element.checked = true;
+						(<HTMLInputElement> tag.domElement).checked = true;
 						isValid = true;
+					}else if(!isValid && wasRadioButtonChecked){
+						// a radio button needs to be checked of
+						isValid = wasRadioButtonChecked;
+					}
 
-						for (let i = 0; i < value.controlElements.length; i++) {
-							let element: CheckboxButton | RadioButton = <CheckboxButton | RadioButton> value.controlElements[i];
-							if(tag.domElement == element.referenceTag.domElement)
-								(<HTMLInputElement> tag.domElement).checked = element.checked;
-						}
-						break;
-					
-				}
+					break;
+
+				case "checkbox" :
+					// checkbox is always valid
+					isValid = true;
+
+					for (let i = 0; i < value.controlElements.length; i++) {
+						let element: CheckboxButton = <CheckboxButton> value.controlElements[i];
+						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
+						(<HTMLInputElement> tag.domElement).checked = element.checked;
+					}
+					break;
 			}
 
 			return isValid;

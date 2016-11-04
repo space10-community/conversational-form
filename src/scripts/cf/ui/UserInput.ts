@@ -78,7 +78,11 @@ namespace cf {
 			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
-		public getInputValue():FlowDTO{
+		public getInputValue():string{
+			return this.inputElement.value;
+		}
+
+		public getFlowDTO():FlowDTO{
 			let value: FlowDTO;// = this.inputElement.value;
 
 			// check for values on control elements as they should overwrite the input value.
@@ -86,9 +90,11 @@ namespace cf {
 				value = <FlowDTO> this.controlElements.getDTO();
 			}else{
 				value = <FlowDTO> {
-					text: this.inputElement.value
+					text: this.getInputValue()
 				};
 			}
+
+			value.input = this;
 
 			return value;
 		}
@@ -99,7 +105,6 @@ namespace cf {
 
 			this.inputElement.setAttribute("data-value", this.inputElement.value);
 			this.inputElement.value = "";
-			console.log((<any>this.constructor).name, 'this.inputElement.value:', this.inputElement.value);
 
 			this.el.setAttribute("error", "");
 			this.disabled = true;
@@ -149,9 +154,6 @@ namespace cf {
 		private onControlElementProgressChange(event: CustomEvent){
 			const status: string = event.detail;
 			this.disabled = status == ControlElementProgressStates.BUSY;
-			// if(status == ControlElementProgressStates.READY)
-
-			console.log((<any>this.constructor).name, 'onControlElementProgressChange:', status);
 		}
 
 		private buildControlElements(tags: Array<ITag>){
@@ -177,8 +179,7 @@ namespace cf {
 			if(this.el.hasAttribute("disabled"))
 				return;
 
-			const value: FlowDTO = this.getInputValue();
-			value.inputValue = this.inputElement.value;
+			const value: FlowDTO = this.getFlowDTO();
 
 			if(event.keyCode == 13){
 				// ENTER key
@@ -206,7 +207,7 @@ namespace cf {
 		}
 
 		private doSubmit(){
-			const value: FlowDTO = this.getInputValue();
+			const value: FlowDTO = this.getFlowDTO();
 
 			this.disabled = true;
 			this.el.removeAttribute("error");

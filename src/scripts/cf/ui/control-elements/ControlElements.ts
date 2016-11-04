@@ -65,7 +65,7 @@ namespace cf {
 		private onUserInputKeyChange(event: CustomEvent){
 			if(this.active){
 				const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
-				const inputValue: string = dto.inputValue;
+				const inputValue: string = dto.input.getInputValue();
 				this.filterElementsFrom(inputValue);
 			}
 		}

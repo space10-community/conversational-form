@@ -85,6 +85,7 @@ namespace cf {
 			"input-placeholder-file-size-error": "File size to big ...",
 			"input-no-filter": "No results found for <strong>{input-value}</strong>",
 			"user-reponse-and": " and ",
+			"user-reponse-missing": "Missing input ...",
 			"general": "General type1|General type2",
 			"icon-type-file": "<svg class='cf-icon-file' viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'><g transform='translate(-756.000000, -549.000000)' fill='#0D83FF'><g transform='translate(736.000000, 127.000000)'><g transform='translate(0.000000, 406.000000)'><polygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'></polygon></g></g></g></g></svg>",
 		}
