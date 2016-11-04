@@ -38,6 +38,9 @@ namespace cf {
 		constructor(options: ConversationalFormOptions){
 			console.log("Space10 Conversational User Interface.");
 
+			if(!window.ConversationalForm)
+				window.ConversationalForm = this;
+
 			this.submitCallback = options.submitCallback;
 			this.formEl = options.formEl;
 

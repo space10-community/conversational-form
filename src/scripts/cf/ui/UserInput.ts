@@ -9,6 +9,7 @@ namespace cf {
 	export interface InputKeyChangeDTO{
 		dto: FlowDTO,
 		keyCode: number,
+		inputFieldActive: boolean
 	}
 
 	export const UserInputEvents = {
@@ -35,6 +36,7 @@ namespace cf {
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private keyUpCallback: () => void;
+		private keyDownCallback: () => void;
 
 		private controlElements: ControlElements;
 		private currentTag: ITag | ITagGroup;
@@ -59,7 +61,9 @@ namespace cf {
 
 			// setup event listeners
 			this.keyUpCallback = this.onKeyUp.bind(this);
+			this.keyDownCallback = this.onKeyDown.bind(this);
 			document.addEventListener("keyup", this.keyUpCallback, false);
+			document.addEventListener("keydown", this.keyDownCallback, false);
 
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -180,6 +184,14 @@ namespace cf {
 			this.onEnterOrSubmitButtonSubmit();
 		}
 
+		private onKeyDown(event: KeyboardEvent){
+			if(this.el.hasAttribute("disabled"))
+				return;
+
+			// prevent normal behaviour, we are not here to take part, we are here to take over!
+			event.preventDefault();
+		}
+
 		private onKeyUp(event: KeyboardEvent){
 			if(this.el.hasAttribute("disabled"))
 				return;
@@ -189,12 +201,23 @@ namespace cf {
 			if(event.keyCode == 13){
 				// ENTER key
 				this.onEnterOrSubmitButtonSubmit();
+			}else if(event.keyCode == 9){
+				// TAB key
+
+				if(this.inputElement !== document.activeElement)
+					// if input is NOT in focus, then
+					this.inputElement.focus();
+				else
+					// if input IS in focus, then
+					this.inputElement.blur();
+					// TOOD: highlight first element?
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: <InputKeyChangeDTO> {
 						dto: value,
 						keyCode: event.keyCode,
+						inputFieldActive: this.inputElement === document.activeElement
 					}
 				}));
 			}
@@ -231,6 +254,9 @@ namespace cf {
 		public dealloc(){
 			document.removeEventListener("keyup", this.keyUpCallback, false);
 			this.keyUpCallback = null;
+
+			document.removeEventListener("keydown", this.keyDownCallback, false);
+			this.keyDownCallback = null;
 
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;

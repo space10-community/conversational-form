@@ -37,16 +37,6 @@ namespace cf {
 			return "OptionsList";
 		}
 
-		public get width():number{
-			let w: number = 0;
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: OptionButton = <OptionButton>this.elements[i];
-				w += element.width;
-			}
-
-			return w;
-		}
-
 		public getValue(): Array<OptionButton> {
 			let arr: Array<OptionButton> = [];
 			for (let i = 0; i < this.elements.length; i++) {
