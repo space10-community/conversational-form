@@ -10,9 +10,14 @@
 
 // namespace
 namespace cf {
+	export interface ControlElementsDTO{
+		height: number;
+	}
+
 	export interface IControlElementsOptions{
 		el: HTMLElement;
 	}
+
 	export class ControlElements {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
@@ -59,7 +64,8 @@ namespace cf {
 
 		private onUserInputKeyChange(event: CustomEvent){
 			if(this.active){
-				const inputValue: string = (<FlowDTO> event.detail).inputValue;
+				const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
+				const inputValue: string = dto.inputValue;
 				this.filterElementsFrom(inputValue);
 			}
 		}

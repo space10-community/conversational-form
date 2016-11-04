@@ -43,7 +43,7 @@ namespace cf {
 		}
 
 		private onInputKeyChange(event: CustomEvent){
-			const dto: FlowDTO = event.detail;
+			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
 
 			if(this.currentResponse){
