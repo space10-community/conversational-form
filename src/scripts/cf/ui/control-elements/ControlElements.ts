@@ -128,7 +128,7 @@ namespace cf {
 					console.log("**** colunmIndex:", this.columnIndex);
 					console.log("**** rowBreakIndex:", this.rowBreakIndex);
 
-					const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+					const isElementsOptionsList: boolean = this.elements[0] && (<any>this.elements[0].constructor).name == "OptionsList";
 					const elementsToTraverse: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 					this.currentTraversedElement = elementsToTraverse[(this.rowIndex * this.rowBreakIndex) + this.columnIndex];
 				}
@@ -359,7 +359,7 @@ namespace cf {
 				}
 			}
 
-			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const isElementsOptionsList: boolean = this.elements[0] && (<any>this.elements[0].constructor).name == "OptionsList";
 			if(isElementsOptionsList){
 				this.filterListNumberOfVisible = (<OptionsList> this.elements[0]).elements.length;
 			}else{
@@ -390,7 +390,7 @@ namespace cf {
 
 			setTimeout(() => {
 				this.listWidth = 0;
-				const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+				const isElementsOptionsList: boolean = this.elements[0] && (<any>this.elements[0].constructor).name == "OptionsList";
 				const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 				if(elements.length > 0){
 					

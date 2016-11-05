@@ -7,12 +7,20 @@ namespace cf {
 	// class
 	export class Button extends ControlElement {
 		private clickCallback: () => void;
+		private mouseDownCallback: () => void;
 
 		constructor(options: IControlElementOptions){
 			super(options);
 
 			this.clickCallback = this.onClick.bind(this);
 			this.el.addEventListener("click", this.clickCallback, false);
+
+			this.mouseDownCallback = this.onMouseDown.bind(this);
+			this.el.addEventListener("mousedown", this.mouseDownCallback, false);
+		}
+
+		private onMouseDown(event:MouseEvent){
+			event.preventDefault();
 		}
 
 		protected onClick(event: MouseEvent){
@@ -22,6 +30,9 @@ namespace cf {
 		public dealloc(){
 			this.el.removeEventListener("click", this.clickCallback, false);
 			this.clickCallback = null;
+
+			this.el.removeEventListener("mousedown", this.mouseDownCallback, false);
+			this.mouseDownCallback = null;
 
 			super.dealloc();
 		}
