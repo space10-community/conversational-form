@@ -207,6 +207,14 @@ namespace cf {
 			}
 		}
 
+		public setFocusOnElement(index: number){
+			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+			index = index == -1 ? elements.length - 1 : index;
+			if(elements)
+				elements[index].el.focus();
+		}
+
 		public updateStateOnElements(controlElement: IControlElement){
 			this.list.classList.add("disabled");
 			if(controlElement.type == "RadioButton"){
@@ -405,7 +413,7 @@ namespace cf {
 					// double whammy to find row break index :(
 					for (let i = 0; i < elements.length; i++) {
 						let element: ControlElement = <ControlElement>elements[i];
-						element.tabIndex = 2 + i;
+						element.tabIndex = 3 + i;
 						if(element.rect.left == 0)
 							this.rowBreakIndex = i;
 					}
