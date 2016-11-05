@@ -250,9 +250,16 @@ namespace cf {
 								this.questions.push(Helpers.getInnerTextOfElement(label));
 							}
 						}
-					}else{
-						// no labelTags found, so set default
-						this.questions = [Dictionary.getAIResponse(this.type)];
+					}
+				
+					if(!this.questions || this.questions.length == 0){
+						// try a broader search using for and id attributes
+						const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
+
+						if(forLabel){
+							this.questions = [Helpers.getInnerTextOfElement(forLabel)];
+						}else
+							this.questions = [Dictionary.getAIResponse(this.type)];
 					}
 
 					// if title is not set from the title attribute then set it to the label...
@@ -261,7 +268,7 @@ namespace cf {
 						if(this.domElement.getAttribute("cf-label"))
 							this._title = this.domElement.getAttribute("cf-label");
 						else
-							this._title = this.questions && this.questions.length > 0 ? this.questions[0] : Helpers.getInnerTextOfElement(labelTags[0]);
+							this._title = labelTags.length > 0 ? Helpers.getInnerTextOfElement(labelTags[0]) : Dictionary.getAIResponse(this.type);//this.questions && this.questions.length > 0 ? this.questions[0];
 					}
 				}
 			}

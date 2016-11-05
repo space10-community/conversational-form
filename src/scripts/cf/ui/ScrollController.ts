@@ -180,6 +180,7 @@ namespace cf {
 			this.startXTarget = this.startX;
 			this.inputAccerlation = 0;
 			this.x = 0;
+			this.xTarget = 0;
 			this.render();
 			this.listNavButtons[0].classList.add("hide");
 			this.listNavButtons[1].classList.add("hide");
