@@ -98,11 +98,10 @@ namespace cf {
 		}
 
 		constructor(options: ITagOptions){
-			if(!Tag.isTagValid(options.domElement)){
-				return;
-			}
-
 			this.domElement = options.domElement;
+			
+			// remove tabIndex from the dom element.. danger zone... should we or should we not...
+			this.domElement.tabIndex = -1;
 
 			// questions array
 			if(options.questions)
@@ -142,6 +141,9 @@ namespace cf {
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
+			
+			if(element.getAttribute("type") === "submit")
+				return false;
 
 			if(element.style.display === "none")
 				return false;
@@ -156,8 +158,9 @@ namespace cf {
 		
 			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
-			else
+			else{
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+			}
 		}
 
 		public static createTag(options: ITagOptions): ITag{
