@@ -47,6 +47,9 @@ namespace cf {
 			this.el = options.el;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
+			// TODO: Listen for "scroll" event (TAB INDEX) and set trnslate instead.
+			// document.getElementsByTagName("cf-input-control-elements")[0].scrollLeft
+
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 
@@ -329,6 +332,13 @@ namespace cf {
 					const element: IControlElement = <IControlElement> this.elements[this.elements.length - 1];
 					this.list.appendChild(element.el);
 				}
+			}
+
+			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			if(isElementsOptionsList){
+				this.filterListNumberOfVisible = (<OptionsList> this.elements[0]).elements.length;
+			}else{
+				this.filterListNumberOfVisible = tags.length;
 			}
 
 			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
