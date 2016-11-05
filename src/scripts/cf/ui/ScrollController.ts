@@ -26,6 +26,7 @@ namespace cf {
 
 		private interacting: boolean = false;
 		private x: number = 0;
+		private xTarget: number = 0;
 		private startX: number = 0;
 		private startXTarget: number = 0;
 		private mouseSpeed: number = 0;
@@ -114,14 +115,16 @@ namespace cf {
 			this.direction += this.mouseSpeed;
 			
 			// animate x
-			this.x += this.inputAccerlation * 0.05;
+			this.xTarget += this.inputAccerlation * 0.05;
 
 			// bounce back when over
-			if(this.x > 0)
-				this.x += (0 - this.x) * 0.3;
+			if(this.xTarget > 0)
+				this.xTarget += (0 - this.xTarget) * 0.3;
 
-			if(this.x < this.max)
-				this.x += (this.max - this.x) * 0.3;
+			if(this.xTarget < this.max)
+				this.xTarget += (this.max - this.xTarget) * 0.3;
+
+			this.x += (this.xTarget - this.x) * 0.4;
 
 			// toggle visibility on nav arrows
 			if(this.x >= -10 && !this.listNavButtons[0].classList.contains("hide"))
@@ -138,14 +141,16 @@ namespace cf {
 
 			// set css transforms
 			const xx: number = this.x;
-			(<any> this.listToScroll).style["-webkit-transform"] = "translateX("+xx+"px)";
-			(<any> this.listToScroll).style["-moz-transform"] = "translateX("+xx+"px)";
-			(<any> this.listToScroll).style["-ms-transform"] = "translateX("+xx+"px)";
-			(<any> this.listToScroll).style["transform"] = "translateX("+xx+"px)";
+			Helpers.setTransform(this.listToScroll, "translateX("+xx+"px)");
 
 			// cycle render
-			if(this.interacting || (Math.abs(this.inputAccerlation) > 0.02 && !this.interacting))
+			if(this.interacting || (Math.abs(this.x -this.xTarget) > 0.02 && !this.interacting))
 				this.rAF = window.requestAnimationFrame(() => this.render());
+		}
+
+		public setScroll(x: number, y: number){
+			this.xTarget = x;
+			this.render();
 		}
 
 		public pushDirection(dir: number){

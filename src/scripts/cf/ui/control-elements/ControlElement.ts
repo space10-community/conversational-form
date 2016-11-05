@@ -26,6 +26,7 @@ namespace cf {
 	export const ControlElementEvents = {
 		SUBMIT_VALUE: "cf-basic-element-submit",
 		PROGRESS_CHANGE: "cf-basic-element-progress", // busy, ready
+		ON_FOCUS: "cf-basic-element-on-focus", // busy, ready
 	}
 
 	export const ControlElementProgressStates = {
@@ -40,6 +41,9 @@ namespace cf {
 		public el: HTMLElement;
 		public referenceTag: ITag;
 		private animateInTimer: number = 0;
+		private currentPosVector: ControlElementVector;
+
+		private onFocusCallback: () => void;
 
 		public get type():string{
 			return (<any>this.constructor).name;
@@ -55,10 +59,12 @@ namespace cf {
 			
 			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
 			// try not to do this to often, re-paint whammy!
-			return <ControlElementVector> {
+			this.currentPosVector = <ControlElementVector> {
 				width: this.el.offsetWidth + mr,
 				left: this.el.offsetLeft,
-			}
+			};
+
+			return this.currentPosVector;
 		}
 
 		public set tabIndex(value: number){
@@ -74,6 +80,20 @@ namespace cf {
 				this.el.classList.remove("hide");
 			else
 				this.el.classList.add("hide");
+		}
+
+		constructor(options: IBasicElementOptions){
+			super(options);
+
+			this.onFocusCallback = this.onFocus.bind(this);
+			this.el.addEventListener('focus', this.onFocusCallback, false);
+		}
+
+		private onFocus(event: Event){
+			ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.ON_FOCUS, this.referenceTag);
+			document.dispatchEvent(new CustomEvent(ControlElementEvents.ON_FOCUS, {
+				detail: this.currentPosVector
+			}));
 		}
 
 		protected setData(options: IControlElementOptions){
@@ -103,6 +123,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.el.removeEventListener('focus', this.onFocusCallback, false);
+			this.onFocusCallback = null;
+
 			super.dealloc();
 		}
 	}

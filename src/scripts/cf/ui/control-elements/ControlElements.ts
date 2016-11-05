@@ -26,6 +26,9 @@ namespace cf {
 		private userInputUpdateCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
+		private onElementFocusCallback: () => void;
+		private onScrollCallback: () => void;
+
 		private elementWidth: number = 0;
 		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
@@ -47,8 +50,11 @@ namespace cf {
 			this.el = options.el;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 
-			// TODO: Listen for "scroll" event (TAB INDEX) and set trnslate instead.
-			// document.getElementsByTagName("cf-input-control-elements")[0].scrollLeft
+			this.onScrollCallback = this.onScroll.bind(this);
+			this.el.addEventListener('scroll', this.onScrollCallback, false);
+
+			this.onElementFocusCallback = this.onElementFocus.bind(this);
+			document.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
 			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
@@ -67,12 +73,23 @@ namespace cf {
 			});
 		}
 
+		private onScroll(event: Event){
+			// some times the tabbing will result in el scroll, reset this.
+			this.el.scrollLeft = 0;
+		}
+
+		private onElementFocus(event: CustomEvent){
+			const vector: ControlElementVector = <ControlElementVector> event.detail;
+			const x: number = (vector.left != 0 ? vector.left - vector.width : 0) * -1;
+			this.listScrollController.setScroll(x, 0);
+		}
+
 		private onChatAIReponse(event:CustomEvent){
 			this.animateElementsIn();
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
-			// TODO: Delete all this???????
+			// TODO: Delete all this? Because we are using tabindex
 			const dto: InputKeyChangeDTO = event.detail;
 			if(this.active){
 				let shouldFilter: boolean = dto.inputFieldActive;
@@ -418,6 +435,12 @@ namespace cf {
 		public dealloc(){
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
+
+			this.el.removeEventListener('scroll', this.onScrollCallback, false);
+			this.onScrollCallback = null;
+
+			document.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
+			this.onElementFocusCallback = null;
 
 			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
 			this.onChatAIReponseCallback = null;

@@ -55,5 +55,12 @@ namespace cf {
 				return false;
 			}
 		}
+
+		public static setTransform(el: any, transformString: string){
+			el.style["-webkit-transform"] = transformString;
+			el.style["-moz-transform"] = transformString;
+			el.style["-ms-transform"] = transformString;
+			el.style["transform"] = transformString;
+		}
 	}
 }
