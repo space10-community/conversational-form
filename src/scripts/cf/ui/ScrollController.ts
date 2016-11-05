@@ -149,7 +149,7 @@ namespace cf {
 		}
 
 		public setScroll(x: number, y: number){
-			this.xTarget = x;
+			this.xTarget = this.visibleAreaWidth == this.listWidth ? 0 : x;
 			this.render();
 		}
 

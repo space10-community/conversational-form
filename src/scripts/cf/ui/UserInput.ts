@@ -36,7 +36,6 @@ namespace cf {
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private keyUpCallback: () => void;
-		private keyDownCallback: () => void;
 
 		private controlElements: ControlElements;
 		private currentTag: ITag | ITagGroup;
@@ -62,9 +61,7 @@ namespace cf {
 
 			// setup event listeners
 			this.keyUpCallback = this.onKeyUp.bind(this);
-			this.keyDownCallback = this.onKeyDown.bind(this);
 			document.addEventListener("keyup", this.keyUpCallback, false);
-			document.addEventListener("keydown", this.keyDownCallback, false);
 
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -185,16 +182,27 @@ namespace cf {
 			this.onEnterOrSubmitButtonSubmit();
 		}
 
-		private onKeyDown(event: KeyboardEvent){
-			if(this.el.hasAttribute("disabled"))
-				return;
-
-			// prevent normal behaviour, we are not here to take part, we are here to take over!
-			// if(this.inputElement !== document.activeElement)
-			// 	event.preventDefault();
-		}
-
 		private onKeyUp(event: KeyboardEvent){
+			if(event.keyCode == 9){
+				// tab key pressed, check if node is child of CF, if then then reset focus to input element
+
+				var doesKeyTargetExistInCF: boolean = false;
+				var node = (<HTMLElement> event.target).parentNode;
+				while (node != null) {
+					if (node === window.ConversationalForm.el) {
+						doesKeyTargetExistInCF = true;
+						break;
+					}
+					node = node.parentNode;
+				}
+				
+				// prevent normal behaviour, we are not here to take part, we are here to take over!
+				if(!doesKeyTargetExistInCF){
+					event.preventDefault();
+					this.inputElement.focus();
+				}
+			}
+
 			if(this.el.hasAttribute("disabled"))
 				return;
 
@@ -246,9 +254,6 @@ namespace cf {
 		public dealloc(){
 			document.removeEventListener("keyup", this.keyUpCallback, false);
 			this.keyUpCallback = null;
-
-			document.removeEventListener("keydown", this.keyDownCallback, false);
-			this.keyDownCallback = null;
 
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;

@@ -26,6 +26,7 @@ namespace cf {
 	export class ConversationalForm{
 		public dictionary: Dictionary;
 
+		private el: HTMLElement;
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
@@ -58,6 +59,11 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
+			// TODO: listen for blur event and reset focus if it happens, to control tabbing
+			document.addEventListener("blur", (event: Event) => {
+				console.log((<any>this.constructor).name, 'blur blur blur:');
+			}, false);
+
 			const configTag: any = document.getElementById("conversational-form");
 
 			if(configTag.getAttribute("development") == undefined){
@@ -179,20 +185,20 @@ namespace cf {
 				tags: this.tags,
 			});
 
-			var s10context: HTMLElement = document.createElement("div");
-			s10context.id = "conversational-form";
-			s10context.className = "conversational-form";
-			this.context.appendChild(s10context);
+			this.el = document.createElement("div");
+			this.el.id = "conversational-form";
+			this.el.className = "conversational-form";
+			this.context.appendChild(this.el);
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});
-			s10context.appendChild(this.chatList.el);
+			this.el.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({});
-			s10context.appendChild(this.userInput.el);
+			this.el.appendChild(this.userInput.el);
 
 			setTimeout(() => {
-				s10context.classList.add("conversational-form--show")
+				this.el.classList.add("conversational-form--show")
 				this.flowManager.start();
 			}, 0);
 
