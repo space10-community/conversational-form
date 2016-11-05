@@ -92,8 +92,8 @@ namespace cf {
 		}
 
 		public addStep(){
-			// this can be used for when a Tags value is updated and new tags are presented,
-			// TODO: fix this
+			// this can be used for when a Tags value is updated and new tags are presented
+			// like dynamic tag insertion depending on an answer.. V2..
 		}
 
 		public dealloc(){

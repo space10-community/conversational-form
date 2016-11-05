@@ -88,9 +88,10 @@ namespace cf {
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
 			let aiReponse: string = "";
 
-			// aiReponse = (currentTag.name || currentTag.title) + " : " + currentTag.question;
 			aiReponse = currentTag.question;
-			
+			// TODO: Replace {id..something} with.. this.flowDTOFromUserInputUpdate.text
+			// if(this.flowDTOFromUserInputUpdate)
+			// 	aiReponse = aiReponse.split("{....}").join(this.flowDTOFromUserInputUpdate.text)
 			this.createResponse(true, aiReponse, aiThumb);
 
 			// user reponse, create the waiting response

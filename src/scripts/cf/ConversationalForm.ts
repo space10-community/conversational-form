@@ -59,11 +59,6 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			// TODO: listen for blur event and reset focus if it happens, to control tabbing
-			document.addEventListener("blur", (event: Event) => {
-				console.log((<any>this.constructor).name, 'blur blur blur:');
-			}, false);
-
 			const configTag: any = document.getElementById("conversational-form");
 
 			if(configTag.getAttribute("development") == undefined){

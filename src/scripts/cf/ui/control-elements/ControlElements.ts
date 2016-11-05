@@ -83,7 +83,6 @@ namespace cf {
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
-			// TODO: Delete all this? Because we are using tabindex
 			const dto: InputKeyChangeDTO = event.detail;
 			if(this.active){
 				let shouldFilter: boolean = dto.inputFieldActive;

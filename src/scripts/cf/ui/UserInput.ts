@@ -158,12 +158,8 @@ namespace cf {
 			this.controlElements.reset();
 
 			if(this.currentTag.type == "group"){
-				//TODO: The buildControlElements should be chained together with AI Reponse.
-				console.log('UserInput > currentTag is a group of types:', (<ITagGroup> this.currentTag).elements[0].type);
 				this.buildControlElements((<ITagGroup> this.currentTag).elements);
 			}else{
-				//TODO: The buildControlElements should be chained together with AI Reponse.
-				console.log('UserInput > currentTag type:', this.currentTag.type);
 				this.buildControlElements([this.currentTag]);
 			}
 

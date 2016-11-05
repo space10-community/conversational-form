@@ -33,7 +33,7 @@ namespace cf {
 				this.onDomElementChangeCallback = this.onDomElementChange.bind(this);
 				this.referenceTag.domElement.addEventListener("change", this.onDomElementChangeCallback, false);
 			}else{
-				// TODO: What to do when fileReader is not supported?
+				throw new Error("Conversational Form Error: No FileReader available for client.");
 			}
 		}
 

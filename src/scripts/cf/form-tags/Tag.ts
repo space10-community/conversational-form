@@ -130,7 +130,13 @@ namespace cf {
 		}
 
 		public dealloc(){
-			// TODO: Handle deallocation of element
+			this.domElement = null;
+			this.defaultValue = null;
+			this.errorMessages = null;
+			this.pattern = null;
+			this._title = null;
+			this.validationCallback = null;
+			this.questions = null;
 		}
 
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
@@ -222,7 +228,6 @@ namespace cf {
 			// check for label tag, we only go 2 steps backwards..
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
-
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
