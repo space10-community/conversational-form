@@ -29,6 +29,7 @@ namespace cf {
 		public el: HTMLElement;
 
 		private inputElement: HTMLInputElement;
+		private submitButton: HTMLButtonElement;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -84,9 +85,9 @@ namespace cf {
 			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
 			document.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
 
-			const submitButton: HTMLButtonElement = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
+			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
-			submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
+			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
 		public getInputValue():string{
@@ -223,7 +224,7 @@ namespace cf {
 					if(this.shiftIsDown){
 						// highlight the last item in controlElement
 						if(this.controlElements.active)
-							this.controlElements.setFocusOnElement(-1)
+							this.controlElements.setFocusOnElement(-1);
 						else
 							this.inputElement.focus();
 					}else{
@@ -237,9 +238,18 @@ namespace cf {
 
 			const value: FlowDTO = this.getFlowDTO();
 
-			if(event.keyCode == 13){
-				// ENTER key
-				this.onEnterOrSubmitButtonSubmit();
+			if(event.keyCode == 13 || event.keyCode == 32){
+				// ENTER and SPACE key
+				if(event.keyCode == 13 && this.inputElement === document.activeElement){
+					this.onEnterOrSubmitButtonSubmit();
+				}
+				else{
+					// either click on submit button or do something with control elements
+					if(event.keyCode == 13)
+						this.submitButton.click();
+					else if(event.keyCode == 32 && document.activeElement)
+						(<any> document.activeElement).click();
+				}
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
@@ -299,8 +309,8 @@ namespace cf {
 			document.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 			this.onControlElementSubmitCallback = null;
 
-			const submitButton: HTMLButtonElement = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
-			submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
+			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
+			this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
 			this.onSubmitButtonClickCallback = null;
 
 			super.dealloc();
