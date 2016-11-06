@@ -79,7 +79,13 @@ namespace cf {
 		}
 
 		public dealloc(){
-			// TODO: Handle deallocation of group
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.dealloc();
+			}
+
+			this.elements = null;
+			this.errorMessages = null;
 		}
 
 		public getGroupTagType():string{

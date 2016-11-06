@@ -3,10 +3,9 @@
 @import "../../cf-variables"
 
 cf-radio-button.cf-button
-	+above($breakpoint-1)
-		&:hover
-			cf-radio
-				background $color-chat-reponse-user-text
+	&:hover, &.highlight, &:focus
+		cf-radio
+			background $color-chat-reponse-user-text
 
 	cf-radio
 		display block

@@ -31,6 +31,9 @@ namespace cf {
 
 		public setValue(dto: FlowDTO = null){
 			this.response = dto ? dto.text : "";
+
+			this.response = Helpers.emojify(this.response);
+			
 			const text: Element = this.el.getElementsByTagName("text")[0];
 			text.innerHTML = this.response;
 

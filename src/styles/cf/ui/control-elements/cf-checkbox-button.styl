@@ -3,10 +3,9 @@
 @import "../../cf-variables"
 
 .cf-button.cf-checkbox-button
-	+above($breakpoint-1)
-		&:hover
-			cf-checkbox
-				background $color-chat-reponse-user-text
+	&:hover, &.highlight, &:focus
+		cf-checkbox
+			background $color-chat-reponse-user-text
 	
 	cf-checkbox
 		display block

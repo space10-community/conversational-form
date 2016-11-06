@@ -66,14 +66,14 @@ namespace cf {
 			}
 			else{
 				// this should never happen..
-				throw new Error("No current response??")
+				throw new Error("No current response ..?")
 			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			// event.detail = ITag
+			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 
 			if(this.flowDTOFromUserInputUpdate){
 				// validate text..
@@ -82,22 +82,18 @@ namespace cf {
 				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
 			}
 
-			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
-
 			// AI response
 			const aiThumb: string = Dictionary.getAIResponse("thumb");
 			let aiReponse: string = "";
 
 			aiReponse = currentTag.question;
-			// TODO: Replace {id..something} with.. this.flowDTOFromUserInputUpdate.text
 
+			// one way data binding values:
 			if(this.flowDTOFromUserInputUpdate){
-				// one way data binding values:
-				
 				// previous answer..
 				aiReponse = aiReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
 				
-				// add others here..
+				// add other patterns here..
 				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
 			this.createResponse(true, aiReponse, aiThumb);

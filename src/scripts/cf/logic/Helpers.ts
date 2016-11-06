@@ -56,6 +56,31 @@ namespace cf {
 			}
 		}
 
+		private static emojilib: any = null;
+		public static setEmojiLib(lib: string = "emojify", scriptSrc: string = "//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"){
+			const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
+			
+			const script: HTMLScriptElement = document.createElement("script");
+			script.type = "text/javascript";
+			script.onload = function() {
+				// we use https://github.com/Ranks/emojify.js as a standard
+				Helpers.emojilib = (<any> window)[lib];
+				Helpers.emojilib.setConfig({
+					img_dir: "https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/",
+				});
+			}
+			script.setAttribute("src", scriptSrc);
+			head.appendChild(script);
+		}
+
+		public static emojify(str: string): string{
+			if(Helpers.emojilib){
+				str = Helpers.emojilib.replace(str);
+			}
+
+			return str;
+		}
+
 		public static setTransform(el: any, transformString: string){
 			el.style["-webkit-transform"] = transformString;
 			el.style["-moz-transform"] = transformString;

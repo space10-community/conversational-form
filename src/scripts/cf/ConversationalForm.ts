@@ -51,6 +51,10 @@ namespace cf {
 				aiQuestions: options.dictionaryAI,
 				userImage: options.userImage,
 			});
+
+			// emoji.. fork and set your own values..
+			Helpers.setEmojiLib();
+		
 			
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
