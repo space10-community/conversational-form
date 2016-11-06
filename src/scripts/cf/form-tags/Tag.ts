@@ -63,7 +63,7 @@ namespace cf {
 
 		public get title (): string{
 			if(!this._title){
-				this._title = this.domElement.getAttribute("title");
+				this.findTitle();
 			}
 
 			return this._title;
@@ -232,13 +232,34 @@ namespace cf {
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
+			const elId: string = this.domElement.getAttribute("id");
+
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
 			}else{
 				// questions not set, so find it in the DOM
+				// try a broader search using for and id attributes
+				const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
+
+				if(forLabel){
+					this.questions = [Helpers.getInnerTextOfElement(forLabel)];
+				}else
+					this.questions = [Dictionary.getAIResponse(this.type)];
+			}
+
+			// if questions are empty, then fall back to dictionary
+			if(!this.questions || this.questions.length == 0){
+				this.questions = [Dictionary.getAIResponse(this.type)];
+			}
+		}
+
+		private findTitle(){
+			// find label..
+			if(this.domElement.getAttribute("cf-label")){
+				this._title = this.domElement.getAttribute("cf-label");
+			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
 				if(parentDomNode){
-					const elId: string = this.domElement.getAttribute("id");
 					// step backwards and check for label tag.
 					let labelTags: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
@@ -249,41 +270,13 @@ namespace cf {
 							labelTags = [(<HTMLLabelElement>parentDomNode)];
 					}
 
-					if(labelTags.length > 0){
-						// if <label> are found then add them to the questions array
-						this.questions = [];
-						for (var i = 0; i < labelTags.length; i++) {
-							var label: HTMLLabelElement = labelTags[i];
-							if(elId && (elId && label.getAttribute("for") == elId)){
-								this.questions.push(Helpers.getInnerTextOfElement(label));
-							}
-						}
-					}
-				
-					if(!this.questions || this.questions.length == 0){
-						// try a broader search using for and id attributes
-						const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
-
-						if(forLabel){
-							this.questions = [Helpers.getInnerTextOfElement(forLabel)];
-						}else
-							this.questions = [Dictionary.getAIResponse(this.type)];
-					}
-
-					// if title is not set from the title attribute then set it to the label...
-					if(!this._title){
-						// checl first for optional label set on the Tag
-						if(this.domElement.getAttribute("cf-label"))
-							this._title = this.domElement.getAttribute("cf-label");
-						else
-							this._title = labelTags.length > 0 ? Helpers.getInnerTextOfElement(labelTags[0]) : Dictionary.getAIResponse(this.type);//this.questions && this.questions.length > 0 ? this.questions[0];
-					}
+					if(labelTags.length > 0 && labelTags[0])
+						this._title = Helpers.getInnerTextOfElement(labelTags[0]);
 				}
 			}
 
-			if(!this.questions || this.questions.length == 0){
-				this.questions = [Dictionary.getAIResponse(this.type)];
-			}
+			if(!this._title)
+				Dictionary.getAIResponse(this.type)
 		}
 	}
 }
