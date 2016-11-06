@@ -40,21 +40,14 @@ namespace cf {
 		}
 
 		public get question():string{
-			for (var i = 0; i < this.elements.length; i++) {
-				// force question render..
-				this.elements[i].question
-			}
+			// check if elements have the questions, else fallback
+			let tagQuestion: string = this.elements[0].question;
 
-			// expect the first tag of the group to have the question, else fallback to AIReponse
-
-			const firstTag: ITag = this.elements[0];
-			const firstTagQuestion: string = firstTag.question;
-
-			if(firstTagQuestion){
-				return firstTagQuestion;
+			if(tagQuestion){
+				return tagQuestion;
 			}else{
 				// fallback to AI response from dictionary
-				const aiReponse: string = Dictionary.getAIResponse(firstTag.type);
+				const aiReponse: string = Dictionary.getAIResponse(this.getGroupTagType());
 				return aiReponse;
 			}
 		}

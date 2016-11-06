@@ -90,8 +90,16 @@ namespace cf {
 
 			aiReponse = currentTag.question;
 			// TODO: Replace {id..something} with.. this.flowDTOFromUserInputUpdate.text
-			// if(this.flowDTOFromUserInputUpdate)
-			// 	aiReponse = aiReponse.split("{....}").join(this.flowDTOFromUserInputUpdate.text)
+
+			if(this.flowDTOFromUserInputUpdate){
+				// one way data binding values:
+				
+				// previous answer..
+				aiReponse = aiReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
+				
+				// add others here..
+				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
+			}
 			this.createResponse(true, aiReponse, aiThumb);
 
 			// user reponse, create the waiting response
