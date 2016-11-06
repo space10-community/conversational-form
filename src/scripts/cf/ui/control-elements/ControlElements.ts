@@ -113,7 +113,7 @@ namespace cf {
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 			// the type is not strong with this one..
 
-			let numItemsVisible: number = 0;
+			let itemsVisible: Array<ControlElement> = [];
 			for (let i = 0; i < elements.length; i++) {
 				let element: ControlElement = <ControlElement>elements[i];
 				let elementVisibility: boolean = true;
@@ -126,28 +126,34 @@ namespace cf {
 					}
 				}
 
+				element.highlight = false;
+
 				// set element visibility.
 				element.visible = elementVisibility;
-				if(elementVisibility) 
-					numItemsVisible += element.visible ? 1 : 0;
+				if(elementVisibility && element.visible) 
+					itemsVisible.push(element);
 			}
 
 			// set feedback text for filter..
 			const infoElement: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
-			infoElement.innerHTML = numItemsVisible == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
-			if(numItemsVisible == 0)
+			infoElement.innerHTML = itemsVisible.length == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
+			if(itemsVisible.length == 0){
 				infoElement.classList.add("show");
-			else
+			}else{
 				infoElement.classList.remove("show");
+				
+				// highlight first item when filtering
+				itemsVisible[0].highlight = true;
+			}
 
 			// crude way of checking if list has changed...
-			const hasListChanged: boolean = this.filterListNumberOfVisible != numItemsVisible;
+			const hasListChanged: boolean = this.filterListNumberOfVisible != itemsVisible.length;
 			if(hasListChanged){
 				this.resize();
 				this.animateElementsIn();
 			}
 			
-			this.filterListNumberOfVisible = numItemsVisible;
+			this.filterListNumberOfVisible = itemsVisible.length;
 		}
 
 		private animateElementsIn(){
@@ -158,6 +164,20 @@ namespace cf {
 				let element: ControlElement = <ControlElement>this.elements[i];
 				element.animateIn();
 			}
+		}
+
+		public canClickOnHighlightedItem(): boolean {
+			const elements: Array <any> = (<any>this.elements[0].constructor).name == "OptionsList" ? (<OptionsList> this.elements[0]).elements : this.elements;
+
+			for (let i = 0; i < elements.length; i++) {
+				let element: IControlElement = <IControlElement>elements[i];
+				if(element.highlight){
+					element.el.click();
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public setFocusOnElement(index: number){

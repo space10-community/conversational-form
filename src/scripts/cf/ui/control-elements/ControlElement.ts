@@ -20,6 +20,7 @@ namespace cf {
 		type: string;
 		value: string;
 		rect: ControlElementVector;
+		highlight: boolean;
 		dealloc(): void;
 	}
 
@@ -80,6 +81,17 @@ namespace cf {
 				this.el.classList.remove("hide");
 			else
 				this.el.classList.add("hide");
+		}
+
+		public get highlight(): boolean{
+			return this.el.classList.contains("highlight");
+		}
+
+		public set highlight(value: boolean){
+			if(value)
+				this.el.classList.add("highlight");
+			else
+				this.el.classList.remove("highlight");
 		}
 
 		constructor(options: IBasicElementOptions){

@@ -235,9 +235,16 @@ namespace cf {
 			const value: FlowDTO = this.getFlowDTO();
 
 			if(event.keyCode == 13 || event.keyCode == 32){
-				// ENTER and SPACE key
+				// ENTER (13) and SPACE (32) key
 				if(event.keyCode == 13 && this.inputElement === document.activeElement){
-					this.onEnterOrSubmitButtonSubmit();
+					if(this.controlElements.active){
+						// if no highlighted element, then just standard behaviour
+						if(!this.controlElements.canClickOnHighlightedItem()){
+							this.onEnterOrSubmitButtonSubmit();
+						}
+					}else{
+						this.onEnterOrSubmitButtonSubmit();
+					}
 				}
 				else{
 					// either click on submit button or do something with control elements
