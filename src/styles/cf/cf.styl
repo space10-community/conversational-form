@@ -49,8 +49,6 @@
 		height auto
 		margin 0px 4px
 	
-
-
 	padding 20px
 	font-family 'Roboto', sans-serif
 	font-size 12px
@@ -70,7 +68,6 @@
 	transition opacity $anim-time * 0.25 $anim-easeOut
 
 	// test
-	transform translateX(50%)
 
 	// disable user selection for the app feel
 	*
@@ -78,6 +75,8 @@
 		-webkit-tap-highlight-color rgba(255, 255, 255, 0)
 		tap-highlight-color rgba(255, 255, 255, 0)
 	
+.cf--development-mode
+	transform translateX(50%)
 
 .conversational-form--show
 	opacity 1

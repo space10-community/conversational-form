@@ -35,6 +35,7 @@ namespace cf {
 
 		private chatList: ChatList;
 		private userInput: UserInput;
+		private isDevelopment: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			console.log("Space10 Conversational User Interface.");
@@ -74,6 +75,8 @@ namespace cf {
 				style.setAttribute("rel", "stylesheet");
 				style.setAttribute("href", cdnUrl + "space10-cf-dist.min.css");
 				head.appendChild(style);
+			}else{
+				this.isDevelopment = true;
 			}
 
 			// set context position to relative, else we break out of the box
@@ -187,6 +190,8 @@ namespace cf {
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
 			this.context.appendChild(this.el);
+			if(this.isDevelopment)
+				this.el.classList.add("cf--development-mode");
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});
