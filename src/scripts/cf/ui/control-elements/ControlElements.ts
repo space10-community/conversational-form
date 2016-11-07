@@ -37,7 +37,11 @@ namespace cf {
 		private listWidth: number = 0;
 
 		public get active():boolean{
-			return this.elements.length > 0;
+			return this.elements && this.elements.length > 0;
+		}
+
+		public get length(): number{
+			return this.elements.length;
 		}
 
 		constructor(options: IControlElementsOptions){
@@ -183,9 +187,26 @@ namespace cf {
 		public setFocusOnElement(index: number){
 			const isElementsOptionsList: boolean = this.elements[0].type == "OptionsList";
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
-			index = index == -1 ? elements.length - 1 : index;
-			if(elements)
-				elements[index].el.focus();
+
+			if(index != -1 && elements){
+				let visibleCount: number = 0;
+				for (let i = 0; i < this.elements.length; i++) {
+					let element: ControlElement = <ControlElement>this.elements[i];
+					if(element.visible){
+						if(visibleCount == index){
+							elements[i].el.focus();
+							elements[i].highlight = true;
+						}
+						visibleCount++;
+					}
+				}
+			}else if(index == -1 && elements){
+				for (let i = 0; i < this.elements.length; i++) {
+					let element: ControlElement = <ControlElement>this.elements[i];
+					element.el.blur();
+					element.highlight = false;
+				}
+			}
 		}
 
 		public updateStateOnElements(controlElement: IControlElement){

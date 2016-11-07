@@ -35,6 +35,7 @@ namespace cf {
 		private inputInvalidCallback: () => void;
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
+		private onInputFocusCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private shiftIsDown: boolean = false;
@@ -49,7 +50,7 @@ namespace cf {
 				this.el.setAttribute("disabled", "disabled");
 				this.inputElement.blur();
 			}else{
-				this.inputElement.focus();
+				this.setFocusOnInput();
 				this.el.removeAttribute("disabled");
 			}
 		}
@@ -59,6 +60,8 @@ namespace cf {
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.inputElement = this.el.getElementsByTagName("input")[0];
+			this.onInputFocusCallback = this.onInputFocus.bind(this);
+			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
@@ -114,10 +117,6 @@ namespace cf {
 			return value;
 		}
 
-		private windowFocus(event: Event){
-			this.inputElement.focus();
-		}
-
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			const dto: FlowDTO = event.detail;
@@ -137,7 +136,7 @@ namespace cf {
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
 				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-				this.inputElement.focus();
+				this.setFocusOnInput();
 			}, UserInput.ERROR_TIME);
 		}
 
@@ -157,7 +156,7 @@ namespace cf {
 			this.inputElement.value = "";
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
-			this.inputElement.focus();
+			this.setFocusOnInput();
 			this.controlElements.reset();
 
 			if(this.currentTag.type == "group"){
@@ -201,10 +200,16 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			if(event.keyCode == 16)
+			if(event.keyCode == 16){
 				this.shiftIsDown = false;
-
-			if(event.keyCode == 9){
+			}else if(event.keyCode == 38){
+				// key UP
+				if(this.controlElements.active)
+					this.controlElements.setFocusOnElement(0);
+			}else if(event.keyCode == 40){
+				// key DOWN
+				this.setFocusOnInput();
+			}else if(event.keyCode == 9){
 				// tab key pressed, check if node is child of CF, if then then reset focus to input element
 
 				var doesKeyTargetExistInCF: boolean = false;
@@ -223,11 +228,11 @@ namespace cf {
 					if(this.shiftIsDown){
 						// highlight the last item in controlElement
 						if(this.controlElements.active)
-							this.controlElements.setFocusOnElement(-1);
+							this.controlElements.setFocusOnElement(this.controlElements.length - 1);
 						else
-							this.inputElement.focus();
+							this.setFocusOnInput();
 					}else{
-						this.inputElement.focus();
+						this.setFocusOnInput();
 					}
 				}
 			}
@@ -256,7 +261,8 @@ namespace cf {
 					else if(event.keyCode == 32 && document.activeElement)
 						(<any> document.activeElement).click();
 				}
-			}else{
+			}else if(event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 16 && event.keyCode != 9){
+				// don't accept the arrow keys here
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
 				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 					detail: <InputKeyChangeDTO> {
@@ -266,6 +272,19 @@ namespace cf {
 					}
 				}));
 			}
+		}
+
+		private windowFocus(event: Event){
+			this.setFocusOnInput();
+		}
+
+		private onInputFocus(event: FocusEvent){
+			if(this.controlElements.active)
+				this.controlElements.setFocusOnElement(-1);
+		}
+
+		private setFocusOnInput(){
+			this.inputElement.focus();
 		}
 
 		private onEnterOrSubmitButtonSubmit(){
@@ -297,6 +316,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
+			this.onInputFocusCallback = null;
+
 			window.removeEventListener('focus', this.windowFocusCallback, false);
 			this.windowFocusCallback = null;
 
