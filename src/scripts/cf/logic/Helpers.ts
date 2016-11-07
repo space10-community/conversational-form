@@ -23,7 +23,7 @@ namespace cf {
 			if((<any> event).originalEvent)
 				touches = (<any> event).originalEvent.touches || (<any> event).originalEvent.changedTouches;
 			else if((<TouchEvent> event).changedTouches)
-				touches = Array <any> ((<TouchEvent> event).changedTouches);
+				touches = <any> (<TouchEvent> event).changedTouches;
 
 			if(touches){
 				return {x: touches[0].pageX, y: touches[0].pageY, touches: touches[0]};
