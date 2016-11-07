@@ -12,7 +12,8 @@ namespace cf {
 		private interactionListener: HTMLElement;
 		private listToScroll: HTMLElement;
 		private listWidth: number = 0;
-		private listNavButtons: NodeListOf<Element>;
+		private prevButton: Element;
+		private nextButton: Element;
 
 		private rAF: number;
 		private visibleAreaWidth: number = 0;
@@ -39,11 +40,12 @@ namespace cf {
 		constructor(options: IScrollControllerOptions){
 			this.interactionListener = options.interactionListener;
 			this.listToScroll = options.listToScroll;
-			this.listNavButtons = options.listNavButtons;
+			this.prevButton = options.listNavButtons[0];
+			this.nextButton = options.listNavButtons[0];
 
 			this.onListNavButtonsClickCallback = this.onListNavButtonsClick.bind(this);
-			this.listNavButtons[0].addEventListener("click", this.onListNavButtonsClickCallback, false);
-			this.listNavButtons[1].addEventListener("click", this.onListNavButtonsClickCallback, false);
+			this.prevButton.addEventListener("click", this.onListNavButtonsClickCallback, false);
+			this.nextButton.addEventListener("click", this.onListNavButtonsClickCallback, false);
 
 			this.documentLeaveCallback = this.documentLeave.bind(this);
 			this.onInteractStartCallback = this.onInteractStart.bind(this);
@@ -127,17 +129,17 @@ namespace cf {
 			this.x += (this.xTarget - this.x) * 0.4;
 
 			// toggle visibility on nav arrows
-			if(this.x >= -10 && !this.listNavButtons[0].classList.contains("hide"))
-				this.listNavButtons[0].classList.add("hide");
+			if(this.x >= -10 && !this.prevButton.classList.contains("hide"))
+				this.prevButton.classList.add("hide");
 
-			if(this.x < -10 && this.listNavButtons[0].classList.contains("hide"))
-				this.listNavButtons[0].classList.remove("hide");
+			if(this.x < -10 && this.prevButton.classList.contains("hide"))
+				this.prevButton.classList.remove("hide");
 
-			if(this.x <= this.max + 10 && !this.listNavButtons[1].classList.contains("hide"))
-				this.listNavButtons[1].classList.add("hide");
+			if(this.x <= this.max + 10 && !this.nextButton.classList.contains("hide"))
+				this.nextButton.classList.add("hide");
 
-			if(this.x > this.max + 10 && this.listNavButtons[1].classList.contains("hide"))
-				this.listNavButtons[1].classList.remove("hide");
+			if(this.x > this.max + 10 && this.nextButton.classList.contains("hide"))
+				this.nextButton.classList.remove("hide");
 
 			// set css transforms
 			const xx: number = this.x;
@@ -159,9 +161,11 @@ namespace cf {
 		}
 
 		public dealloc(){
-			this.listNavButtons[0].removeEventListener("click", this.onListNavButtonsClickCallback, false);
-			this.listNavButtons[1].removeEventListener("click", this.onListNavButtonsClickCallback, false);
+			this.prevButton.removeEventListener("click", this.onListNavButtonsClickCallback, false);
+			this.nextButton.removeEventListener("click", this.onListNavButtonsClickCallback, false);
 			this.onListNavButtonsClickCallback = null;
+			this.prevButton = null;
+			this.nextButton = null;
 
 			document.removeEventListener("mouseleave", this.documentLeaveCallback, false);
 			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mousedown"), this.onInteractStartCallback, false);
@@ -182,8 +186,8 @@ namespace cf {
 			this.x = 0;
 			this.xTarget = 0;
 			this.render();
-			this.listNavButtons[0].classList.add("hide");
-			this.listNavButtons[1].classList.add("hide");
+			this.prevButton.classList.add("hide");
+			this.nextButton.classList.add("hide");
 		}
 
 		public resize(listWidth: number, visibleAreaWidth: number){

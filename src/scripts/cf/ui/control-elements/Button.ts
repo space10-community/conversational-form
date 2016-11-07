@@ -9,6 +9,10 @@ namespace cf {
 		private clickCallback: () => void;
 		private mouseDownCallback: () => void;
 
+		public get type():string{
+			return "Button";
+		}
+
 		constructor(options: IControlElementOptions){
 			super(options);
 

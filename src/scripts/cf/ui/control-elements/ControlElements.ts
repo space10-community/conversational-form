@@ -109,7 +109,7 @@ namespace cf {
 			if(inputValuesLowerCase.indexOf("") != -1)
 				inputValuesLowerCase.splice(inputValuesLowerCase.indexOf(""), 1);
 
-			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const isElementsOptionsList: boolean = this.elements[0].type == "OptionsList";
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 			// the type is not strong with this one..
 
@@ -167,7 +167,7 @@ namespace cf {
 		}
 
 		public canClickOnHighlightedItem(): boolean {
-			const elements: Array <any> = (<any>this.elements[0].constructor).name == "OptionsList" ? (<OptionsList> this.elements[0]).elements : this.elements;
+			const elements: Array <any> = this.elements[0].type == "OptionsList" ? (<OptionsList> this.elements[0]).elements : this.elements;
 
 			for (let i = 0; i < elements.length; i++) {
 				let element: IControlElement = <IControlElement>elements[i];
@@ -181,7 +181,7 @@ namespace cf {
 		}
 
 		public setFocusOnElement(index: number){
-			const isElementsOptionsList: boolean = (<any>this.elements[0].constructor).name == "OptionsList";
+			const isElementsOptionsList: boolean = this.elements[0].type == "OptionsList";
 			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 			index = index == -1 ? elements.length - 1 : index;
 			if(elements)
@@ -329,7 +329,7 @@ namespace cf {
 				}
 			}
 
-			const isElementsOptionsList: boolean = this.elements[0] && (<any>this.elements[0].constructor).name == "OptionsList";
+			const isElementsOptionsList: boolean = this.elements[0] && this.elements[0].type == "OptionsList";
 			if(isElementsOptionsList){
 				this.filterListNumberOfVisible = (<OptionsList> this.elements[0]).elements.length;
 			}else{
@@ -360,7 +360,7 @@ namespace cf {
 
 			setTimeout(() => {
 				this.listWidth = 0;
-				const isElementsOptionsList: boolean = this.elements[0] && (<any>this.elements[0].constructor).name == "OptionsList";
+				const isElementsOptionsList: boolean = this.elements[0] && this.elements[0].type == "OptionsList";
 				const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
 				if(elements.length > 0){
 					

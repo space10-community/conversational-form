@@ -6,8 +6,14 @@ namespace cf {
 
 	// class
 	export class RadioButton extends Button {
+
+		public get type():string{
+			return "RadioButton";
+		}
+
 		public get checked():boolean{
-			return this.el.getAttribute("checked") == "checked";
+			const _checked: boolean = this.el.hasAttribute("checked") && this.el.getAttribute("checked") == "checked";
+			return _checked;
 		}
 
 		public set checked(value: boolean){
@@ -20,7 +26,6 @@ namespace cf {
 
 		protected onClick(event: MouseEvent){
 			this.checked = !this.checked;
-
 			super.onClick(event);
 		}
 

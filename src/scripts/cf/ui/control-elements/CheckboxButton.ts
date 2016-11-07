@@ -7,6 +7,10 @@ namespace cf {
 	// class
 	export class CheckboxButton extends Button {
 
+		public get type():string{
+			return "CheckboxButton";
+		}
+
 		public get checked():boolean{
 			return this.el.getAttribute("checked") == "checked";
 		}

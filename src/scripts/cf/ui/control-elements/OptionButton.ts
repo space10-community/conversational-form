@@ -16,6 +16,10 @@ namespace cf {
 	export class OptionButton extends Button {
 		private isMultiChoice: boolean = false;
 
+		public get type():string{
+			return "OptionButton";
+		}
+
 		public get selected():boolean{
 			return this.el.hasAttribute("selected");
 		}

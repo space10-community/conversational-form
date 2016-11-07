@@ -233,7 +233,7 @@ namespace cf {
 			// ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail);
 			// ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(ConversationalForm.ILLUSTRATE_APP_FLOW){
+			if(ConversationalForm.ILLUSTRATE_APP_FLOW && navigator.appName != 'Netscape'){
 				const highlight: string = "font-weight: 900; background: pink; color: black; padding: 0px 5px;";
 				console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c"+(<any> classRef.constructor).name, "font-weight: 900;",highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
 				if(detail)

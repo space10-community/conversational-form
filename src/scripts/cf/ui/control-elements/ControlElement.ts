@@ -47,7 +47,7 @@ namespace cf {
 		private onFocusCallback: () => void;
 
 		public get type():string{
-			return (<any>this.constructor).name;
+			return "ControlElement";
 		}
 
 		public get value():string{

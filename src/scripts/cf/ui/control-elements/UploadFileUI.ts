@@ -18,6 +18,10 @@ namespace cf {
 			return this.fileName;
 		}
 
+		public get type():string{
+			return "UploadFileUI";
+		}
+
 		constructor(options: IControlElementOptions){
 			super(options);
 

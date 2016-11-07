@@ -20,6 +20,10 @@ namespace cf {
 		private referenceTag: ITag;
 		private onOptionButtonClickCallback: () => void;
 
+		public get type():string{
+			return "OptionsList";
+		}
+
 		constructor(options: IOptionsListOptions){
 			this.context = options.context;
 			this.referenceTag = options.referenceTag;
@@ -31,10 +35,6 @@ namespace cf {
 			document.addEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
 
 			this.createElements();
-		}
-
-		public get type():string{
-			return "OptionsList";
 		}
 
 		public getValue(): Array<OptionButton> {
