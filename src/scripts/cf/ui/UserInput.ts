@@ -45,10 +45,13 @@ namespace cf {
 		private currentTag: ITag | ITagGroup;
 
 		private set disabled(value: boolean){
-			if(value)
+			if(value){
 				this.el.setAttribute("disabled", "disabled");
-			else
+				this.inputElement.blur();
+			}else{
+				this.inputElement.focus();
 				this.el.removeAttribute("disabled");
+			}
 		}
 
 		constructor(options: IBasicElementOptions){
