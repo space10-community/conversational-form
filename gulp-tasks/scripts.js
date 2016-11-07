@@ -59,7 +59,9 @@ global.gulp.task('scripts', function() {
 
 global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	var src = [
-		global.buildFolder + "**/*.js",
+		global.buildFolder + "scripts/bower_components/promise-polyfill/promise.js",
+		global.buildFolder + "scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js",
+		global.buildFolder + "cf/**/*.js",
 		"!" + global.buildFolder + "ConversationalForm-dist.js",
 		"!" + global.buildFolder + "ConversationalForm-dist.min.js",
 	]

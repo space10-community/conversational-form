@@ -132,3 +132,6 @@ USER_INPUT_UPDATE: "cf-flow-user-input-update",
 USER_INPUT_INVALID: "cf-flow-user-input-invalid",
 FLOW_UPDATE: "cf-flow-update",
 
+
+#### Browser support
+// TODO: insert browser support table.

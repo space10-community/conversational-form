@@ -28,7 +28,7 @@ namespace cf {
 		protected createElement(): Element{
 			var template: HTMLTemplateElement = document.createElement('template');
 			template.innerHTML = this.getTemplate();
-			this.el = <HTMLElement> template.content.firstChild;
+			this.el = <HTMLElement> template.firstChild || <HTMLElement>template.content.firstChild;
 			return this.el;
 		}
 
