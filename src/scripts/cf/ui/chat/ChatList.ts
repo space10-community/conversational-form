@@ -38,7 +38,7 @@ namespace cf {
 
 		private onControlElementsAddedToUserInput(event: CustomEvent){
 			const dto: ControlElementsDTO = event.detail;
-			const paddingBottom: number = 20;
+			const paddingBottom: number = 30;
 			this.el.style.paddingBottom = (dto.height + paddingBottom) + "px";
 		}
 

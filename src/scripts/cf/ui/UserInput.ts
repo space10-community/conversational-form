@@ -45,6 +45,10 @@ namespace cf {
 		private controlElements: ControlElements;
 		private currentTag: ITag | ITagGroup;
 
+		public get active(): boolean{
+			return this.inputElement === document.activeElement;
+		}
+
 		private set disabled(value: boolean){
 			if(value){
 				this.el.setAttribute("disabled", "disabled");
@@ -202,13 +206,12 @@ namespace cf {
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 16){
 				this.shiftIsDown = false;
-			}else if(event.keyCode == 38){
+			}else if(event.keyCode == 38 && this.active && this.controlElements.active){
 				// key UP
-				if(this.controlElements.active)
-					this.controlElements.setFocusOnElement(0);
+				this.controlElements.setFocusOnElement(0);
 			}else if(event.keyCode == 40){
 				// key DOWN
-				this.setFocusOnInput();
+				// this.setFocusOnInput();
 			}else if(event.keyCode == 9){
 				// tab key pressed, check if node is child of CF, if then then reset focus to input element
 
@@ -226,7 +229,7 @@ namespace cf {
 				if(!doesKeyTargetExistInCF){
 					event.preventDefault();
 					if(this.shiftIsDown){
-						// highlight the last item in controlElement
+						// focus the last item in controlElement
 						if(this.controlElements.active)
 							this.controlElements.setFocusOnElement(this.controlElements.length - 1);
 						else
@@ -246,15 +249,8 @@ namespace cf {
 				// ENTER (13) and SPACE (32) key
 				event.preventDefault();
 
-				if(event.keyCode == 13 && this.inputElement === document.activeElement){
-					if(this.controlElements.active){
-						// if no highlighted element, then just standard behaviour
-						if(!this.controlElements.canClickOnHighlightedItem()){
-							this.onEnterOrSubmitButtonSubmit();
-						}
-					}else{
-						this.onEnterOrSubmitButtonSubmit();
-					}
+				if(event.keyCode == 13 && this.active){
+					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
 					if(event.keyCode == 13){
@@ -279,7 +275,7 @@ namespace cf {
 						(<any> document.activeElement).click();
 					}
 				}
-			}else if(event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 16 && event.keyCode != 9){
+			}else if(event.keyCode != 16 && event.keyCode != 9){
 				// don't accept the arrow keys here
 				this.dispatchKeyChange(value, event.keyCode)
 			}
@@ -291,7 +287,7 @@ namespace cf {
 				detail: <InputKeyChangeDTO> {
 					dto: dto,
 					keyCode: keyCode,
-					inputFieldActive: this.inputElement === document.activeElement
+					inputFieldActive: this.active
 				}
 			}));
 		}

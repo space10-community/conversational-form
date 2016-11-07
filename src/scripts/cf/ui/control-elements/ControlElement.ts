@@ -8,6 +8,7 @@ namespace cf {
 	export interface ControlElementVector{
 		width: number,
 		left: number,
+		top: number,
 	}
 
 	export interface IControlElementOptions extends IBasicElementOptions{
@@ -20,7 +21,7 @@ namespace cf {
 		type: string;
 		value: string;
 		rect: ControlElementVector;
-		highlight: boolean;
+		tabIndex: number;
 		dealloc(): void;
 	}
 
@@ -56,13 +57,14 @@ namespace cf {
 
 		public get rect():ControlElementVector{
 			if(!this.visible)
-				return {width: 0, left: 0};
+				return {width: 0, left: 0, top: 0};
 			
 			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
 			// try not to do this to often, re-paint whammy!
 			this.currentPosVector = <ControlElementVector> {
 				width: this.el.offsetWidth + mr,
 				left: this.el.offsetLeft,
+				top: this.el.offsetTop,
 			};
 
 			return this.currentPosVector;
@@ -81,17 +83,6 @@ namespace cf {
 				this.el.classList.remove("hide");
 			else
 				this.el.classList.add("hide");
-		}
-
-		public get highlight(): boolean{
-			return this.el.classList.contains("highlight");
-		}
-
-		public set highlight(value: boolean){
-			if(value)
-				this.el.classList.add("highlight");
-			else
-				this.el.classList.remove("highlight");
 		}
 
 		constructor(options: IBasicElementOptions){

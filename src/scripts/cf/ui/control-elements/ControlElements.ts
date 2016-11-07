@@ -41,7 +41,8 @@ namespace cf {
 		}
 
 		public get length(): number{
-			return this.elements.length;
+			const elements: Array<IControlElement> = this.getElements();
+			return elements.length;
 		}
 
 		constructor(options: IControlElementsOptions){
@@ -79,6 +80,8 @@ namespace cf {
 		private onElementFocus(event: CustomEvent){
 			const vector: ControlElementVector = <ControlElementVector> event.detail;
 			const x: number = (vector.left != 0 ? vector.left - vector.width : 0) * -1;
+			
+			// this.currentFocusIndex = 0;
 			this.listScrollController.setScroll(x, 0);
 		}
 
@@ -95,6 +98,35 @@ namespace cf {
 					const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 					const inputValue: string = dto.input.getInputValue();
 					this.filterElementsFrom(inputValue);
+				}else{
+					if(dto.keyCode == 37){
+						console.log("LEFT");
+						// key LEFT
+						
+						// this.setFocusOnElement(this.currentFocusIndex);
+						// this.getNearestElementFromXY(x, y).focus??
+					}else if(dto.keyCode == 39){
+						console.log("RIGHT");
+						// key RIGHT
+					}else if(dto.keyCode == 40){
+						console.log("DOWN");
+						// key DOWN
+					}else if(dto.keyCode == 38){
+						console.log("UP");
+						// key UP
+					}
+				}
+			}
+		}
+
+		private getNearestElementFromXY(x: number, y: number){
+			const elements: Array<IControlElement> = this.getElements();
+			
+			for (var i = 0; i < elements.length; i++) {
+				let element: ControlElement = <ControlElement>elements[i];
+				if(element.visible){
+					
+					console.log(element.rect.left + element.rect.top);
 				}
 			}
 		}
@@ -129,8 +161,6 @@ namespace cf {
 						elementVisibility = element.value.toLowerCase().indexOf(inputWord) != -1;
 					}
 				}
-
-				element.highlight = false;
 
 				// set element visibility.
 				element.visible = elementVisibility;
@@ -175,20 +205,6 @@ namespace cf {
 			return <Array<IControlElement>> this.elements;
 		}
 
-		public canClickOnHighlightedItem(): boolean {
-			const elements: Array<IControlElement> = this.getElements();
-
-			for (let i = 0; i < elements.length; i++) {
-				let element: IControlElement = <IControlElement>elements[i];
-				if(element.highlight){
-					element.el.click();
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		public setFocusOnElement(index: number){
 			const elements: Array<IControlElement> = this.getElements();
 
@@ -199,7 +215,8 @@ namespace cf {
 					if(element.visible){
 						if(visibleCount == index){
 							elements[i].el.focus();
-							elements[i].highlight = true;
+						}else{
+							elements[i].el.blur();
 						}
 						visibleCount++;
 					}
@@ -208,7 +225,6 @@ namespace cf {
 				for (let i = 0; i < elements.length; i++) {
 					let element: ControlElement = <ControlElement>elements[i];
 					element.el.blur();
-					element.highlight = false;
 				}
 			}
 		}
@@ -386,10 +402,9 @@ namespace cf {
 
 			setTimeout(() => {
 				this.listWidth = 0;
-				const isElementsOptionsList: boolean = this.elements[0] && this.elements[0].type == "OptionsList";
-				const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+				const elements: Array <IControlElement> = this.getElements();
 				if(elements.length > 0){
-					
+
 					for (let i = 0; i < elements.length; i++) {
 						let element: IControlElement = <IControlElement>elements[i];
 						let rect: ControlElementVector = element.rect;
@@ -410,12 +425,13 @@ namespace cf {
 					isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
 
 					// sort the list so we can set tabIndex properly
-					const tabIndexFilteredElements: Array<ControlElement> = elements.sort((a: ControlElement, b: ControlElement) => {
+					const tabIndexFilteredElements: Array<IControlElement> = elements.sort((a: IControlElement, b: IControlElement) => {
 						return a.rect.left == b.rect.left ? 0 : a.rect.left < b.rect.left ? -1 : 1;
 					});
 
 					for (let i = 0; i < tabIndexFilteredElements.length; i++) {
-						let element: ControlElement = <ControlElement>tabIndexFilteredElements[i];
+						let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
+						//tabindex 1 and 2 are userinput and the submit button
 						element.tabIndex = 3 + i;
 					}
 					
