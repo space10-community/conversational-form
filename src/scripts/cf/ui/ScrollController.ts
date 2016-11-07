@@ -41,7 +41,7 @@ namespace cf {
 			this.interactionListener = options.interactionListener;
 			this.listToScroll = options.listToScroll;
 			this.prevButton = options.listNavButtons[0];
-			this.nextButton = options.listNavButtons[0];
+			this.nextButton = options.listNavButtons[1];
 
 			this.onListNavButtonsClickCallback = this.onListNavButtonsClick.bind(this);
 			this.prevButton.addEventListener("click", this.onListNavButtonsClickCallback, false);
@@ -129,17 +129,35 @@ namespace cf {
 			this.x += (this.xTarget - this.x) * 0.4;
 
 			// toggle visibility on nav arrows
-			if(this.x >= -10 && !this.prevButton.classList.contains("hide"))
-				this.prevButton.classList.add("hide");
 
-			if(this.x < -10 && this.prevButton.classList.contains("hide"))
-				this.prevButton.classList.remove("hide");
+			const xRounded: number = Math.round(this.x);
+			if(xRounded < 0){
+				if(!this.prevButton.classList.contains("active"))
+					this.prevButton.classList.add("active");
+				if(!this.prevButton.classList.contains("gradient"))
+					this.prevButton.classList.add("gradient");
+			}
 
-			if(this.x <= this.max + 10 && !this.nextButton.classList.contains("hide"))
-				this.nextButton.classList.add("hide");
+			if(xRounded == 0){
+				if(this.prevButton.classList.contains("active"))
+					this.prevButton.classList.remove("active");
+				if(this.prevButton.classList.contains("gradient"))
+					this.prevButton.classList.remove("gradient");
+			}
 
-			if(this.x > this.max + 10 && this.nextButton.classList.contains("hide"))
-				this.nextButton.classList.remove("hide");
+			if(xRounded > this.max){
+				if(!this.nextButton.classList.contains("active"))
+					this.nextButton.classList.add("active");
+				if(!this.nextButton.classList.contains("gradient"))
+					this.nextButton.classList.add("gradient");
+			}
+
+			if(xRounded <= this.max){
+				if(!this.nextButton.classList.contains("active"))
+					this.nextButton.classList.remove("active");
+				if(!this.nextButton.classList.contains("gradient"))
+					this.nextButton.classList.remove("gradient");
+			}
 
 			// set css transforms
 			const xx: number = this.x;
@@ -186,8 +204,8 @@ namespace cf {
 			this.x = 0;
 			this.xTarget = 0;
 			this.render();
-			this.prevButton.classList.add("hide");
-			this.nextButton.classList.add("hide");
+			this.prevButton.classList.remove("active");
+			this.nextButton.classList.remove("active");
 		}
 
 		public resize(listWidth: number, visibleAreaWidth: number){

@@ -370,9 +370,9 @@ namespace cf {
 		public getTemplate () : string {
 			return `<cf-input>
 				<cf-input-control-elements>
-					<cf-list-button class="hide" direction="prev">
+					<cf-list-button direction="prev">
 					</cf-list-button>
-					<cf-list-button class="hide" direction="next">
+					<cf-list-button direction="next">
 					</cf-list-button>
 					<cf-list>
 						<cf-info></cf-info>
