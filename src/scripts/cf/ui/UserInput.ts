@@ -244,6 +244,8 @@ namespace cf {
 
 			if(event.keyCode == 13 || event.keyCode == 32){
 				// ENTER (13) and SPACE (32) key
+				event.preventDefault();
+
 				if(event.keyCode == 13 && this.inputElement === document.activeElement){
 					if(this.controlElements.active){
 						// if no highlighted element, then just standard behaviour
@@ -253,25 +255,45 @@ namespace cf {
 					}else{
 						this.onEnterOrSubmitButtonSubmit();
 					}
-				}
-				else{
+				}else{
 					// either click on submit button or do something with control elements
-					if(event.keyCode == 13)
-						this.submitButton.click();
-					else if(event.keyCode == 32 && document.activeElement)
+					if(event.keyCode == 13){
+						if(this.currentTag.type == "select" || this.currentTag.type == "checkbox"){
+							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
+							// if select or checkbox then check for multi select item
+							if(this.currentTag.type == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
+								this.setFocusOnInput();
+								this.resetValue();
+								// let UI know what we changed the key here
+								this.dispatchKeyChange(value, event.keyCode)
+							}else{
+								// standard click submit button
+								this.submitButton.click();
+							}
+
+						}else{
+							// standard click submit button
+							this.submitButton.click();
+						}
+					}else if(event.keyCode == 32 && document.activeElement){
 						(<any> document.activeElement).click();
+					}
 				}
 			}else if(event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 16 && event.keyCode != 9){
 				// don't accept the arrow keys here
-				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, value);
-				document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
-					detail: <InputKeyChangeDTO> {
-						dto: value,
-						keyCode: event.keyCode,
-						inputFieldActive: this.inputElement === document.activeElement
-					}
-				}));
+				this.dispatchKeyChange(value, event.keyCode)
 			}
+		}
+
+		private dispatchKeyChange(dto: FlowDTO, keyCode: number){
+			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, dto);
+			document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
+				detail: <InputKeyChangeDTO> {
+					dto: dto,
+					keyCode: keyCode,
+					inputFieldActive: this.inputElement === document.activeElement
+				}
+			}));
 		}
 
 		private windowFocus(event: Event){

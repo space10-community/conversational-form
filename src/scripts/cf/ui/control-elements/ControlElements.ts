@@ -162,14 +162,14 @@ namespace cf {
 				this.el.classList.add("animate-in");
 			
 			const elements: Array<IControlElement> = this.getElements();
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ControlElement = <ControlElement>this.elements[i];
+			for (let i = 0; i < elements.length; i++) {
+				let element: ControlElement = <ControlElement>elements[i];
 				element.animateIn();
 			}
 		}
 
 		private getElements(): Array <IControlElement> {
-			if(this.elements[0].type == "OptionsList")
+			if(this.elements.length > 0 && this.elements[0].type == "OptionsList")
 				return (<OptionsList> this.elements[0]).elements;
 			
 			return <Array<IControlElement>> this.elements;
