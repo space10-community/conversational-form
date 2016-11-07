@@ -101,8 +101,9 @@ namespace cf {
 
 		private onUserInputUpdate(event: CustomEvent){
 			if(this.elements){
-				for (var i = 0; i < this.elements.length; i++) {
-					let element: ControlElement = <ControlElement>this.elements[i];
+				const elements: Array<IControlElement> = this.getElements();
+				for (var i = 0; i < elements.length; i++) {
+					let element: ControlElement = <ControlElement>elements[i];
 					element.animateOut();
 				}
 			}
@@ -113,8 +114,7 @@ namespace cf {
 			if(inputValuesLowerCase.indexOf("") != -1)
 				inputValuesLowerCase.splice(inputValuesLowerCase.indexOf(""), 1);
 
-			const isElementsOptionsList: boolean = this.elements[0].type == "OptionsList";
-			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+			const elements: Array<IControlElement> = this.getElements();
 			// the type is not strong with this one..
 
 			let itemsVisible: Array<ControlElement> = [];
@@ -145,9 +145,6 @@ namespace cf {
 				infoElement.classList.add("show");
 			}else{
 				infoElement.classList.remove("show");
-				
-				// highlight first item when filtering
-				itemsVisible[0].highlight = true;
 			}
 
 			// crude way of checking if list has changed...
@@ -163,15 +160,23 @@ namespace cf {
 		private animateElementsIn(){
 			if(!this.el.classList.contains("animate-in"))
 				this.el.classList.add("animate-in");
-
+			
+			const elements: Array<IControlElement> = this.getElements();
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ControlElement = <ControlElement>this.elements[i];
 				element.animateIn();
 			}
 		}
 
+		private getElements(): Array <IControlElement> {
+			if(this.elements[0].type == "OptionsList")
+				return (<OptionsList> this.elements[0]).elements;
+			
+			return <Array<IControlElement>> this.elements;
+		}
+
 		public canClickOnHighlightedItem(): boolean {
-			const elements: Array <any> = this.elements[0].type == "OptionsList" ? (<OptionsList> this.elements[0]).elements : this.elements;
+			const elements: Array<IControlElement> = this.getElements();
 
 			for (let i = 0; i < elements.length; i++) {
 				let element: IControlElement = <IControlElement>elements[i];
@@ -185,13 +190,12 @@ namespace cf {
 		}
 
 		public setFocusOnElement(index: number){
-			const isElementsOptionsList: boolean = this.elements[0].type == "OptionsList";
-			const elements: Array <any> = (isElementsOptionsList ? (<OptionsList> this.elements[0]).elements : this.elements);
+			const elements: Array<IControlElement> = this.getElements();
 
 			if(index != -1 && elements){
 				let visibleCount: number = 0;
-				for (let i = 0; i < this.elements.length; i++) {
-					let element: ControlElement = <ControlElement>this.elements[i];
+				for (let i = 0; i < elements.length; i++) {
+					let element: ControlElement = <ControlElement>elements[i];
 					if(element.visible){
 						if(visibleCount == index){
 							elements[i].el.focus();
@@ -201,8 +205,8 @@ namespace cf {
 					}
 				}
 			}else if(index == -1 && elements){
-				for (let i = 0; i < this.elements.length; i++) {
-					let element: ControlElement = <ControlElement>this.elements[i];
+				for (let i = 0; i < elements.length; i++) {
+					let element: ControlElement = <ControlElement>elements[i];
 					element.el.blur();
 					element.highlight = false;
 				}
@@ -213,8 +217,9 @@ namespace cf {
 			this.list.classList.add("disabled");
 			if(controlElement.type == "RadioButton"){
 				// uncheck other radio buttons...
-				for (let i = 0; i < this.elements.length; i++) {
-					let element: RadioButton = <RadioButton>this.elements[i];
+				const elements: Array<IControlElement> = this.getElements();
+				for (let i = 0; i < elements.length; i++) {
+					let element: RadioButton = <RadioButton>elements[i];
 					if(element != controlElement){
 						element.checked = false;
 					}
