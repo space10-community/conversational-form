@@ -98,8 +98,9 @@ namespace cf {
 
 		private onElementFocus(event: CustomEvent){
 			const vector: ControlElementVector = <ControlElementVector> event.detail;
-			const x: number = (vector.x != 0 ? vector.x - vector.width : 0) * -1;
-			
+			let x: number = (vector.x + vector.width < this.elementWidth ? 0 : vector.x - vector.width);
+			x *= -1;
+
 			// this.currentFocusIndex = 0;
 			this.listScrollController.setScroll(x, 0);
 		}
