@@ -206,12 +206,18 @@ namespace cf {
 		private onKeyUp(event: KeyboardEvent){
 			if(event.keyCode == 16){
 				this.shiftIsDown = false;
-			}else if(event.keyCode == 38 && this.active && this.controlElements.active){
+			}else if(event.keyCode == 38){
 				// key UP
-				this.controlElements.setFocusOnElement(0);
+				event.preventDefault();
+
+				if(this.active && !this.controlElements.focus)
+					this.controlElements.focusFrom("bottom");
 			}else if(event.keyCode == 40){
 				// key DOWN
-				// this.setFocusOnInput();
+				event.preventDefault();
+
+				if(this.active && !this.controlElements.focus)
+					this.controlElements.focusFrom("top");
 			}else if(event.keyCode == 9){
 				// tab key pressed, check if node is child of CF, if then then reset focus to input element
 
@@ -222,6 +228,7 @@ namespace cf {
 						doesKeyTargetExistInCF = true;
 						break;
 					}
+
 					node = node.parentNode;
 				}
 				
@@ -266,7 +273,6 @@ namespace cf {
 								// standard click submit button
 								this.submitButton.click();
 							}
-
 						}else{
 							// standard click submit button
 							this.submitButton.click();
@@ -276,7 +282,6 @@ namespace cf {
 					}
 				}
 			}else if(event.keyCode != 16 && event.keyCode != 9){
-				// don't accept the arrow keys here
 				this.dispatchKeyChange(value, event.keyCode)
 			}
 		}
@@ -301,7 +306,7 @@ namespace cf {
 				this.controlElements.setFocusOnElement(-1);
 		}
 
-		private setFocusOnInput(){
+		public setFocusOnInput(){
 			this.inputElement.focus();
 		}
 

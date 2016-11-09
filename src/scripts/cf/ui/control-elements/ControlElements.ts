@@ -23,6 +23,11 @@ namespace cf {
 		private el: HTMLElement;
 		private list: HTMLElement;
 
+		private ignoreKeyboardInput: boolean = false;
+		private rowIndex: number = -1;
+		private columnIndex: number = 0;
+		private tableableRows: Array<Array<IControlElement>>;
+
 		private userInputUpdateCallback: () => void;
 		private onChatAIReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
@@ -38,6 +43,18 @@ namespace cf {
 
 		public get active():boolean{
 			return this.elements && this.elements.length > 0;
+		}
+
+		public get focus():boolean{
+			const elements: Array<IControlElement> = this.getElements();
+			for (var i = 0; i < elements.length; i++) {
+				let element: ControlElement = <ControlElement>elements[i];
+				if(element.focus){
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public get length(): number{
@@ -79,7 +96,7 @@ namespace cf {
 
 		private onElementFocus(event: CustomEvent){
 			const vector: ControlElementVector = <ControlElementVector> event.detail;
-			const x: number = (vector.left != 0 ? vector.left - vector.width : 0) * -1;
+			const x: number = (vector.x != 0 ? vector.x - vector.width : 0) * -1;
 			
 			// this.currentFocusIndex = 0;
 			this.listScrollController.setScroll(x, 0);
@@ -90,7 +107,14 @@ namespace cf {
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
+			if(this.ignoreKeyboardInput){
+				this.ignoreKeyboardInput = false;
+				return;
+			}
+
 			const dto: InputKeyChangeDTO = event.detail;
+			const userInput: UserInput = dto.dto.input;
+
 			if(this.active){
 				let shouldFilter: boolean = dto.inputFieldActive;
 				if(shouldFilter){
@@ -100,35 +124,67 @@ namespace cf {
 					this.filterElementsFrom(inputValue);
 				}else{
 					if(dto.keyCode == 37){
-						console.log("LEFT");
+						this.columnIndex--;
 						// key LEFT
-						
-						// this.setFocusOnElement(this.currentFocusIndex);
-						// this.getNearestElementFromXY(x, y).focus??
 					}else if(dto.keyCode == 39){
-						console.log("RIGHT");
+						this.columnIndex++;
 						// key RIGHT
 					}else if(dto.keyCode == 40){
-						console.log("DOWN");
 						// key DOWN
+						this.rowIndex++;
+						this.onRowIndexChange();
 					}else if(dto.keyCode == 38){
-						console.log("UP");
 						// key UP
+						this.rowIndex--;
+						this.onRowIndexChange();
+					}
+
+					if(this.validateRowColIndexes()){
+						userInput.setFocusOnInput();
 					}
 				}
 			}
+
+			console.log("keyboard touched...", "rowindex:", this.rowIndex);
+			if(!userInput.active && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
+				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+			}
 		}
 
-		private getNearestElementFromXY(x: number, y: number){
-			const elements: Array<IControlElement> = this.getElements();
-			
-			for (var i = 0; i < elements.length; i++) {
-				let element: ControlElement = <ControlElement>elements[i];
-				if(element.visible){
-					
-					console.log(element.rect.left + element.rect.top);
+		private validateRowColIndexes():boolean{
+			const maxRowIndex: number = (this.el.classList.contains("two-row") ? 1 : 0)
+			console.log('validateRowColIndexes:', "this.rowIndex:", this.rowIndex);
+			if(this.rowIndex >= 0 && this.rowIndex <= maxRowIndex){
+				// columnIndex is only valid if rowIndex is valid
+				if(this.columnIndex < 0){
+					this.columnIndex = this.tableableRows[this.rowIndex].length - 1;
+					return false;
+				}
+
+				if(this.columnIndex > this.tableableRows[this.rowIndex].length - 1){
+					this.columnIndex = 0;
+					return false;
 				}
 			}
+
+			console.log('validateRowColIndexes:', this.rowIndex, this.columnIndex);
+
+			if(this.rowIndex < 0 || this.rowIndex > maxRowIndex){
+				this.resetTabList();
+				return true;
+			}
+
+			return false;
+		}
+
+		private onRowIndexChange(){
+			// TODO: find nearest columnIndex to the current one.
+			// this.columnIndex = 0;
+		}
+
+		private resetTabList(){
+			this.rowIndex = -1;
+			this.columnIndex = -1;
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
@@ -205,27 +261,69 @@ namespace cf {
 			return <Array<IControlElement>> this.elements;
 		}
 
-		public setFocusOnElement(index: number){
+		/**
+		* @name buildTabableRows
+		* build the tabable array index
+		*/
+		private buildTabableRows(): void {
+			console.log("buildTabableRows");
+			this.tableableRows = [];
+			this.resetTabList();
+
 			const elements: Array<IControlElement> = this.getElements();
 
-			if(index != -1 && elements){
-				let visibleCount: number = 0;
+			if(this.el.classList.contains("two-row")){
+				// two rows
+				this.tableableRows[0] = [];
+				this.tableableRows[1] = [];
+
 				for (let i = 0; i < elements.length; i++) {
-					let element: ControlElement = <ControlElement>elements[i];
+					let element: IControlElement = <IControlElement>elements[i];
 					if(element.visible){
-						if(visibleCount == index){
-							elements[i].el.focus();
-						}else{
-							elements[i].el.blur();
-						}
-						visibleCount++;
+						if(element.positionVector.y == 0)
+							this.tableableRows[0].push(element);
+						else
+							this.tableableRows[1].push(element);
 					}
 				}
-			}else if(index == -1 && elements){
+			}else{
+				// single row
+				this.tableableRows[0] = [];
+
 				for (let i = 0; i < elements.length; i++) {
-					let element: ControlElement = <ControlElement>elements[i];
-					element.el.blur();
+					let element: IControlElement = <IControlElement>elements[i];
+					if(element.visible)
+						this.tableableRows[0].push(element);
 				}
+			}
+
+			console.log("this.tableableRows created:", this.tableableRows)
+		}
+		
+		public focusFrom(angle: string){
+			console.log("focus from: this.tableableRows valid?", this.tableableRows);
+			if(!this.tableableRows)
+				return;
+
+			this.columnIndex = 0;
+			if(angle == "bottom"){
+				this.rowIndex = this.el.classList.contains("two-row") ? 1 : 0;
+			}else if(angle == "top"){
+				this.rowIndex = 0;
+			}
+
+			this.ignoreKeyboardInput = true;
+
+			this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+
+			console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
+		}
+		public setFocusOnElement(index: number){
+			const elements: Array<IControlElement> = this.getElements();
+			if(this.tableableRows && index != -1){
+				this.tableableRows[0][0].el.focus();
+			}else{
+				this.rowIndex = 0;
 			}
 		}
 
@@ -319,6 +417,7 @@ namespace cf {
 
 		public buildTags(tags: Array<ITag>){
 			this.list.classList.remove("disabled");
+
 			const topList: HTMLUListElement = (<HTMLUListElement > this.el.parentNode).getElementsByTagName("ul")[0];
 			const bottomList: HTMLUListElement = (<HTMLUListElement> this.el.parentNode).getElementsByTagName("ul")[1];
 
@@ -407,8 +506,7 @@ namespace cf {
 
 					for (let i = 0; i < elements.length; i++) {
 						let element: IControlElement = <IControlElement>elements[i];
-						let rect: ControlElementVector = element.rect;
-						this.listWidth += rect.width;
+						this.listWidth += element.positionVector.width;
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
@@ -426,7 +524,7 @@ namespace cf {
 
 					// sort the list so we can set tabIndex properly
 					const tabIndexFilteredElements: Array<IControlElement> = elements.sort((a: IControlElement, b: IControlElement) => {
-						return a.rect.left == b.rect.left ? 0 : a.rect.left < b.rect.left ? -1 : 1;
+						return a.positionVector.x == b.positionVector.x ? 0 : a.positionVector.x < b.positionVector.x ? -1 : 1;
 					});
 
 					for (let i = 0; i < tabIndexFilteredElements.length; i++) {
@@ -448,6 +546,8 @@ namespace cf {
 					// resize scroll
 					this.listScrollController.resize(this.listWidth, this.elementWidth);
 				}
+
+				this.buildTabableRows();
 
 				if(resolve)
 					resolve();

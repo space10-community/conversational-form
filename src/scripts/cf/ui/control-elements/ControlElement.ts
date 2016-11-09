@@ -6,9 +6,12 @@
 namespace cf {
 	// interface
 	export interface ControlElementVector{
+		height: number,
 		width: number,
-		left: number,
-		top: number,
+		x: number,
+		y: number,
+		centerX?: number,
+		centerY?: number,
 	}
 
 	export interface IControlElementOptions extends IBasicElementOptions{
@@ -20,8 +23,10 @@ namespace cf {
 		referenceTag: ITag;
 		type: string;
 		value: string;
-		rect: ControlElementVector;
+		positionVector: ControlElementVector;
 		tabIndex: number;
+		visible: boolean;
+		focus: boolean;
 		dealloc(): void;
 	}
 
@@ -38,14 +43,14 @@ namespace cf {
 
 	// class
 	export class ControlElement extends BasicElement implements IControlElement{
-		private _visible: boolean = true;
-
 		public el: HTMLElement;
 		public referenceTag: ITag;
-		private animateInTimer: number = 0;
-		private currentPosVector: ControlElementVector;
 
+		private animateInTimer: number = 0;
+		private _positionVector: ControlElementVector;
+		private _focus: boolean = false;
 		private onFocusCallback: () => void;
+		private onBlurCallback: () => void;
 
 		public get type():string{
 			return "ControlElement";
@@ -55,23 +60,22 @@ namespace cf {
 			return Helpers.getInnerTextOfElement(this.el);
 		}
 
-		public get rect():ControlElementVector{
+		public get positionVector():ControlElementVector{
 			if(!this.visible)
-				return {width: 0, left: 0, top: 0};
+				return {width: 0, x: 0, y: 0, height: 0};
 			
-			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
-			// try not to do this to often, re-paint whammy!
-			this.currentPosVector = <ControlElementVector> {
-				width: this.el.offsetWidth + mr,
-				left: this.el.offsetLeft,
-				top: this.el.offsetTop,
-			};
+			// TODO: add this calc to somewhere else where ot does not get called to many times..
+			this.calcPosition();
 
-			return this.currentPosVector;
+			return this._positionVector;
 		}
 
 		public set tabIndex(value: number){
 			this.el.tabIndex = value;
+		}
+	
+		public get focus(): boolean{
+			return this._focus;
 		}
 	
 		public get visible(): boolean{
@@ -90,13 +94,34 @@ namespace cf {
 
 			this.onFocusCallback = this.onFocus.bind(this);
 			this.el.addEventListener('focus', this.onFocusCallback, false);
+			this.onBlurCallback = this.onBlur.bind(this);
+			this.el.addEventListener('blur', this.onBlurCallback, false);
+		}
+
+		private onBlur(event: Event){
+			this._focus = false;
 		}
 
 		private onFocus(event: Event){
+			this._focus = true;
 			ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.ON_FOCUS, this.referenceTag);
 			document.dispatchEvent(new CustomEvent(ControlElementEvents.ON_FOCUS, {
-				detail: this.currentPosVector
+				detail: this.positionVector
 			}));
+		}
+
+		private calcPosition(){
+			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
+			// try not to do this to often, re-paint whammy!
+			this._positionVector = <ControlElementVector> {
+				height: this.el.offsetHeight,
+				width: this.el.offsetWidth + mr,
+				x: this.el.offsetLeft,
+				y: this.el.offsetTop,
+			};
+
+			this._positionVector.centerX = this._positionVector.x + (this._positionVector.width * 0.5);
+			this._positionVector.centerY = this._positionVector.y + (this._positionVector.height * 0.5);
 		}
 
 		protected setData(options: IControlElementOptions){
@@ -126,6 +151,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.el.removeEventListener('blur', this.onBlurCallback, false);
+			this.onBlurCallback = null;
+
 			this.el.removeEventListener('focus', this.onFocusCallback, false);
 			this.onFocusCallback = null;
 
