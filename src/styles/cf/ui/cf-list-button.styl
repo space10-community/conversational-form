@@ -22,6 +22,8 @@ cf-list-button
 	cursor pointer
 	opacity 0
 	pointer-events none
+	will-change opacity
+	transition opacity $anim-time $anim-easeOut 0.5s
 
 	+above($breakpoint-1)
 		&:hover:nth-child(1)
@@ -84,7 +86,7 @@ cf-list-button
 		background-repeat no-repeat
 		top calc(50% - 5px)
 		left calc(50% - 3px)
-		opacity 0.5
+		opacity 0
 		will-change opacity
 		transition opacity $anim-time * 0.5 $anim-easeOut
 
