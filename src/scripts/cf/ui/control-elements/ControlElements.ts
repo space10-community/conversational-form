@@ -22,6 +22,7 @@ namespace cf {
 		private elements: Array<IControlElement | OptionsList>;
 		private el: HTMLElement;
 		private list: HTMLElement;
+		private infoElement: HTMLElement;
 
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
@@ -65,6 +66,7 @@ namespace cf {
 		constructor(options: IControlElementsOptions){
 			this.el = options.el;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
+			this.infoElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
 
 			this.onScrollCallback = this.onScroll.bind(this);
 			this.el.addEventListener('scroll', this.onScrollCallback, false);
@@ -188,6 +190,9 @@ namespace cf {
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
+			this.el.classList.remove("animate-in");
+			this.infoElement.classList.remove("show");
+
 			if(this.elements){
 				const elements: Array<IControlElement> = this.getElements();
 				for (var i = 0; i < elements.length; i++) {
@@ -203,54 +208,56 @@ namespace cf {
 				inputValuesLowerCase.splice(inputValuesLowerCase.indexOf(""), 1);
 
 			const elements: Array<IControlElement> = this.getElements();
-			// the type is not strong with this one..
-
-			let itemsVisible: Array<ControlElement> = [];
-			for (let i = 0; i < elements.length; i++) {
-				let element: ControlElement = <ControlElement>elements[i];
-				let elementVisibility: boolean = true;
-				
-				// check for all words of input
-				for (let i = 0; i < inputValuesLowerCase.length; i++) {
-					let inputWord: string = <string>inputValuesLowerCase[i];
-					if(elementVisibility){
-						elementVisibility = element.value.toLowerCase().indexOf(inputWord) != -1;
+			if(elements.length > 1){
+				// the type is not strong with this one..
+				let itemsVisible: Array<ControlElement> = [];
+				for (let i = 0; i < elements.length; i++) {
+					let element: ControlElement = <ControlElement>elements[i];
+					let elementVisibility: boolean = true;
+					
+					// check for all words of input
+					for (let i = 0; i < inputValuesLowerCase.length; i++) {
+						let inputWord: string = <string>inputValuesLowerCase[i];
+						if(elementVisibility){
+							elementVisibility = element.value.toLowerCase().indexOf(inputWord) != -1;
+						}
 					}
+
+					// set element visibility.
+					element.visible = elementVisibility;
+					if(elementVisibility && element.visible) 
+						itemsVisible.push(element);
 				}
 
-				// set element visibility.
-				element.visible = elementVisibility;
-				if(elementVisibility && element.visible) 
-					itemsVisible.push(element);
-			}
+				// set feedback text for filter..
+				this.infoElement.innerHTML = itemsVisible.length == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
+				if(itemsVisible.length == 0){
+					this.infoElement.classList.add("show");
+				}else{
+					this.infoElement.classList.remove("show");
+				}
 
-			// set feedback text for filter..
-			const infoElement: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
-			infoElement.innerHTML = itemsVisible.length == 0 ? Dictionary.get("input-no-filter").split("{input-value}").join(value) : "";
-			if(itemsVisible.length == 0){
-				infoElement.classList.add("show");
-			}else{
-				infoElement.classList.remove("show");
+				// crude way of checking if list has changed...
+				const hasListChanged: boolean = this.filterListNumberOfVisible != itemsVisible.length;
+				if(hasListChanged){
+					this.resize();
+					this.animateElementsIn();
+				}
+				
+				this.filterListNumberOfVisible = itemsVisible.length;
 			}
-
-			// crude way of checking if list has changed...
-			const hasListChanged: boolean = this.filterListNumberOfVisible != itemsVisible.length;
-			if(hasListChanged){
-				this.resize();
-				this.animateElementsIn();
-			}
-			
-			this.filterListNumberOfVisible = itemsVisible.length;
 		}
 
 		private animateElementsIn(){
-			if(!this.el.classList.contains("animate-in"))
-				this.el.classList.add("animate-in");
-			
 			const elements: Array<IControlElement> = this.getElements();
-			for (let i = 0; i < elements.length; i++) {
-				let element: ControlElement = <ControlElement>elements[i];
-				element.animateIn();
+			if(elements.length > 0){
+				if(!this.el.classList.contains("animate-in"))
+					this.el.classList.add("animate-in");
+				
+				for (let i = 0; i < elements.length; i++) {
+					let element: ControlElement = <ControlElement>elements[i];
+					element.animateIn();
+				}
 			}
 		}
 
