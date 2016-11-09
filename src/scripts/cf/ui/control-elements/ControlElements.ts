@@ -319,9 +319,13 @@ namespace cf {
 				this.rowIndex = 0;
 			}
 
-			this.ignoreKeyboardInput = true;
 
-			this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+			if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]){
+				this.ignoreKeyboardInput = true;
+				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+			}else{
+				this.resetTabList();
+			}
 
 			console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
 		}
