@@ -52,6 +52,16 @@ cf-input
 		opacity 0
 		transform translateY(40px) rotateX(-40deg)
 
+		&:hover
+			&::-webkit-input-placeholder
+				color darken($color-chat-reponse-default-text, 20%)
+			&::-moz-input-placeholder
+				color darken($color-chat-reponse-default-text, 20%)
+			&:-moz-input-placeholder
+				color darken($color-chat-reponse-default-text, 20%)
+			&:-ms-input-placeholder
+				color darken($color-chat-reponse-default-text, 20%)
+
 		&::-webkit-input-placeholder
 			color currentColor
 		&::-moz-input-placeholder
