@@ -126,29 +126,22 @@ namespace cf {
 					const inputValue: string = dto.input.getInputValue();
 					this.filterElementsFrom(inputValue);
 				}else{
-					if(dto.keyCode == 37){
+					if(dto.keyCode == Dictionary.keyCodes["left"]){
 						this.columnIndex--;
-						// key LEFT
-					}else if(dto.keyCode == 39){
+					}else if(dto.keyCode == Dictionary.keyCodes["right"]){
 						this.columnIndex++;
-						// key RIGHT
-					}else if(dto.keyCode == 40){
-						// key DOWN
-						this.rowIndex++;
-						this.onRowIndexChange();
-					}else if(dto.keyCode == 38){
-						// key UP
-						this.rowIndex--;
-						this.onRowIndexChange();
+					}else if(dto.keyCode == Dictionary.keyCodes["down"]){
+						this.updateRowIndex(1);
+					}else if(dto.keyCode == Dictionary.keyCodes["up"]){
+						this.updateRowIndex(-1);
 					}
 
-					if(this.validateRowColIndexes()){
+					if(!this.validateRowColIndexes()){
 						userInput.setFocusOnInput();
 					}
 				}
 			}
 
-			console.log("keyboard touched...", "rowindex:", this.rowIndex);
 			if(!userInput.active && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
 				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
 			}
@@ -156,33 +149,42 @@ namespace cf {
 
 		private validateRowColIndexes():boolean{
 			const maxRowIndex: number = (this.el.classList.contains("two-row") ? 1 : 0)
-			console.log('validateRowColIndexes:', "this.rowIndex:", this.rowIndex);
 			if(this.rowIndex >= 0 && this.rowIndex <= maxRowIndex){
 				// columnIndex is only valid if rowIndex is valid
 				if(this.columnIndex < 0){
 					this.columnIndex = this.tableableRows[this.rowIndex].length - 1;
-					return false;
+					return true;
 				}
 
 				if(this.columnIndex > this.tableableRows[this.rowIndex].length - 1){
 					this.columnIndex = 0;
-					return false;
+					return true;
 				}
 			}
 
-			console.log('validateRowColIndexes:', this.rowIndex, this.columnIndex);
-
 			if(this.rowIndex < 0 || this.rowIndex > maxRowIndex){
 				this.resetTabList();
-				return true;
+				return false;
 			}
 
-			return false;
+			return true;
 		}
 
-		private onRowIndexChange(){
-			// TODO: find nearest columnIndex to the current one.
-			// this.columnIndex = 0;
+		private updateRowIndex(direction: number){
+			const oldRowIndex: number = this.rowIndex;
+			this.rowIndex += direction;
+
+			// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
+			const oldVector: ControlElementVector = this.tableableRows[oldRowIndex][this.columnIndex].positionVector;
+			const items: Array <IControlElement> = this.tableableRows[this.rowIndex];
+			let currentDistance: number = 10000000000000;
+			for (let i = 0; i < items.length; i++) {
+				let element: IControlElement = <IControlElement>items[i];
+				if(currentDistance > Math.abs(oldVector.centerX - element.positionVector.centerX)){
+					currentDistance = Math.abs(oldVector.centerX - element.positionVector.centerX);
+					this.columnIndex = i;
+				}
+			}
 		}
 
 		private resetTabList(){
@@ -567,6 +569,8 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.tableableRows = null;
+
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
 
@@ -581,6 +585,9 @@ namespace cf {
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
+
+			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			this.userInputUpdateCallback = null;
 
 			this.listScrollController.dealloc();
 		}

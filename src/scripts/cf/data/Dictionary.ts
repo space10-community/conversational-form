@@ -1,6 +1,17 @@
 // namespace
 namespace cf {
 
+	export interface IKeyCodes{
+		"left": number,
+		"right": number,
+		"down": number,
+		"up": number,
+		"enter": number,
+		"space": number,
+		"shift": number,
+		"tab": number,
+	}
+
 	export interface IDictionaryOptions{
 		data?: Object;
 		aiQuestions?: Object;
@@ -24,6 +35,17 @@ namespace cf {
 			// overwrite ai questions if defined
 			if(options && options.aiQuestions)
 				this.AIQuestions = options.aiQuestions;
+		}
+
+		public static keyCodes: IKeyCodes = {
+			"left": 37,
+			"right": 39,
+			"down": 40,
+			"up": 38,
+			"enter": 13,
+			"space": 32,
+			"shift": 16,
+			"tab": 9,
 		}
 
 		public static get(id:string): string{

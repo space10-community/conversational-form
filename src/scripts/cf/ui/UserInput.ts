@@ -199,26 +199,24 @@ namespace cf {
 		}
 
 		private onKeyDown(event: KeyboardEvent){
-			if(event.keyCode == 16)
+			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			if(event.keyCode == 16){
+			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
-			}else if(event.keyCode == 38){
-				// key UP
+			}else if(event.keyCode == Dictionary.keyCodes["up"]){
 				event.preventDefault();
 
 				if(this.active && !this.controlElements.focus)
 					this.controlElements.focusFrom("bottom");
-			}else if(event.keyCode == 40){
-				// key DOWN
+			}else if(event.keyCode == Dictionary.keyCodes["down"]){
 				event.preventDefault();
 
 				if(this.active && !this.controlElements.focus)
 					this.controlElements.focusFrom("top");
-			}else if(event.keyCode == 9){
+			}else if(event.keyCode == Dictionary.keyCodes["tab"]){
 				// tab key pressed, check if node is child of CF, if then then reset focus to input element
 
 				var doesKeyTargetExistInCF: boolean = false;
@@ -252,15 +250,14 @@ namespace cf {
 
 			const value: FlowDTO = this.getFlowDTO();
 
-			if(event.keyCode == 13 || event.keyCode == 32){
-				// ENTER (13) and SPACE (32) key
+			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
 				event.preventDefault();
 
-				if(event.keyCode == 13 && this.active){
+				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
-					if(event.keyCode == 13){
+					if(event.keyCode == Dictionary.keyCodes["enter"]){
 						if(this.currentTag.type == "select" || this.currentTag.type == "checkbox"){
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
 							// if select or checkbox then check for multi select item
@@ -277,7 +274,7 @@ namespace cf {
 							// standard click submit button
 							this.submitButton.click();
 						}
-					}else if(event.keyCode == 32 && document.activeElement){
+					}else if(event.keyCode == Dictionary.keyCodes["space"] && document.activeElement){
 						(<any> document.activeElement).click();
 					}
 				}
