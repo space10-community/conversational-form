@@ -529,8 +529,8 @@ namespace cf {
 
 					for (let i = 0; i < tabIndexFilteredElements.length; i++) {
 						let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
-						//tabindex 1 and 2 are userinput and the submit button
-						element.tabIndex = 3 + i;
+						//tabindex 1 are the UserInput element
+						element.tabIndex = 2 + i;
 					}
 					
 					// toggle nav button visiblity
