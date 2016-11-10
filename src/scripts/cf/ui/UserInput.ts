@@ -45,6 +45,10 @@ namespace cf {
 		private controlElements: ControlElements;
 		private currentTag: ITag | ITagGroup;
 
+		public get active(): boolean{
+			return this.inputElement === document.activeElement;
+		}
+
 		private set disabled(value: boolean){
 			if(value){
 				this.el.setAttribute("disabled", "disabled");
@@ -195,21 +199,24 @@ namespace cf {
 		}
 
 		private onKeyDown(event: KeyboardEvent){
-			if(event.keyCode == 16)
+			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			if(event.keyCode == 16){
+			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
-			}else if(event.keyCode == 38){
-				// key UP
-				if(this.controlElements.active)
-					this.controlElements.setFocusOnElement(0);
-			}else if(event.keyCode == 40){
-				// key DOWN
-				this.setFocusOnInput();
-			}else if(event.keyCode == 9){
+			}else if(event.keyCode == Dictionary.keyCodes["up"]){
+				event.preventDefault();
+
+				if(this.active && !this.controlElements.focus)
+					this.controlElements.focusFrom("bottom");
+			}else if(event.keyCode == Dictionary.keyCodes["down"]){
+				event.preventDefault();
+
+				if(this.active && !this.controlElements.focus)
+					this.controlElements.focusFrom("top");
+			}else if(event.keyCode == Dictionary.keyCodes["tab"]){
 				// tab key pressed, check if node is child of CF, if then then reset focus to input element
 
 				var doesKeyTargetExistInCF: boolean = false;
@@ -219,6 +226,7 @@ namespace cf {
 						doesKeyTargetExistInCF = true;
 						break;
 					}
+
 					node = node.parentNode;
 				}
 				
@@ -226,7 +234,7 @@ namespace cf {
 				if(!doesKeyTargetExistInCF){
 					event.preventDefault();
 					if(this.shiftIsDown){
-						// highlight the last item in controlElement
+						// focus the last item in controlElement
 						if(this.controlElements.active)
 							this.controlElements.setFocusOnElement(this.controlElements.length - 1);
 						else
@@ -242,22 +250,14 @@ namespace cf {
 
 			const value: FlowDTO = this.getFlowDTO();
 
-			if(event.keyCode == 13 || event.keyCode == 32){
-				// ENTER (13) and SPACE (32) key
+			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
 				event.preventDefault();
 
-				if(event.keyCode == 13 && this.inputElement === document.activeElement){
-					if(this.controlElements.active){
-						// if no highlighted element, then just standard behaviour
-						if(!this.controlElements.canClickOnHighlightedItem()){
-							this.onEnterOrSubmitButtonSubmit();
-						}
-					}else{
-						this.onEnterOrSubmitButtonSubmit();
-					}
+				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
+					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
-					if(event.keyCode == 13){
+					if(event.keyCode == Dictionary.keyCodes["enter"]){
 						if(this.currentTag.type == "select" || this.currentTag.type == "checkbox"){
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
 							// if select or checkbox then check for multi select item
@@ -270,17 +270,15 @@ namespace cf {
 								// standard click submit button
 								this.submitButton.click();
 							}
-
 						}else{
 							// standard click submit button
 							this.submitButton.click();
 						}
-					}else if(event.keyCode == 32 && document.activeElement){
+					}else if(event.keyCode == Dictionary.keyCodes["space"] && document.activeElement){
 						(<any> document.activeElement).click();
 					}
 				}
-			}else if(event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 16 && event.keyCode != 9){
-				// don't accept the arrow keys here
+			}else if(event.keyCode != 16 && event.keyCode != 9){
 				this.dispatchKeyChange(value, event.keyCode)
 			}
 		}
@@ -291,7 +289,7 @@ namespace cf {
 				detail: <InputKeyChangeDTO> {
 					dto: dto,
 					keyCode: keyCode,
-					inputFieldActive: this.inputElement === document.activeElement
+					inputFieldActive: this.active
 				}
 			}));
 		}
@@ -305,7 +303,7 @@ namespace cf {
 				this.controlElements.setFocusOnElement(-1);
 		}
 
-		private setFocusOnInput(){
+		public setFocusOnInput(){
 			this.inputElement.focus();
 		}
 
@@ -379,7 +377,7 @@ namespace cf {
 					</cf-list>
 				</cf-input-control-elements>
 
-				<cf-input-button class="cf-input-button" tabindex="2">
+				<cf-input-button class="cf-input-button">
 					<svg class="cf-icon-progress" viewBox="0 0 24 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill="#B9BCBE"><polygon transform="translate(12.257339, 11.185170) rotate(90.000000) translate(-12.257339, -11.185170) " points="10.2587994 9.89879989 14.2722074 5.85954869 12.4181046 3.92783101 5.07216899 11.1851701 12.4181046 18.4425091 14.2722074 16.5601737 10.2587994 12.5405503 19.4425091 12.5405503 19.4425091 9.89879989"></polygon></g></g></svg>
 
 					<svg class="cf-icon-attachment" viewBox="0 0 24 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g transform="translate(-1226.000000, -1427.000000)"><g transform="translate(738.000000, 960.000000)"><g transform="translate(6.000000, 458.000000)"><path stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" d="M499,23.1092437 L499,18.907563 C499,16.2016807 496.756849,14 494,14 C491.243151,14 489,16.2016807 489,18.907563 L489,24.5042017 C489,26.4369748 490.592466,28 492.561644,28 C494.530822,28 496.123288,26.4369748 496.123288,24.5042017 L496.123288,18.907563 C496.140411,17.7478992 495.181507,16.8067227 494,16.8067227 C492.818493,16.8067227 491.859589,17.7478992 491.859589,18.907563 L491.859589,23.1092437" id="Icon"></path></g></g></g></g></svg>

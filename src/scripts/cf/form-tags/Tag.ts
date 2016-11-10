@@ -144,6 +144,10 @@ namespace cf {
 			
 			if(element.getAttribute("type") === "submit")
 				return false;
+			
+			// ignore buttons, we submit the form automatially
+			if(element.getAttribute("type") == "button")
+				return false;
 
 			if(element.style.display === "none")
 				return false;
