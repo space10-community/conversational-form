@@ -11,7 +11,7 @@ namespace cf {
 			return "option";
 		}
 
-		public get title (): string{
+		public get label (): string{
 			return Helpers.getInnerTextOfElement(this.domElement);
 		}
 		

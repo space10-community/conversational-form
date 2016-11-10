@@ -35,8 +35,8 @@ namespace cf {
 			return this.elements[0].name;
 		}
 
-		public get title (): string{
-			return this.elements[0].title;
+		public get label (): string{
+			return this.elements[0].label;
 		}
 
 		public get question():string{

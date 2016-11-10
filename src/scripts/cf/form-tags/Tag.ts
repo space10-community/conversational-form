@@ -25,7 +25,7 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		type: string,
 		name: string,
-		title: string,
+		label: string,
 		question: string,
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
@@ -48,7 +48,7 @@ namespace cf {
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
-		private _title: string;
+		private _label: string;
 
 		private validationCallback?: (value: string) => boolean; // can also be set through cf-validation attribute.
 		private questions: Array<string>; // can also be set through cf-questions attribute.
@@ -61,12 +61,12 @@ namespace cf {
 			return this.domElement.getAttribute("name");
 		}
 
-		public get title (): string{
-			if(!this._title){
-				this.findTitle();
+		public get label (): string{
+			if(!this._label){
+				this.setLabel();
 			}
 
-			return this._title;
+			return this._label;
 		}
 
 		public get value (): string{
@@ -133,7 +133,7 @@ namespace cf {
 			this.defaultValue = null;
 			this.errorMessages = null;
 			this.pattern = null;
-			this._title = null;
+			this._label = null;
 			this.validationCallback = null;
 			this.questions = null;
 		}
@@ -238,7 +238,9 @@ namespace cf {
 
 			const elId: string = this.domElement.getAttribute("id");
 
-			if(this.domElement.getAttribute("cf-questions")){
+			if(this.domElement.getAttribute("cf-label")){
+				this.questions = [this.domElement.getAttribute("cf-label")];
+			}else if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
 			}else{
 				// questions not set, so find it in the DOM
@@ -257,10 +259,10 @@ namespace cf {
 			}
 		}
 
-		private findTitle(){
+		private setLabel(){
 			// find label..
 			if(this.domElement.getAttribute("cf-label")){
-				this._title = this.domElement.getAttribute("cf-label");
+				this._label = this.domElement.getAttribute("cf-label");
 			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
 				if(parentDomNode){
@@ -275,12 +277,12 @@ namespace cf {
 					}
 
 					if(labelTags.length > 0 && labelTags[0])
-						this._title = Helpers.getInnerTextOfElement(labelTags[0]);
+						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
 				}
 			}
 
-			if(!this._title)
-				Dictionary.getAIResponse(this.type)
+			if(!this._label)
+				this._label = Dictionary.getAIResponse(this.type);
 		}
 	}
 }

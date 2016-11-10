@@ -51,7 +51,7 @@ namespace cf {
 			if(this.isMultiChoice)
 				tmpl += "<cf-checkbox></cf-checkbox>";
 
-			tmpl += this.referenceTag.title;
+			tmpl += this.referenceTag.label;
 			tmpl += "</cf-button>";
 
 			return tmpl;

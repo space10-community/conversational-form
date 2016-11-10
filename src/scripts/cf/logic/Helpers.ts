@@ -32,7 +32,7 @@ namespace cf {
 			}
 		}
 
-		public static getInnerTextOfElement(element: HTMLElement): string {
+		public static getInnerTextOfElement(element: Element): string {
 			var tmp = document.createElement("DIV");
 			tmp.innerHTML = element.innerHTML;
 			return tmp.textContent || tmp.innerText || "";
@@ -65,9 +65,11 @@ namespace cf {
 			script.onload = function() {
 				// we use https://github.com/Ranks/emojify.js as a standard
 				Helpers.emojilib = (<any> window)[lib];
-				Helpers.emojilib.setConfig({
-					img_dir: "https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/",
-				});
+				if(Helpers.emojilib){
+					Helpers.emojilib.setConfig({
+						img_dir: "https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/",
+					});
+				}
 			}
 			script.setAttribute("src", scriptSrc);
 			head.appendChild(script);

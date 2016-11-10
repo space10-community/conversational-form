@@ -32,7 +32,7 @@ namespace cf {
 			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
 			return `<cf-button class="cf-button cf-checkbox-button" checked=`+(isChecked ? "checked" : "")+`>
 				<cf-checkbox></cf-checkbox>
-				` + this.referenceTag.title + `
+				` + this.referenceTag.label + `
 			</cf-button>
 			`;
 		}

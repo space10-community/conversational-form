@@ -44,7 +44,7 @@ namespace cf {
 		// override
 		public getTemplate () : string {
 			return `<cf-button class="cf-button">
-				` + this.referenceTag.title + `
+				` + this.referenceTag.label + `
 			</cf-button>
 			`;
 		}
