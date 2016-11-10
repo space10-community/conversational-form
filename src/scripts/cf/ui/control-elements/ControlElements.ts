@@ -518,16 +518,18 @@ namespace cf {
 				const elements: Array <IControlElement> = this.getElements();
 				if(elements.length > 0){
 
+					const listWidthValues: Array<number> = [];
 					for (let i = 0; i < elements.length; i++) {
 						let element: IControlElement = <IControlElement>elements[i];
 						this.listWidth += element.positionVector.width;
+						listWidthValues.push(element.positionVector.x + element.positionVector.width);
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
 					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
 					if(isListWidthOverElementWidth){
 						this.el.classList.add("two-row");
-						this.listWidth = Math.max(elOffsetWidth, Math.round((this.listWidth / 2) + 50));
+						this.listWidth = Math.max(elOffsetWidth, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
 						this.list.style.width = this.listWidth + "px";
 					}else{
 						this.el.classList.add("one-row");
