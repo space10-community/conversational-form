@@ -174,15 +174,18 @@ namespace cf {
 			const oldRowIndex: number = this.rowIndex;
 			this.rowIndex += direction;
 
-			// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
-			const oldVector: ControlElementVector = this.tableableRows[oldRowIndex][this.columnIndex].positionVector;
-			const items: Array <IControlElement> = this.tableableRows[this.rowIndex];
-			let currentDistance: number = 10000000000000;
-			for (let i = 0; i < items.length; i++) {
-				let element: IControlElement = <IControlElement>items[i];
-				if(currentDistance > Math.abs(oldVector.centerX - element.positionVector.centerX)){
-					currentDistance = Math.abs(oldVector.centerX - element.positionVector.centerX);
-					this.columnIndex = i;
+			
+			if(this.rowIndex == 0 || this.rowIndex == 1){
+				// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
+				const oldVector: ControlElementVector = this.tableableRows[oldRowIndex][this.columnIndex].positionVector;
+				const items: Array <IControlElement> = this.tableableRows[this.rowIndex];
+				let currentDistance: number = 10000000000000;
+				for (let i = 0; i < items.length; i++) {
+					let element: IControlElement = <IControlElement>items[i];
+					if(currentDistance > Math.abs(oldVector.centerX - element.positionVector.centerX)){
+						currentDistance = Math.abs(oldVector.centerX - element.positionVector.centerX);
+						this.columnIndex = i;
+					}
 				}
 			}
 		}
@@ -276,7 +279,6 @@ namespace cf {
 		* build the tabable array index
 		*/
 		private buildTabableRows(): void {
-			console.log("buildTabableRows");
 			this.tableableRows = [];
 			this.resetTabList();
 
