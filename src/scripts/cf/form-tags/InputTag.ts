@@ -26,6 +26,20 @@ namespace cf {
 			}
 		}
 
+		protected findAndSetQuestions(){
+			super.findAndSetQuestions();
+
+			// special use cases for <input> tag add here...
+		}
+
+		protected findAndSetLabel(){
+			super.findAndSetLabel();
+
+			if(!this._label){
+				// special use cases for <input> tag add here...
+			}
+		}
+
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			if(this.type == "checkbox"){
 				// checkbox is always true..

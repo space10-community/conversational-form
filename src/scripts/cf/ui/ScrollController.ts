@@ -134,29 +134,29 @@ namespace cf {
 			if(xRounded < 0){
 				if(!this.prevButton.classList.contains("active"))
 					this.prevButton.classList.add("active");
-				if(!this.prevButton.classList.contains("gradient"))
-					this.prevButton.classList.add("gradient");
+				if(!this.prevButton.classList.contains("cf-gradient"))
+					this.prevButton.classList.add("cf-gradient");
 			}
 
 			if(xRounded == 0){
 				if(this.prevButton.classList.contains("active"))
 					this.prevButton.classList.remove("active");
-				if(this.prevButton.classList.contains("gradient"))
-					this.prevButton.classList.remove("gradient");
+				if(this.prevButton.classList.contains("cf-gradient"))
+					this.prevButton.classList.remove("cf-gradient");
 			}
 
 			if(xRounded > this.max){
 				if(!this.nextButton.classList.contains("active"))
 					this.nextButton.classList.add("active");
-				if(!this.nextButton.classList.contains("gradient"))
-					this.nextButton.classList.add("gradient");
+				if(!this.nextButton.classList.contains("cf-gradient"))
+					this.nextButton.classList.add("cf-gradient");
 			}
 
 			if(xRounded <= this.max){
 				if(!this.nextButton.classList.contains("active"))
 					this.nextButton.classList.remove("active");
-				if(!this.nextButton.classList.contains("gradient"))
-					this.nextButton.classList.remove("gradient");
+				if(!this.nextButton.classList.contains("cf-gradient"))
+					this.nextButton.classList.remove("cf-gradient");
 			}
 
 			// set css transforms

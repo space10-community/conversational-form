@@ -48,10 +48,10 @@ namespace cf {
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
-		private _label: string;
+		protected _label: string;
 
 		private validationCallback?: (value: string) => boolean; // can also be set through cf-validation attribute.
-		private questions: Array<string>; // can also be set through cf-questions attribute.
+		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
 			return this.domElement.getAttribute("type");
@@ -62,11 +62,13 @@ namespace cf {
 		}
 
 		public get label (): string{
-			if(!this._label){
-				this.setLabel();
-			}
+			if(!this._label)
+				this.findAndSetLabel();
 
-			return this._label;
+			if(this._label)
+				return this._label;
+			
+			return Dictionary.getAIResponse(this.type);
 		}
 
 		public get value (): string{
@@ -74,11 +76,11 @@ namespace cf {
 		}
 
 		public get question():string{
-			if(!this.questions){
-				this.findLabelAndSetQuestions();
-			}
-
-			return this.questions[Math.floor(Math.random() * this.questions.length)];
+			// if questions are empty, then fall back to dictionary, every time
+			if(!this.questions || this.questions.length == 0)
+				return Dictionary.getAIResponse(this.type);
+			else
+				return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}
 
 		public get errorMessage():string{
@@ -126,6 +128,8 @@ namespace cf {
 			if(this.type != "group"){
 				console.log('Tag registered:', this.type);
 			}
+
+			this.findAndSetQuestions();
 		}
 
 		public dealloc(){
@@ -227,7 +231,7 @@ namespace cf {
 			return isValid;
 		}
 
-		private findLabelAndSetQuestions(){
+		protected findAndSetQuestions(){
 			if(this.questions)
 				return;
 
@@ -238,36 +242,32 @@ namespace cf {
 
 			const elId: string = this.domElement.getAttribute("id");
 
-			if(this.domElement.getAttribute("cf-label")){
-				this.questions = [this.domElement.getAttribute("cf-label")];
-			}else if(this.domElement.getAttribute("cf-questions")){
+			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
+			}else if(this.domElement.getAttribute("placeholder")){
+				// check for placeholder attr
+				this.questions = [this.domElement.getAttribute("placeholder")];
 			}else{
 				// questions not set, so find it in the DOM
 				// try a broader search using for and id attributes
 				const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
 
-				if(forLabel){
+				if(forLabel)
 					this.questions = [Helpers.getInnerTextOfElement(forLabel)];
-				}else
-					this.questions = [Dictionary.getAIResponse(this.type)];
-			}
-
-			// if questions are empty, then fall back to dictionary
-			if(!this.questions || this.questions.length == 0){
-				this.questions = [Dictionary.getAIResponse(this.type)];
 			}
 		}
 
-		private setLabel(){
+		protected findAndSetLabel(){
+			console.log("findAndSetLabel", this._label)
 			// find label..
 			if(this.domElement.getAttribute("cf-label")){
 				this._label = this.domElement.getAttribute("cf-label");
 			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
+				console.log("parentDomNode:", parentDomNode);
 				if(parentDomNode){
 					// step backwards and check for label tag.
-					let labelTags: NodeListOf<HTMLLabelElement> | Array<HTMLLabelElement> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
+					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
 					if(labelTags.length == 0){
 						// check for innerText
@@ -280,9 +280,6 @@ namespace cf {
 						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
 				}
 			}
-
-			if(!this._label)
-				this._label = Dictionary.getAIResponse(this.type);
 		}
 	}
 }
