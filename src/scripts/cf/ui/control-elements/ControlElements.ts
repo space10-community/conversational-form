@@ -101,7 +101,7 @@ namespace cf {
 			let x: number = (vector.x + vector.width < this.elementWidth ? 0 : vector.x - vector.width);
 			x *= -1;
 
-			// this.currentFocusIndex = 0;
+			// TODO: update rowIndex and columnIndex
 			this.listScrollController.setScroll(x, 0);
 		}
 
