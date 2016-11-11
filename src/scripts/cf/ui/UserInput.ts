@@ -262,10 +262,13 @@ namespace cf {
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
 							// if select or checkbox then check for multi select item
 							if(this.currentTag.type == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
-								this.setFocusOnInput();
+								// let UI know what we changed the key
+								this.dispatchKeyChange(value, event.keyCode);
+
+								// after ui has been selected we RESET the input/filter
 								this.resetValue();
-								// let UI know what we changed the key here
-								this.dispatchKeyChange(value, event.keyCode)
+								this.setFocusOnInput();
+								this.dispatchKeyChange(value, event.keyCode);
 							}else{
 								// standard click submit button
 								this.submitButton.click();
@@ -278,7 +281,7 @@ namespace cf {
 						(<any> document.activeElement).click();
 					}
 				}
-			}else if(event.keyCode != 16 && event.keyCode != 9){
+			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
 				this.dispatchKeyChange(value, event.keyCode)
 			}
 		}

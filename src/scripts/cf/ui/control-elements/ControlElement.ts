@@ -27,6 +27,7 @@ namespace cf {
 		tabIndex: number;
 		visible: boolean;
 		focus: boolean;
+		calcPosition(): void;
 		dealloc(): void;
 	}
 
@@ -61,12 +62,6 @@ namespace cf {
 		}
 
 		public get positionVector():ControlElementVector{
-			if(!this.visible)
-				return {width: 0, x: 0, y: 0, height: 0};
-			
-			// TODO: add this calc to somewhere else where ot does not get called to many times..
-			this.calcPosition();
-
 			return this._positionVector;
 		}
 
@@ -83,10 +78,12 @@ namespace cf {
 		}
 
 		public set visible(value: boolean){
-			if(value)
+			if(value){
 				this.el.classList.remove("hide");
-			else
+			}else{
 				this.el.classList.add("hide");
+				this.tabIndex = -1;
+			}
 		}
 
 		constructor(options: IBasicElementOptions){
@@ -110,7 +107,7 @@ namespace cf {
 			}));
 		}
 
-		private calcPosition(){
+		public calcPosition(){
 			const mr: number = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
 			// try not to do this to often, re-paint whammy!
 			this._positionVector = <ControlElementVector> {

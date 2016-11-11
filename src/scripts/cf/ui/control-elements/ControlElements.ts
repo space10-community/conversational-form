@@ -134,6 +134,8 @@ namespace cf {
 						this.updateRowIndex(1);
 					}else if(dto.keyCode == Dictionary.keyCodes["up"]){
 						this.updateRowIndex(-1);
+					}else if(dto.keyCode == Dictionary.keyCodes["enter"] || dto.keyCode == Dictionary.keyCodes["space"]){
+						this.tableableRows[this.rowIndex][this.columnIndex].el.click();
 					}
 
 					if(!this.validateRowColIndexes()){
@@ -149,33 +151,30 @@ namespace cf {
 
 		private validateRowColIndexes():boolean{
 			const maxRowIndex: number = (this.el.classList.contains("two-row") ? 1 : 0)
-			if(this.rowIndex >= 0 && this.rowIndex <= maxRowIndex){
+			if(this.tableableRows[this.rowIndex]){
 				// columnIndex is only valid if rowIndex is valid
 				if(this.columnIndex < 0){
 					this.columnIndex = this.tableableRows[this.rowIndex].length - 1;
-					return true;
 				}
 
 				if(this.columnIndex > this.tableableRows[this.rowIndex].length - 1){
 					this.columnIndex = 0;
-					return true;
 				}
-			}
 
-			if(this.rowIndex < 0 || this.rowIndex > maxRowIndex){
+				return true;
+			}else{
 				this.resetTabList();
 				return false;
 			}
-
-			return true;
 		}
 
 		private updateRowIndex(direction: number){
 			const oldRowIndex: number = this.rowIndex;
 			this.rowIndex += direction;
 
-			
-			if(this.rowIndex == 0 || this.rowIndex == 1){
+			// console.log("updateRowIndex:", this.tableableRows);
+
+			if(this.tableableRows[this.rowIndex]){
 				// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
 				const oldVector: ControlElementVector = this.tableableRows[oldRowIndex][this.columnIndex].positionVector;
 				const items: Array <IControlElement> = this.tableableRows[this.rowIndex];
@@ -292,7 +291,8 @@ namespace cf {
 				for (let i = 0; i < elements.length; i++) {
 					let element: IControlElement = <IControlElement>elements[i];
 					if(element.visible){
-						if(element.positionVector.y == 0)
+						// crude way of checking if element is top row or bottom row..
+						if(element.positionVector.y < 30)
 							this.tableableRows[0].push(element);
 						else
 							this.tableableRows[1].push(element);
@@ -309,11 +309,10 @@ namespace cf {
 				}
 			}
 
-			console.log("this.tableableRows created:", this.tableableRows)
+			// console.log("this.tableableRows created:", this.tableableRows)
 		}
 		
 		public focusFrom(angle: string){
-			console.log("focus from: this.tableableRows valid?", this.tableableRows);
 			if(!this.tableableRows)
 				return;
 
@@ -324,7 +323,6 @@ namespace cf {
 				this.rowIndex = 0;
 			}
 
-
 			if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]){
 				this.ignoreKeyboardInput = true;
 				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
@@ -332,7 +330,7 @@ namespace cf {
 				this.resetTabList();
 			}
 
-			console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
+			// console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
 		}
 		public setFocusOnElement(index: number){
 			const elements: Array<IControlElement> = this.getElements();
@@ -518,13 +516,18 @@ namespace cf {
 			setTimeout(() => {
 				this.listWidth = 0;
 				const elements: Array <IControlElement> = this.getElements();
-				if(elements.length > 0){
 
+				if(elements.length > 0){
 					const listWidthValues: Array<number> = [];
+					const listWidthValues2: Array<IControlElement> = [];
 					for (let i = 0; i < elements.length; i++) {
 						let element: IControlElement = <IControlElement>elements[i];
-						this.listWidth += element.positionVector.width;
-						listWidthValues.push(element.positionVector.x + element.positionVector.width);
+						if(element.visible){
+							element.calcPosition();
+							this.listWidth += element.positionVector.width;
+							listWidthValues.push(element.positionVector.x + element.positionVector.width);
+							listWidthValues2.push(element);
+						}
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
@@ -537,35 +540,52 @@ namespace cf {
 						this.el.classList.add("one-row");
 					}
 
-					// check again after classes are set.
-					isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
+					setTimeout(() => {
+						// recalc after LIST classes has been added
+						for (let i = 0; i < elements.length; i++) {
+							let element: IControlElement = <IControlElement>elements[i];
+							if(element.visible){
+								element.calcPosition();
+							}
+						}
 
-					// sort the list so we can set tabIndex properly
-					const tabIndexFilteredElements: Array<IControlElement> = elements.sort((a: IControlElement, b: IControlElement) => {
-						return a.positionVector.x == b.positionVector.x ? 0 : a.positionVector.x < b.positionVector.x ? -1 : 1;
-					});
+						// check again after classes are set.
+						isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
 
-					for (let i = 0; i < tabIndexFilteredElements.length; i++) {
-						let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
-						//tabindex 1 are the UserInput element
-						element.tabIndex = 2 + i;
-					}
-					
-					// toggle nav button visiblity
-					cancelAnimationFrame(this.rAF);
-					if(isListWidthOverElementWidth){
-						this.el.classList.remove("hide-nav-buttons");
-					}else{
-						this.el.classList.add("hide-nav-buttons");
-					}
+						// sort the list so we can set tabIndex properly
+						var elementsCopyForSorting: Array <IControlElement> = elements.slice();
+						const tabIndexFilteredElements: Array<IControlElement> = elementsCopyForSorting.sort((a: IControlElement, b: IControlElement) => {
+							return a.positionVector.x == b.positionVector.x ? 0 : a.positionVector.x < b.positionVector.x ? -1 : 1;
+						});
 
-					this.elementWidth = elOffsetWidth;
+						let tabIndex: number = 0;
+						for (let i = 0; i < tabIndexFilteredElements.length; i++) {
+							let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
+							if(element.visible){
+								//tabindex 1 are the UserInput element
+								element.tabIndex = 2 + (tabIndex++);
+							}else{
+								element.tabIndex = -1;
+							}
+						}
+						
+						// toggle nav button visiblity
+						cancelAnimationFrame(this.rAF);
+						if(isListWidthOverElementWidth){
+							this.el.classList.remove("hide-nav-buttons");
+						}else{
+							this.el.classList.add("hide-nav-buttons");
+						}
 
-					// resize scroll
-					this.listScrollController.resize(this.listWidth, this.elementWidth);
+						this.elementWidth = elOffsetWidth;
+
+						// resize scroll
+						this.listScrollController.resize(this.listWidth, this.elementWidth);
+
+						this.buildTabableRows();
+					}, 0);
 				}
 
-				this.buildTabableRows();
 
 				if(resolve)
 					resolve();
