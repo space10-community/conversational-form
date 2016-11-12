@@ -135,7 +135,11 @@ namespace cf {
 					}else if(dto.keyCode == Dictionary.keyCodes["up"]){
 						this.updateRowIndex(-1);
 					}else if(dto.keyCode == Dictionary.keyCodes["enter"] || dto.keyCode == Dictionary.keyCodes["space"]){
-						this.tableableRows[this.rowIndex][this.columnIndex].el.click();
+						if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex])
+							this.tableableRows[this.rowIndex][this.columnIndex].el.click();
+						else if(this.tableableRows[0] && this.tableableRows[0].length == 1)
+							// this is when only one element in a filter, then we click it!
+							this.tableableRows[0][0].el.click();
 					}
 
 					if(!this.validateRowColIndexes()){

@@ -1250,21 +1250,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <script>
       (function(){
-        setTimeout(function() {
-          var tags = [],
-            formEl = document.getElementById("co-billing-form");
-
-          window.ConversationalForm = new cf.ConversationalForm({
-            formEl: document.getElementById("user_new"),
-            // dictionaryData: {},// empty will throw error
-            // dictionaryAI: {},
-            context: document.getElementById("user_new"),
-            tags: tags,
-            //submitCallback: () => void | HTMLButtonElement
-            
-            //base64 or crossdomain-enabled image url
-          });
-        }, 0);
+        document.getElementById("create_using_email_button").addEventListener("click", function(){
+            window.ConversationalForm = new cf.ConversationalForm({
+              formEl: document.getElementById("user_new"),
+              // dictionaryData: {},// empty will throw error
+              // dictionaryAI: {},
+              context: document.getElementById("user_new"),
+              // tags: tags,
+              //submitCallback: () => void | HTMLButtonElement
+              //base64 or crossdomain-enabled image url
+            });
+        }, false);
       })();
     </script>
 

@@ -250,34 +250,49 @@ namespace cf {
 			const value: FlowDTO = this.getFlowDTO();
 
 			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
-				event.preventDefault();
 
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
+					event.preventDefault();
+
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
 					if(event.keyCode == Dictionary.keyCodes["enter"]){
-						if(this.currentTag.type == "select" || this.currentTag.type == "checkbox"){
+						event.preventDefault();
+						event.stopImmediatePropagation();
+
+						const tagType: string = this.currentTag.type == "group" ? (<TagGroup>this.currentTag).getGroupTagType() : this.currentTag.type;
+
+						if(tagType == "select" || tagType == "checkbox"){
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
 							// if select or checkbox then check for multi select item
-							if(this.currentTag.type == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
-								// let UI know what we changed the key
-								this.dispatchKeyChange(value, event.keyCode);
+							if(tagType == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
+								if(this.active){
+									// click on UserInput submit button
+									this.submitButton.click();
+								}else{
+									// let UI know what we changed the key
+									this.dispatchKeyChange(value, event.keyCode);
 
-								// after ui has been selected we RESET the input/filter
-								this.resetValue();
-								this.setFocusOnInput();
-								this.dispatchKeyChange(value, event.keyCode);
+									// after ui has been selected we RESET the input/filter
+									this.resetValue();
+									this.setFocusOnInput();
+									this.dispatchKeyChange(value, event.keyCode);
+								}
 							}else{
-								// standard click submit button
-								this.submitButton.click();
+								this.dispatchKeyChange(value, event.keyCode);
 							}
 						}else{
-							// standard click submit button
-							this.submitButton.click();
+							if(this.currentTag.type == "group"){
+								// let the controlements handle action
+								this.dispatchKeyChange(value, event.keyCode);
+							}else{
+								// click on UserInput submit button
+								this.submitButton.click();
+							}
 						}
 					}else if(event.keyCode == Dictionary.keyCodes["space"] && document.activeElement){
-						(<any> document.activeElement).click();
+						this.dispatchKeyChange(value, event.keyCode);
 					}
 				}
 			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
