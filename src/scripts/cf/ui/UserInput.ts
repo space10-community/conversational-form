@@ -73,7 +73,6 @@ namespace cf {
 			})
 
 			// setup event listeners
-			
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);
 
