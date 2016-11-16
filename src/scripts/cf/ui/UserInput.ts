@@ -257,7 +257,7 @@ namespace cf {
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
-					if(event.keyCode == Dictionary.keyCodes["enter"]){
+					if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
 						event.preventDefault();
 						event.stopImmediatePropagation();
 
