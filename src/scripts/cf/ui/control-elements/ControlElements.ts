@@ -6,7 +6,7 @@
 /// <reference path="UploadFileUI.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
-/// <reference path="../../../typings/es6-promise/es6-promise.d.ts"/>
+/// <reference path="../../../typings/globals/es6-promise/index.d.ts"/>
 
 // namespace
 namespace cf {

@@ -22,12 +22,11 @@ Install local gulp from project root
 	$ npm install gulp
 
 
-### tsd
-[Install](https://github.com/DefinitelyTyped/tsd#install)
+### Typescript Typings
+[Install](https://github.com/typings/typings)
 
 	$ cd src/scripts
-	$ tsd update
-
+	$ typings install
 
 
 ### Gulp tasks
@@ -47,13 +46,6 @@ watch task, watches .styl, .ts, .jpg, .png, .gif
 	
 	$ cd gulp-tasks
 	$ npm install --save-dev XX
-
-
-### Typescript + tsd
-/src/scripts/tsd.json
-ex.:
-	
-	$ tsd install XX --save --resolve
 
 
 ## Tests...
