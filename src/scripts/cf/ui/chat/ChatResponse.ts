@@ -35,11 +35,11 @@ namespace cf {
 			this.response = Helpers.emojify(this.response);
 			
 			const text: Element = this.el.getElementsByTagName("text")[0];
-			text.innerHTML = this.response;
 
 			if(!this.response || this.response.length == 0){
 				text.setAttribute("thinking", "");
 			}else{
+				text.innerHTML = this.response;
 				text.setAttribute("value-added", "");
 				text.removeAttribute("thinking");
 
@@ -95,7 +95,7 @@ namespace cf {
 		public getTemplate () : string {
 			return `<cf-chat-response>
 				<thumb style="background-image: url(` + this.image + `)"></thumb>
-				<text ` + (!this.response || this.response.length == 0 ? "thinking" : "") + `>` + (!this.response ? "" : this.response) + `</text>
+				<text>` + (!this.response ? "<thinking><span>.</span><span>.</span><span>.</span></thinking>" : this.response) + `</text>
 			</cf-chat-response>`;
 		}
 	}
