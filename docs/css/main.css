@@ -1,0 +1,17 @@
+html, body, .container {
+  height: 100%;
+  position: relative;
+}
+
+.row.valign {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+#conversational-form {
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
