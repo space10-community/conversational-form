@@ -28,4 +28,5 @@ h1 {
 #form-outer {
   padding-top: 30px;
   padding-bottom: 30px;
+  min-height: 450px;
 }
