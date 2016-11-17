@@ -1,4 +1,4 @@
-html, body, .container {
+/*html, body, .container {
   height: 100%;
   position: relative;
 }
@@ -8,10 +8,24 @@ html, body, .container {
   top: 50%;
   transform: translateY(-50%);
   width: 100%;
+}*/
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  padding-top: 30px;
 }
 
 #conversational-form {
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+#form-outer {
+  padding-top: 30px;
+  padding-bottom: 30px;
 }

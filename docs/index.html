@@ -12,7 +12,7 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
@@ -190,7 +190,7 @@
         setTimeout(function() {
           $(".conversational-form--show").removeClass("cf--development-mode");
           $(".conversational-form--show").removeClass("conversational-form--show");
-        }, 200);
+        }, 100);
       })();
 
       (function(){
@@ -217,7 +217,7 @@
         <div class="col-md-6 col-md-offset-3">
           <h1>Conversational Form</h1>
           <p>
-            <button id="toggle-conversation" type="button" class="btn btn-default btn-block">Turn conversational</button>
+            <button id="toggle-conversation" type="button" class="btn btn-primary btn-block">Turn conversational</button>
           </p>
           <div id="form-outer">
             <form id="conversational">
