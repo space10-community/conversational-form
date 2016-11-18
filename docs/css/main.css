@@ -19,9 +19,16 @@ body {
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
+  border-radius: 5px;
+  margin-top: 3px;
 }
 
-h1 {
+h1, h2, h3, h4, h5 {
+  margin-bottom: 30px;
+  font-family: Roboto Mono, monospace;
+}
+
+#toggle-conversation {
   margin-bottom: 30px;
 }
 
