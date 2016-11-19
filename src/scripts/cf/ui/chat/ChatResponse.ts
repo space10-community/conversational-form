@@ -9,6 +9,7 @@ namespace cf {
 		response: string;
 		image: string;
 		isAIReponse: boolean;
+		tag: ITag;
 	}
 
 	export const ChatResponseEvents = {
@@ -20,6 +21,7 @@ namespace cf {
 		private response: string;
 		private image: string;
 		private isAIReponse: boolean;
+		private tag: ITag
 
 		public set visible(value: boolean){
 			if(value){
@@ -29,10 +31,15 @@ namespace cf {
 			}
 		}
 
+		constructor(options: IChatResponseOptions){
+			super(options);
+			this.tag = options.tag;
+		}
+
 		public setValue(dto: FlowDTO = null){
 			this.response = dto ? dto.text : "";
 
-			this.response = Helpers.emojify(this.response);
+			this.processResponse();
 			
 			const text: Element = this.el.getElementsByTagName("text")[0];
 
@@ -68,7 +75,18 @@ namespace cf {
 					}));
 				}
 			}
+		}
 
+		private processResponse(){
+			this.response = Helpers.emojify(this.response);
+			
+			if(this.tag.type == "password" && !this.isAIReponse){
+				var newStr: string = "";
+				for (let i = 0; i < this.response.length; i++) {
+					newStr += "*";
+				}
+				this.response = newStr;
+			}
 		}
 
 		protected setData(options: IChatResponseOptions):void{
