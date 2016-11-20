@@ -96,15 +96,16 @@ namespace cf {
 				// add other patterns here..
 				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
-			this.createResponse(true, aiReponse, aiThumb);
+			this.createResponse(true, currentTag, aiReponse, aiThumb);
 
 			// user reponse, create the waiting response
-			this.createResponse(false);
+			this.createResponse(false, currentTag);
 		}
 
-		private createResponse(isAIReponse: boolean, value: string = null, image: string = Dictionary.get("user-image")){
+		private createResponse(isAIReponse: boolean, currentTag: ITag, value: string = null, image: string = Dictionary.get("user-image")){
 			this.currentResponse = new ChatResponse({
 				// image: null,
+				tag: currentTag,
 				isAIReponse: isAIReponse,
 				response: value,// || input-response,
 				image: image,
