@@ -478,7 +478,7 @@ namespace cf {
 							}));
 						}
 						// nothing to add.
-						console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
+						// console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
 						break;
 				}
 

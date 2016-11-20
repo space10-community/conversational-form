@@ -109,11 +109,7 @@ namespace cf {
 					const element = fields[i];
 					if(Tag.isTagValid(element)){
 						// ignore hidden tags
-						this.tags.push(Tag.createTag({
-							domElement: element
-							// validationCallback
-							// questions: Array<String>
-						}));
+						this.tags.push(Tag.createTag(element));
 					}
 				}
 			}else{
@@ -190,8 +186,6 @@ namespace cf {
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
 			this.context.appendChild(this.el);
-			if(this.isDevelopment)
-				this.el.classList.add("cf--development-mode");
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});
@@ -242,3 +236,15 @@ namespace cf {
 		}
 	}
 }
+
+
+// check for a form element with attribute:
+
+window.addEventListener("load", () =>{
+	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form-element]");
+	if(formEl){
+		window.ConversationalForm = new cf.ConversationalForm({
+			formEl: formEl
+		});
+	}
+}, false);
