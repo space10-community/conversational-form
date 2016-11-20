@@ -111,9 +111,7 @@ namespace cf {
 
 			
 			// custom tag validation
-			if(this.validationCallback){
-				this.validationCallback = options.validationCallback;
-			}else if(this.domElement.getAttribute("cf-validation")){
+			if(this.domElement.getAttribute("cf-validation")){
 				// set it through an attribute, danger land with eval
 				this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			}
@@ -176,8 +174,7 @@ namespace cf {
 			}
 		}
 
-		public static createTag(options: ITagOptions): ITag{
-			const element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = options.domElement;
+		public static createTag(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement): ITag{
 			if(Tag.isTagValid(element)){
 				// ignore hidden tags
 				let tag: ITag;
@@ -265,13 +262,11 @@ namespace cf {
 		}
 
 		protected findAndSetLabel(){
-			console.log("findAndSetLabel", this._label)
 			// find label..
 			if(this.domElement.getAttribute("cf-label")){
 				this._label = this.domElement.getAttribute("cf-label");
 			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
-				console.log("parentDomNode:", parentDomNode);
 				if(parentDomNode){
 					// step backwards and check for label tag.
 					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
