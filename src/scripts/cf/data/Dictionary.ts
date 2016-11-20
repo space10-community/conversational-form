@@ -26,7 +26,7 @@ namespace cf {
 
 			// overwrite data if defined 
 			if(options && options.data)
-				this.validateAndSetNewData(options.data);
+				this.data = this.validateAndSetNewData(options.data, this.data);
 
 			// overwrite user image
 			if(options.userImage)
@@ -34,7 +34,7 @@ namespace cf {
 			
 			// overwrite ai questions if defined
 			if(options && options.aiQuestions)
-				this.AIQuestions = options.aiQuestions;
+				this.AIQuestions = this.validateAndSetNewData(options.aiQuestions, this.AIQuestions[Dictionary.AIType]);
 		}
 
 		public static keyCodes: IKeyCodes = {
@@ -88,13 +88,14 @@ namespace cf {
 			return value;
 		}
 
-		private validateAndSetNewData(data: any){
-			if(!data["entry-not-found"])
-				throw new Error("Conversational Form Dictionary Error, 'entry-not-found' is undefined");
-			if(!data["input-placeholder"])
-				throw new Error("Conversational Form Dictionary Error, 'input-placeholder' is undefined");
-			
-			this.data = data;
+		private validateAndSetNewData(newData: any, originalDataObject: any){
+			for(var key in originalDataObject){
+				if(!newData[key]){
+					throw new Error("Conversational Form Dictionary Error, '"+key+"' value is undefined, see Dictionary.ts for mappings.");
+				}
+			}
+
+			return newData;
 		}
 
 		// can be overwritten

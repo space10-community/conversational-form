@@ -38,13 +38,14 @@ namespace cf {
 		private isDevelopment: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
-			console.log("Space10 Conversational User Interface.");
-
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
+			
+			if(!options.formEl)
+				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
-			this.submitCallback = options.submitCallback;
 			this.formEl = options.formEl;
+			this.submitCallback = options.submitCallback;
 
 			// 
 			this.dictionary = new Dictionary({
@@ -176,8 +177,7 @@ namespace cf {
 		}
 
 		private setupUI(){
-			console.log("%c💆 %c by Relax, we are the good guys %c 🏄", "background: none,", "background: black; color: white; font-weight: bold;", "background: none;");
-			console.log('ConversationalForm start > these are the mapped DOM tags:', this.tags);
+			console.log('Conversational Form > start > mapped DOM tags:', this.tags);
 			console.log('----------------------------------------------');
 
 			// start the flow
