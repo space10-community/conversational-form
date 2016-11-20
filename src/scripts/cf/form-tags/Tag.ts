@@ -245,20 +245,22 @@ namespace cf {
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
-			const elId: string = this.domElement.getAttribute("id");
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
-			}else if(this.domElement.getAttribute("placeholder")){
-				// check for placeholder attr
-				this.questions = [this.domElement.getAttribute("placeholder")];
 			}else{
 				// questions not set, so find it in the DOM
 				// try a broader search using for and id attributes
+				const elId: string = this.domElement.getAttribute("id");
 				const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
 
 				if(forLabel)
 					this.questions = [Helpers.getInnerTextOfElement(forLabel)];
+			}
+
+			if(!this.questions && this.domElement.getAttribute("placeholder")){
+				// check for placeholder attr if questions are still undefined
+				this.questions = [this.domElement.getAttribute("placeholder")];
 			}
 		}
 
