@@ -8,7 +8,6 @@
     "gulp-bower": "*",
     "gulp-changed": "*",
     "gulp-concat": "^2.6.0",
-    "gulp-cssmin": "^0.1.7",
     "gulp-flatten": "*",
     "gulp-insert-lines": "*",
     "gulp-livereload": "*",
