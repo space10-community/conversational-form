@@ -55,9 +55,9 @@ $("form").conversationalform();
 * **tags**?: Array<ITag>
 	* [cf.Tag.createTag(element), ...]
 * **dictionaryData**?: object
-	* Possibility to overwrite the default dictionary, empty will throw error, see Dictionaty.ts for values
+	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
 * **dictionaryAI**?: object
-	* Possibility to overwrite the default dictionary, empty will throw error, see Dictionaty.ts for values
+	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
 * **submitCallback**?: () => void | HTMLButtonElement
 	* An alternative way to submit the form. Can be a Function or an HTMLButtonElement (click will be called). If not defined the component will search in the formEl after a button[type=”submit”] and call click() if not button is found final fallback will be to call submit() on formEl.
 * **userImage**?: string
