@@ -58,12 +58,34 @@ global.gulp.task('scripts', function() {
 });
 
 global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
+	// build order is important in a inheritance world
 	var src = [
 		global.buildFolder + "scripts/bower_components/promise-polyfill/promise.js",
 		global.buildFolder + "scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js",
-		global.buildFolder + "cf/**/*.js",
-		"!" + global.buildFolder + "**/conversational-form.js",
-		"!" + global.distFolder + "**/conversational-form.min.js",
+		global.buildFolder + "cf/ConversationalForm.js",
+		global.buildFolder + "cf/ConversationalForm.plugin.js",
+		global.buildFolder + "cf/logic/Helpers.js",
+		global.buildFolder + "cf/ui/BasicElement.js",
+		global.buildFolder + "cf/ui/control-elements/ControlElement.js",
+		global.buildFolder + "cf/ui/control-elements/ControlElements.js",
+		global.buildFolder + "cf/ui/ScrollController.js",
+		global.buildFolder + "cf/data/Dictionary.js",
+		global.buildFolder + "cf/form-tags/Tag.js",
+		global.buildFolder + "cf/form-tags/TagGroup.js",
+		global.buildFolder + "cf/form-tags/InputTag.js",
+		global.buildFolder + "cf/form-tags/SelectTag.js",
+		global.buildFolder + "cf/form-tags/ButtonTag.js",
+		global.buildFolder + "cf/form-tags/OptionTag.js",
+		global.buildFolder + "cf/ui/control-elements/Button.js",
+		global.buildFolder + "cf/ui/control-elements/RadioButton.js",
+		global.buildFolder + "cf/ui/control-elements/CheckboxButton.js",
+		global.buildFolder + "cf/ui/control-elements/OptionButton.js",
+		global.buildFolder + "cf/ui/control-elements/OptionsList.js",
+		global.buildFolder + "cf/ui/control-elements/UploadFileUI.js",
+		global.buildFolder + "cf/ui/UserInput.js",
+		global.buildFolder + "cf/ui/chat/ChatResponse.js",
+		global.buildFolder + "cf/ui/chat/ChatList.js",
+		global.buildFolder + "cf/logic/FlowManager.js"
 	];
 
 	var stream = global.gulp.src(src)
@@ -75,3 +97,5 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	
 	return stream;
 });
+
+
