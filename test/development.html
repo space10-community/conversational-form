@@ -57,9 +57,8 @@
 
 
 
-			<!-- Auto run on element invoke.. -->
-			<!--<form id="co-billing-form" action="" cf-form-element>-->
-			<form id="co-billing-form" action="">
+			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
+			<form id="co-billing-form" action="" cf-form-element>
 
 				<input type="password" name="password" value="" id="password">
 								
@@ -418,14 +417,6 @@
 
 		<!--<script
 			type="text/javascript"
-			id="conversational-form"
-			src="../dist/conversational-form.min.js"
-			crossorigin
-		></script>-->
-
-
-		<script
-			type="text/javascript"
 			src="../build/scripts/bower_components/promise-polyfill/promise.js"
 		></script>
 
@@ -442,7 +433,6 @@
 		></script>
 
 		<script
-			id="conversational-form" 
 			type="text/javascript"
 			src="../build/cf/ConversationalForm.plugin.js"
 			development
@@ -558,8 +548,6 @@
 			src="../build/cf/logic/FlowManager.js"
 		></script>
 
-
-
 		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
@@ -571,10 +559,13 @@
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>-->
 
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form" src="../dist/conversational-form.min.js" development crossorigin></script>-->
 
-		
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>-->
 
 	</body>
 </html>
