@@ -70,7 +70,7 @@ namespace cf {
 				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("style");
-				const githubMasterUrl: string = "https://raw.githubusercontent.com/space10-community/conversational-form/master/";
+				const githubMasterUrl: string = "https://raw.githubusercontent.com/space10-community/conversational-form/master/dist/";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");

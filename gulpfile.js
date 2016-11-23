@@ -17,6 +17,9 @@ global.srcFolder = srcFolder;
 var buildFolder = './build/';
 global.buildFolder = buildFolder;
 
+var distFolder = './dist/';
+global.distFolder = distFolder;
+
 // Watch Files For Changes
 global.gulp.task('watch', ['bower', 'typescript', 'stylus', 'copy-images'], function() {
 	livereload.listen();
@@ -32,6 +35,7 @@ global.gulp.task('watch', ['bower', 'typescript', 'stylus', 'copy-images'], func
 	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
 });
 
-// Default Task
+// Default tasks
 global.gulp.task('default', ['watch']);
 global.gulp.task('build', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
+global.gulp.task('dist', ['bower', 'scripts-build', 'styles-build', 'copy-images']);

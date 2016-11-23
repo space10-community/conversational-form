@@ -63,16 +63,15 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 		global.buildFolder + "scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js",
 		global.buildFolder + "cf/**/*.js",
 		"!" + global.buildFolder + "**/conversational-form.js",
-		"!" + global.buildFolder + "**/conversational-form.min.js",
+		"!" + global.distFolder + "**/conversational-form.min.js",
 	];
 
-	var dst = global.buildFolder;
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form.js'))
-		.pipe(global.gulp.dest(dst))
+		.pipe(global.gulp.dest(global.buildFolder))
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(global.gulp.dest(dst));
+		.pipe(global.gulp.dest(global.distFolder));
 	
 	return stream;
 });
