@@ -43,7 +43,7 @@ new cf.ConversationalForm({
 Exclude the attribute **cf-form-element** from the form element
 
 ```javascript
-$("form").conversationalform();
+$("form").conversationalForm();
 ```
 
 
@@ -174,13 +174,15 @@ Install local gulp from project root
 #### main task
 watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
+	# compiles (same as build) and watches files.
 	$ gulp
 
 #### sub tasks
 
-	$ gulp stylus
-	$ gulp typescript
+	# compiles build files, to run locally.
 	$ gulp build
+
+	# compiles distribution files
 	$ gulp dist
 
 
