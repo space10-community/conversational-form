@@ -3,7 +3,7 @@
 
 #### Include the Conversational Form
 
-	<script type="text/javascript" id="conversational-form" src="https://raw.githubusercontent.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
+	<script type="text/javascript" id="conversational-form" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
 
 #### Instantiate:
 
