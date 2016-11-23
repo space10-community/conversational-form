@@ -48,19 +48,19 @@ $("form").conversationalform();
 
 
 ## Parameters to pass the constructor of ConversationalForm: <<a name="ConversationalFormOptions"></a>ConversationalFormOptions>
-* formEl: HTMLFormElement | string
-* context?: HTMLElement | string
+* **formEl**: HTMLFormElement | string
+* **context**?: HTMLElement | string
 	* Set the context of where the ConversationalForm will be appended to
 	* If not set then ConversationalForm will get appended to document.body
-* tags?: Array<ITag>
+* **tags**?: Array<ITag>
 	* [cf.Tag.createTag(element), ...]
-* dictionaryData?: object
+* **dictionaryData**?: object
 	* Possibility to overwrite the default dictionary, empty will throw error, see Dictionaty.ts for values
-* dictionaryAI?: object
+* **dictionaryAI**?: object
 	* Possibility to overwrite the default dictionary, empty will throw error, see Dictionaty.ts for values
-* submitCallback?: () => void | HTMLButtonElement
+* **submitCallback**?: () => void | HTMLButtonElement
 	* An alternative way to submit the form. Can be a Function or an HTMLButtonElement (click will be called). If not defined the component will search in the formEl after a button[type=”submit”] and call click() if not button is found final fallback will be to call submit() on formEl.
-* userImage: string
+* **userImage**?: string
 	* Set a different userImage. "..." //base64 || image url
 
 
@@ -80,8 +80,11 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 ## DOM Element attributes
 
-#### pattern attribute
-**pattern** attribute will automatically be used if set on <input> field
+#### input pattern="" attribute
+**pattern** attribute will automatically be used if set in tag.:s
+```html
+<input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
+```
 
 #### cf-questions
 * to map questions directly to a tag.
