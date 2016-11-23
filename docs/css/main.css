@@ -10,30 +10,34 @@
   width: 100%;
 }*/
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  padding-top: 30px;
-}
-
 #conversational-form {
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
-  border-radius: 5px;
   margin-top: 3px;
+}
+
+h1 {
+  font-size: 3.5em;
 }
 
 h1, h2, h3, h4, h5 {
   margin-bottom: 30px;
-  font-family: Roboto Mono, monospace;
 }
 
 #toggle-conversation {
   margin-bottom: 30px;
+  border: 2px solid #000;
+  text-transform: uppercase;
+  padding: 13px 25px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
-#form-outer {
-  padding-top: 30px;
-  padding-bottom: 30px;
-  min-height: 450px;
+#toggle-conversation:hover, #toggle-conversation.active, #toggle-conversation.active:hover {
+  border-color: #000;
+}
+
+.panel, .btn {
+  border-radius: 0;
 }
