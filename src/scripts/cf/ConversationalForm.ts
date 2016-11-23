@@ -66,15 +66,15 @@ namespace cf {
 		public init(): ConversationalForm{
 			const configTag: any = document.getElementById("conversational-form");
 
-			if(configTag.getAttribute("development") == undefined){
+			if(!configTag.getAttribute("development")){
 				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
-				const style: HTMLStyleElement = document.createElement("style");
-				const githubMasterUrl: string = "https://raw.githubusercontent.com/space10-community/conversational-form/master/dist/";
+				const style: HTMLStyleElement = document.createElement("link");
+				const githubMasterUrl: string = "https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.css";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
-				style.setAttribute("href", githubMasterUrl + "conversational-form.min.css");
+				style.setAttribute("href", githubMasterUrl);
 				head.appendChild(style);
 
 			}else{
