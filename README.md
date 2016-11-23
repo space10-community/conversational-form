@@ -3,21 +3,21 @@
 
 #### Include the Conversational Form
 
-	<script type="text/javascript" id="cui" src=".../conversational-form.js" crossorigin></script>
+	<script type="text/javascript" id="conversational-form" src="https://raw.githubusercontent.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
 
 #### Instantiate:
 
 ##### Automatic:
 This will load in the code for the CF. From here you can instantiate it like:
 
-Initially when loaded, CF will automatically look through the DOM for a form element with the attibute "cf-form-element", if found then it will instantiate it self.
+Initially when loaded, CF will automatically look through the DOM for a form element with the attibute "cf-form-element", if found then it will auto-instantiate.
 	
 	<form id="co-billing-form" action="" cf-form-element>
 	...
 
 
-##### Manual (exclude cf-form-element from markup):
-You can also self instantiate:
+##### Manual
+You can also self instantiate from vanilla JS.
 
 	new cf.ConversationalForm({
 		formEl: <HTMLFormElement>,
@@ -31,9 +31,9 @@ You can also self instantiate:
 		// userImage: "..."
 	});
 
-or via jQuery
+##### Jquery
 
-	$("form").ConversationalForm();
+	$("form").conversationalform();
 
 
 ### ConversationalFormOptions
@@ -61,11 +61,11 @@ If this is not desired then you are able to define your own **tags**, and pass t
 		tags.push(cf.Tag.createTag(element));
 	}
 
-Tags can then be set in the instantiation object.
+Tags can then be set in the instantiation object, see ConversationalFormOptions
 
 
 ### Public API
-When instantiating CF a reference to the instance will be set to 
+When instantiating CF a reference to the instance will be available in window scope. 
 
 	window.ConversationalForm
 
@@ -75,12 +75,12 @@ using this reference you are able to remove the CF by calling:
 
 
 ## Overwrite styles
-...
+You can overwrite the UI with your own styles. Please see the source css for more info.
 
 
 
 
-## Get started / build the source files
+## Extend functionality -> Get started / build the source files
 
 ### NPM
 [Install](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
@@ -106,7 +106,7 @@ Install local gulp from project root
 
 ### Gulp tasks
 #### main task
-watch task, watches .styl, .ts, .jpg, .png, .gif
+watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 	$ gulp
 
@@ -115,6 +115,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif
 	$ gulp stylus
 	$ gulp typescript
 	$ gulp build
+	$ gulp dist
 
 
 ### install new packages for dev
@@ -127,7 +128,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif
 TBD ...
 
 ## Usage...
-TBD ...
+See /tests for various use-cases
 
 
 ## Conventions
@@ -153,43 +154,6 @@ Link to google doc?
 * seperate by | to allow for more error, app will shuffle.
 
 	<input type="text" cf-error="field is wrong wrong wrong" ..
-
-## Classes
-========
-
-#### Dictionary
-Reference to app labels and AI default responses. Everything can be overwritten.
-
-
-#### FlowManager;
-Controls the flow of the app, binds events from views together
-
-#### form-tags/*:  
-represent DOM (virtual) tags  
-
-**Tag**  
-**SelectTag**  
-**InputTag**  
-**ButtonTag**  
-**TagGroup** (contains x number of the above)  
-
-#### ui/*:
-Represent app views, like the User Inputfield or CF radio buttons  
-
-**UserInput**, handles user input and shows different kinds of interaction UI, like RadioButtons, SelectList etc.  
-**ChatList,** handles ChatResponses  
-**ChatResponse,** chat bubble
-
-#### Events
-##### UserInputEvents:
-SUBMIT: when a value is submittet from the UserInput view
-KEY_CHANGE: when a key is used, 
-
-##### FlowEvents:
-USER_INPUT_UPDATE: "cf-flow-user-input-update",
-USER_INPUT_INVALID: "cf-flow-user-input-invalid",
-FLOW_UPDATE: "cf-flow-update",
-
 
 #### Browser support
 // TODO: insert browser support table.

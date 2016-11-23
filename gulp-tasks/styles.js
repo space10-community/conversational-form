@@ -46,16 +46,15 @@ global.gulp.task('styles-build', ['stylus'], function(){
 	var src = [
 		global.buildFolder + "**/*.css",
 		"!" + global.buildFolder + "conversational-form.css",
-		"!" + global.buildFolder + "conversational-form.min.css",
+		"!" + global.distFolder + "conversational-form.min.css",
 	]
-	var dst = global.buildFolder;
 
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form.css'))
-		.pipe(global.gulp.dest(dst))
+		.pipe(global.gulp.dest(global.buildFolder))
 		.pipe(cssmin())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(global.gulp.dest(dst));
+		.pipe(global.gulp.dest(global.distFolder));
 	
 	return stream;
 });
