@@ -194,7 +194,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 When you are up and running, you can find a few form tests in the /test folder.
 
 #### Browser support
-// TODO: insert browser support table.
+Tested in latest Chrome, Firefox, Safari and Internet Explorer.
 
 #### License
 
