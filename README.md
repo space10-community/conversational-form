@@ -1,9 +1,9 @@
 # Conversational Form
 
-![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/readme-cf.gif)
+Turning web form interfaces into conversations  
+<a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/readme-cf.gif)</a>
 
-
-Below you will find guides to inlcude the ConversationalForm into a page containing a form.
+Below you will find guides to inlcude the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
 
 
 ## Include the ConversationalForm in your page
@@ -81,7 +81,7 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 ## DOM Element attributes
 
 #### input pattern="" attribute
-**pattern** attribute will automatically be used if set in tag.:s
+**pattern** attribute will automatically be used if set in tag.:
 ```html
 <input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
 ```
