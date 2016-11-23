@@ -5,8 +5,8 @@ var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
 var notify = require("gulp-notify");
 var concat = require('gulp-concat');
-var jsmin = require('gulp-jsmin');
 var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
 
 function swallowError(error) {
 	// If you want details of the error in the console
@@ -52,7 +52,7 @@ global.gulp.task('scripts', function() {
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("Typescript compiled."));
+		.pipe(notify("Scripts compiled."));
 
 	return stream
 });
@@ -62,15 +62,15 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 		global.buildFolder + "scripts/bower_components/promise-polyfill/promise.js",
 		global.buildFolder + "scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js",
 		global.buildFolder + "cf/**/*.js",
-		"!" + global.buildFolder + "conversational-form.js",
-		"!" + global.buildFolder + "conversational-form.min.js",
-	]
-	var dst = global.buildFolder;
+		"!" + global.buildFolder + "**/conversational-form.js",
+		"!" + global.buildFolder + "**/conversational-form.min.js",
+	];
 
+	var dst = global.buildFolder;
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form.js'))
 		.pipe(global.gulp.dest(dst))
-		.pipe(jsmin())
+		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(global.gulp.dest(dst));
 	
