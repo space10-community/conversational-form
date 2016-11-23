@@ -11,7 +11,7 @@
 		}
 	}
 	}(function ($) {
-		$.fn.conversationalform = function () {
+		$.fn.conversationalForm = function () {
 			return new cf.ConversationalForm({
 				formEl: this[0],
 				// dictionaryData?: {},// empty will throw error
