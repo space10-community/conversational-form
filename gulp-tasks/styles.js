@@ -45,13 +45,13 @@ global.gulp.task('stylus', function() {
 global.gulp.task('styles-build', ['stylus'], function(){
 	var src = [
 		global.buildFolder + "**/*.css",
-		"!" + global.buildFolder + "cf-dist.css",
-		"!" + global.buildFolder + "cf-dist.min.css",
+		"!" + global.buildFolder + "conversational-form.css",
+		"!" + global.buildFolder + "conversational-form.min.css",
 	]
 	var dst = global.buildFolder;
 
 	var stream = global.gulp.src(src)
-		.pipe(concat('cf-dist.css'))
+		.pipe(concat('conversational-form.css'))
 		.pipe(global.gulp.dest(dst))
 		.pipe(cssmin())
 		.pipe(rename({suffix: '.min'}))

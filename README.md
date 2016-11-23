@@ -1,10 +1,9 @@
-# SPACE10 Conversational Form
-
+# Conversational Form
 
 
 #### Include the Conversational Form
 
-	<script type="text/javascript" id="cui" src=".../S10CUI.js" crossorigin></script>
+	<script type="text/javascript" id="cui" src=".../conversational-form.js" crossorigin></script>
 
 #### Instantiate:
 

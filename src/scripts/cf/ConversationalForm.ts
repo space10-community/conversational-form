@@ -70,12 +70,13 @@ namespace cf {
 				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("style");
-				const cdnUrl: string = "http://CDN/GITHUB URL.../";
+				const githubMasterUrl: string = "https://raw.githubusercontent.com/space10-community/conversational-form/master/";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
-				style.setAttribute("href", cdnUrl + "space10-cf-dist.min.css");
+				style.setAttribute("href", githubMasterUrl + "conversational-form.min.css");
 				head.appendChild(style);
+
 			}else{
 				this.isDevelopment = true;
 			}
