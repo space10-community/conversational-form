@@ -250,7 +250,6 @@ namespace cf {
 			const value: FlowDTO = this.getFlowDTO();
 
 			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
-
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
 					event.preventDefault();
 
@@ -259,7 +258,6 @@ namespace cf {
 					// either click on submit button or do something with control elements
 					if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
 						event.preventDefault();
-						event.stopImmediatePropagation();
 
 						const tagType: string = this.currentTag.type == "group" ? (<TagGroup>this.currentTag).getGroupTagType() : this.currentTag.type;
 
@@ -288,7 +286,13 @@ namespace cf {
 								this.dispatchKeyChange(value, event.keyCode);
 							}else{
 								// click on UserInput submit button
-								this.submitButton.click();
+								let doesTypeAndAllowClickOnSubmit: boolean = true;
+								// if space key and certain tag types, then don't allow for button click
+								if(event.keyCode == Dictionary.keyCodes["space"] && ["text", "email", "tel", "password"].indexOf(this.currentTag.type) != -1)
+									doesTypeAndAllowClickOnSubmit = false;
+
+								if(doesTypeAndAllowClickOnSubmit)
+									this.submitButton.click();
 							}
 						}
 					}else if(event.keyCode == Dictionary.keyCodes["space"] && document.activeElement){
