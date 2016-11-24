@@ -7,14 +7,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title></title>
-    <meta name="description" content="">
+    <meta name="description" content="Turning web forms into conversations">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" href="css/main.css">
 
     <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
@@ -30,7 +27,7 @@
 
     <div class="container">
       <!-- Example row of columns -->
-      <div class="row valign">
+      <div class="row">
         <div class="col-md-6 col-md-offset-3">
           <div class="row">
             <div class="col-md-12 text-center">
@@ -46,11 +43,13 @@
                   <form id="conversational" action="https://formspree.io/mzzppbdm" method="POST">
                     <h2>Feedback form</h2>
 
-                    <input type="text" name="_gotcha" style="display: none"> 
-                    
+                    <input type="text" name="_gotcha" style="display: none">
+                    <input type="hidden" name="_next" value="https://space10-community.github.io/conversational-form/thanks.html" />
+                    <input type="hidden" name="_subject" value="Submission on ConversationalForm" />
+
                     <div class="form-group">
                       <label for="your-name">Name</label>
-                      <input cf-questions="Hi there! What's your name?" type="name" class="form-control" id="your-name">
+                      <input cf-questions="Hi there! What's your name?" type="name" class="form-control" name="your-name" id="your-name">
                     </div>
 
                     <div class="form-group">
@@ -82,12 +81,12 @@
                     </div>
                     <div class="form-group">
                       <label for="your-company">Company</label>
-                      <input cf-questions="Which company are you with?" type="text" class="form-control" id="your-company">
+                      <input cf-questions="Which company are you with?" type="text" class="form-control" name="your-company" id="your-company">
                     </div>
 
                     <div class="form-group">
                       <label for="your-opinion">Will conversational interfaces be everywhere?</label>
-                      <select cf-questions="Do you think conversational forms will replace web forms in the future?" id="your-opinion" class="form-control">
+                      <select cf-questions="Do you think conversational forms will replace web forms in the future?" name="your-opinion" id="your-opinion" class="form-control">
                         <option></option>
                         <option>Definitely</option>
                         <option>Maybe</option>
@@ -97,7 +96,7 @@
 
                     <div class="form-group">
                       <label for="your-email">Email</label>
-                      <input cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" id="your-email">
+                      <input cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="your-email" id="your-email">
                     </div>
 
                     <div class="form-group">
