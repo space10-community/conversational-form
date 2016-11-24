@@ -11,14 +11,12 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<link type="text/css" rel="stylesheet" href="conversational-form.min.css"/>
 <script type="text/javascript" src="conversational-form.min.js" crossorigin></script>
 ```
 
 Or use a cdn:
 
 ```html
-https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.css
 https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js
 ```
 
