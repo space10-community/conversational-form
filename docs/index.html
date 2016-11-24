@@ -32,7 +32,7 @@
               <h1>Conversational Form</h1>
               <p class="lead">Turning web forms into conversations.</p>
               <p>
-                <button id="toggle-conversation" type="button" class="btn btn-default">Turn conversational</button>
+                <button id="toggle-conversation" type="button" class="btn btn-default">Turn on conversation</button>
               </p>
             </div>
             <div class="col-md-12">
@@ -158,9 +158,11 @@
             var form = $(".conversational-form");
             if (form.hasClass("conversational-form--show")) {
               $(this).removeClass("active");
+              $(this).text("Turn on conversation");
               $(".conversational-form").removeClass("conversational-form--show");
             } else {
               $(this).addClass("active");
+              $(this).text("Turn off conversation");
               $(".conversational-form").addClass("conversational-form--show");
             }
             $(this).removeClass("disabled");
