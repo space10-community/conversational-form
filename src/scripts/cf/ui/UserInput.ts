@@ -265,17 +265,19 @@ namespace cf {
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
 							// if select or checkbox then check for multi select item
 							if(tagType == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
-								if(this.active){
-									// click on UserInput submit button
+								if(this.active && event.keyCode == Dictionary.keyCodes["enter"]){
+									// click on UserInput submit button, only ENTER allowed
 									this.submitButton.click();
 								}else{
 									// let UI know what we changed the key
 									this.dispatchKeyChange(value, event.keyCode);
 
-									// after ui has been selected we RESET the input/filter
-									this.resetValue();
-									this.setFocusOnInput();
-									this.dispatchKeyChange(value, event.keyCode);
+									if(!this.active){
+										// after ui has been selected we RESET the input/filter
+										this.resetValue();
+										this.setFocusOnInput();
+										this.dispatchKeyChange(value, event.keyCode);
+									}
 								}
 							}else{
 								this.dispatchKeyChange(value, event.keyCode);
@@ -284,15 +286,6 @@ namespace cf {
 							if(this.currentTag.type == "group"){
 								// let the controlements handle action
 								this.dispatchKeyChange(value, event.keyCode);
-							}else{
-								// click on UserInput submit button
-								let doesTypeAndAllowClickOnSubmit: boolean = true;
-								// if space key and certain tag types, then don't allow for button click
-								if(event.keyCode == Dictionary.keyCodes["space"] && ["text", "email", "tel", "password"].indexOf(this.currentTag.type) != -1)
-									doesTypeAndAllowClickOnSubmit = false;
-
-								if(doesTypeAndAllowClickOnSubmit)
-									this.submitButton.click();
 							}
 						}
 					}else if(event.keyCode == Dictionary.keyCodes["space"] && document.activeElement){
