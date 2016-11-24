@@ -22,7 +22,7 @@ https://cdn.rawgit.com/space10-community/conversational-form/master/dist/convers
 https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form-element`, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attibute cf-form-element, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form-element ...>
 ```
@@ -87,7 +87,7 @@ for (var i = 0; i < fields.length; i++) {
 
 Tags can then be set in the instantiation object, see [ConversationalFormOptions](#ConversationalFormOptions)
 
-## DOM Element attributes
+# DOM Element attributes
 
 #### input pattern="" attribute
 **pattern** attribute will automatically be used if set in tag.:
@@ -95,14 +95,14 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 <input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
 ```
 
-#### cf-questions
+### cf-questions
 * to map questions directly to a tag.
 * seperate by | to allow for more questions, app will shuffle.
 ```html
 <input type="text" cf-questions="What is your name?|Please tell me your name." ..
 ```
 
-#### {One way value-binding} with cf-questions:
+### {One way value-binding} with cf-questions:
 For cui-questions, add {previous-answer} to insert the value from the previous user-answer.
 ```html
 <input type="text" cf-questions="Hello {previous-answer}" ..
@@ -114,20 +114,20 @@ previous input could be firstname.
 ```
 previous input could be a select:option list with countries.
 
-#### cf-label
+### cf-label
 * set a label to the field, [type="radio"|"checkbox"]
 ```html
 <input type="radio" cf-label="Subscribe to newsletter" ..
 ```
 
-#### cf-validation
+### cf-validation
 * Javascript validate a <Tag> before submitting
 * OBS. eval is used.
 ```html
 <input type="text" cf-validation="window.validateFunction" ..
 ```
 
-#### cf-error
+### cf-error
 * to map error messages directly to a tag.
 * seperate by | to allow for more error, app will shuffle.
 ```html
@@ -135,7 +135,7 @@ previous input could be a select:option list with countries.
 ```
 
 
-### Public API
+# Public API
 When instantiating ConversationalForm a reference to the instance will be available in window scope. 
 
 ```javascript
@@ -148,14 +148,17 @@ using this reference you are able to remove the ConversationalForm by calling:
 window.ConversationalForm.remove();
 ```
 
-## Overwrite styles
+# Overwrite styles
 You can overwrite the UI with your own styles. Please see the source styl/css files for more info. 
+
+
+# Contribute to ConversationalForm
+
+We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
+
+ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland)
   
-  
----
-  
-  
-## Extend functionality -> Get started / build the source files
+## Build the source
 
 ### NPM
 [Install](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
@@ -201,20 +204,8 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	$ npm install --save-dev XX
 
 
-## Tests...
+## Tests
 When you are up and running, you can find a few form tests in the /test folder.
 
-#### Browser support
+## Browser support
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.
-
-#### License
-
-The MIT License (MIT)
-
-Copyright (c) 2013-2016 Petka Antonov
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
