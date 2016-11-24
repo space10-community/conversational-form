@@ -12,7 +12,7 @@ Include ConversationalForm in your page
 
 ```html
 <link type="text/css" rel="stylesheet" href="conversational-form.min.css"/>
-<script type="text/javascript" id="conversational-form" src="conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="conversational-form.min.js" crossorigin></script>
 ```
 
 Or use a cdn:
@@ -22,7 +22,7 @@ https://cdn.rawgit.com/space10-community/conversational-form/master/dist/convers
 https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute **cf-form-element**, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form-element`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form-element ...>
 ```
@@ -32,7 +32,7 @@ That's it! Your form is now conversational :thumbsup:
 
 ## Customization
 
-For more control over the output exclude the attribute **cf-form-element** from the form element and instantiate either with vanilla JS or jQuery:
+For more control over the output exclude the attribute `cf-form-element` from the form element and instantiate either with vanilla JS or jQuery:
 
 ### Self-instantiate with vanilla JS
 
