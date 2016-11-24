@@ -64,9 +64,9 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			const configTag: any = document.getElementById("conversational-form");
+			const developmentScriptTag: any = document.getElementById("conversational-form-development");
 
-			if(!configTag.getAttribute("development")){
+			if(!developmentScriptTag){
 				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
@@ -78,6 +78,7 @@ namespace cf {
 				head.appendChild(style);
 
 			}else{
+				// expect styles to be in the document
 				this.isDevelopment = true;
 			}
 
