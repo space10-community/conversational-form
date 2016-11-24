@@ -1,30 +1,40 @@
 # Conversational Form
 
-** Turning web forms into conversations. ** Conversational Form is an open-source concept by <a href="https://www.space10.io">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
+**Turning web forms into conversations.** Conversational Form is an open-source concept by <a href="https://www.space10.io">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
 <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/readme-cf.gif)</a>
 
 Below you will find guides to inlcude the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
 
 
-## Include the ConversationalForm in your page
+# Getting started
+
+Include ConversationalForm in your page
+
 ```html
-<script type="text/javascript" id="conversational-form" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
+<link type="text/css" rel="stylesheet" href="conversational-form.min.css"/>
+<script type="text/javascript" id="conversational-form" src="conversational-form.min.js" crossorigin></script>
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute **cf-form-element**, if found then it will auto-instantiate.
+Or use a cdn:
+
+```html
+https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.css
+https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js
+```
+
+ConversationalForm will automatically look through the DOM for a form element with the attibute **cf-form-element**, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form-element ...>
 ```
 
-You are now good to go :thumbsup:
+That's it! Your form is now conversational :thumbsup:
   
-  
----
 
-## Customisation and how to extend the source
+## Customization
 
-##### Self instantiate with vanilla JS
-Exclude the attribute **cf-form-element** from the form element
+For more control over the output exclude the attribute **cf-form-element** from the form element and instantiate either with vanilla JS or jQuery:
+
+### Self-instantiate with vanilla JS
 
 ```javascript
 new cf.ConversationalForm({
@@ -39,8 +49,7 @@ new cf.ConversationalForm({
 ```
 
 
-##### Use jQuery to instantiate.
-Exclude the attribute **cf-form-element** from the form element
+### Instantiate with jQuery
 
 ```javascript
 $("form").conversationalForm();
