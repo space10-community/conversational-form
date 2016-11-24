@@ -1,6 +1,7 @@
 # Conversational Form
 
 **Turning web forms into conversations.** Conversational Form is an open-source concept by <a href="https://www.space10.io">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
+
 <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/readme-cf.gif)</a>
 
 Below you will find guides to inlcude the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
@@ -12,12 +13,6 @@ Include ConversationalForm in your page
 
 ```html
 <script type="text/javascript" src="https://rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
-```
-
-Or use a cdn:
-
-```html
-https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute cf-form-element, and auto-instantiate.
