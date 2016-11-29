@@ -120,10 +120,10 @@ namespace cf {
 			if(this.domElement.getAttribute("pattern"))
 				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
 			
-			if(this.type == "email" && !this.pattern){
-				// set a standard e-mail pattern for email type input
-				this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-			}
+			// if(this.type == "email" && !this.pattern){
+			// 	// set a standard e-mail pattern for email type input
+			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
+			// }
 
 			// default value of Tag
 			this.defaultValue = this.domElement.value;
