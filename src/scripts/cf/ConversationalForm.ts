@@ -244,9 +244,12 @@ namespace cf {
 
 window.addEventListener("load", () =>{
 	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form-element]");
+	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
+
 	if(formEl){
 		window.ConversationalForm = new cf.ConversationalForm({
-			formEl: formEl
+			formEl: formEl,
+			context: contextEl
 		});
 	}
 }, false);

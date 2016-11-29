@@ -17,12 +17,17 @@ Include ConversationalForm in your page
 <script type="text/javascript" src="https://rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute cf-form-element, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form-element`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form-element ...>
 ```
 
-That's it! Your form is now conversational :thumbsup:
+That's it! Your form is now conversational :thumbsup:  
+
+Optional, if you want to have the ConversationalForm in a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the body element.
+```html
+<div cf-context ...>
+```
   
 
 ## Customization
@@ -36,7 +41,7 @@ new cf.ConversationalForm({
 	formEl: <HTMLFormElement>,
 	// dictionaryData?: {}, // empty will throw error, see Dictionaty.ts for values
 	// dictionaryAI?: {}, // empty will throw error, see Dictionaty.ts for values
-	// context?: // context of where to append the ConversationalForm
+	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
 	// userImage: "..." //base64 || image url
