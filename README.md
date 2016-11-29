@@ -28,7 +28,7 @@ Optional, if you want to have the ConversationalForm in a certain element (when 
 ```html
 <div cf-context ...>
 ```
-  
+
 
 ## Customization
 
@@ -136,7 +136,7 @@ previous input could be a select:option list with countries.
 
 
 # Public API
-When instantiating ConversationalForm a reference to the instance will be available in window scope. 
+When instantiating ConversationalForm a reference to the instance will be available in window scope.
 
 ```javascript
 window.ConversationalForm
@@ -149,7 +149,7 @@ window.ConversationalForm.remove();
 ```
 
 # Overwrite styles
-You can overwrite the UI with your own styles. Please see the source styl/css files for more info. 
+You can overwrite the UI with your own styles. Please see the source styles/css files for more info. 
 
 
 # Contribute to ConversationalForm
@@ -157,7 +157,7 @@ You can overwrite the UI with your own styles. Please see the source styl/css fi
 We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
 
 ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
-  
+
 ## Build the source
 
 ### NPM
@@ -199,7 +199,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 
 ### install new packages for dev
-	
+
 	$ cd gulp-tasks
 	$ npm install --save-dev XX
 
