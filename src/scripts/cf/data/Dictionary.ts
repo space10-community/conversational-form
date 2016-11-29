@@ -34,7 +34,7 @@ namespace cf {
 			
 			// overwrite ai questions if defined
 			if(options && options.aiQuestions)
-				this.AIQuestions = this.validateAndSetNewData(options.aiQuestions, this.AIQuestions[Dictionary.AIType]);
+				this.AIQuestions[Dictionary.AIType] = this.validateAndSetNewData(options.aiQuestions, this.AIQuestions[Dictionary.AIType]);
 		}
 
 		public static keyCodes: IKeyCodes = {
@@ -91,7 +91,8 @@ namespace cf {
 		private validateAndSetNewData(newData: any, originalDataObject: any){
 			for(var key in originalDataObject){
 				if(!newData[key]){
-					throw new Error("Conversational Form Dictionary Error, '"+key+"' value is undefined, see Dictionary.ts for mappings.");
+					console.warn("Conversational Form Dictionary warning, '"+key+"' value is undefined, mapping '"+key+"' to default value. See Dictionary.ts for keys.");
+					newData[key] = originalDataObject[key];
 				}
 			}
 

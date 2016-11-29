@@ -22,7 +22,8 @@
 
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
-			<form id="co-billing-form" action="" cf-form-element>
+			<!--<form id="co-billing-form" action="" cf-form-element>-->
+			<form id="co-billing-form" action="">
 
 				<input type="password" name="password" value="" id="password">
 								
@@ -538,6 +539,54 @@
 					return true;
 				return false;
 			};
+
+			// Self-Invoking Anonymous Function to get started
+			(function(){
+		// 		var tags = [],
+					
+
+		// 		// build some static elements
+		// 		var fields = [].slice.call(formEl.querySelectorAll("input, select, button"), 0);
+
+		// 		for (var i = 0; i < fields.length; i++) {
+		// 			var element = fields[i];
+		// 			tags.push(cf.Tag.createTag(element));
+		// 		}
+
+
+				var formEl = document.getElementById("co-billing-form");
+				window.ConversationalForm = new cf.ConversationalForm({
+					formEl: formEl,
+					dictionaryData: {
+						"entry-not-found": "Wörterbuchschlüssel wird nicht gefunden.",
+						"input-placeholder": "Geben Sie hier Ihre Antwort ein ...",
+						"input-placeholder-error": "Ihre Eingabe ist nicht korrekt ...",
+						"input-placeholder-file-error": "Datei-Upload fehlgeschlagen ...",
+						"input-placeholder-file-size-error": "Dateigröße zu groß ...",
+						"input-no-filter": "Keine Ergebnisse für <strong>{input-value}</strong>",
+						"user-reponse-and": " und ",
+						"user-reponse-missing": "Fehlende Eingabe ...",
+						"general": "Allgemeiner Typ1|Allgemeiner Typ2"
+					},// empty will throw error
+					dictionaryAI: {
+						"text": "Bitte schreiben Sie etwas Text.",
+						"name": "Wie heißen Sie?",
+						"email": "Brauchen Sie Ihre E-Mail.",
+						"password": "Bitte geben Sie das Passwort ein",
+						"tel": "Wie ist deine Telefonnummer?",
+						"radio": "Ich brauche Sie, um eine dieser auszuwählen.",
+						"checkbox": "Wählen Sie so viele, wie Sie möchten.",
+						"select": "Wählen Sie eine dieser Optionen.",
+						"general": "Allgemeines1|Allgemeines2|Allgemeines3.."
+					},
+					// context: document.getElementById("form-outer")[0],
+					// tags: tags,
+					//submitCallback: () => void | HTMLButtonElement
+					
+					//base64 or crossdomain-enabled image url
+					// userImage: "..."
+				});
+			})();
 		</script>
 
 	</body>
