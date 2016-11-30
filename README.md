@@ -212,6 +212,6 @@ Tested in latest Chrome, Firefox, Safari and Internet Explorer.
 
 # Websites that use Conversational Form
 
-(if you have a project that uses Conversational Form, feel free to make a PR to add it to this list)
+If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
 
 - Be the first one here
