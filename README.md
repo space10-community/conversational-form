@@ -123,6 +123,9 @@ previous input could be a select:option list with countries.
 ### cf-validation
 * Javascript validate a <Tag> before submitting
 * OBS. eval is used.
+* two parameters is passed to the method
+	* value: String, the value of the input field
+	* tag: ITag, the actual DOM tag
 ```html
 <input type="text" cf-validation="window.validateFunction" ..
 ```
