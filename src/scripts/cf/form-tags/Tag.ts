@@ -37,7 +37,7 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (value: string) => boolean,// can also be set through cf-validation attribute
+		validationCallback?: (value: string, tag: ITag) => boolean,// can also be set through cf-validation attribute
 	}
 
 	// class
@@ -50,7 +50,7 @@ namespace cf {
 		private pattern: RegExp;
 		protected _label: string;
 
-		private validationCallback?: (value: string) => boolean; // can also be set through cf-validation attribute.
+		private validationCallback?: (value: string, tag: ITag) => boolean; // can also be set through cf-validation attribute.
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
@@ -215,7 +215,7 @@ namespace cf {
 			}
 
 			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(valueText);
+				isValid = this.validationCallback(valueText, this);
 			}
 
 			if(valueText == ""){
