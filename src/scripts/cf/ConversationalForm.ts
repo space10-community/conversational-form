@@ -209,8 +209,12 @@ namespace cf {
 		}
 
 		public doSubmitForm(){
-			this.formEl.submit();
-			this.remove();
+			if(this.submitCallback){
+				this.submitCallback();
+			}else{
+				this.formEl.submit();
+				this.remove();
+			}
 		}
 
 		public remove(){
