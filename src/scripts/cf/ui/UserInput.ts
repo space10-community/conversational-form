@@ -25,6 +25,8 @@ namespace cf {
 
 	// class
 	export class UserInput extends BasicElement {
+		public static preventAutoFocus: boolean = false;
+
 		public static ERROR_TIME: number = 2000;
 		public el: HTMLElement;
 
@@ -39,6 +41,7 @@ namespace cf {
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private shiftIsDown: boolean = false;
+		private _disabled: boolean = false;
 		private keyUpCallback: () => void;
 		private keyDownCallback: () => void;
 
@@ -50,12 +53,16 @@ namespace cf {
 		}
 
 		private set disabled(value: boolean){
-			if(value){
-				this.el.setAttribute("disabled", "disabled");
-				this.inputElement.blur();
-			}else{
-				this.setFocusOnInput();
-				this.el.removeAttribute("disabled");
+			const hasChanged: boolean = this._disabled != value;
+			if(hasChanged){
+				this._disabled = value;
+				if(value){
+					this.el.setAttribute("disabled", "disabled");
+					this.inputElement.blur();
+				}else{
+					this.setFocusOnInput();
+					this.el.removeAttribute("disabled");
+				}
 			}
 		}
 
@@ -159,7 +166,10 @@ namespace cf {
 			this.inputElement.value = "";
 			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.resetValue();
-			this.setFocusOnInput();
+
+			if(!UserInput.preventAutoFocus)
+				this.setFocusOnInput();
+
 			this.controlElements.reset();
 
 			if(this.currentTag.type == "group"){
@@ -309,7 +319,8 @@ namespace cf {
 		}
 
 		private windowFocus(event: Event){
-			this.setFocusOnInput();
+			if(!UserInput.preventAutoFocus)
+				this.setFocusOnInput();
 		}
 
 		private onInputFocus(event: FocusEvent){

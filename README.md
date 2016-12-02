@@ -24,11 +24,20 @@ ConversationalForm will automatically look through the DOM for a form element wi
 
 That's it! Your form is now conversational :thumbsup:  
 
-Optional, if you want to have the ConversationalForm in a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the body element.
+## Optional attributes
+
+**cf-context**  
+If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the body element.
 ```html
 <div cf-context ...>
 ```
 
+**cf-prevent-autofocus**  
+If you don't want to have the UserInput to auto focus.
+
+```html
+<form id="my-form-element" cf-form-element cf-prevent-autofocus>
+```
 
 ## Customization
 
