@@ -43,13 +43,17 @@ namespace cf {
 	// class
 	export class Tag implements ITag {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
-		
+
 		protected defaultValue: string | number;
 
 		private errorMessages: Array<string>;
-		private pattern: RegExp;
 		protected _label: string;
-
+		private validationContains: Array<any>;
+		private validationEmail: RegExp;
+		private validationMin: number;
+		private validationMatches: RegExp;
+		private validationMax: number;
+		private validationPresent: boolean;
 		private validationCallback?: (value: string, tag: ITag) => boolean; // can also be set through cf-validation attribute.
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
@@ -67,7 +71,7 @@ namespace cf {
 
 			if(this._label)
 				return this._label;
-			
+
 			return Dictionary.getAIResponse(this.type);
 		}
 
@@ -86,7 +90,7 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
-				
+
 				if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
 				}else{
@@ -99,9 +103,32 @@ namespace cf {
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
 
+		protected includes(arr: Array<any>, searchElement: any) {
+			'use strict';
+			if (arr == null) {
+				throw new TypeError('Array.prototype.includes called on null or undefined');
+			}
+
+			var len:number = arr.length || 0;
+			if (len === 0) {
+				return false;
+			}
+			var k:number = 0;
+			var currentElement: any;
+			while (k < len) {
+				currentElement = arr[k];
+				if (searchElement === currentElement ||
+					 (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+					return true;
+				}
+				k++;
+			}
+			return false;
+		}
+
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
-			
+
 			// remove tabIndex from the dom element.. danger zone... should we or should we not...
 			this.domElement.tabIndex = -1;
 
@@ -109,21 +136,51 @@ namespace cf {
 			if(options.questions)
 				this.questions = options.questions;
 
-			
+
 			// custom tag validation
-			if(this.domElement.getAttribute("cf-validation")){
+			if(this.domElement.getAttribute("cf-validation-custom")){
 				// set it through an attribute, danger land with eval
-				this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+				this.validationCallback = eval(this.domElement.getAttribute("cf-validation-custom"));
 			}
 
-			// reg ex pattern is set on the Tag, so use it in our validation
-			if(this.domElement.getAttribute("pattern"))
-				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
-			
-			// if(this.type == "email" && !this.pattern){
-			// 	// set a standard e-mail pattern for email type input
-			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-			// }
+			// array contains flag is set on Tag
+			if(this.domElement.getAttribute("cf-validation-contains")){
+				// set it through an attribute, danger land with eval
+				this.validationContains = this.domElement.getAttribute("cf-validation-contains").split("|");
+				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+			}
+
+			// email validation flag is set
+			if(this.domElement.getAttribute("cf-validation-email") == ""){
+				this.validationEmail = new RegExp("^[^@]+@[^@]+\.[^@]+$");
+
+			}
+
+			// matches pattern flag is set on the Tag
+			if(this.domElement.getAttribute("cf-validation-matches")){
+				this.validationMatches = new RegExp(this.domElement.getAttribute("cf-validation-matches"));
+			}
+
+			// max value flag is set on the Tag
+			if(this.domElement.getAttribute("cf-validation-max")){
+				// set it through an attribute, danger land with eval
+				this.validationMax = +this.domElement.getAttribute("cf-validation-max");
+				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+			}
+
+			// min value flag is set on the Tag
+			if(this.domElement.getAttribute("cf-validation-min")){
+				// set it through an attribute, danger land with eval
+				this.validationMin = +this.domElement.getAttribute("cf-validation-min");
+				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+			}
+
+			// required flag is set on the Tag
+			if(this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == ""){
+				// set it through an attribute, danger land with eval
+				this.validationPresent = true;
+				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+			}
 
 			// default value of Tag
 			this.defaultValue = this.domElement.value;
@@ -139,8 +196,13 @@ namespace cf {
 			this.domElement = null;
 			this.defaultValue = null;
 			this.errorMessages = null;
-			this.pattern = null;
 			this._label = null;
+			this.validationContains = null;
+			this.validationEmail = null;
+			this.validationMin = null;
+			this.validationMatches = null;
+			this.validationMax = null;
+			this.validationPresent = false;
 			this.validationCallback = null;
 			this.questions = null;
 		}
@@ -148,17 +210,17 @@ namespace cf {
 		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
-			
+
 			if(element.getAttribute("type") === "submit")
 				return false;
-			
+
 			// ignore buttons, we submit the form automatially
 			if(element.getAttribute("type") == "button")
 				return false;
 
 			if(element.style.display === "none")
 				return false;
-			
+
 			if(element.style.visibility === "hidden")
 				return false;
 
@@ -166,7 +228,7 @@ namespace cf {
 			if(element.tagName.toLowerCase() == "option" && (innerText == "" || innerText == " ")){
 				return false;
 			}
-		
+
 			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
 			else{
@@ -210,17 +272,34 @@ namespace cf {
 			let isValid: boolean = true;
 			let valueText: string = value.text;
 
-			if(this.pattern){
-				isValid = this.pattern.test(valueText);
+			if(this.validationPresent){
+				isValid = valueText != "";
+			}
+
+			if(isValid && this.validationContains){
+				isValid = this.includes(this.validationContains, valueText);
+			}
+
+			if(isValid && this.validationEmail){
+				isValid = this.validationEmail.test(valueText);
+			}
+
+			if(this.validationMatches){
+				isValid = this.validationMatches.test(valueText);
+			}
+
+			if(isValid && this.validationMax){
+				isValid = this.validationMax >= +valueText;
+			}
+
+			if(isValid && this.validationMin){
+				isValid = this.validationMin <= +valueText;
 			}
 
 			if(isValid && this.validationCallback){
 				isValid = this.validationCallback(valueText, this);
 			}
 
-			if(valueText == ""){
-				isValid = false;
-			}
 
 			if(isValid){
 				// we cannot set the dom element value when type is file
@@ -285,4 +364,3 @@ namespace cf {
 		}
 	}
 }
-

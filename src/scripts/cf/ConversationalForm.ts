@@ -28,6 +28,7 @@ namespace cf {
 
 		private el: HTMLElement;
 		private context: HTMLElement;
+		private defaultContext: boolean;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
 		private tags: Array<ITag | ITagGroup>;
@@ -40,7 +41,7 @@ namespace cf {
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
-			
+
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
@@ -49,10 +50,10 @@ namespace cf {
 
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
-			
+
 			console.log(UserInput.preventAutoFocus, this.formEl, this.formEl.getAttribute("cf-prevent-autofocus"))
 
-			// 
+			//
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
 				aiQuestions: options.dictionaryAI,
@@ -62,7 +63,8 @@ namespace cf {
 			// emoji.. fork and set your own values..
 			Helpers.setEmojiLib();
 
-			this.context = options.context ? options.context : document.body;
+			this.defaultContext = !!options.context
+			this.context = options.context ? options.context : <HTMLElement>this.formEl.parentNode;
 			this.tags = options.tags;
 
 			setTimeout(() => this.init(), 0);
@@ -91,17 +93,6 @@ namespace cf {
 			if(this.context.style.position != "fixed" && this.context.style.position != "absolute" && this.context.style.position != "relative"){
 				this.context.style.position = "relative";
 			}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -153,7 +144,7 @@ namespace cf {
 				if(tag.type == "radio" || tag.type == "checkbox"){
 					if(!groups[tag.name])
 						groups[tag.name] = [];
-					
+
 					groups[tag.name].push(tag);
 				}
 			}
@@ -192,7 +183,13 @@ namespace cf {
 			this.el = document.createElement("div");
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
-			this.context.appendChild(this.el);
+			
+			if(this.defaultContext){
+				this.context = <HTMLElement>this.formEl.parentNode
+				this.formEl.parentNode.insertBefore(this.el, this.formEl.nextSibling);
+			} else {
+				this.context.appendChild(this.el);
+			}
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});

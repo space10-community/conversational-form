@@ -223,7 +223,7 @@ namespace cf {
 				for (let i = 0; i < elements.length; i++) {
 					let element: ControlElement = <ControlElement>elements[i];
 					let elementVisibility: boolean = true;
-					
+
 					// check for all words of input
 					for (let i = 0; i < inputValuesLowerCase.length; i++) {
 						let inputWord: string = <string>inputValuesLowerCase[i];
@@ -234,7 +234,7 @@ namespace cf {
 
 					// set element visibility.
 					element.visible = elementVisibility;
-					if(elementVisibility && element.visible) 
+					if(elementVisibility && element.visible)
 						itemsVisible.push(element);
 				}
 
@@ -252,7 +252,7 @@ namespace cf {
 					this.resize();
 					this.animateElementsIn();
 				}
-				
+
 				this.filterListNumberOfVisible = itemsVisible.length;
 			}
 		}
@@ -262,7 +262,7 @@ namespace cf {
 			if(elements.length > 0){
 				if(!this.el.classList.contains("animate-in"))
 					this.el.classList.add("animate-in");
-				
+
 				for (let i = 0; i < elements.length; i++) {
 					let element: ControlElement = <ControlElement>elements[i];
 					element.animateIn();
@@ -273,7 +273,7 @@ namespace cf {
 		private getElements(): Array <IControlElement> {
 			if(this.elements.length > 0 && this.elements[0].type == "OptionsList")
 				return (<OptionsList> this.elements[0]).elements;
-			
+
 			return <Array<IControlElement>> this.elements;
 		}
 
@@ -315,7 +315,7 @@ namespace cf {
 
 			// console.log("this.tableableRows created:", this.tableableRows)
 		}
-		
+
 		public focusFrom(angle: string){
 			if(!this.tableableRows)
 				return;
@@ -388,9 +388,9 @@ namespace cf {
 
 							dto.controlElements.push(element);
 						}
-						
+
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
-						
+
 						break;
 
 					case "RadioButton" :
@@ -422,7 +422,7 @@ namespace cf {
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 
 						break;
-					
+
 					case "UploadFileUI":
 						dto.text = (<UploadFileUI> this.elements[0]).value;//Dictionary.parseAndGetMultiValueString(values);
 						dto.controlElements.push(<UploadFileUI> this.elements[0]);
@@ -450,7 +450,7 @@ namespace cf {
 
 			for (var i = 0; i < tags.length; i++) {
 				var tag: ITag = tags[i];
-				
+
 				switch(tag.type){
 					case "radio" :
 						this.elements.push(new RadioButton({
@@ -461,7 +461,7 @@ namespace cf {
 						this.elements.push(new CheckboxButton({
 							referenceTag: tag
 						}));
-					
+
 						break;
 					case "select" :
 						this.elements.push(new OptionsList({
@@ -469,8 +469,7 @@ namespace cf {
 							context: this.list,
 						}));
 						break;
-					
-					case "input" :
+					case "password":
 					default :
 						if(tag.type == "file"){
 							this.elements.push(new UploadFileUI({
@@ -572,7 +571,7 @@ namespace cf {
 								element.tabIndex = -1;
 							}
 						}
-						
+
 						// toggle nav button visiblity
 						cancelAnimationFrame(this.rAF);
 						if(isListWidthOverElementWidth){

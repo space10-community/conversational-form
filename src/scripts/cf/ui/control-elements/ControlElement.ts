@@ -68,11 +68,11 @@ namespace cf {
 		public set tabIndex(value: number){
 			this.el.tabIndex = value;
 		}
-	
+
 		public get focus(): boolean{
 			return this._focus;
 		}
-	
+
 		public get visible(): boolean{
 			return !this.el.classList.contains("hide");
 		}

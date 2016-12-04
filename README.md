@@ -27,7 +27,7 @@ That's it! Your form is now conversational :thumbsup:
 ## Optional attributes
 
 **cf-context**  
-If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the body element.
+If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the form's parent element.
 ```html
 <div cf-context ...>
 ```
@@ -98,12 +98,6 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 # DOM Element attributes
 
-#### input pattern="" attribute
-**pattern** attribute will automatically be used if set in tag.:
-```html
-<input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
-```
-
 ### cf-questions
 * to map questions directly to a tag.
 * seperate by | to allow for more questions, app will shuffle.
@@ -129,21 +123,64 @@ previous input could be a select:option list with countries.
 <input type="radio" cf-label="Subscribe to newsletter" ..
 ```
 
-### cf-validation
-* Javascript validate a <Tag> before submitting
-* OBS. eval is used.
-* two parameters is passed to the method
-	* value: String, the value of the input field
-	* tag: ITag, the actual DOM tag
-```html
-<input type="text" cf-validation="window.validateFunction" ..
-```
-
 ### cf-error
 * to map error messages directly to a tag.
 * seperate by | to allow for more error, app will shuffle.
 ```html
 <input type="text" cf-error="Text is wrong wrong|Input is not right" ..
+```
+
+
+# Validations
+
+#### input pattern="" attribute
+**pattern** attribute will automatically be used if set in tag.:
+```html
+<input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
+```
+
+### cf-validation-contains
+* Checks if the input value is one of a pipe-separated list of values
+* e.g. the following will check if the input is equal to "a", "b", "c", or "d"
+```html
+<input type="text" cf-validation-contains="a|b|c|d" ..
+```
+
+### cf-validation-email
+* Basic email regex check to ensure the value contains only 1 "@" symbol and at lease 1 "." after the "@"
+<input type="text" cf-validation-email ..
+```
+
+### cf-validation-matches
+* This will check user input against the supplied regex
+<input type="text" cf-validation-matches="^[0-9a-zA-Z-']*$" ..
+```
+
+### cf-validation-max
+* Ensure User input is less than or equal to a maximum
+<input type="text" cf-validation-max=9 ..
+```
+
+### cf-validation-min
+* Ensure User input is greater than or equal to a minimum
+<input type="text" cf-validation-min=1 ..
+```
+
+### required
+* to require a field set the required attribute as normal
+<input type="text" required ..
+<input type="text" required="true" ..
+<input type="text" required="required" ..
+```
+
+### cf-validation-custom
+* Javascript validate a <Tag> before submitting
+* OBS. eval is used.
+* two parameters are passed to your custom method
+	* value: String, the value of the input field
+	* tag: ITag, the actual DOM tag
+```html
+<input type="text" cf-validation-custom="window.validateFunction" ..
 ```
 
 
@@ -161,7 +198,7 @@ window.ConversationalForm.remove();
 ```
 
 # Overwrite styles
-You can overwrite the UI with your own styles. Please see the source styles/css files for more info. 
+You can overwrite the UI with your own styles. Please see the source styles/css files for more info.
 
 
 # Contribute to ConversationalForm

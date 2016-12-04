@@ -71,6 +71,7 @@ namespace cf {
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.inputElement = this.el.getElementsByTagName("input")[0];
+
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 
@@ -159,6 +160,13 @@ namespace cf {
 
 			this.currentTag = <ITag | ITagGroup> event.detail;
 
+			//set UserInput to type password if should be secure
+			if(this.currentTag.type == "password"){
+				this.inputElement.setAttribute("type", "password")
+			}else{
+				this.inputElement.setAttribute("type", "text")
+			}
+
 			this.el.setAttribute("tag-type", this.currentTag.type);
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
@@ -171,7 +179,6 @@ namespace cf {
 				this.setFocusOnInput();
 
 			this.controlElements.reset();
-
 			if(this.currentTag.type == "group"){
 				this.buildControlElements((<ITagGroup> this.currentTag).elements);
 			}else{
@@ -238,7 +245,7 @@ namespace cf {
 
 					node = node.parentNode;
 				}
-				
+
 				// prevent normal behaviour, we are not here to take part, we are here to take over!
 				if(!doesKeyTargetExistInCF){
 					event.preventDefault();
@@ -407,8 +414,8 @@ namespace cf {
 
 					<svg class="cf-icon-attachment" viewBox="0 0 24 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g transform="translate(-1226.000000, -1427.000000)"><g transform="translate(738.000000, 960.000000)"><g transform="translate(6.000000, 458.000000)"><path stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" d="M499,23.1092437 L499,18.907563 C499,16.2016807 496.756849,14 494,14 C491.243151,14 489,16.2016807 489,18.907563 L489,24.5042017 C489,26.4369748 490.592466,28 492.561644,28 C494.530822,28 496.123288,26.4369748 496.123288,24.5042017 L496.123288,18.907563 C496.140411,17.7478992 495.181507,16.8067227 494,16.8067227 C492.818493,16.8067227 491.859589,17.7478992 491.859589,18.907563 L491.859589,23.1092437" id="Icon"></path></g></g></g></g></svg>
 				</cf-input-button>
-				
-				<input type='input' tabindex="1">
+
+				<input type='text' tabindex="1" class="cf-main-input-box">
 
 			</cf-input>
 			`;
