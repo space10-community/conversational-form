@@ -133,12 +133,6 @@ previous input could be a select:option list with countries.
 
 # Validations
 
-#### input pattern="" attribute
-**pattern** attribute will automatically be used if set in tag.:
-```html
-<input type="text" pattern="^hello" cf-questions="Your answer needs to include 'hello'" ..
-```
-
 ### cf-validation-contains
 * Checks if the input value is one of a pipe-separated list of values
 * e.g. the following will check if the input is equal to "a", "b", "c", or "d"
