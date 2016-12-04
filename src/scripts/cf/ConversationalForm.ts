@@ -63,7 +63,7 @@ namespace cf {
 			// emoji.. fork and set your own values..
 			Helpers.setEmojiLib();
 
-			this.defaultContext = !!options.context
+			this.defaultContext = !options.context
 			this.context = options.context ? options.context : <HTMLElement>this.formEl.parentNode;
 			this.tags = options.tags;
 
@@ -183,7 +183,7 @@ namespace cf {
 			this.el = document.createElement("div");
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
-			
+
 			if(this.defaultContext){
 				this.context = <HTMLElement>this.formEl.parentNode
 				this.formEl.parentNode.insertBefore(this.el, this.formEl.nextSibling);
