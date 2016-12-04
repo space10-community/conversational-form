@@ -148,26 +148,31 @@ previous input could be a select:option list with countries.
 
 ### cf-validation-email
 * Basic email regex check to ensure the value contains only 1 "@" symbol and at lease 1 "." after the "@"
+```html
 <input type="text" cf-validation-email ..
 ```
 
 ### cf-validation-matches
 * This will check user input against the supplied regex
+```html
 <input type="text" cf-validation-matches="^[0-9a-zA-Z-']*$" ..
 ```
 
 ### cf-validation-max
 * Ensure User input is less than or equal to a maximum
+```html
 <input type="text" cf-validation-max=9 ..
 ```
 
 ### cf-validation-min
 * Ensure User input is greater than or equal to a minimum
+```html
 <input type="text" cf-validation-min=1 ..
 ```
 
 ### required
 * to require a field set the required attribute as normal
+```html
 <input type="text" required ..
 <input type="text" required="true" ..
 <input type="text" required="required" ..
