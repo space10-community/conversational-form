@@ -145,9 +145,7 @@ namespace cf {
 
 			// array contains flag is set on Tag
 			if(this.domElement.getAttribute("cf-validation-contains")){
-				// set it through an attribute, danger land with eval
 				this.validationContains = this.domElement.getAttribute("cf-validation-contains").split("|");
-				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			}
 
 			// email validation flag is set
@@ -157,29 +155,25 @@ namespace cf {
 			}
 
 			// matches pattern flag is set on the Tag
-			if(this.domElement.getAttribute("cf-validation-matches")){
+			if(this.domElement.getAttribute("pattern")){
+				this.validationMatches = new RegExp(this.domElement.getAttribute("pattern"));
+			}else if(this.domElement.getAttribute("cf-validation-matches")){
 				this.validationMatches = new RegExp(this.domElement.getAttribute("cf-validation-matches"));
 			}
 
 			// max value flag is set on the Tag
 			if(this.domElement.getAttribute("cf-validation-max")){
-				// set it through an attribute, danger land with eval
 				this.validationMax = +this.domElement.getAttribute("cf-validation-max");
-				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			}
 
 			// min value flag is set on the Tag
 			if(this.domElement.getAttribute("cf-validation-min")){
-				// set it through an attribute, danger land with eval
 				this.validationMin = +this.domElement.getAttribute("cf-validation-min");
-				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			}
 
 			// required flag is set on the Tag
 			if(this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == ""){
-				// set it through an attribute, danger land with eval
 				this.validationPresent = true;
-				// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			}
 
 			// default value of Tag

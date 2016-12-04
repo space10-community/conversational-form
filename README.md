@@ -133,6 +133,12 @@ previous input could be a select:option list with countries.
 
 # Validations
 
+### pattern
+* Checks user input against the supplied regex
+```html
+<input type="text" pattern="^[0-9a-zA-Z-']*$" ..
+```
+
 ### cf-validation-contains
 * Checks if the input value is one of a pipe-separated list of values
 * e.g. the following will check if the input is equal to "a", "b", "c", or "d"
@@ -148,6 +154,7 @@ previous input could be a select:option list with countries.
 
 ### cf-validation-matches
 * This will check user input against the supplied regex
+* Added for tag consistency, recommended to use HTML5 "pattern" instead
 ```html
 <input type="text" cf-validation-matches="^[0-9a-zA-Z-']*$" ..
 ```
@@ -173,7 +180,7 @@ previous input could be a select:option list with countries.
 ```
 
 ### cf-validation-custom
-* Javascript validate a <Tag> before submitting
+* Check input against a custom Javascript function before submitting
 * OBS. eval is used.
 * two parameters are passed to your custom method
 	* value: String, the value of the input field
