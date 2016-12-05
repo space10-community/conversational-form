@@ -192,7 +192,8 @@ namespace cf {
 			}
 
 			// Conversational Form UI
-			this.chatList = new ChatList({});
+			let simulateThinking: boolean = !!(this.formEl.getAttribute('cf-simulate-thought') || this.formEl.getAttribute('cf-simulate-thought') == "")
+			this.chatList = new ChatList({}, simulateThinking);
 			this.el.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({});

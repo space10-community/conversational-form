@@ -39,6 +39,12 @@ If you don't want to have the UserInput to auto focus.
 <form id="my-form-element" cf-form-element cf-prevent-autofocus>
 ```
 
+**cf-simulate-thought**  
+If you want to have the ConversationalForm robot to appear to be "thinking" after each user response, add the cf-simulate-thought attribute
+```html
+<form id="my-form-element" cf-form-element cf-simulate-thought ..
+```
+
 ## Customization
 
 For more control over the output exclude the attribute `cf-form-element` from the form element and instantiate either with vanilla JS or jQuery:

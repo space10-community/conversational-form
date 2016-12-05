@@ -10,6 +10,7 @@ namespace cf {
 		image: string;
 		isAIReponse: boolean;
 		tag: ITag;
+		simulateThinking: boolean;
 	}
 
 	export const ChatResponseEvents = {
@@ -22,7 +23,7 @@ namespace cf {
 		private image: string;
 		private isAIReponse: boolean;
 		private tag: ITag;
-		private simulateThinking: boolean = false;
+		private simulateThinking: boolean;
 
 		public set visible(value: boolean){
 			if(value){
@@ -35,6 +36,7 @@ namespace cf {
 		constructor(options: IChatResponseOptions){
 			super(options);
 			this.tag = options.tag;
+			this.simulateThinking = options.simulateThinking
 		}
 
 		public setValue(dto: FlowDTO = null){
@@ -104,6 +106,7 @@ namespace cf {
 					// AI is pseudo thinking
 					let timeout = 0
 					if(this.simulateThinking){
+						console.log("Thinking!")
 						timeout = Helpers.lerp(Math.random(), 500, 900)
 					}
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), timeout);
