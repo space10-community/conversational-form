@@ -151,7 +151,6 @@ namespace cf {
 			// email validation flag is set
 			if(this.domElement.getAttribute("cf-validation-email") == ""){
 				this.validationEmail = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-
 			}
 
 			// matches pattern flag is set on the Tag
