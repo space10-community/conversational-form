@@ -133,7 +133,7 @@ previous input could be a select:option list with countries.
 
 # Validations
 
-### pattern
+###
 * Checks user input against the supplied regex
 ```html
 <input type="text" pattern="^[0-9a-zA-Z-']*$" ..
@@ -152,22 +152,27 @@ previous input could be a select:option list with countries.
 <input type="text" cf-validation-email ..
 ```
 
-### cf-validation-matches
+### pattern/cf-validation-matches
 * This will check user input against the supplied regex
-* Added for tag consistency, recommended to use HTML5 "pattern" instead
+* Using "pattern" is recommended over cf-validation-matches when possible as it is a native HTML5 attribute
 ```html
+<input type="text" pattern="^[0-9a-zA-Z-']*$" ..
 <input type="text" cf-validation-matches="^[0-9a-zA-Z-']*$" ..
 ```
 
-### cf-validation-max
+### max/cf-validation-max
 * Ensure User input is less than or equal to a maximum
+* Using "max" is recommended over cf-validation-max when possible as it is a native HTML5 attribute
 ```html
+<input type="number" max=9 ..
 <input type="text" cf-validation-max=9 ..
 ```
 
-### cf-validation-min
+### min/cf-validation-min
 * Ensure User input is greater than or equal to a minimum
+* Using "min" is recommended over cf-validation-min when possible as it is a native HTML5 attribute
 ```html
+<input type="number" min=1 ..
 <input type="text" cf-validation-min=1 ..
 ```
 

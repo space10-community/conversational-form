@@ -162,12 +162,16 @@ namespace cf {
 			}
 
 			// max value flag is set on the Tag
-			if(this.domElement.getAttribute("cf-validation-max")){
+			if(this.domElement.getAttribute("max")){
+				this.validationMax = +this.domElement.getAttribute("max");
+			}else if(this.domElement.getAttribute("cf-validation-max")){
 				this.validationMax = +this.domElement.getAttribute("cf-validation-max");
 			}
 
 			// min value flag is set on the Tag
-			if(this.domElement.getAttribute("cf-validation-min")){
+			if(this.domElement.getAttribute("min")){
+				this.validationMin = +this.domElement.getAttribute("min");
+			}else if(this.domElement.getAttribute("cf-validation-min")){
 				this.validationMin = +this.domElement.getAttribute("cf-validation-min");
 			}
 
