@@ -105,7 +105,12 @@ namespace cf {
 			if(this.step == this.maxSteps){
 				// console.warn("We are at the end..., submit click")
 				this.cuiReference.doSubmitForm();
-			}else{
+			} else if(!this.shouldStepBeDisplayed()) {
+				this.tags.splice(this.step, 1); // we remove the current step
+				this.maxSteps--; // we remove one step for the total steps
+				this.step--; // we go back to the previous step
+				this.nextStep(); // we ask for a next step
+			} else {
 				this.step %= this.maxSteps;
 				this.showStep();
 			}
@@ -117,6 +122,10 @@ namespace cf {
 			document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 				detail: this.currentTag
 			}));
+		}
+
+		private shouldStepBeDisplayed(): boolean {
+			return this.currentTag.shouldBeDisplayed(this.tags.slice(0, this.step));
 		}
 	}
 }

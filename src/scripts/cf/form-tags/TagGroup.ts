@@ -53,8 +53,15 @@ namespace cf {
 		}
 
 		public get value (): string{
-			// TODO: fix value???
-			return "";
+			const valuesChecked = new Array();
+			this.elements.forEach((element) => {
+				let domElement = <HTMLInputElement>element.domElement;
+				if(domElement.checked) {
+					valuesChecked.push(domElement.value);
+				}
+			});
+
+			return valuesChecked.join('|');
 		}
 		
 		public get errorMessage():string{
@@ -144,6 +151,14 @@ namespace cf {
 			}
 
 			return isValid;
+		}
+
+		public shouldBeDisplayed(previousTags: Array<ITag>): boolean {
+			this.elements = this.elements.filter((element) => {
+				return element.shouldBeDisplayed(previousTags);
+			});
+
+			return (this.elements.length > 0);
 		}
 	}
 }
