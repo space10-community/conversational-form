@@ -130,7 +130,7 @@ namespace cf {
 			this.domElement = options.domElement;
 
 			// remove tabIndex from the dom element.. danger zone... should we or should we not...
-			this.domElement.tabIndex = -1;
+			//this.domElement.tabIndex = -1;
 
 			// questions array
 			if(options.questions)
