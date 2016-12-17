@@ -49,8 +49,6 @@ namespace cf {
 
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
-			
-			console.log(UserInput.preventAutoFocus, this.formEl, this.formEl.getAttribute("cf-prevent-autofocus"))
 
 			// 
 			this.dictionary = new Dictionary({
@@ -193,6 +191,9 @@ namespace cf {
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
 			this.context.appendChild(this.el);
+			
+			//hide until stylesheet is rendered
+			this.el.style.visibility = "hidden";
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});
