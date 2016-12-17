@@ -13,7 +13,7 @@ namespace cf {
 	}
 
 	export const ChatResponseEvents = {
-		ROBOT_QUESTION_ASKED: "cf-on-ai-asked-question"
+		ROBOT_QUESTION_ASKED: "cf-on-robot-asked-question"
 	}
 
 	// class
