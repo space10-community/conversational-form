@@ -68,7 +68,7 @@ namespace cf {
 			if(this._label)
 				return this._label;
 			
-			return Dictionary.getAIResponse(this.type);
+			return Dictionary.getRobotResponse(this.type);
 		}
 
 		public get value (): string{
@@ -78,7 +78,7 @@ namespace cf {
 		public get question():string{
 			// if questions are empty, then fall back to dictionary, every time
 			if(!this.questions || this.questions.length == 0)
-				return Dictionary.getAIResponse(this.type);
+				return Dictionary.getRobotResponse(this.type);
 			else
 				return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}

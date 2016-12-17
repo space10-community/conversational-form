@@ -30,7 +30,7 @@ namespace cf {
 		private tableableRows: Array<Array<IControlElement>>;
 
 		private userInputUpdateCallback: () => void;
-		private onChatAIReponseCallback: () => void;
+		private onChatRobotReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
@@ -74,8 +74,8 @@ namespace cf {
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
 			document.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
-			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
-			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+			this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
+			document.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
@@ -105,7 +105,7 @@ namespace cf {
 			this.listScrollController.setScroll(x, 0);
 		}
 
-		private onChatAIReponse(event:CustomEvent){
+		private onChatRobotReponse(event:CustomEvent){
 			this.animateElementsIn();
 		}
 
@@ -608,8 +608,8 @@ namespace cf {
 			document.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 			this.onElementFocusCallback = null;
 
-			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
-			this.onChatAIReponseCallback = null;
+			document.removeEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+			this.onChatRobotReponseCallback = null;
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;

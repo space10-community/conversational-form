@@ -8,19 +8,19 @@ namespace cf {
 	export interface IChatResponseOptions{
 		response: string;
 		image: string;
-		isAIReponse: boolean;
+		isRobotReponse: boolean;
 		tag: ITag;
 	}
 
 	export const ChatResponseEvents = {
-		AI_QUESTION_ASKED: "cf-on-ai-asked-question"
+		ROBOT_QUESTION_ASKED: "cf-on-ai-asked-question"
 	}
 
 	// class
 	export class ChatResponse extends BasicElement {
 		private response: string;
 		private image: string;
-		private isAIReponse: boolean;
+		private isRobotReponse: boolean;
 		private tag: ITag
 
 		public set visible(value: boolean){
@@ -66,11 +66,11 @@ namespace cf {
 					this.visible = true;
 				}
 
-				if(this.isAIReponse){
-					// AI Reponse ready to ask question.
+				if(this.isRobotReponse){
+					// Robot Reponse ready to ask question.
 
-					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.AI_QUESTION_ASKED, this.response);
-					document.dispatchEvent(new CustomEvent(ChatResponseEvents.AI_QUESTION_ASKED, {
+					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.ROBOT_QUESTION_ASKED, this.response);
+					document.dispatchEvent(new CustomEvent(ChatResponseEvents.ROBOT_QUESTION_ASKED, {
 						detail: this
 					}));
 				}
@@ -80,7 +80,7 @@ namespace cf {
 		private processResponse(){
 			this.response = Helpers.emojify(this.response);
 			
-			if(this.tag.type == "password" && !this.isAIReponse){
+			if(this.tag.type == "password" && !this.isRobotReponse){
 				var newStr: string = "";
 				for (let i = 0; i < this.response.length; i++) {
 					newStr += "*";
@@ -92,15 +92,15 @@ namespace cf {
 		protected setData(options: IChatResponseOptions):void{
 			this.image = options.image;
 			this.response = "";
-			this.isAIReponse = options.isAIReponse;
+			this.isRobotReponse = options.isRobotReponse;
 			super.setData(options);
 
 			setTimeout(() => {
-				this.visible = this.isAIReponse || (this.response && this.response.length > 0);
+				this.visible = this.isRobotReponse || (this.response && this.response.length > 0);
 				this.setValue();
 
-				if(this.isAIReponse){
-					// AI is pseudo thinking
+				if(this.isRobotReponse){
+					// Robot is pseudo thinking
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), Helpers.lerp(Math.random(), 500, 900));
 				}else{
 					// show the 3 dots automatically
