@@ -46,9 +46,9 @@ namespace cf {
 			if(tagQuestion){
 				return tagQuestion;
 			}else{
-				// fallback to AI response from dictionary
-				const aiReponse: string = Dictionary.getAIResponse(this.getGroupTagType());
-				return aiReponse;
+				// fallback to robot response from dictionary
+				const robotReponse: string = Dictionary.getRobotResponse(this.getGroupTagType());
+				return robotReponse;
 			}
 		}
 

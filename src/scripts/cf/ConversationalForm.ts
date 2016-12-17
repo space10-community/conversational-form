@@ -18,7 +18,7 @@ namespace cf {
 		formEl: HTMLFormElement,
 		context?: HTMLElement,
 		dictionaryData?: Object,
-		dictionaryAI?: Object,
+		dictionaryRobot?: Object,
 		userImage?: string,
 		submitCallback?: () => void | HTMLButtonElement,
 	}
@@ -55,7 +55,7 @@ namespace cf {
 			// 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
-				aiQuestions: options.dictionaryAI,
+				robotQuestions: options.dictionaryRobot,
 				userImage: options.userImage,
 			});
 

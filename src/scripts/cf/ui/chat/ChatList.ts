@@ -82,8 +82,8 @@ namespace cf {
 				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
 			}
 
-			// AI response
-			const aiThumb: string = Dictionary.getAIResponse("thumb");
+			// robot response
+			const aiThumb: string = Dictionary.getRobotResponse("thumb");
 			let aiReponse: string = "";
 
 			aiReponse = currentTag.question;
@@ -102,11 +102,11 @@ namespace cf {
 			this.createResponse(false, currentTag);
 		}
 
-		private createResponse(isAIReponse: boolean, currentTag: ITag, value: string = null, image: string = Dictionary.get("user-image")){
+		private createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null, image: string = Dictionary.get("user-image")){
 			this.currentResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
-				isAIReponse: isAIReponse,
+				isRobotReponse: isRobotReponse,
 				response: value,// || input-response,
 				image: image,
 			});
