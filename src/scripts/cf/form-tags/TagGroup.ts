@@ -19,6 +19,7 @@ namespace cf {
 		elements: Array <ITag>;
 		getGroupTagType: () => string;
 		dealloc():void;
+		disabled: boolean;
 	}
 
 	// class
@@ -55,6 +56,17 @@ namespace cf {
 		public get value (): string{
 			// TODO: fix value???
 			return "";
+		}
+
+		public get disabled (): boolean{
+			let disabled: boolean = false;
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.disabled)
+					disabled = true;
+			}
+
+			return disabled;
 		}
 		
 		public get errorMessage():string{

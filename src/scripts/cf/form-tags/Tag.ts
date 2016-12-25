@@ -31,6 +31,7 @@ namespace cf {
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 		dealloc():void;
 		value:string;
+		disabled: boolean;
 	}
 
 	export interface ITagOptions{
@@ -73,6 +74,10 @@ namespace cf {
 
 		public get value (): string{
 			return this.domElement.value;
+		}
+
+		public get disabled (): boolean{
+			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
 		}
 
 		public get question():string{
