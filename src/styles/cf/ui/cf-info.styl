@@ -16,8 +16,9 @@ cf-info
 	will-change opacity
 
 	&.show
-		transition opacity $anim-time $anim-easeOut
 		opacity 1
+		.conversational-form--enable-animation &
+			transition opacity $anim-time $anim-easeOut
 
 	strong
 		font-weight 900

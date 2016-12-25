@@ -66,7 +66,7 @@ namespace cf {
 				}));
 
 				// goto next step when user has answered
-				setTimeout(() => this.nextStep(), 250);
+				setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0);
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
 
