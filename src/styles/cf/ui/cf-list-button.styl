@@ -23,7 +23,8 @@ cf-list-button
 	opacity 0
 	pointer-events none
 	will-change opacity
-	transition opacity $anim-time $anim-easeOut 0.5s
+	.conversational-form--enable-animation &
+		transition opacity $anim-time $anim-easeOut 0.5s
 
 	+above($breakpoint-1)
 		&:hover:nth-child(1)
@@ -74,7 +75,8 @@ cf-list-button
 		height 100%
 		opacity 0
 		will-change opacity
-		transition opacity $anim-time $anim-easeOut
+		.conversational-form--enable-animation &
+			transition opacity $anim-time $anim-easeOut
 
 	&:after
 		content ""
@@ -88,7 +90,8 @@ cf-list-button
 		left calc(50% - 3px)
 		opacity 0
 		will-change opacity
-		transition opacity $anim-time * 0.5 $anim-easeOut
+		.conversational-form--enable-animation &
+			transition opacity $anim-time * 0.5 $anim-easeOut
 
 @keyframes cf-arrow-right
 	0%

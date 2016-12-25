@@ -24,6 +24,8 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
+		public static animationsEnabled: boolean = true;
+
 		public dictionary: Dictionary;
 
 		private el: HTMLElement;
@@ -46,6 +48,9 @@ namespace cf {
 
 			this.formEl = options.formEl;
 			this.submitCallback = options.submitCallback;
+
+			if(this.formEl.getAttribute("cf-no-animation") == "")
+				ConversationalForm.animationsEnabled = false;
 
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
@@ -190,6 +195,11 @@ namespace cf {
 			this.el = document.createElement("div");
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
+
+			if(ConversationalForm.animationsEnabled)
+				this.el.classList.add("conversational-form--enable-animation");
+
+			// add conversational form to context
 			this.context.appendChild(this.el);
 			
 			//hide until stylesheet is rendered
@@ -256,7 +266,7 @@ window.addEventListener("load", () =>{
 	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form-element]");
 	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
 
-	if(formEl){
+	if(formEl && !window.ConversationalForm){
 		window.ConversationalForm = new cf.ConversationalForm({
 			formEl: formEl,
 			context: contextEl

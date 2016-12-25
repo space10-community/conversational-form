@@ -43,6 +43,10 @@ namespace cf {
 			
 			const text: Element = this.el.getElementsByTagName("text")[0];
 
+			if(!this.visible){
+				this.visible = true;
+			}
+
 			if(!this.response || this.response.length == 0){
 				text.setAttribute("thinking", "");
 			}else{
@@ -51,7 +55,7 @@ namespace cf {
 				text.removeAttribute("thinking");
 
 				// check for if reponse type is file upload...
-				if(dto.controlElements && dto.controlElements[0]){
+				if(dto && dto.controlElements && dto.controlElements[0]){
 					switch(dto.controlElements[0].type){
 						case "UploadFileUI" :
 							text.classList.add("file-icon");
@@ -60,10 +64,6 @@ namespace cf {
 							text.insertBefore(icon.children[0], text.firstChild)
 							break;
 					}
-				}
-
-				if(!this.visible){
-					this.visible = true;
 				}
 
 				if(this.isRobotReponse){
@@ -96,15 +96,14 @@ namespace cf {
 			super.setData(options);
 
 			setTimeout(() => {
-				this.visible = this.isRobotReponse || (this.response && this.response.length > 0);
 				this.setValue();
 
 				if(this.isRobotReponse){
 					// Robot is pseudo thinking
-					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), Helpers.lerp(Math.random(), 500, 900));
+					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), 0);//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 				}else{
 					// show the 3 dots automatically
-					setTimeout(() => this.el.classList.add("peak-thumb"), 1400);
+					setTimeout(() => this.el.classList.add("peak-thumb"), ConversationalForm.animationsEnabled ? 1400 : 0);
 				}
 			}, 0);
 		}

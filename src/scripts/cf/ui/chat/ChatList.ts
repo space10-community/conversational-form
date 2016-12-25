@@ -45,16 +45,6 @@ namespace cf {
 		private onInputKeyChange(event: CustomEvent){
 			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
-
-			if(this.currentResponse){
-				const inputFieldStr: string = dto.text || dto.input.getInputValue();
-				if(!inputFieldStr || inputFieldStr.length == 0){
-					this.currentResponse.visible = false;
-				}else{
-					if(!this.currentResponse.visible)
-						this.currentResponse.visible = true;
-				}
-			}
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
