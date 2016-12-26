@@ -187,6 +187,10 @@ namespace cf {
 					tag = new InputTag({
 						domElement: element
 					});
+				}else if(element.tagName.toLowerCase() == "textarea"){
+					tag = new InputTag({
+						domElement: element
+					});
 				}else if(element.tagName.toLowerCase() == "select"){
 					tag = new SelectTag({
 						domElement: element
