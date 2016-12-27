@@ -239,6 +239,7 @@ namespace cf {
 
 		public doSubmitForm(){
 			if(this.submitCallback){
+				// remove should be called in the submitCallback
 				this.submitCallback();
 			}else{
 				this.formEl.submit();
@@ -252,9 +253,12 @@ namespace cf {
 
 			this.userInput = null;
 			this.chatList = null;
-			console.log(this, 'remove() Conversational Form');
+			this.el.parentNode.removeChild(this.el);
+			this.el = null;
+			this.context = null;
+			this.formEl = null;
+			this.submitCallback = null;
 		}
-
 
 		// to illustrate the event flow of the app
 		public static ILLUSTRATE_APP_FLOW: boolean = true;
