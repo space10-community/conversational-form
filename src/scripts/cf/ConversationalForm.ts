@@ -159,6 +159,15 @@ namespace cf {
 			return this;
 		}
 
+		public getTag(nameOrIndex: string | number): ITag{
+			if(typeof nameOrIndex == "number"){
+				return this.tags[nameOrIndex];
+			}else{
+				// TODO: fix so you can get a tag by its name attribute
+				return null;
+			}
+		}
+
 		private setupTagGroups(){
 			// make groups, from input tag[type=radio | type=checkbox]
 			// groups are used to bind logic like radio-button or checkbox dependencies
@@ -248,9 +257,12 @@ namespace cf {
 		}
 
 		public remove(){
+			this.flowManager.dealloc();
 			this.userInput.dealloc();
 			this.chatList.dealloc();
 
+			this.dictionary = null;
+			this.flowManager = null;
 			this.userInput = null;
 			this.chatList = null;
 			this.el.parentNode.removeChild(this.el);
