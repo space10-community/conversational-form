@@ -49,7 +49,7 @@ For more control over the output exclude the attribute `cf-form-element` from th
 new cf.ConversationalForm({
 	formEl: <HTMLFormElement>,
 	// dictionaryData?: {}, // empty will throw error, see Dictionaty.ts for values
-	// dictionaryAI?: {}, // empty will throw error, see Dictionaty.ts for values
+	// dictionaryRobot?: {}, // empty will throw error, see Dictionaty.ts for values
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..

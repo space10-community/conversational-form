@@ -73,20 +73,20 @@ namespace cf {
 			}
 
 			// robot response
-			const aiThumb: string = Dictionary.getRobotResponse("thumb");
-			let aiReponse: string = "";
+			const robotImage: string = Dictionary.getRobotResponse("robot-image");
+			let robotReponse: string = "";
 
-			aiReponse = currentTag.question;
+			robotReponse = currentTag.question;
 
 			// one way data binding values:
 			if(this.flowDTOFromUserInputUpdate){
 				// previous answer..
-				aiReponse = aiReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
+				robotReponse = robotReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
 				
 				// add other patterns here..
-				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
+				// robotReponse = robotReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
-			this.createResponse(true, currentTag, aiReponse, aiThumb);
+			this.createResponse(true, currentTag, robotReponse, robotImage);
 
 			// user reponse, create the waiting response
 			this.createResponse(false, currentTag);

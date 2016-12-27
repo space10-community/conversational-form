@@ -70,7 +70,7 @@ namespace cf {
 			// 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
-				robotQuestions: options.dictionaryRobot,
+				robotData: options.dictionaryRobot,
 				userImage: options.userImage,
 				robotImage: options.robotImage,
 			});
