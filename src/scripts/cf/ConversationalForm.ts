@@ -20,8 +20,10 @@ namespace cf {
 		dictionaryData?: Object,
 		dictionaryRobot?: Object,
 		userImage?: string,
+		robotImage?: string,
 		submitCallback?: () => void | HTMLButtonElement,
 		loadExternalStyleSheet?: boolean;
+		preventAutoAppend?: boolean;
 	}
 
 	export class ConversationalForm{
@@ -29,7 +31,7 @@ namespace cf {
 
 		public dictionary: Dictionary;
 
-		private el: HTMLElement;
+		public el: HTMLElement;
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
@@ -40,6 +42,7 @@ namespace cf {
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
+		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
@@ -48,6 +51,9 @@ namespace cf {
 			if(options.loadExternalStyleSheet == true || (!options.loadExternalStyleSheet && !document.getElementById("conversational-form-development"))){
 				this.loadExternalStyleSheet = options.loadExternalStyleSheet;
 			}
+
+			if(options.preventAutoAppend == true)
+				this.preventAutoAppend = true;
 			
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
@@ -66,6 +72,7 @@ namespace cf {
 				data: options.dictionaryData,
 				robotQuestions: options.dictionaryRobot,
 				userImage: options.userImage,
+				robotImage: options.robotImage,
 			});
 
 			// emoji.. fork and set your own values..
@@ -74,7 +81,7 @@ namespace cf {
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			setTimeout(() => this.init(), 0);
+			this.init();
 		}
 
 		public init(): ConversationalForm{
@@ -205,7 +212,8 @@ namespace cf {
 				this.el.classList.add("conversational-form--enable-animation");
 
 			// add conversational form to context
-			this.context.appendChild(this.el);
+			if(!this.preventAutoAppend)
+				this.context.appendChild(this.el);
 			
 			//hide until stylesheet is rendered
 			this.el.style.visibility = "hidden";
