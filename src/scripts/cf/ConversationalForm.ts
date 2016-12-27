@@ -21,6 +21,7 @@ namespace cf {
 		dictionaryRobot?: Object,
 		userImage?: string,
 		submitCallback?: () => void | HTMLButtonElement,
+		loadExternalStyleSheet?: boolean;
 	}
 
 	export class ConversationalForm{
@@ -38,10 +39,15 @@ namespace cf {
 		private chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
+		private loadExternalStyleSheet: boolean = true;
 
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
+			
+			if(options.loadExternalStyleSheet == true || (!options.loadExternalStyleSheet && !document.getElementById("conversational-form-development"))){
+				this.loadExternalStyleSheet = options.loadExternalStyleSheet;
+			}
 			
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
@@ -72,9 +78,7 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			const developmentScriptTag: any = document.getElementById("conversational-form-development");
-
-			if(!developmentScriptTag){
+			if(this.loadExternalStyleSheet){
 				// not in development/test, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
