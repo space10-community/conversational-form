@@ -95,7 +95,8 @@ namespace cf {
 			}
 
 			// set context position to relative, else we break out of the box
-			if(this.context.style.position != "fixed" && this.context.style.position != "absolute" && this.context.style.position != "relative"){
+			const position: string = window.getComputedStyle(this.context).getPropertyValue("position").toLowerCase();
+			if(["fixed", "absolute", "relative"].indexOf(position) == -1){
 				this.context.style.position = "relative";
 			}
 
