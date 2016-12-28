@@ -70,7 +70,6 @@ namespace cf {
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 
 			// robot response
-			const robotImage: string = Dictionary.getRobotResponse("robot-image");
 			let robotReponse: string = "";
 
 			robotReponse = currentTag.question;
@@ -83,19 +82,19 @@ namespace cf {
 				// add other patterns here..
 				// robotReponse = robotReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
-			this.createResponse(true, currentTag, robotReponse, robotImage);
+			this.createResponse(true, currentTag, robotReponse);
 
 			// user reponse, create the waiting response
 			this.createResponse(false, currentTag);
 		}
 
-		private createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null, image: string = Dictionary.get("user-image")){
+		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null){
 			this.currentResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
 				isRobotReponse: isRobotReponse,
 				response: value,// || input-response,
-				image: image,
+				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
 			
 			this.el.appendChild(this.currentResponse.el);

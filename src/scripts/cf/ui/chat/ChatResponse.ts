@@ -80,7 +80,7 @@ namespace cf {
 		private processResponse(){
 			this.response = Helpers.emojify(this.response);
 			
-			if(this.tag.type == "password" && !this.isRobotReponse){
+			if(this.tag && this.tag.type == "password" && !this.isRobotReponse){
 				var newStr: string = "";
 				for (let i = 0; i < this.response.length; i++) {
 					newStr += "*";

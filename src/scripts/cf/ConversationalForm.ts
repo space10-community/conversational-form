@@ -159,6 +159,10 @@ namespace cf {
 			return this;
 		}
 
+		public addRobotChatResponse(response: string){
+			this.chatList.createResponse(true, null, response);
+		}
+
 		public getTag(nameOrIndex: string | number): ITag{
 			if(typeof nameOrIndex == "number"){
 				return this.tags[nameOrIndex];
