@@ -53,6 +53,10 @@ namespace cf {
 			if(this.currentResponse){
 				const response: FlowDTO = event.detail;
 				this.flowDTOFromUserInputUpdate = response;
+
+				if(!this.flowDTOFromUserInputUpdate.text)
+					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
 			}
 			else{
 				// this should never happen..
@@ -64,13 +68,6 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
-
-			if(this.flowDTOFromUserInputUpdate){
-				// validate text..
-				if(!this.flowDTOFromUserInputUpdate.text)
-					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
-				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
-			}
 
 			// robot response
 			const robotImage: string = Dictionary.getRobotResponse("robot-image");
