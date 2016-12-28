@@ -77,6 +77,11 @@ namespace cf {
 			}
 		}
 
+		public startFrom(index: number){
+			this.step = index;
+			this.validateStepAndUpdate();
+		}
+
 		public start(){
 			this.validateStepAndUpdate();
 		}

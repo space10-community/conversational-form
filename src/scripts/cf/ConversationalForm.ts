@@ -246,6 +246,16 @@ namespace cf {
 			// })
 		}
 
+		public remapTagsAndStartFrom(index: number = 0){
+			// possibility to start the form flow over from {index}
+			for(var i = 0; i < this.tags.length; i++){
+				const tag: ITag | ITagGroup = this.tags[i];
+				tag.refresh();
+			}
+
+			this.flowManager.startFrom(index);
+		}
+
 		public doSubmitForm(){
 			if(this.submitCallback){
 				// remove should be called in the submitCallback
