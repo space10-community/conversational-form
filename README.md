@@ -156,11 +156,19 @@ When instantiating ConversationalForm a reference to the instance will be availa
 ```javascript
 window.ConversationalForm
 ```
-
-using this reference you are able to remove the ConversationalForm by calling:
+ 
+### remove()
+remove the ConversationalForm by calling:
 
 ```javascript
 window.ConversationalForm.remove();
+```
+
+### remapTagsAndStartFrom: 
+remap registered tags and start flow from {index}
+
+```javascript
+window.ConversationalForm.remapTagsAndStartFrom(index);
 ```
 
 # Overwrite styles
