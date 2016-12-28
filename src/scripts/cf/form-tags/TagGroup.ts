@@ -18,6 +18,7 @@ namespace cf {
 	export interface ITagGroup extends ITag{
 		elements: Array <ITag>;
 		getGroupTagType: () => string;
+		refresh():void;
 		dealloc():void;
 		disabled: boolean;
 	}
@@ -98,6 +99,13 @@ namespace cf {
 
 			this.elements = null;
 			this.errorMessages = null;
+		}
+
+		public refresh(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.refresh();
+			}
 		}
 
 		public getGroupTagType():string{

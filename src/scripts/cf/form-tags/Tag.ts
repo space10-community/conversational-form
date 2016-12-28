@@ -30,6 +30,7 @@ namespace cf {
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 		dealloc():void;
+		refresh():void;
 		value:string;
 		disabled: boolean;
 	}
@@ -210,7 +211,11 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
+		}
 
+		public refresh(){
+			this.questions = null;
+			this.findAndSetQuestions();
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
