@@ -30,6 +30,7 @@ namespace cf {
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 		dealloc():void;
+		shouldBeDisplayed(previousTags: Array<ITag>): boolean;
 		value:string;
 	}
 
@@ -52,6 +53,8 @@ namespace cf {
 
 		private validationCallback?: (value: string, tag: ITag) => boolean; // can also be set through cf-validation attribute.
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
+
+		private _displayCondition: string;
 
 		public get type (): string{
 			return this.domElement.getAttribute("type");
@@ -114,6 +117,11 @@ namespace cf {
 			if(this.domElement.getAttribute("cf-validation")){
 				// set it through an attribute, danger land with eval
 				this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+			}
+
+			// check and set display condition
+			if(this.domElement.getAttribute("cf-display-if")) {
+				this._displayCondition = this.domElement.getAttribute("cf-display-if");
 			}
 
 			// reg ex pattern is set on the Tag, so use it in our validation
@@ -281,6 +289,29 @@ namespace cf {
 					if(labelTags.length > 0 && labelTags[0])
 						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
 				}
+			}
+		}
+
+		public shouldBeDisplayed(previousTags: Array<ITag>): boolean {
+			if(!this._displayCondition) {
+				return true;
+			}
+
+			let conditionExpression = this._displayCondition
+				.replace('AND', '&&')
+				.replace('OR', '||')
+				.replace(/ CONTAINS ?(.*) ?/, '.indexOf$1!==-1')
+
+			previousTags.forEach((tag) => {
+				conditionExpression = conditionExpression.replace(new RegExp(tag.name, 'g'), '"' + tag.value + '"');
+			});
+
+
+			// We catch undefined variable here			
+			try {
+				return <boolean>eval(conditionExpression);
+			} catch(e) {
+				return false;
 			}
 		}
 	}
