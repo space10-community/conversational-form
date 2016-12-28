@@ -38,6 +38,7 @@ namespace cf {
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
 		private onInputFocusCallback: () => void;
+		private onInputBlurCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private shiftIsDown: boolean = false;
@@ -48,8 +49,10 @@ namespace cf {
 		private controlElements: ControlElements;
 		private currentTag: ITag | ITagGroup;
 
+		//acts as a fallb ack for ex. shadow dom implementation
+		private _active: boolean = false;
 		public get active(): boolean{
-			return this.inputElement === document.activeElement;
+			return this.inputElement === document.activeElement || this._active;
 		}
 
 		private set disabled(value: boolean){
@@ -73,6 +76,8 @@ namespace cf {
 			this.inputElement = this.el.getElementsByTagName("input")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
+			this.onInputBlurCallback = this.onInputBlur.bind(this);
+			this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
@@ -213,6 +218,8 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
+			console.log("onKeyUp:", event.keyCode);
+
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
 			}else if(event.keyCode == Dictionary.keyCodes["up"]){
@@ -323,7 +330,12 @@ namespace cf {
 				this.setFocusOnInput();
 		}
 
+		private onInputBlur(event: FocusEvent){
+			this._active = false;
+		}
+
 		private onInputFocus(event: FocusEvent){
+			this._active = true;
 			if(this.controlElements.active)
 				this.controlElements.setFocusOnElement(-1);
 		}
@@ -361,6 +373,9 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
+			this.onInputBlurCallback = null;
+
 			this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputFocusCallback = null;
 
