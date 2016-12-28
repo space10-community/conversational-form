@@ -218,8 +218,6 @@ namespace cf {
 		}
 
 		private onKeyUp(event: KeyboardEvent){
-			console.log("onKeyUp:", event.keyCode);
-
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
 			}else if(event.keyCode == Dictionary.keyCodes["up"]){
