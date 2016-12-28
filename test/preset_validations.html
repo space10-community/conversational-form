@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+
+		<style>
+			.form-outer{
+				background: yellow;
+				width: 600px;
+				height: 800px;
+				padding-top: 200px;
+			}
+		</style>
+
+
+		<div class="form-outer">
+
+
+
+
+
+
+			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
+			<form id="co-billing-form" action="" cf-form-element cf-simulate-thought>
+
+				<input
+          type="password"
+          id="test:novalidation"
+          name="billing[novalidation]"
+          value=""
+          title="Fornavn"
+          maxlength="255"
+          class="input-text required-entry"
+
+          cf-questions="Enter Nothing or anything, I don't Care!"
+        >
+
+        <input
+          type="text"
+          id="test:novalidation"
+          name="billing[novalidation]"
+          value=""
+          title="Fornavn"
+          maxlength="255"
+          class="input-text required-entry"
+
+          cf-questions="Enter Nothing or anything, I don't Care!"
+        >
+
+        <input
+          type="text"
+          id="test:required"
+          name="billing[required]"
+          value=""
+          title="Fornavn"
+          maxlength="255"
+          class="input-text required-entry"
+
+          cf-questions="Put anything at all, you just have to put SOMETHING"
+          required
+        >
+
+        <input
+          type="text"
+          id="test:requiredtrue"
+          name="billing[required][true]"
+          value=""
+          title="Fornavn"
+          maxlength="255"
+          class="input-text required-entry"
+
+          cf-questions="Put anything at all, you just have to put SOMETHING"
+          required="true"
+        >
+
+        <input
+          type="text"
+          id="test:required_required"
+          name="billing[required][required]"
+          value=""
+          title="Fornavn"
+          maxlength="255"
+          class="input-text required-entry"
+
+          cf-questions="Put anything at all, you just have to put SOMETHING"
+          required="required"
+        >
+
+
+					<input
+						type="text"
+						id="test:namevalidation"
+						name="billing[firstname]"
+						value=""
+						title="Fornavn"
+						maxlength="255"
+						class="input-text required-entry"
+
+						cf-validation-matches="^[0-9a-zA-Z-']*$"
+						cf-questions="Enter your name."
+						cf-error="Allowed Characters are numbers, letters, hyphens, and single quotes"
+					>
+
+          <input
+						type="text"
+						id="billing:min"
+						name="billing[min]"
+						value=""
+
+						cf-validation-min=1
+						cf-questions="Enter a number larger than 0"
+						cf-error="This value Must be larger than 0"
+					>
+
+          <input
+						type="text"
+						id="billing:max"
+						name="billing[max]"
+						value=""
+
+						cf-validation-max=9
+						cf-questions="Enter a number less than 10"
+						cf-error="This value Must be less than 10"
+					>
+
+          <input
+						type="number"
+						id="billing:between"
+						name="billing[between]"
+						value=""
+
+            cf-validation-min=1
+						cf-validation-max=9
+						cf-questions="Enter a number betwenn 1 and 9"
+						cf-error="This value Must be greater than 0 and less than 10"
+					>
+
+          <input
+						type="email"
+						id="billing:email"
+						name="billing[email]"
+						value=""
+
+            cf-validation-email
+						cf-questions="Enter a valid email"
+						cf-error="This value contain exactly 1 '@' symbol and 1 TLD (eg '.com')"
+					>
+          <input type="hidden" name="testhidden" />
+
+
+</form>
+
+
+
+		</div>
+
+		<script
+			type="text/javascript"
+			src="../build/scripts/bower_components/promise-polyfill/promise.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+		></script>
+
+		<script
+			id="conversational-form-development"
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.js"
+			development
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.plugin.js"
+			development
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/Helpers.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElements.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/ScrollController.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/data/Dictionary.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/Tag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/TagGroup.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/InputTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/SelectTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/ButtonTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/OptionTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionsList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/UploadFileUI.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/UserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatResponse.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/FlowManager.js"
+		></script>
+
+		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>-->
+
+
+		<script>
+			var testValidation = function(value){
+				if(value.indexOf("world") != -1)
+					return true;
+				return false;
+			};
+		</script>
+
+	</body>
+</html>

@@ -14,11 +14,13 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
+		private simulateThinking: boolean;
 		private flowDTOFromUserInputUpdate: FlowDTO;
 
-		constructor(options: IBasicElementOptions){
+		constructor(options: IBasicElementOptions, simulateThinking: boolean){
 			super(options);
 
+			this.simulateThinking = simulateThinking;
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -92,7 +94,7 @@ namespace cf {
 			if(this.flowDTOFromUserInputUpdate){
 				// previous answer..
 				aiReponse = aiReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
-				
+
 				// add other patterns here..
 				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
@@ -109,8 +111,9 @@ namespace cf {
 				isAIReponse: isAIReponse,
 				response: value,// || input-response,
 				image: image,
+				simulateThinking: this.simulateThinking
 			});
-			
+
 			this.el.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;
 		}
@@ -133,4 +136,3 @@ namespace cf {
 		}
 	}
 }
-

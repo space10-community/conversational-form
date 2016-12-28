@@ -18,11 +18,11 @@ namespace cf {
 
 		constructor(options: IBasicElementOptions){
 			this.setData(options);
-			this.createElement();
+			this.createElement();			
 		}
 
 		protected setData(options: IBasicElementOptions){
-			
+
 		}
 
 		protected createElement(): Element{

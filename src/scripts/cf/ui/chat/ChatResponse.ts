@@ -10,6 +10,7 @@ namespace cf {
 		image: string;
 		isAIReponse: boolean;
 		tag: ITag;
+		simulateThinking: boolean;
 	}
 
 	export const ChatResponseEvents = {
@@ -21,7 +22,8 @@ namespace cf {
 		private response: string;
 		private image: string;
 		private isAIReponse: boolean;
-		private tag: ITag
+		private tag: ITag;
+		private simulateThinking: boolean;
 
 		public set visible(value: boolean){
 			if(value){
@@ -34,13 +36,14 @@ namespace cf {
 		constructor(options: IChatResponseOptions){
 			super(options);
 			this.tag = options.tag;
+			this.simulateThinking = options.simulateThinking
 		}
 
 		public setValue(dto: FlowDTO = null){
 			this.response = dto ? dto.text : "";
 
 			this.processResponse();
-			
+
 			const text: Element = this.el.getElementsByTagName("text")[0];
 
 			if(!this.response || this.response.length == 0){
@@ -79,7 +82,7 @@ namespace cf {
 
 		private processResponse(){
 			this.response = Helpers.emojify(this.response);
-			
+
 			if(this.tag.type == "password" && !this.isAIReponse){
 				var newStr: string = "";
 				for (let i = 0; i < this.response.length; i++) {
@@ -101,7 +104,12 @@ namespace cf {
 
 				if(this.isAIReponse){
 					// AI is pseudo thinking
-					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), Helpers.lerp(Math.random(), 500, 900));
+					let timeout = 0
+					if(this.simulateThinking){
+						console.log("Thinking!")
+						timeout = Helpers.lerp(Math.random(), 500, 900)
+					}
+					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), timeout);
 				}else{
 					// show the 3 dots automatically
 					setTimeout(() => this.el.classList.add("peak-thumb"), 1400);
