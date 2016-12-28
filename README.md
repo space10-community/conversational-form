@@ -56,7 +56,6 @@ new cf.ConversationalForm({
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
 	// loadExternalStyleSheet?: boolean; // can be set to false to allow for project to be included within a project-specific ecosystem.
-
 });
 ```
 
@@ -156,8 +155,16 @@ When instantiating ConversationalForm a reference to the instance will be availa
 ```javascript
 window.ConversationalForm
 ```
+
+### addRobotChatResponse
+add a robot reponse, this you would usually do at the end of a process.
+
+````javascript
+window.ConversationalForm.addRobotChatResponse("You have reached the end of the form!");
+````
+See example of end-message [here](TBD....)
  
-### remove()
+### remove
 remove the ConversationalForm by calling:
 
 ```javascript
