@@ -110,6 +110,7 @@ namespace cf {
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Type your answer here ...",
 			"input-placeholder-error": "Your input is not correct ...",
+			"input-placeholder-required": "Input is required ...",
 			"input-placeholder-file-error": "File upload failed ...",
 			"input-placeholder-file-size-error": "File size too big ...",
 			"input-no-filter": "No results found for <strong>{input-value}</strong>",

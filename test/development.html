@@ -24,7 +24,7 @@
 			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
 			<form id="co-billing-form" action="" cf-form-element>
 				
-				<input type="file" name="fileupload" value="fileupload" id="fileupload" accept="image/*" cf-max-size="10000000000000000"> 
+				<input type="password" required cf-questions="Do you want to</br>sign up to our newsletter?" name="password" value="" id="password">
 
 				<li class="fields">
 						<label for="billing:country_id2" class="required"><em>*</em>Land</label>
@@ -41,8 +41,8 @@
 					</li>
 
 				<textarea name="textarea" value="" id="textarea"></textarea>
+				<input type="file" name="fileupload" value="fileupload" id="fileupload" accept="image/*" cf-max-size="10000000000000000"> 
 
-				<input type="password" cf-questions="Do you want to</br>sign up to our newsletter?" name="password" value="" id="password">
 
 				<li class="fields">
 							<div class="field radiocontrol">
