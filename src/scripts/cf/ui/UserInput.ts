@@ -185,7 +185,7 @@ namespace cf {
 
 			setTimeout(() => {
 				this.disabled = false;
-			}, 1000)
+			}, 150);
 		}
 
 		private onControlElementProgressChange(event: CustomEvent){
