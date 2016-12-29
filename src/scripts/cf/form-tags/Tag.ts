@@ -32,6 +32,7 @@ namespace cf {
 		dealloc():void;
 		refresh():void;
 		value:string;
+		required: boolean;
 		disabled: boolean;
 	}
 
@@ -47,7 +48,6 @@ namespace cf {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
 		protected defaultValue: string | number;
-		protected required: boolean;
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
@@ -82,6 +82,10 @@ namespace cf {
 			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
 		}
 
+		public get required(): boolean{
+			return !!this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == "";
+		}
+
 		public get question():string{
 			// if questions are empty, then fall back to dictionary, every time
 			if(!this.questions || this.questions.length == 0)
@@ -93,14 +97,16 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
-				
-				if(this.domElement.getAttribute("cf-error")){
+				if(this.required && this.value == ""){
+					this.errorMessages = [Dictionary.get("input-placeholder-required")]
+				}else if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
 				}else{
 					if(this.type == "file")
 						this.errorMessages = [Dictionary.get("input-placeholder-file-error")];
-					else
+					else{
 						this.errorMessages = [Dictionary.get("input-placeholder-error")];
+					}
 				}
 			}
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
@@ -215,7 +221,6 @@ namespace cf {
 		}
 
 		public refresh(){
-			this.required = !!this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == "";
 			this.questions = null;
 			this.findAndSetQuestions();
 		}
