@@ -96,7 +96,7 @@ namespace cf {
 
 					this.el.classList.remove("animate-in");
 					this.onChoose(); // submit the file
-				}, ConversationalForm.animationsEnabled ? 2000 : 0);
+				}, 100000);//ConversationalForm.animationsEnabled ? 2000 : 0);
 			}
 
 			reader.readAsBinaryString(event.target.files[0]);
