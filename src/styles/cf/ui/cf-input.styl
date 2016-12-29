@@ -137,33 +137,40 @@ cf-input-button.cf-input-button
 	perspective 2000px
 	transform-origin 50% 50%
 	transform scale(0, 0)
+
 	.conversational-form--enable-animation &
 		transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack $introDelay + 0.35
 
-	svg
+	> div
 		position absolute
 		pointer-events none
 		width 100%
-		height auto
+		height 100%
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
 		transform-origin 50% 50%
 		will-change transform, opacity
 		.conversational-form--enable-animation &
 			transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
 
-	svg.cf-icon-attachment
+	div.cf-icon-attachment
 		transform rotateX(90deg)
 		opacity 0
+		background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTIgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTczLjAwMDAwMCwgLTYwNS4wMDAwMDApIiBzdHJva2U9IiMwRDgzRkYiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4NC4wMDAwMDAsIDEzNi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEuMDAwMDAwLCA0NTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTQ5OSwyMy4xMDkyNDM3IEw0OTksMTguOTA3NTYzIEM0OTksMTYuMjAxNjgwNyA0OTYuNzU2ODQ5LDE0IDQ5NCwxNCBDNDkxLjI0MzE1MSwxNCA0ODksMTYuMjAxNjgwNyA0ODksMTguOTA3NTYzIEw0ODksMjQuNTA0MjAxNyBDNDg5LDI2LjQzNjk3NDggNDkwLjU5MjQ2NiwyOCA0OTIuNTYxNjQ0LDI4IEM0OTQuNTMwODIyLDI4IDQ5Ni4xMjMyODgsMjYuNDM2OTc0OCA0OTYuMTIzMjg4LDI0LjUwNDIwMTcgTDQ5Ni4xMjMyODgsMTguOTA3NTYzIEM0OTYuMTQwNDExLDE3Ljc0Nzg5OTIgNDk1LjE4MTUwNywxNi44MDY3MjI3IDQ5NCwxNi44MDY3MjI3IEM0OTIuODE4NDkzLDE2LjgwNjcyMjcgNDkxLjg1OTU4OSwxNy43NDc4OTkyIDQ5MS44NTk1ODksMTguOTA3NTYzIEw0OTEuODU5NTg5LDIzLjEwOTI0MzciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
+		background-size: 12px 16px;
 
+		// path
+		// 	stroke #b9bcbe
+		// 	will-change stroke
+		// 	.conversational-form--enable-animation &
+		// 		transition stroke $anim-time * 0.5 $anim-easeOut
 
-		path
-			stroke #b9bcbe
-			will-change stroke
-			.conversational-form--enable-animation &
-				transition stroke $anim-time * 0.5 $anim-easeOut
-
-	svg.cf-icon-progress
+	div.cf-icon-progress
 		transform rotateX(0deg)
 		opacity 1
+
+		background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTIgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTczLjAwMDAwMCwgLTYwNS4wMDAwMDApIiBzdHJva2U9IiMwRDgzRkYiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4NC4wMDAwMDAsIDEzNi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEuMDAwMDAwLCA0NTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTQ5OSwyMy4xMDkyNDM3IEw0OTksMTguOTA3NTYzIEM0OTksMTYuMjAxNjgwNyA0OTYuNzU2ODQ5LDE0IDQ5NCwxNCBDNDkxLjI0MzE1MSwxNCA0ODksMTYuMjAxNjgwNyA0ODksMTguOTA3NTYzIEw0ODksMjQuNTA0MjAxNyBDNDg5LDI2LjQzNjk3NDggNDkwLjU5MjQ2NiwyOCA0OTIuNTYxNjQ0LDI4IEM0OTQuNTMwODIyLDI4IDQ5Ni4xMjMyODgsMjYuNDM2OTc0OCA0OTYuMTIzMjg4LDI0LjUwNDIwMTcgTDQ5Ni4xMjMyODgsMTguOTA3NTYzIEM0OTYuMTQwNDExLDE3Ljc0Nzg5OTIgNDk1LjE4MTUwNywxNi44MDY3MjI3IDQ5NCwxNi44MDY3MjI3IEM0OTIuODE4NDkzLDE2LjgwNjcyMjcgNDkxLjg1OTU4OSwxNy43NDc4OTkyIDQ5MS44NTk1ODksMTguOTA3NTYzIEw0OTEuODU5NTg5LDIzLjEwOTI0MzciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+")
+		background-size: 12px 16px;
 
 		polygon
 			fill #b9bcbe
@@ -175,7 +182,7 @@ cf-input-button.cf-input-button
 		&:after
 			opacity 0
 
-		svg
+		div
 			transform scale(0.75, 0.75)
 
 	&:hover, &:focus
@@ -184,14 +191,14 @@ cf-input-button.cf-input-button
 		&:after
 			opacity 0
 
-		svg.cf-icon-progress
+		.cf-icon-progress
 			animation cf-arrow-up $anim-time $anim-easeInOut
-			polygon
-				fill $color-dark-blue
+			// polygon
+			// 	fill $color-dark-blue
 		
-		svg.cf-icon-attachment
-			path
-				stroke $color-dark-blue
+		// .cf-icon-attachment
+		// 	path
+		// 		stroke $color-dark-blue
 
 @keyframes cf-spin
 	0%
