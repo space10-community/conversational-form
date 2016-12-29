@@ -47,6 +47,7 @@ namespace cf {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
 		protected defaultValue: string | number;
+		protected required: boolean;
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
@@ -138,7 +139,7 @@ namespace cf {
 				console.log('Tag registered:', this.type);
 			}
 
-			this.findAndSetQuestions();
+			this.refresh();
 		}
 
 		public dealloc(){
@@ -214,6 +215,7 @@ namespace cf {
 		}
 
 		public refresh(){
+			this.required = !!this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == "";
 			this.questions = null;
 			this.findAndSetQuestions();
 		}
@@ -232,7 +234,7 @@ namespace cf {
 				isValid = this.validationCallback(valueText, this);
 			}
 
-			if(valueText == ""){
+			if(valueText == "" && this.required){
 				isValid = false;
 			}
 

@@ -9,6 +9,7 @@ cf-upload-file-ui
 	position absolute
 	top 0px
 	padding-right 30px
+	color $color-chat-reponse-user-text
 
 	opacity 0
 	transform translateY(20px) rotateX(30deg)
@@ -38,7 +39,10 @@ cf-upload-file-text
 	padding-right 30px
 	padding-top 17px
 	position relative
-	color $color-chat-reponse-user-text
+	color currentColor
+	max-width: 50%;
+	text-overflow: ellipsis;
+	overflow: hidden;
 
 	&:before
 		content ""
@@ -75,7 +79,7 @@ cf-upload-file-progress
 	cf-upload-file-progress-bar
 		width 0%
 		will-change width, border-radius
-		background #0288fd
+		background currentColor
 		z-index 2
 		border-radius 7px 0px 0px 7px
 		.conversational-form--enable-animation &
