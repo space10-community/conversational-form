@@ -559,7 +559,8 @@ namespace cf {
 						// sort the list so we can set tabIndex properly
 						var elementsCopyForSorting: Array <IControlElement> = elements.slice();
 						const tabIndexFilteredElements: Array<IControlElement> = elementsCopyForSorting.sort((a: IControlElement, b: IControlElement) => {
-							return a.positionVector.x == b.positionVector.x ? 0 : a.positionVector.x < b.positionVector.x ? -1 : 1;
+							const aOverB: boolean = a.positionVector.y > b.positionVector.y;
+							return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
 						});
 
 						let tabIndex: number = 0;
