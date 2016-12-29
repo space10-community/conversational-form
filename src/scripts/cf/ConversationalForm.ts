@@ -24,6 +24,7 @@ namespace cf {
 		submitCallback?: () => void | HTMLButtonElement,
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
+		scrollAccerlation?: number;
 	}
 
 	export class ConversationalForm{
@@ -51,6 +52,9 @@ namespace cf {
 			if(options.loadExternalStyleSheet == true || (!options.loadExternalStyleSheet && !document.getElementById("conversational-form-development"))){
 				this.loadExternalStyleSheet = options.loadExternalStyleSheet;
 			}
+
+			if(!isNaN(options.scrollAccerlation))
+				ScrollController.accerlation = options.scrollAccerlation;
 
 			if(options.preventAutoAppend == true)
 				this.preventAutoAppend = true;

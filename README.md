@@ -55,7 +55,8 @@ new cf.ConversationalForm({
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
-	// loadExternalStyleSheet?: boolean; // can be set to false to allow for project to be included within a project-specific ecosystem.
+	// loadExternalStyleSheet?: boolean // can be set to false to allow for project to be included within a project-specific ecosystem.
+	// scrollAccerlation?: number // optional horizontal scroll accerlation value
 });
 ```
 
