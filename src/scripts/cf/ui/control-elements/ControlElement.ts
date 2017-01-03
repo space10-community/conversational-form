@@ -130,12 +130,7 @@ namespace cf {
 
 		public animateIn(){
 			clearTimeout(this.animateInTimer);
-			if(this.el.classList.contains("animate-in")){
-				this.el.classList.remove("animate-in");
-				this.animateInTimer = setTimeout(() => this.el.classList.add("animate-in"), 0);
-			}else{
-				this.el.classList.add("animate-in");
-			}
+			this.el.classList.add("animate-in");
 		}
 
 		public animateOut(){
