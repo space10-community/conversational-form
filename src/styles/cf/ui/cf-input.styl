@@ -2,7 +2,7 @@
 @import "rupture"
 @import "../cf-variables"
 
-$introDelay = 1.4s
+$introDelay = 0.4s
 
 cf-input
 	display block
@@ -10,7 +10,6 @@ cf-input
 	width calc(100% - 40px)
 	height auto
 	bottom 20px
-	perspective 2000px
 
 	&.animate-in
 		input
@@ -134,7 +133,6 @@ cf-input-button.cf-input-button
 	cursor pointer
 	border-radius 50%
 	will-change background, border
-	perspective 2000px
 	transform-origin 50% 50%
 	transform scale(0, 0)
 
