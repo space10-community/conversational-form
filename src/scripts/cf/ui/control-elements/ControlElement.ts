@@ -12,6 +12,7 @@ namespace cf {
 		y: number,
 		centerX?: number,
 		centerY?: number,
+		el: cf.IControlElement
 	}
 
 	export interface IControlElementOptions extends IBasicElementOptions{
@@ -115,6 +116,7 @@ namespace cf {
 				width: this.el.offsetWidth + mr,
 				x: this.el.offsetLeft,
 				y: this.el.offsetTop,
+				el: this,
 			};
 
 			this._positionVector.centerX = this._positionVector.x + (this._positionVector.width * 0.5);
