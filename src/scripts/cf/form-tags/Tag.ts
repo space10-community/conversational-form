@@ -57,7 +57,7 @@ namespace cf {
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
-			return this.domElement.getAttribute("type");
+			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
 		}
 
 		public get name (): string{
