@@ -14,6 +14,7 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
+		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
 
 		constructor(options: IBasicElementOptions){
@@ -50,13 +51,13 @@ namespace cf {
 		private onUserInputUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(this.currentResponse){
+			if(this.currentUserResponse){
 				const response: FlowDTO = event.detail;
 				this.flowDTOFromUserInputUpdate = response;
 
 				if(!this.flowDTOFromUserInputUpdate.text)
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
-				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
+				this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
 			}
 			else{
 				// this should never happen..
@@ -96,6 +97,9 @@ namespace cf {
 				response: value,// || input-response,
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
+
+			if(!isRobotReponse)
+				this.currentUserResponse = this.currentResponse;
 			
 			this.el.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;

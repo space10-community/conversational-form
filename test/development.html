@@ -13,6 +13,29 @@
 			}
 		</style>
 
+		<div id="random-interface">
+			<style>
+				#random-interface{
+					position: absolute;
+					z-index: 1000;
+					top: 0px;
+					left: 0px;
+				}
+				#random-interface button{
+					color: red;
+				}
+			</style>
+			<script>
+				function addRandomClick(){
+					var ran = ["Random message 1", "Random message 2"];
+					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
+				}
+			</script>
+			<h2>Add random robot response</h2>
+			<button onclick="addRandomClick()">Add random text</button>
+		</div>
+
+
 
 		<div class="form-outer">
 

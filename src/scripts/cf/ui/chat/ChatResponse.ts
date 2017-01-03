@@ -110,7 +110,7 @@ namespace cf {
 
 		// template, can be overwritten ...
 		public getTemplate () : string {
-			return `<cf-chat-response>
+			return `<cf-chat-response class="` + (this.isRobotReponse ? "robot" : "user") + `">
 				<thumb style="background-image: url(` + this.image + `)"></thumb>
 				<text>` + (!this.response ? "<thinking><span>.</span><span>.</span><span>.</span></thinking>" : this.response) + `</text>
 			</cf-chat-response>`;
