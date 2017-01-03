@@ -101,8 +101,24 @@ namespace cf {
 			let x: number = (vector.x + vector.width < this.elementWidth ? 0 : vector.x - vector.width);
 			x *= -1;
 
-			// TODO: update rowIndex and columnIndex
+			this.updateRowColIndexFromVector(vector);
+
 			this.listScrollController.setScroll(x, 0);
+		}
+
+		private updateRowColIndexFromVector(vector: ControlElementVector){
+			for (let i = 0; i < this.tableableRows.length; i++) {
+				let items: Array <IControlElement> = this.tableableRows[i];
+			
+				for (let j = 0; j < items.length; j++) {
+					let item: IControlElement = items[j];
+					if(item == vector.el){
+						this.rowIndex = i;
+						this.columnIndex = j;
+						break;
+					}
+				}
+			}
 		}
 
 		private onChatRobotReponse(event:CustomEvent){
@@ -135,11 +151,12 @@ namespace cf {
 					}else if(dto.keyCode == Dictionary.keyCodes["up"]){
 						this.updateRowIndex(-1);
 					}else if(dto.keyCode == Dictionary.keyCodes["enter"] || dto.keyCode == Dictionary.keyCodes["space"]){
-						if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex])
+						if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]){
 							this.tableableRows[this.rowIndex][this.columnIndex].el.click();
-						else if(this.tableableRows[0] && this.tableableRows[0].length == 1)
+						}else if(this.tableableRows[0] && this.tableableRows[0].length == 1){
 							// this is when only one element in a filter, then we click it!
 							this.tableableRows[0][0].el.click();
+						}
 					}
 
 					if(!this.validateRowColIndexes()){
@@ -175,8 +192,6 @@ namespace cf {
 		private updateRowIndex(direction: number){
 			const oldRowIndex: number = this.rowIndex;
 			this.rowIndex += direction;
-
-			// console.log("updateRowIndex:", this.tableableRows);
 
 			if(this.tableableRows[this.rowIndex]){
 				// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
@@ -312,11 +327,10 @@ namespace cf {
 						this.tableableRows[0].push(element);
 				}
 			}
-
-			// console.log("this.tableableRows created:", this.tableableRows)
 		}
 		
 		public focusFrom(angle: string){
+			
 			if(!this.tableableRows)
 				return;
 
@@ -333,13 +347,14 @@ namespace cf {
 			}else{
 				this.resetTabList();
 			}
-
-			// console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
 		}
+
 		public setFocusOnElement(index: number){
 			const elements: Array<IControlElement> = this.getElements();
 			if(this.tableableRows && index != -1){
 				this.tableableRows[0][0].el.focus();
+				this.columnIndex = 0;
+				this.rowIndex = 0;
 			}else{
 				this.rowIndex = 0;
 			}

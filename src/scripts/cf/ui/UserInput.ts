@@ -284,7 +284,7 @@ namespace cf {
 									// click on UserInput submit button, only ENTER allowed
 									this.submitButton.click();
 								}else{
-									// let UI know what we changed the key
+									// let UI know that we changed the key
 									this.dispatchKeyChange(value, event.keyCode);
 
 									if(!this.active){
