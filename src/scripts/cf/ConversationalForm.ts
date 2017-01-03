@@ -42,7 +42,7 @@ namespace cf {
 		private chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
-		private loadExternalStyleSheet: boolean = true;
+		private loadExternalStyleSheet: boolean = false;
 		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
@@ -50,7 +50,7 @@ namespace cf {
 				window.ConversationalForm = this;
 			
 			if(options.loadExternalStyleSheet == true || (!options.loadExternalStyleSheet && !document.getElementById("conversational-form-development"))){
-				this.loadExternalStyleSheet = options.loadExternalStyleSheet;
+				this.loadExternalStyleSheet = true;
 			}
 
 			if(!isNaN(options.scrollAccerlation))
