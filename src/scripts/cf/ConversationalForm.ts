@@ -265,6 +265,8 @@ namespace cf {
 		}
 
 		public doSubmitForm(){
+			this.el.classList.add("done");
+
 			if(this.submitCallback){
 				// remove should be called in the submitCallback
 				this.submitCallback();
