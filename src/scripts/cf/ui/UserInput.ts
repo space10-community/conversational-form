@@ -112,7 +112,12 @@ namespace cf {
 		}
 
 		public getInputValue():string{
-			return this.inputElement.value;
+			const str: string = this.inputElement.value;
+
+			// Build-in way to handle XSS issues ->
+			const div = document.createElement('div');
+			div.appendChild(document.createTextNode(str));
+			return div.innerHTML;
 		}
 
 		public getFlowDTO():FlowDTO{
