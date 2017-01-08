@@ -554,12 +554,12 @@
 		// 		}
 
 
-				var formEl = document.getElementById("co-billing-form");
 				window.ConversationalForm = new cf.ConversationalForm({
-					formEl: formEl,
+					formEl: document.getElementById("co-billing-form"),
 					dictionaryData: {
 						"entry-not-found": "Wörterbuchschlüssel wird nicht gefunden.",
 						"input-placeholder": "Geben Sie hier Ihre Antwort ein ...",
+						"input-placeholder-required": "Eingabe erforderlich ...",
 						"input-placeholder-error": "Ihre Eingabe ist nicht korrekt ...",
 						"input-placeholder-file-error": "Datei-Upload fehlgeschlagen ...",
 						"input-placeholder-file-size-error": "Dateigröße zu groß ...",
@@ -570,6 +570,7 @@
 					},// empty will throw error
 					dictionaryRobot: {
 						"text": "Bitte schreiben Sie etwas Text.",
+						"input": "Bitte schreiben Sie etwas Text.",
 						"name": "Wie heißen Sie?",
 						"email": "Brauchen Sie Ihre E-Mail.",
 						"password": "Bitte geben Sie das Passwort ein",
