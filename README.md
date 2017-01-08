@@ -235,8 +235,8 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	$ npm install --save-dev XX
 
 
-## Tests
-When you are up and running, you can find a few form tests in the /test folder.
+## Examples and tests
+When you are up and running, you can find a few form tests and examples in the /examples folder.
 
 ## Browser support
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.
