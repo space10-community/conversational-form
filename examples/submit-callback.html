@@ -193,11 +193,11 @@
 
 		<script>
 			(function(){
-				window.ConversationalForm = new cf.ConversationalForm({
+				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
 					submitCallback: function(){
 						// remove Conversational Form
-						window.ConversationalForm.remove();
+						conversationalForm.remove();
 
 						alert("Custom submit callback reached, see markup of this file:190")
 					}
