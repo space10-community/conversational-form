@@ -18,9 +18,8 @@
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
 			<!--<form id="co-billing-form" action="" cf-form-element>-->
-			<form id="form" onsubmit="event.preventDefault(); return false;">
-				<input type="text" cf-questions="Your answer needs to include 'hello'" />
-				<input type="text" cf-questions="What is your name?|Please tell me your name." />
+			<form id="form">
+				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
 			</form>
 
 		</div>
@@ -185,13 +184,13 @@
 
 		<script>
 			(function(){
-				var formEl = document.getElementById("form");
 				window.ConversationalForm = new cf.ConversationalForm({
-					formEl: formEl,
+					formEl: document.getElementById("form"),
 					submitCallback: function(){
-						console.log("custom submit callback reached");
 						// remove Conversational Form
 						window.ConversationalForm.remove();
+
+						alert("Custom submit callback reached, see markup of this file:190")
 					}
 				});
 			})();
