@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+
+		<style>
+			.form-outer{
+				background: lightgrey;
+				width: 600px;
+				height: 800px;
+				padding-top: 200px;
+			}
+		</style>
+
+
+		<div class="form-outer" cf-context>
+
+			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
+			<form id="co-billing-form" action="" cf-form-element>
+
+				<input type="password" name="password" value="" id="password">
+					
+
+			</form>
+
+		</div>
+
+
+
+
+
+
+		<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- OR -->
+		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin></script>
+
+
+		<script>
+			var testValidation = function(value){
+				if(value.indexOf("world") != -1)
+					return true;
+				return false;
+			};
+		</script>
+
+	</body>
+</html>

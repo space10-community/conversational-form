@@ -90,7 +90,7 @@ namespace cf {
 
 		public init(): ConversationalForm{
 			if(this.loadExternalStyleSheet){
-				// not in development/test, so inject production css
+				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
 				const githubMasterUrl: string = "https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.css";
