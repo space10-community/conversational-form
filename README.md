@@ -17,9 +17,9 @@ Include ConversationalForm in your page
 <script type="text/javascript" src="https://rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form-element`, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
 ```html
-<form id="my-form-element" cf-form-element ...>
+<form id="my-form-element" cf-form ...>
 ```
 
 That's it! Your form is now conversational :thumbsup:  
@@ -36,12 +36,12 @@ If you want to have the ConversationalForm appended to a certain element (when a
 If you don't want to have the UserInput to auto focus.
 
 ```html
-<form id="my-form-element" cf-form-element cf-prevent-autofocus>
+<form id="my-form-element" cf-form cf-prevent-autofocus>
 ```
 
 ## Customization
 
-For more control over the output exclude the attribute `cf-form-element` from the form element and instantiate either with vanilla JS or jQuery:
+For more control over the output exclude the attribute `cf-form` from the form element and instantiate either with vanilla JS or jQuery:
 
 ### Self-instantiate with vanilla JS
 
