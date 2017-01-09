@@ -9,6 +9,8 @@ namespace cf {
 
 	}
 	export class ScrollController{
+		public static accerlation: number = 0.1;
+
 		private interactionListener: HTMLElement;
 		private listToScroll: HTMLElement;
 		private listWidth: number = 0;
@@ -105,7 +107,7 @@ namespace cf {
 			this.startX += (this.startXTarget - this.startX) * 0.2;
 
 			// animate accerlaration
-			this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? 0.2 : 0.05);
+			this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.accerlation + 0.1, 1) : ScrollController.accerlation);
 			const accDamping: number = 0.25;
 			this.inputAccerlationTarget *= accDamping;
 
@@ -121,10 +123,10 @@ namespace cf {
 
 			// bounce back when over
 			if(this.xTarget > 0)
-				this.xTarget += (0 - this.xTarget) * 0.3;
+				this.xTarget += (0 - this.xTarget) * Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
 
 			if(this.xTarget < this.max)
-				this.xTarget += (this.max - this.xTarget) * 0.3;
+				this.xTarget += (this.max - this.xTarget) * Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
 
 			this.x += (this.xTarget - this.x) * 0.4;
 

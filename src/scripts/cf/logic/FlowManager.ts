@@ -66,7 +66,7 @@ namespace cf {
 				}));
 
 				// goto next step when user has answered
-				setTimeout(() => this.nextStep(), 250);
+				setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0);
 			}else{
 				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
 
@@ -75,6 +75,11 @@ namespace cf {
 					detail: appDTO //UserInput value
 				}));
 			}
+		}
+
+		public startFrom(index: number){
+			this.step = index;
+			this.validateStepAndUpdate();
 		}
 
 		public start(){
@@ -101,6 +106,10 @@ namespace cf {
 			this.userInputSubmitCallback = null;
 		}
 
+		private skipStep(){
+			this.nextStep();
+		}
+
 		private validateStepAndUpdate(){
 			if(this.step == this.maxSteps){
 				// console.warn("We are at the end..., submit click")
@@ -112,11 +121,18 @@ namespace cf {
 		}
 
 		private showStep(){
-			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag)
+			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag);
 
-			document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
-				detail: this.currentTag
-			}));
+			if(this.currentTag.disabled){
+				// check if current tag has become or is disabled, if it is, then skip step.
+				this.skipStep();
+			}else{
+				// 
+				document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
+					detail: this.currentTag
+				}));
+			}
+
 		}
 	}
 }

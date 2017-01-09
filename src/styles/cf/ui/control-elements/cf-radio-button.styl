@@ -15,10 +15,11 @@ cf-radio-button.cf-button
 		border-radius 50%
 		background $color-chat-reponse-user-bg
 		will-change background
-		transition background $anim-time * 0.5 $anim-easeOut
 		margin-right 10px
 		margin-left -10px
 		position relative
+		.conversational-form--enable-animation &
+			transition background $anim-time * 0.5 $anim-easeOut
 
 	&[checked="checked"]
 		cf-radio

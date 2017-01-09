@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
 
 		<style>
 			.form-outer{
-				background: yellow;
+				background: lightgrey;
 				width: 600px;
 				height: 800px;
 				padding-top: 200px;
@@ -16,14 +18,22 @@
 
 		<div class="form-outer">
 
-			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
-			<!--<form id="co-billing-form" action="" cf-form-element>-->
-			<form id="form" onsubmit="event.preventDefault(); return false;">
-				<input type="text" cf-questions="Your answer needs to include 'hello'" />
-				<input type="text" cf-questions="What is your name?|Please tell me your name." />
+			<form id="form">
+				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
 			</form>
 
 		</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,13 +195,12 @@
 
 		<script>
 			(function(){
-				var formEl = document.getElementById("form");
-				window.ConversationalForm = new cf.ConversationalForm({
-					formEl: formEl,
+				$(document.getElementById("form")).conversationalForm({
 					submitCallback: function(){
-						console.log("custom submit callback reached");
 						// remove Conversational Form
 						window.ConversationalForm.remove();
+
+						alert("Reached custom submit callback method.");
 					}
 				});
 			})();

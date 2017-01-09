@@ -11,17 +11,11 @@
 		}
 	}
 	}(function ($) {
-		$.fn.conversationalForm = function () {
-			return new cf.ConversationalForm({
-				formEl: this[0],
-				// dictionaryData?: {},// empty will throw error
-				// dictionaryAI?: {},
-				// context?: document.getElementsByClassName("form-outer")[0],
-				// tags?: tags,
-				// submitCallback?: () => void | HTMLButtonElement
-				//base64 or crossdomain-enabled image url
-				// userImage: "..."
-			});
+		$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
+			options = options || {};
+			if(!options.formEl)
+				options.formEl = this[0];
+			return new cf.ConversationalForm(options);
 		};
 	}
 ));

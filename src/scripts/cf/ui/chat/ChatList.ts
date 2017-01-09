@@ -14,6 +14,7 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
+		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
 
 		constructor(options: IBasicElementOptions){
@@ -45,24 +46,18 @@ namespace cf {
 		private onInputKeyChange(event: CustomEvent){
 			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
-
-			if(this.currentResponse){
-				const inputFieldStr: string = dto.text || dto.input.getInputValue();
-				if(!inputFieldStr || inputFieldStr.length == 0){
-					this.currentResponse.visible = false;
-				}else{
-					if(!this.currentResponse.visible)
-						this.currentResponse.visible = true;
-				}
-			}
 		}
 
 		private onUserInputUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(this.currentResponse){
+			if(this.currentUserResponse){
 				const response: FlowDTO = event.detail;
 				this.flowDTOFromUserInputUpdate = response;
+
+				if(!this.flowDTOFromUserInputUpdate.text)
+					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+				this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
 			}
 			else{
 				// this should never happen..
@@ -75,41 +70,36 @@ namespace cf {
 
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
 
-			if(this.flowDTOFromUserInputUpdate){
-				// validate text..
-				if(!this.flowDTOFromUserInputUpdate.text)
-					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
-				this.currentResponse.setValue(this.flowDTOFromUserInputUpdate);
-			}
+			// robot response
+			let robotReponse: string = "";
 
-			// AI response
-			const aiThumb: string = Dictionary.getAIResponse("thumb");
-			let aiReponse: string = "";
-
-			aiReponse = currentTag.question;
+			robotReponse = currentTag.question;
 
 			// one way data binding values:
 			if(this.flowDTOFromUserInputUpdate){
 				// previous answer..
-				aiReponse = aiReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
+				robotReponse = robotReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
 				
 				// add other patterns here..
-				// aiReponse = aiReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
+				// robotReponse = robotReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
 			}
-			this.createResponse(true, currentTag, aiReponse, aiThumb);
+			this.createResponse(true, currentTag, robotReponse);
 
 			// user reponse, create the waiting response
 			this.createResponse(false, currentTag);
 		}
 
-		private createResponse(isAIReponse: boolean, currentTag: ITag, value: string = null, image: string = Dictionary.get("user-image")){
+		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null){
 			this.currentResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
-				isAIReponse: isAIReponse,
+				isRobotReponse: isRobotReponse,
 				response: value,// || input-response,
-				image: image,
+				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
+
+			if(!isRobotReponse)
+				this.currentUserResponse = this.currentResponse;
 			
 			this.el.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;
