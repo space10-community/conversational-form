@@ -18,14 +18,29 @@ namespace cf {
 	export interface ITagGroup extends ITag{
 		elements: Array <ITag>;
 		getGroupTagType: () => string;
+		refresh():void;
 		dealloc():void;
+		required: boolean;
+		disabled: boolean;
 	}
 
 	// class
 	export class TagGroup implements ITagGroup {
 
+		private onInputKeyChangeCallback: () => void;
 		private errorMessages: Array<string>;
 		public elements: Array <ITag>;
+		
+		public get required(): boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(this.elements[i].required){
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		public get type (): string{
 			return "group";
@@ -46,9 +61,9 @@ namespace cf {
 			if(tagQuestion){
 				return tagQuestion;
 			}else{
-				// fallback to AI response from dictionary
-				const aiReponse: string = Dictionary.getAIResponse(this.getGroupTagType());
-				return aiReponse;
+				// fallback to robot response from dictionary
+				const robotReponse: string = Dictionary.getRobotResponse(this.getGroupTagType());
+				return robotReponse;
 			}
 		}
 
@@ -56,10 +71,26 @@ namespace cf {
 			// TODO: fix value???
 			return "";
 		}
+
+		public get disabled (): boolean{
+			let disabled: boolean = false;
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.disabled)
+					disabled = true;
+			}
+
+			return disabled;
+		}
 		
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				this.errorMessages = [Dictionary.get("input-placeholder-error")];
+
+				if(this.required){
+					this.errorMessages = [Dictionary.get("input-placeholder-required")]
+				}
+
 				for (let i = 0; i < this.elements.length; i++) {
 					let element: ITag = <ITag>this.elements[i];
 					if(this.elements[i].domElement.getAttribute("cf-error")){
@@ -70,8 +101,6 @@ namespace cf {
 
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
-
-		private onInputKeyChangeCallback: () => void;
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
@@ -86,6 +115,13 @@ namespace cf {
 
 			this.elements = null;
 			this.errorMessages = null;
+		}
+
+		public refresh(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.refresh();
+			}
 		}
 
 		public getGroupTagType():string{

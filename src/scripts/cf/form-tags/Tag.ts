@@ -30,7 +30,10 @@ namespace cf {
 		errorMessage:string,
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 		dealloc():void;
+		refresh():void;
 		value:string;
+		required: boolean;
+		disabled: boolean;
 	}
 
 	export interface ITagOptions{
@@ -54,7 +57,7 @@ namespace cf {
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
-			return this.domElement.getAttribute("type");
+			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
 		}
 
 		public get name (): string{
@@ -68,17 +71,25 @@ namespace cf {
 			if(this._label)
 				return this._label;
 			
-			return Dictionary.getAIResponse(this.type);
+			return Dictionary.getRobotResponse(this.type);
 		}
 
 		public get value (): string{
 			return this.domElement.value;
 		}
 
+		public get disabled (): boolean{
+			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
+		}
+
+		public get required(): boolean{
+			return !!this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == "";
+		}
+
 		public get question():string{
 			// if questions are empty, then fall back to dictionary, every time
 			if(!this.questions || this.questions.length == 0)
-				return Dictionary.getAIResponse(this.type);
+				return Dictionary.getRobotResponse(this.type);
 			else
 				return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}
@@ -86,14 +97,16 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
-				
-				if(this.domElement.getAttribute("cf-error")){
+				if(this.required && this.value == ""){
+					this.errorMessages = [Dictionary.get("input-placeholder-required")]
+				}else if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
 				}else{
 					if(this.type == "file")
 						this.errorMessages = [Dictionary.get("input-placeholder-file-error")];
-					else
+					else{
 						this.errorMessages = [Dictionary.get("input-placeholder-error")];
+					}
 				}
 			}
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
@@ -132,7 +145,7 @@ namespace cf {
 				console.log('Tag registered:', this.type);
 			}
 
-			this.findAndSetQuestions();
+			this.refresh();
 		}
 
 		public dealloc(){
@@ -182,6 +195,10 @@ namespace cf {
 					tag = new InputTag({
 						domElement: element
 					});
+				}else if(element.tagName.toLowerCase() == "textarea"){
+					tag = new InputTag({
+						domElement: element
+					});
 				}else if(element.tagName.toLowerCase() == "select"){
 					tag = new SelectTag({
 						domElement: element
@@ -201,7 +218,11 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
+		}
 
+		public refresh(){
+			this.questions = null;
+			this.findAndSetQuestions();
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
@@ -218,7 +239,7 @@ namespace cf {
 				isValid = this.validationCallback(valueText, this);
 			}
 
-			if(valueText == ""){
+			if(valueText == "" && this.required){
 				isValid = false;
 			}
 

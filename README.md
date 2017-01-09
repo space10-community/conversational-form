@@ -49,11 +49,14 @@ For more control over the output exclude the attribute `cf-form-element` from th
 new cf.ConversationalForm({
 	formEl: <HTMLFormElement>,
 	// dictionaryData?: {}, // empty will throw error, see Dictionaty.ts for values
-	// dictionaryAI?: {}, // empty will throw error, see Dictionaty.ts for values
+	// dictionaryRobot?: {}, // empty will throw error, see Dictionaty.ts for values
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
-	// userImage: "..." //base64 || image url
+	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
+	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
+	// loadExternalStyleSheet?: boolean // can be set to false to allow for project to be included within a project-specific ecosystem.
+	// scrollAccerlation?: number // optional horizontal scroll accerlation value
 });
 ```
 
@@ -154,10 +157,26 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
-using this reference you are able to remove the ConversationalForm by calling:
+### addRobotChatResponse
+add a robot reponse, this you would usually do at the end of a process.
+
+````javascript
+window.ConversationalForm.addRobotChatResponse("You have reached the end of the form!");
+````
+See example of end-message [here](TBD....)
+ 
+### remove
+remove the ConversationalForm by calling:
 
 ```javascript
 window.ConversationalForm.remove();
+```
+
+### remapTagsAndStartFrom: 
+remap registered tags and start flow from {index}
+
+```javascript
+window.ConversationalForm.remapTagsAndStartFrom(index);
 ```
 
 # Overwrite styles
@@ -216,8 +235,8 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	$ npm install --save-dev XX
 
 
-## Tests
-When you are up and running, you can find a few form tests in the /test folder.
+## Examples and tests
+When you are up and running, you can find a few form tests and examples in the /examples folder.
 
 ## Browser support
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.

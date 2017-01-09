@@ -39,7 +39,8 @@ cf-input-control-elements
 
 cf-list, cf-list-button
 	will-change height
-	transition height $anim-time * 0.5 $anim-easeOut
+	.conversational-form--enable-animation &
+		transition height $anim-time * 0.5 $anim-easeOut
 	
 cf-input[tag-type="file"]
 	cf-list
