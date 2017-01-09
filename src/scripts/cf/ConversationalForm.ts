@@ -42,15 +42,15 @@ namespace cf {
 		private chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
-		private loadExternalStyleSheet: boolean = false;
+		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
 			
-			if(options.loadExternalStyleSheet == true || (!options.loadExternalStyleSheet && !document.getElementById("conversational-form-development"))){
-				this.loadExternalStyleSheet = true;
+			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
+				this.loadExternalStyleSheet = false;
 			}
 
 			if(!isNaN(options.scrollAccerlation))

@@ -48,8 +48,8 @@ For more control over the output exclude the attribute `cf-form-element` from th
 ```javascript
 new cf.ConversationalForm({
 	formEl: <HTMLFormElement>,
-	// dictionaryData?: {}, // empty will throw error, see Dictionaty.ts for values
-	// dictionaryRobot?: {}, // empty will throw error, see Dictionaty.ts for values
+	// dictionaryData?: {}, // overwrite the default user Dictionary items
+	// dictionaryRobot?: {}, // overwrite the default robot Dictionary items
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
