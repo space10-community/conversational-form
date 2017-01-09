@@ -38,53 +38,49 @@
             <div class="col-md-12">
               <div id="form-outer" class="panel panel-default">
                 <div class="panel-body">
-                  <form id="conversational" action="https://formspree.io/xnnawezx" method="POST">
+                  <form id="conversational" action="https://formstatic.io/f/a70e3555bd02ede6" method="POST">
                     <h2>Feedback form</h2>
 
-                    <input type="text" name="_gotcha" style="display: none">
-                    <input type="hidden" name="_next" value="https://space10-community.github.io/conversational-form/thanks.html" />
-                    <input type="hidden" name="_subject" value="Submission on ConversationalForm" />
-
                     <div class="form-group">
-                      <label for="your-name">Name</label>
-                      <input cf-questions="Hi there! What's your name?" type="name" class="form-control" name="your-name" id="your-name">
+                      <label for="name">Name</label>
+                      <input cf-questions="Hi there! What's your name?" type="name" class="form-control" name="name" id="name">
                     </div>
 
                     <div class="form-group">
-                      <label for="your-occupation">Occupation</label>
+                      <label for="occupation">Occupation</label>
                       <div class="radio">
                         <label>
-                          <input cf-questions="Great to meet you, {previous-answer}! I'm a web form, what do you do?|Awesome, {previous-answer}! And what do you do?" type="radio" name="your-occupation" id="your-occupation-1" value="developer">
+                          <input cf-questions="Great to meet you, {previous-answer}! I'm a web form, what do you do?|Awesome, {previous-answer}! And what do you do?" type="radio" name="occupation" id="occupation-1" value="developer">
                           Developer
                         </label>
                       </div>
                       <div class="radio">
                         <label>
-                          <input type="radio" name="your-occupation" id="your-occupation-2" value="designer">
+                          <input type="radio" name="occupation" id="occupation-2" value="designer">
                           Designer
                         </label>
                       </div>
                       <div class="radio">
                         <label>
-                          <input type="radio" name="your-occupation" id="your-occupation-3" value="curious-mind">
+                          <input type="radio" name="occupation" id="occupation-3" value="curious-mind">
                           Curious mind
                         </label>
                       </div>
                       <div class="radio">
                         <label>
-                          <input type="radio" name="your-occupation" id="your-occupation-2" value="lost">
+                          <input type="radio" name="occupation" id="occupation-2" value="lost">
                           Lost cause
                         </label>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="your-company">Company</label>
-                      <input cf-questions="Which company are you with?" type="text" class="form-control" name="your-company" id="your-company">
+                      <label for="company">Company</label>
+                      <input cf-questions="Which company are you with?" type="text" class="form-control" name="company" id="company">
                     </div>
 
                     <div class="form-group">
-                      <label for="your-opinion">Will conversational interfaces be everywhere?</label>
-                      <select cf-questions="Do you think conversational forms will replace web forms in the future?" name="your-opinion" id="your-opinion" class="form-control">
+                      <label for="opinion">Will conversational interfaces be everywhere?</label>
+                      <select cf-questions="Do you think conversational forms will replace web forms in the future?" name="opinion" id="opinion" class="form-control">
                         <option></option>
                         <option>Definitely</option>
                         <option>Maybe</option>
@@ -93,8 +89,8 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="your-email">Email</label>
-                      <input cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="your-email" id="your-email">
+                      <label for="email">Email</label>
+                      <input cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="email" id="your-email">
                     </div>
 
                     <div class="form-group">
