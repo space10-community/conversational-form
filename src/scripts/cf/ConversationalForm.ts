@@ -25,7 +25,7 @@ namespace cf {
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
 		scrollAccerlation?: number;
-		flowStepCallback?: (value: string, tag: ITag) => boolean, // a optional one catch all method, will be set on each Tag.ts
+		flowStepCallback?: (dto: FlowDTO) => boolean, // a optional one catch all method, will be set on each Tag.ts
 	}
 
 	export class ConversationalForm{

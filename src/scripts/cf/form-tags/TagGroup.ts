@@ -191,8 +191,6 @@ namespace cf {
 					break;
 			}
 
-			console.log("alalaalala", this._values);
-
 			return isValid;
 		}
 	}

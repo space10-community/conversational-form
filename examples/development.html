@@ -579,8 +579,8 @@
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
-					flowStepCallback: function(value, dto){
-						console.log("....flowStepCallback", value, dto.input.currentTag.value);
+					flowStepCallback: function(dto){
+						console.log("....flowStepCallback", dto.text, dto.input.currentTag.value);
 						return true;
 					},
 					submitCallback: function(){
