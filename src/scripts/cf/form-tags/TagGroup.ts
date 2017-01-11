@@ -28,7 +28,6 @@ namespace cf {
 	export class TagGroup implements ITagGroup {
 
 		private onInputKeyChangeCallback: () => void;
-		private errorMessages: Array<string>;
 		private _values: Array<string>;
 
 		public elements: Array <ITag>;
@@ -86,22 +85,14 @@ namespace cf {
 		}
 		
 		public get errorMessage():string{
-			if(!this.errorMessages){
-				this.errorMessages = [Dictionary.get("input-placeholder-error")];
+			var errorMessage = Dictionary.get("input-placeholder-error");
 
-				if(this.required){
-					this.errorMessages = [Dictionary.get("input-placeholder-required")]
-				}
-
-				for (let i = 0; i < this.elements.length; i++) {
-					let element: ITag = <ITag>this.elements[i];
-					if(this.elements[i].domElement.getAttribute("cf-error")){
-						this.errorMessages = this.elements[i].domElement.getAttribute("cf-error").split("|");
-					}
-				}
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				errorMessage = element.errorMessage;
 			}
 
-			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+			return errorMessage;
 		}
 
 		constructor(options: ITagGroupOptions){
@@ -116,7 +107,6 @@ namespace cf {
 			}
 
 			this.elements = null;
-			this.errorMessages = null;
 		}
 
 		public refresh(){
