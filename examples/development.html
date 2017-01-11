@@ -45,7 +45,7 @@
 
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="co-billing-form" action="" cf-form>
+			<form id="form" action="">
 				
 				<li class="fields">
 					<label for="billing:country_id2" class="required"><em>*</em>Land</label>
@@ -567,6 +567,22 @@
 					return true;
 				return false;
 			};
+
+			(function(){
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
+					flowStepCallback: function(value, tag){
+						console.log("....flowStepCallback", value, tag);
+						return false;
+					},
+					submitCallback: function(){
+						// remove Conversational Form
+						conversationalForm.remove();
+
+						alert("Custom submit callback reached, see markup of this file:190")
+					}
+				});
+			})();
 		</script>
 
 	</body>
