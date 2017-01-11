@@ -161,6 +161,10 @@ namespace cf {
 				this.inputElement.setAttribute("data-value", "");
 				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 				this.setFocusOnInput();
+
+				if(this.controlElements)
+					this.controlElements.resetAfterErrorMessage();
+
 			}, UserInput.ERROR_TIME);
 		}
 

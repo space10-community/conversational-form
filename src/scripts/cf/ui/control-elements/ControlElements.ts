@@ -23,6 +23,7 @@ namespace cf {
 		private el: HTMLElement;
 		private list: HTMLElement;
 		private infoElement: HTMLElement;
+		private currentControlElement: IControlElement;
 
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
@@ -56,6 +57,13 @@ namespace cf {
 			}
 
 			return false;
+		}
+
+		public set disabled(value: boolean){
+			if(value)
+				this.list.classList.add("disabled");
+			else
+				this.list.classList.remove("disabled");
 		}
 
 		public get length(): number{
@@ -328,6 +336,16 @@ namespace cf {
 				}
 			}
 		}
+
+		public resetAfterErrorMessage(){
+			if(this.currentControlElement){
+				//reverse value of currentControlElement.
+				(<RadioButton | CheckboxButton>this.currentControlElement).checked = !(<RadioButton | CheckboxButton>this.currentControlElement).checked;
+				this.currentControlElement = null;
+			}
+
+			this.disabled = false;
+		}
 		
 		public focusFrom(angle: string){
 			
@@ -361,7 +379,9 @@ namespace cf {
 		}
 
 		public updateStateOnElements(controlElement: IControlElement){
-			this.list.classList.add("disabled");
+			this.disabled = true;
+			this.currentControlElement = controlElement;
+
 			if(controlElement.type == "RadioButton"){
 				// uncheck other radio buttons...
 				const elements: Array<IControlElement> = this.getElements();
@@ -449,7 +469,7 @@ namespace cf {
 		}
 
 		public buildTags(tags: Array<ITag>){
-			this.list.classList.remove("disabled");
+			this.disabled = false;
 
 			const topList: HTMLUListElement = (<HTMLUListElement > this.el.parentNode).getElementsByTagName("ul")[0];
 			const bottomList: HTMLUListElement = (<HTMLUListElement> this.el.parentNode).getElementsByTagName("ul")[1];
@@ -613,6 +633,7 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.currentControlElement = null;
 			this.tableableRows = null;
 
 			cancelAnimationFrame(this.rAF);
