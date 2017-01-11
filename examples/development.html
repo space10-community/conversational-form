@@ -46,6 +46,14 @@
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form" action="">
+
+
+			<div class="radio-control" >
+				<input cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
+				<input cf-label="Sign-in with Twitter" type="radio" name="login-type" tabindex="2" value="twitter">
+				<input cf-label="Sign-in with E-mail" type="radio" name="login-type" tabindex="3" value="email">
+				<input cf-label="Don't have an account?'" type="radio" name="login-type" tabindex="4" value="no-account">
+			</div>
 				
 				<li class="fields">
 					<label for="billing:country_id2" class="required"><em>*</em>Land</label>
@@ -379,10 +387,10 @@
 
 
 
-		<script
+		<!-- <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous"></script> -->
 
 
 
@@ -571,8 +579,8 @@
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
-					flowStepCallback: function(value, tag){
-						console.log("....flowStepCallback", value, tag);
+					flowStepCallback: function(value, dto){
+						console.log("....flowStepCallback", value, dto.input.currentTag.value);
 						return true;
 					},
 					submitCallback: function(){

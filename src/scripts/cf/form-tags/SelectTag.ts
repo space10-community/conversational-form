@@ -8,9 +8,14 @@ namespace cf {
 	export class SelectTag extends Tag {
 
 		public optionTags: Array<OptionTag>;
+		private _values: Array<string>;
 
 		public get type (): string{
 			return "select";
+		}
+
+		public get value (): string | Array<string> {
+			return this._values;
 		}
 
 		public get multipleChoice(): boolean{
@@ -40,6 +45,7 @@ namespace cf {
 
 			// select tag values are set via selected attribute on option tag
 			let numberOptionButtonsVisible: Array <OptionButton> = [];
+			this._values = [];
 
 			for (let i = 0; i < this.optionTags.length; i++) {
 				let tag: OptionTag = <OptionTag>this.optionTags[i];
@@ -54,6 +60,9 @@ namespace cf {
 						if(!isValid && tag.selected)
 							isValid = true;
 
+						if(tag.selected)
+							this._values.push(<string> tag.value);
+
 						if(controllerElement.visible)
 							numberOptionButtonsVisible.push(controllerElement);
 					}
@@ -67,6 +76,9 @@ namespace cf {
 				element.selected = true;
 				tag.selected = true;
 				isValid = true;
+
+				if(tag.selected)
+					this._values.push(<string> tag.value);
 			}
 
 			return isValid;

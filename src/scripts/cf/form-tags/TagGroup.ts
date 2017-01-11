@@ -29,6 +29,8 @@ namespace cf {
 
 		private onInputKeyChangeCallback: () => void;
 		private errorMessages: Array<string>;
+		private _values: Array<string>;
+
 		public elements: Array <ITag>;
 		
 		public get required(): boolean{
@@ -67,9 +69,9 @@ namespace cf {
 			}
 		}
 
-		public get value (): string{
+		public get value (): Array<string>{
 			// TODO: fix value???
-			return "";
+			return this._values;
 		}
 
 		public get disabled (): boolean{
@@ -132,6 +134,7 @@ namespace cf {
 			let isValid: boolean = false;
 
 			const groupType: string = this.elements[0].type;
+			this._values = [];
 
 			switch(groupType){
 				case "radio" :
@@ -145,6 +148,9 @@ namespace cf {
 
 							if(tag == element.referenceTag){
 								(<HTMLInputElement> tag.domElement).checked = element.checked;
+								
+								if(element.checked)
+									this._values.push(<string> tag.value);
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
@@ -159,6 +165,9 @@ namespace cf {
 						element.checked = true;
 						(<HTMLInputElement> tag.domElement).checked = true;
 						isValid = true;
+
+						if(element.checked)
+							this._values.push(<string> tag.value);
 					}else if(!isValid && wasRadioButtonChecked){
 						// a radio button needs to be checked of
 						isValid = wasRadioButtonChecked;
@@ -174,10 +183,15 @@ namespace cf {
 						let element: CheckboxButton = <CheckboxButton> value.controlElements[i];
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
 						(<HTMLInputElement> tag.domElement).checked = element.checked;
+
+						if(element.checked)
+							this._values.push(<string> tag.value);
 					}
 
 					break;
 			}
+
+			console.log("alalaalala", this._values);
 
 			return isValid;
 		}
