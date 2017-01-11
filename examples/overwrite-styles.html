@@ -174,10 +174,6 @@
 								title="Fornavn"
 								maxlength="255"
 								class="input-text required-entry"
-
-								cf-validation="window.testValidation"
-								cf-questions="Put on the sherlock holmes hat to get past this step, and look at the custom validation method window.testValidation"
-								cf-error="This value goes through the window.javascript called testValidation, check that for guide.."
 							>
 						</div>
 					</div>
@@ -538,11 +534,6 @@
 
 
 		<script>
-			var testValidation = function(value){
-				if(value.indexOf("world") != -1)
-					return true;
-				return false;
-			};
 
 			// Self-Invoking Anonymous Function to get started
 			(function(){

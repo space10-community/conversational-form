@@ -28,33 +28,36 @@ namespace cf {
 		label: string,
 		question: string,
 		errorMessage:string,
-		setTagValueAndIsValid(value: FlowDTO):boolean;
+		setTagValueAndIsValid(dto: FlowDTO):boolean;
 		dealloc():void;
 		refresh():void;
 		value:string | Array <string>;
 		required: boolean;
 		disabled: boolean;
+
+		validationCallback?(dto: FlowDTO, success: () => void, error: ()  => void): boolean;
 	}
 
 	export interface ITagOptions{
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (dto: FlowDTO) => boolean,// can also be set through cf-validation attribute
+		validationCallback?: (dto: FlowDTO, success: () => void, error: ()  => void) => boolean,// can be set through cf-validation attribute
 	}
 
 	// class
 	export class Tag implements ITag {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
-		protected defaultValue: string | number;
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
-		protected _label: string;
 
-		private validationCallback?: (dto: FlowDTO) => boolean; // can also be set through cf-validation attribute.
+		protected _label: string;
+		protected defaultValue: string | number;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
+
+		public validationCallback?: (dto: FlowDTO, success: () => void, error: ()  => void) => boolean; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
 			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
@@ -235,10 +238,6 @@ namespace cf {
 				isValid = this.pattern.test(valueText);
 			}
 
-			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(dto);
-			}
-
 			if(valueText == "" && this.required){
 				isValid = false;
 			}
@@ -266,6 +265,9 @@ namespace cf {
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
+			}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions")){
+				// for groups the parentNode can have the cf-questions..
+				this.questions = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions").split("|");
 			}else{
 				// questions not set, so find it in the DOM
 				// try a broader search using for and id attributes

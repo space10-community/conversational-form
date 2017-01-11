@@ -47,6 +47,25 @@
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form" action="">
 
+				<div class="field name-firstname">
+						<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
+						<div class="input-box">
+							<input
+								type="text"
+								id="billing:firstname"
+								name="billing[firstname]"
+								value=""
+								title="Fornavn"
+								maxlength="255"
+								class="input-text required-entry"
+
+								cf-validation="window.testValidation"
+								cf-questions="Put on the sherlock holmes hat to get past this step, and look at the custom validation method window.testValidation"
+								cf-error="This value goes through the window.javascript called testValidation, check that for guide.."
+							>
+						</div>
+					</div>
+
 
 			<div class="radio-control" >
 				<input cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
@@ -174,27 +193,6 @@
 							<input type="hidden" name="billing[address_id]" value="" id="billing:address_id">
 							<ul>
 
-
-
-
-								<div class="field name-firstname">
-						<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
-						<div class="input-box">
-							<input
-								type="text"
-								id="billing:firstname"
-								name="billing[firstname]"
-								value=""
-								title="Fornavn"
-								maxlength="255"
-								class="input-text required-entry"
-
-								cf-validation="window.testValidation"
-								cf-questions="Put on the sherlock holmes hat to get past this step, and look at the custom validation method window.testValidation"
-								cf-error="This value goes through the window.javascript called testValidation, check that for guide.."
-							>
-						</div>
-					</div>
 
 								
 
@@ -570,18 +568,18 @@
 
 
 		<script>
-			var testValidation = function(value){
-				if(value.indexOf("world") != -1)
-					return true;
-				return false;
+			var testValidation = function(dto, success, error){
+				console.log("dto....", dto, success, error);
+				if(dto.text.indexOf("world") != -1)
+					return success();
+				return error();
 			};
 
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
-					flowStepCallback: function(dto){
-						console.log("....flowStepCallback", dto.text, dto.input.currentTag.value);
-						return true;
+					flowStepCallback: function(dto, success, error){
+						success();
 					},
 					submitCallback: function(){
 						// remove Conversational Form
