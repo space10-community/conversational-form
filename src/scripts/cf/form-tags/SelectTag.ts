@@ -40,7 +40,7 @@ namespace cf {
 			}
 		}
 
-		public setTagValueAndIsValid(value: FlowDTO):boolean{
+		public setTagValueAndIsValid(dto: FlowDTO):boolean{
 			let isValid: boolean = false;
 
 			// select tag values are set via selected attribute on option tag
@@ -50,8 +50,8 @@ namespace cf {
 			for (let i = 0; i < this.optionTags.length; i++) {
 				let tag: OptionTag = <OptionTag>this.optionTags[i];
 
-				for (let j = 0; j < value.controlElements.length; j++) {
-					let controllerElement: OptionButton = <OptionButton>value.controlElements[j];
+				for (let j = 0; j < dto.controlElements.length; j++) {
+					let controllerElement: OptionButton = <OptionButton>dto.controlElements[j];
 					if(controllerElement.referenceTag == tag){
 						// tag match found, so set value
 						tag.selected = controllerElement.selected;

@@ -40,7 +40,7 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (value: string, dto: FlowDTO) => boolean,// can also be set through cf-validation attribute
+		validationCallback?: (dto: FlowDTO) => boolean,// can also be set through cf-validation attribute
 	}
 
 	// class
@@ -53,7 +53,7 @@ namespace cf {
 		private pattern: RegExp;
 		protected _label: string;
 
-		private validationCallback?: (value: string, dto: FlowDTO) => boolean; // can also be set through cf-validation attribute.
+		private validationCallback?: (dto: FlowDTO) => boolean; // can also be set through cf-validation attribute.
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
@@ -225,18 +225,18 @@ namespace cf {
 			this.findAndSetQuestions();
 		}
 
-		public setTagValueAndIsValid(value: FlowDTO):boolean{
+		public setTagValueAndIsValid(dto: FlowDTO):boolean{
 			// this sets the value of the tag in the DOM
 			// validation
 			let isValid: boolean = true;
-			let valueText: string = value.text;
+			let valueText: string = dto.text;
 
 			if(this.pattern){
 				isValid = this.pattern.test(valueText);
 			}
 
 			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(valueText, value);
+				isValid = this.validationCallback(dto);
 			}
 
 			if(valueText == "" && this.required){

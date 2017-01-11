@@ -47,12 +47,16 @@ namespace cf {
 		private keyDownCallback: () => void;
 
 		private controlElements: ControlElements;
-		private currentTag: ITag | ITagGroup;
+		private _currentTag: ITag | ITagGroup;
 
 		//acts as a fallb ack for ex. shadow dom implementation
 		private _active: boolean = false;
 		public get active(): boolean{
 			return this.inputElement === document.activeElement || this._active;
+		}
+
+		public get currentTag(): ITag | ITagGroup{
+			return this._currentTag;
 		}
 
 		private set disabled(value: boolean){
@@ -147,7 +151,7 @@ namespace cf {
 			this.el.setAttribute("error", "");
 			this.disabled = true;
 			// cf-error
-			this.inputElement.setAttribute("placeholder", dto.errorText || this.currentTag.errorMessage);
+			this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
 			clearTimeout(this.errorTimer);
 
 			this.errorTimer = setTimeout(() => {
@@ -167,9 +171,9 @@ namespace cf {
 			if(!this.el.classList.contains("animate-in"))
 				this.el.classList.add("animate-in")
 
-			this.currentTag = <ITag | ITagGroup> event.detail;
+			this._currentTag = <ITag | ITagGroup> event.detail;
 
-			this.el.setAttribute("tag-type", this.currentTag.type);
+			this.el.setAttribute("tag-type", this._currentTag.type);
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
@@ -182,10 +186,10 @@ namespace cf {
 
 			this.controlElements.reset();
 
-			if(this.currentTag.type == "group"){
-				this.buildControlElements((<ITagGroup> this.currentTag).elements);
+			if(this._currentTag.type == "group"){
+				this.buildControlElements((<ITagGroup> this._currentTag).elements);
 			}else{
-				this.buildControlElements([this.currentTag]);
+				this.buildControlElements([this._currentTag]);
 			}
 
 			setTimeout(() => {
@@ -279,10 +283,10 @@ namespace cf {
 					if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
 						event.preventDefault();
 
-						const tagType: string = this.currentTag.type == "group" ? (<TagGroup>this.currentTag).getGroupTagType() : this.currentTag.type;
+						const tagType: string = this._currentTag.type == "group" ? (<TagGroup>this._currentTag).getGroupTagType() : this._currentTag.type;
 
 						if(tagType == "select" || tagType == "checkbox"){
-							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this.currentTag;
+							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this._currentTag;
 							// if select or checkbox then check for multi select item
 							if(tagType == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
 								if(this.active && event.keyCode == Dictionary.keyCodes["enter"]){
@@ -303,7 +307,7 @@ namespace cf {
 								this.dispatchKeyChange(value, event.keyCode);
 							}
 						}else{
-							if(this.currentTag.type == "group"){
+							if(this._currentTag.type == "group"){
 								// let the controlements handle action
 								this.dispatchKeyChange(value, event.keyCode);
 							}
@@ -349,7 +353,7 @@ namespace cf {
 
 		private onEnterOrSubmitButtonSubmit(){
 			// we need to check if current tag is file
-			if(this.currentTag.type == "file"){
+			if(this._currentTag.type == "file"){
 				// trigger <input type="file"
 				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
 			}else{
