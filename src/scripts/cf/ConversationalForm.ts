@@ -32,7 +32,7 @@ namespace cf {
 
 		public dictionary: Dictionary;
 
-		public el: HTMLElement;
+		private el: HTMLElement;
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
