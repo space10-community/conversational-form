@@ -71,7 +71,7 @@
 						<input cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
 						<input cf-label="Sign-in with Twitter" type="radio" name="login-type" tabindex="2" value="twitter">
 						<input cf-label="Sign-in with E-mail" type="radio" name="login-type" tabindex="3" value="email">
-						<input cf-label="Don't have an account?'" type="radio" name="login-type" tabindex="4" value="no-account">
+						<input cf-label="Sherlock will sign in for you'" type="radio" name="login-type" tabindex="4" value="sherlock">
 					</div>
 				
 					</div>
@@ -272,8 +272,8 @@
 
 		<script>
 			var testValidation = function(dto, success, error){
-				console.log("dto....", dto, success, error);
-				if(dto.text.indexOf("world") != -1)
+				console.log("testValidation, dto:", dto);
+				if(dto.text.indexOf("holmes") != -1)
 					return success();
 				return error();
 			};
@@ -282,14 +282,17 @@
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
 					flowStepCallback: function(dto, success, error){
-						// if(dto.)
-						success();
+						console.log("flowStepCallback, dto:", dto);
+						if(dto.text.indexOf("holmes") != -1 || dto.input.currentTag.value[0].indexOf("sherlock") != -1)
+							success();
+						else
+							error();
 					},
 					submitCallback: function(){
 						// remove Conversational Form
 						conversationalForm.remove();
 
-						alert("Custom submit callback reached, see markup of this file:190")
+						alert("Custom submit callback reached, see markup of this file")
 					}
 				});
 			})();
