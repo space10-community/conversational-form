@@ -100,10 +100,12 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
-				if(this.required && this.value == ""){
-					this.errorMessages = [Dictionary.get("input-placeholder-required")]
-				}else if(this.domElement.getAttribute("cf-error")){
+				if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
+				}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error")){
+					this.errorMessages = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error").split("|");
+				}else if(this.required){
+					this.errorMessages = [Dictionary.get("input-placeholder-required")]
 				}else{
 					if(this.type == "file")
 						this.errorMessages = [Dictionary.get("input-placeholder-file-error")];
@@ -112,6 +114,7 @@ namespace cf {
 					}
 				}
 			}
+
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
 
