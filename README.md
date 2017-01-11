@@ -53,7 +53,7 @@ new cf.ConversationalForm({
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
-	// flowStepCallback? (value: string, tag: ITag) => boolean // allow for a global validation method, should return true if value is accepted
+	// flowStepCallback? (dto: FlowDTO, success: () => void, error: () => void) => boolean // allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
 	// loadExternalStyleSheet?: boolean // can be set to false to allow for project to be included within a project-specific ecosystem.
@@ -136,9 +136,11 @@ previous input could be a select:option list with countries.
 ### cf-validation
 * Javascript validate a <Tag> before submitting
 * OBS. eval is used.
-* two parameters is passed to the method
-	* value: String, the value of the input field
-	* tag: ITag, the actual DOM tag
+* Asyncronous, so a value can be validated through a server
+* three parameters is passed to the method
+	* dto: FlowDTO
+	* success: () => void //callback
+	* error: () => void //callback
 ```html
 <input type="text" cf-validation="window.validateFunction" ..
 ```

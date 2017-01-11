@@ -27,7 +27,7 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (dto: FlowDTO) => boolean;
+		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => boolean;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
@@ -56,32 +56,68 @@ namespace cf {
 
 			let appDTO: FlowDTO = event.detail;
 			let isTagValid: Boolean = this.currentTag.setTagValueAndIsValid(appDTO);
+			let hasCheckedForTagSpecificValidation: boolean = false;
+			let hasCheckedForGlobalFlowValidation: boolean = false;
 
-			if(isTagValid && FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
-				// use global validationCallback method
-				isTagValid = FlowManager.generalFlowStepCallback(appDTO);
+			const onValidationCallback = () =>{
+				// check 1
+				if(this.currentTag.validationCallback && typeof this.currentTag.validationCallback == "function"){
+					if(!hasCheckedForTagSpecificValidation && isTagValid){
+						hasCheckedForTagSpecificValidation = true;
+						this.currentTag.validationCallback(appDTO, () => {
+							isTagValid = true;
+							onValidationCallback();
+						}, () => {
+							isTagValid = false;
+							onValidationCallback();
+						});
+
+						return;
+					}
+				}
+
+				// check 2
+				if(FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+					if(!hasCheckedForGlobalFlowValidation && isTagValid){
+						hasCheckedForGlobalFlowValidation = true;
+						// use global validationCallback method
+						FlowManager.generalFlowStepCallback(appDTO, () => {
+							isTagValid = true;
+							onValidationCallback();
+						}, () => {
+							isTagValid = false;
+							onValidationCallback();
+						});
+
+						return;
+					}
+				}
+
+				// go on with the flow
+				if(isTagValid){
+					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
+
+					// update to latest DTO because values can be changed in validation flow...
+					appDTO = appDTO.input.getFlowDTO();
+
+					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
+						detail: appDTO //UserInput value
+					}));
+
+					// goto next step when user has answered
+					setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0);
+				}else{
+					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
+
+					// Value not valid
+					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+						detail: appDTO //UserInput value
+					}));
+				}
 			}
 
-			if(isTagValid){
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
-
-				// update to latest DTO because values can be changed in validation flow...
-				appDTO = appDTO.input.getFlowDTO();
-
-				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-					detail: appDTO //UserInput value
-				}));
-
-				// goto next step when user has answered
-				setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0);
-			}else{
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
-
-				// Value not valid
-				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-					detail: appDTO //UserInput value
-				}));
-			}
+			// TODO, make into promises when IE is rolling with it..
+			onValidationCallback();
 		}
 
 		public startFrom(index: number){
