@@ -27,7 +27,7 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (value: string, tag: ITag) => boolean;
+		public static generalFlowStepCallback: (value: string, dto: FlowDTO) => boolean;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
@@ -59,7 +59,7 @@ namespace cf {
 
 			if(isTagValid && FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
 				// use global validationCallback method
-				isTagValid = FlowManager.generalFlowStepCallback(appDTO.text, this.currentTag);
+				isTagValid = FlowManager.generalFlowStepCallback(appDTO.text, appDTO);
 			}
 
 			if(isTagValid){

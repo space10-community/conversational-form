@@ -31,7 +31,7 @@ namespace cf {
 		setTagValueAndIsValid(value: FlowDTO):boolean;
 		dealloc():void;
 		refresh():void;
-		value:string;
+		value:string | Array <string>;
 		required: boolean;
 		disabled: boolean;
 	}
@@ -40,7 +40,7 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (value: string, tag: ITag) => boolean,// can also be set through cf-validation attribute
+		validationCallback?: (value: string, dto: FlowDTO) => boolean,// can also be set through cf-validation attribute
 	}
 
 	// class
@@ -53,7 +53,7 @@ namespace cf {
 		private pattern: RegExp;
 		protected _label: string;
 
-		private validationCallback?: (value: string, tag: ITag) => boolean; // can also be set through cf-validation attribute.
+		private validationCallback?: (value: string, dto: FlowDTO) => boolean; // can also be set through cf-validation attribute.
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public get type (): string{
@@ -74,7 +74,7 @@ namespace cf {
 			return Dictionary.getRobotResponse(this.type);
 		}
 
-		public get value (): string{
+		public get value (): string | Array<string> {
 			return this.domElement.value;
 		}
 
@@ -236,7 +236,7 @@ namespace cf {
 			}
 
 			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(valueText, this);
+				isValid = this.validationCallback(valueText, value);
 			}
 
 			if(valueText == "" && this.required){
