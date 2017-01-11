@@ -53,6 +53,7 @@ new cf.ConversationalForm({
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
+	// flowStepCallback? (value: string, tag: ITag) => boolean // allow for a global validation method, should return true if value is accepted
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
 	// loadExternalStyleSheet?: boolean // can be set to false to allow for project to be included within a project-specific ecosystem.

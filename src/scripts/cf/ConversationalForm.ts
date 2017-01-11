@@ -25,6 +25,7 @@ namespace cf {
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
 		scrollAccerlation?: number;
+		flowStepCallback?: (value: string, tag: ITag) => boolean, // a optional one catch all method, will be set on each Tag.ts
 	}
 
 	export class ConversationalForm{
@@ -48,6 +49,10 @@ namespace cf {
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
+
+			// set a general step validation callback
+			if(options.flowStepCallback)
+				FlowManager.generalFlowStepCallback = options.flowStepCallback;
 			
 			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
@@ -58,7 +63,7 @@ namespace cf {
 
 			if(options.preventAutoAppend == true)
 				this.preventAutoAppend = true;
-			
+
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
@@ -71,7 +76,6 @@ namespace cf {
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
 
-			// 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
 				robotData: options.dictionaryRobot,
@@ -218,7 +222,7 @@ namespace cf {
 			// start the flow
 			this.flowManager = new FlowManager({
 				cuiReference: this,
-				tags: this.tags,
+				tags: this.tags
 			});
 
 			this.el = document.createElement("div");

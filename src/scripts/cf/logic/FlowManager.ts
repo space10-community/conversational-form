@@ -27,6 +27,7 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
+		public static generalFlowStepCallback: (value: string, tag: ITag) => boolean;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
@@ -53,9 +54,15 @@ namespace cf {
 		public userInputSubmit(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			var appDTO: FlowDTO = event.detail;
+			let appDTO: FlowDTO = event.detail;
+			let isTagValid: Boolean = this.currentTag.setTagValueAndIsValid(appDTO);
 
-			if(this.currentTag.setTagValueAndIsValid(appDTO)){
+			if(isTagValid && FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+				// use global validationCallback method
+				isTagValid = FlowManager.generalFlowStepCallback(appDTO.text, this.currentTag);
+			}
+
+			if(isTagValid){
 				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
 
 				// update to latest DTO because values can be changed in validation flow...
