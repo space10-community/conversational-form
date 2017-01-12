@@ -245,6 +245,17 @@ namespace cf {
 				isValid = false;
 			}
 
+			const min: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
+			const max: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+			console.log(min, max);
+			if(min != -1 && valueText.length < min){
+				isValid = false;
+			}
+
+			if(max != -1 && valueText.length > max){
+				isValid = false;
+			}
+
 			if(isValid){
 				// we cannot set the dom element value when type is file
 				if(this.type != "file")
