@@ -25,7 +25,7 @@ namespace cf {
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
 		scrollAccerlation?: number;
-		flowStepCallback?: (dto: FlowDTO) => boolean, // a optional one catch all method, will be set on each Tag.ts
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be set on each Tag.ts
 	}
 
 	export class ConversationalForm{
@@ -57,7 +57,6 @@ namespace cf {
 			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
 			}
-			console.log("................this.loadExternalStyleSheet", this.loadExternalStyleSheet);
 
 			if(!isNaN(options.scrollAccerlation))
 				ScrollController.accerlation = options.scrollAccerlation;
@@ -170,6 +169,22 @@ namespace cf {
 
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
+		}
+
+		public stop(optionalStoppingMessage: string = ""){
+			this.flowManager.stop();
+			if(optionalStoppingMessage != "")
+				this.chatList.createResponse(true, null, optionalStoppingMessage);
+			
+			this.userInput.disabled = true;
+			this.userInput.visible = false;
+		}
+
+		public start(){
+			this.flowManager.start();
+			
+			this.userInput.disabled = false;
+			this.userInput.visible = true;
 		}
 
 		public getTag(nameOrIndex: string | number): ITag{

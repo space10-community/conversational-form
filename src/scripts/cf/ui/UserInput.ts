@@ -55,11 +55,18 @@ namespace cf {
 			return this.inputElement === document.activeElement || this._active;
 		}
 
+		public set visible(value: boolean){
+			if(!this.el.classList.contains("animate-in") && value)
+				this.el.classList.add("animate-in");
+			else if(this.el.classList.contains("animate-in") && !value)
+				this.el.classList.remove("animate-in");
+		}
+
 		public get currentTag(): ITag | ITagGroup{
 			return this._currentTag;
 		}
 
-		private set disabled(value: boolean){
+		public set disabled(value: boolean){
 			const hasChanged: boolean = this._disabled != value;
 			if(hasChanged){
 				this._disabled = value;
@@ -172,12 +179,15 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			// animate input field in
-			if(!this.el.classList.contains("animate-in"))
-				this.el.classList.add("animate-in")
+			this.visible = true;
 
 			this._currentTag = <ITag | ITagGroup> event.detail;
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
+
+			// set input field to type password if the dom input field is that, covering up the input
+			this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
+
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
@@ -260,15 +270,8 @@ namespace cf {
 				// prevent normal behaviour, we are not here to take part, we are here to take over!
 				if(!doesKeyTargetExistInCF){
 					event.preventDefault();
-					if(this.shiftIsDown){
-						// focus the last item in controlElement
-						if(this.controlElements.active)
-							this.controlElements.setFocusOnElement(this.controlElements.length - 1);
-						else
-							this.setFocusOnInput();
-					}else{
+					if(!this.controlElements.active)
 						this.setFocusOnInput();
-					}
 				}
 			}
 
@@ -347,8 +350,6 @@ namespace cf {
 
 		private onInputFocus(event: FocusEvent){
 			this._active = true;
-			if(this.controlElements.active)
-				this.controlElements.setFocusOnElement(-1);
 		}
 
 		public setFocusOnInput(){

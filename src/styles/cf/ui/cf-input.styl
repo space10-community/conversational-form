@@ -13,10 +13,12 @@ cf-input
 
 	&.animate-in
 		input
+			transition-delay 0s, 0s, 0s, $introDelay, $introDelay
 			opacity 1
 			transform translateY(0px) rotateX(0deg)
 		
 		cf-input-button.cf-input-button
+			transition-delay 0s, 0s $introDelay + 0.35
 			transform scale(1, 1)
 
 	input
@@ -51,7 +53,7 @@ cf-input
 		transform translateY(40px) rotateX(-40deg)
 
 		.conversational-form--enable-animation &
-			transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack $introDelay, opacity $anim-time * 0.5 $anim-easeOut $introDelay
+			transition box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack 0s, opacity $anim-time * 0.5 $anim-easeOut 0s
 
 		&:hover
 			&::-webkit-input-placeholder
@@ -137,7 +139,7 @@ cf-input-button.cf-input-button
 	transform scale(0, 0)
 
 	.conversational-form--enable-animation &
-		transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack $introDelay + 0.35
+		transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack 0s
 
 	> div
 		position absolute

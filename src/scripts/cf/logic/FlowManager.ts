@@ -27,11 +27,12 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => boolean;
+		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
 
+		private stopped: boolean = false;
 		private maxSteps: number = 0;
 		private step: number = 0;
 		private stepTimer: number = 0;
@@ -126,7 +127,12 @@ namespace cf {
 		}
 
 		public start(){
+			this.stopped = false;
 			this.validateStepAndUpdate();
+		}
+
+		public stop(){
+			this.stopped = true;
 		}
 
 		public nextStep(){
@@ -164,6 +170,9 @@ namespace cf {
 		}
 
 		private showStep(){
+			if(this.stopped)
+				return;
+
 			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag);
 
 			if(this.currentTag.disabled){
