@@ -6,6 +6,7 @@
 
 		<style>
 			.form-outer{
+				position: relative;
 				background: lightgrey;
 				width: 600px;
 				height: 80vh;
@@ -15,10 +16,8 @@
 		<div id="random-interface">
 			<style>
 				#random-interface{
-					position: absolute;
+					position: relative;
 					z-index: 1000;
-					top: 0px;
-					left: 0px;
 				}
 				#random-interface button{
 					color: red;
@@ -36,7 +35,7 @@
 
 
 
-		<div class="form-outer">
+		<div class="form-outer" cf-context>
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form" action="" cf-form>
