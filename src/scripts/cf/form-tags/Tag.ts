@@ -35,7 +35,7 @@ namespace cf {
 		required: boolean;
 		disabled: boolean;
 
-		validationCallback?(dto: FlowDTO, success: () => void, error: () => void): void;
+		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
 
 	export interface ITagOptions{
@@ -57,7 +57,7 @@ namespace cf {
 		protected defaultValue: string | number;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
-		public validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
+		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
 			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
