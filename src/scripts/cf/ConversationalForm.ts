@@ -176,15 +176,14 @@ namespace cf {
 			if(optionalStoppingMessage != "")
 				this.chatList.createResponse(true, null, optionalStoppingMessage);
 			
-			this.userInput.disabled = true;
-			this.userInput.visible = false;
+			this.userInput.onFlowStopped();
 		}
 
 		public start(){
-			this.flowManager.start();
-			
 			this.userInput.disabled = false;
 			this.userInput.visible = true;
+
+			this.flowManager.start();
 		}
 
 		public getTag(nameOrIndex: string | number): ITag{

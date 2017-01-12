@@ -148,6 +148,14 @@ namespace cf {
 			return value;
 		}
 
+		public onFlowStopped(){
+			if(this.controlElements)
+				this.controlElements.reset();
+			
+			this.disabled = true;
+			this.visible = false;
+		}
+
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			const dto: FlowDTO = event.detail;
