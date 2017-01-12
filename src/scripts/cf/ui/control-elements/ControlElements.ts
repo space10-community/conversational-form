@@ -173,14 +173,16 @@ namespace cf {
 				}
 			}
 
-			if(!userInput.active && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
+			if(!userInput.active && this.validateRowColIndexes() && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
 				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+			}else if(!userInput.active){
+				userInput.setFocusOnInput();
 			}
 		}
 
 		private validateRowColIndexes():boolean{
 			const maxRowIndex: number = (this.el.classList.contains("two-row") ? 1 : 0)
-			if(this.tableableRows[this.rowIndex]){
+			if(this.rowIndex != -1 && this.tableableRows[this.rowIndex]){
 				// columnIndex is only valid if rowIndex is valid
 				if(this.columnIndex < 0){
 					this.columnIndex = this.tableableRows[this.rowIndex].length - 1;
@@ -364,17 +366,6 @@ namespace cf {
 				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
 			}else{
 				this.resetTabList();
-			}
-		}
-
-		public setFocusOnElement(index: number){
-			const elements: Array<IControlElement> = this.getElements();
-			if(this.tableableRows && index != -1){
-				this.tableableRows[0][0].el.focus();
-				this.columnIndex = 0;
-				this.rowIndex = 0;
-			}else{
-				this.rowIndex = 0;
 			}
 		}
 

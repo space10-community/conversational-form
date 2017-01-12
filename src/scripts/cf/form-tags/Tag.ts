@@ -35,14 +35,14 @@ namespace cf {
 		required: boolean;
 		disabled: boolean;
 
-		validationCallback?(dto: FlowDTO, success: () => void, error: ()  => void): boolean;
+		validationCallback?(dto: FlowDTO, success: () => void, error: () => void): void;
 	}
 
 	export interface ITagOptions{
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (dto: FlowDTO, success: () => void, error: ()  => void) => boolean,// can be set through cf-validation attribute
+		validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void,// can be set through cf-validation attribute
 	}
 
 	// class
@@ -57,7 +57,7 @@ namespace cf {
 		protected defaultValue: string | number;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
-		public validationCallback?: (dto: FlowDTO, success: () => void, error: ()  => void) => boolean; // can be set through cf-validation attribute, get's called from FlowManager
+		public validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
 			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
@@ -247,7 +247,7 @@ namespace cf {
 
 			const min: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
 			const max: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
-			console.log(min, max);
+
 			if(min != -1 && valueText.length < min){
 				isValid = false;
 			}
