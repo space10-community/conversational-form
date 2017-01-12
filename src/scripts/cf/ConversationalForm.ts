@@ -57,6 +57,7 @@ namespace cf {
 			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
 			}
+			console.log("................this.loadExternalStyleSheet", this.loadExternalStyleSheet);
 
 			if(!isNaN(options.scrollAccerlation))
 				ScrollController.accerlation = options.scrollAccerlation;
@@ -316,7 +317,7 @@ namespace cf {
 // check for a form element with attribute:
 
 window.addEventListener("load", () =>{
-	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form-element]");
+	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form]") || <HTMLFormElement> document.querySelector("form[cf-form-element]");
 	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
 
 	if(formEl && !window.ConversationalForm){

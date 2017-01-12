@@ -8,18 +8,77 @@
 			.form-outer{
 				background: lightgrey;
 				width: 600px;
-				height: 100vh;
+				height: 80vh;
 			}
 		</style>
+
+		<div id="random-interface">
+			<style>
+				#random-interface{
+					position: absolute;
+					z-index: 1000;
+					top: 0px;
+					left: 0px;
+				}
+				#random-interface button{
+					color: red;
+				}
+			</style>
+			<script>
+				function addRandomClick(){
+					var ran = ["Random message 1", "Random message 2"];
+					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
+				}
+			</script>
+			<h2>Add random robot response</h2>
+			<button onclick="addRandomClick()">Add random text</button>
+		</div>
+
 
 
 		<div class="form-outer">
 
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form" action="" cf-form>
+
+				<div class="field name-firstname">
+					<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
+					<div class="input-box">
+						<input
+							type="text"
+							id="billing:firstname"
+							name="billing[firstname]"
+							value=""
+							title="Fornavn"
+							maxlength="255"
+							class="input-text required-entry"
+
+							cf-questions="Click 'Add random text' button above"
+						>
+					</div>
+				</div>
+
 			</form>
 
 		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -191,17 +250,6 @@
 
 
 		<script>
-			(function(){
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form"),
-					submitCallback: function(){
-						// remove Conversational Form
-						conversationalForm.remove();
-
-						alert("Custom submit callback reached, see markup of this file:190")
-					}
-				});
-			})();
 		</script>
 
 	</body>
