@@ -27,7 +27,7 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
+		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
@@ -68,8 +68,10 @@ namespace cf {
 						this.currentTag.validationCallback(appDTO, () => {
 							isTagValid = true;
 							onValidationCallback();
-						}, () => {
+						}, (optionalErrorMessage?: string) => {
 							isTagValid = false;
+							if(optionalErrorMessage)
+								appDTO.errorText = optionalErrorMessage;
 							onValidationCallback();
 						});
 
@@ -85,8 +87,10 @@ namespace cf {
 						FlowManager.generalFlowStepCallback(appDTO, () => {
 							isTagValid = true;
 							onValidationCallback();
-						}, () => {
+						}, (optionalErrorMessage?: string) => {
 							isTagValid = false;
+							if(optionalErrorMessage)
+								appDTO.errorText = optionalErrorMessage;
 							onValidationCallback();
 						});
 

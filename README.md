@@ -142,7 +142,7 @@ previous input could be a select:option list with countries.
 * three parameters is passed to the method
 	* dto: FlowDTO
 	* success: () => void //callback
-	* error: () => void //callback
+	* error: (optionalErrorMessage?: string) => void //callback
 ```html
 <input type="text" cf-validation="window.validateFunction" ..
 ```
