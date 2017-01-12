@@ -46,6 +46,10 @@
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form" action="">
 
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+
+				<input type="text" pattern=".{5,10}" required cf-error="need to be between 5-10 chars" name="maxmin" value="">
+
 				<div class="field name-firstname">
 						<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
 						<div class="input-box">
