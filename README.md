@@ -14,7 +14,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
