@@ -18,12 +18,19 @@ namespace cf {
 		formEl: HTMLFormElement,
 		context?: HTMLElement,
 		dictionaryData?: Object,
-		dictionaryAI?: Object,
+		dictionaryRobot?: Object,
 		userImage?: string,
+		robotImage?: string,
 		submitCallback?: () => void | HTMLButtonElement,
+		loadExternalStyleSheet?: boolean;
+		preventAutoAppend?: boolean;
+		scrollAccerlation?: number;
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be set on each Tag.ts
 	}
 
 	export class ConversationalForm{
+		public static animationsEnabled: boolean = true;
+
 		public dictionary: Dictionary;
 
 		private el: HTMLElement;
@@ -36,27 +43,44 @@ namespace cf {
 		private chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
+		private loadExternalStyleSheet: boolean = true;
+		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
+
+			// set a general step validation callback
+			if(options.flowStepCallback)
+				FlowManager.generalFlowStepCallback = options.flowStepCallback;
 			
+			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
+				this.loadExternalStyleSheet = false;
+			}
+
+			if(!isNaN(options.scrollAccerlation))
+				ScrollController.accerlation = options.scrollAccerlation;
+
+			if(options.preventAutoAppend == true)
+				this.preventAutoAppend = true;
+
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
 			this.formEl = options.formEl;
 			this.submitCallback = options.submitCallback;
 
+			if(this.formEl.getAttribute("cf-no-animation") == "")
+				ConversationalForm.animationsEnabled = false;
+
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
-			
-			console.log(UserInput.preventAutoFocus, this.formEl, this.formEl.getAttribute("cf-prevent-autofocus"))
 
-			// 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
-				aiQuestions: options.dictionaryAI,
+				robotData: options.dictionaryRobot,
 				userImage: options.userImage,
+				robotImage: options.robotImage,
 			});
 
 			// emoji.. fork and set your own values..
@@ -65,17 +89,15 @@ namespace cf {
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			setTimeout(() => this.init(), 0);
+			this.init();
 		}
 
 		public init(): ConversationalForm{
-			const developmentScriptTag: any = document.getElementById("conversational-form-development");
-
-			if(!developmentScriptTag){
-				// not in development/test, so inject production css
+			if(this.loadExternalStyleSheet){
+				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
-				const githubMasterUrl: string = "https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.css";
+				const githubMasterUrl: string = "http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.css";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
@@ -88,7 +110,8 @@ namespace cf {
 			}
 
 			// set context position to relative, else we break out of the box
-			if(this.context.style.position != "fixed" && this.context.style.position != "absolute" && this.context.style.position != "relative"){
+			const position: string = window.getComputedStyle(this.context).getPropertyValue("position").toLowerCase();
+			if(["fixed", "absolute", "relative"].indexOf(position) == -1){
 				this.context.style.position = "relative";
 			}
 
@@ -110,7 +133,7 @@ namespace cf {
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button"), 0);
+				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea"), 0);
 
 				for (var i = 0; i < fields.length; i++) {
 					const element = fields[i];
@@ -142,6 +165,34 @@ namespace cf {
 			this.setupUI();
 
 			return this;
+		}
+
+		public addRobotChatResponse(response: string){
+			this.chatList.createResponse(true, null, response);
+		}
+
+		public stop(optionalStoppingMessage: string = ""){
+			this.flowManager.stop();
+			if(optionalStoppingMessage != "")
+				this.chatList.createResponse(true, null, optionalStoppingMessage);
+			
+			this.userInput.onFlowStopped();
+		}
+
+		public start(){
+			this.userInput.disabled = false;
+			this.userInput.visible = true;
+
+			this.flowManager.start();
+		}
+
+		public getTag(nameOrIndex: string | number): ITag{
+			if(typeof nameOrIndex == "number"){
+				return this.tags[nameOrIndex];
+			}else{
+				// TODO: fix so you can get a tag by its name attribute
+				return null;
+			}
 		}
 
 		private setupTagGroups(){
@@ -186,13 +237,22 @@ namespace cf {
 			// start the flow
 			this.flowManager = new FlowManager({
 				cuiReference: this,
-				tags: this.tags,
+				tags: this.tags
 			});
 
 			this.el = document.createElement("div");
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
-			this.context.appendChild(this.el);
+
+			if(ConversationalForm.animationsEnabled)
+				this.el.classList.add("conversational-form--enable-animation");
+
+			// add conversational form to context
+			if(!this.preventAutoAppend)
+				this.context.appendChild(this.el);
+			
+			//hide until stylesheet is rendered
+			this.el.style.visibility = "hidden";
 
 			// Conversational Form UI
 			this.chatList = new ChatList({});
@@ -213,8 +273,21 @@ namespace cf {
 			// })
 		}
 
+		public remapTagsAndStartFrom(index: number = 0){
+			// possibility to start the form flow over from {index}
+			for(var i = 0; i < this.tags.length; i++){
+				const tag: ITag | ITagGroup = this.tags[i];
+				tag.refresh();
+			}
+
+			this.flowManager.startFrom(index);
+		}
+
 		public doSubmitForm(){
+			this.el.classList.add("done");
+
 			if(this.submitCallback){
+				// remove should be called in the submitCallback
 				this.submitCallback();
 			}else{
 				this.formEl.submit();
@@ -223,14 +296,20 @@ namespace cf {
 		}
 
 		public remove(){
+			this.flowManager.dealloc();
 			this.userInput.dealloc();
 			this.chatList.dealloc();
 
+			this.dictionary = null;
+			this.flowManager = null;
 			this.userInput = null;
 			this.chatList = null;
-			console.log(this, 'remove() Conversational Form');
+			this.el.parentNode.removeChild(this.el);
+			this.el = null;
+			this.context = null;
+			this.formEl = null;
+			this.submitCallback = null;
 		}
-
 
 		// to illustrate the event flow of the app
 		public static ILLUSTRATE_APP_FLOW: boolean = true;
@@ -252,10 +331,10 @@ namespace cf {
 // check for a form element with attribute:
 
 window.addEventListener("load", () =>{
-	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form-element]");
+	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form]") || <HTMLFormElement> document.querySelector("form[cf-form-element]");
 	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
 
-	if(formEl){
+	if(formEl && !window.ConversationalForm){
 		window.ConversationalForm = new cf.ConversationalForm({
 			formEl: formEl,
 			context: contextEl

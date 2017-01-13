@@ -23,6 +23,7 @@ namespace cf {
 		private el: HTMLElement;
 		private list: HTMLElement;
 		private infoElement: HTMLElement;
+		private currentControlElement: IControlElement;
 
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
@@ -30,7 +31,7 @@ namespace cf {
 		private tableableRows: Array<Array<IControlElement>>;
 
 		private userInputUpdateCallback: () => void;
-		private onChatAIReponseCallback: () => void;
+		private onChatRobotReponseCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
@@ -58,6 +59,13 @@ namespace cf {
 			return false;
 		}
 
+		public set disabled(value: boolean){
+			if(value)
+				this.list.classList.add("disabled");
+			else
+				this.list.classList.remove("disabled");
+		}
+
 		public get length(): number{
 			const elements: Array<IControlElement> = this.getElements();
 			return elements.length;
@@ -74,8 +82,8 @@ namespace cf {
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
 			document.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
-			this.onChatAIReponseCallback = this.onChatAIReponse.bind(this);
-			document.addEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
+			this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
+			document.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
@@ -101,11 +109,27 @@ namespace cf {
 			let x: number = (vector.x + vector.width < this.elementWidth ? 0 : vector.x - vector.width);
 			x *= -1;
 
-			// TODO: update rowIndex and columnIndex
+			this.updateRowColIndexFromVector(vector);
+
 			this.listScrollController.setScroll(x, 0);
 		}
 
-		private onChatAIReponse(event:CustomEvent){
+		private updateRowColIndexFromVector(vector: ControlElementVector){
+			for (let i = 0; i < this.tableableRows.length; i++) {
+				let items: Array <IControlElement> = this.tableableRows[i];
+			
+				for (let j = 0; j < items.length; j++) {
+					let item: IControlElement = items[j];
+					if(item == vector.el){
+						this.rowIndex = i;
+						this.columnIndex = j;
+						break;
+					}
+				}
+			}
+		}
+
+		private onChatRobotReponse(event:CustomEvent){
 			this.animateElementsIn();
 		}
 
@@ -135,11 +159,12 @@ namespace cf {
 					}else if(dto.keyCode == Dictionary.keyCodes["up"]){
 						this.updateRowIndex(-1);
 					}else if(dto.keyCode == Dictionary.keyCodes["enter"] || dto.keyCode == Dictionary.keyCodes["space"]){
-						if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex])
+						if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]){
 							this.tableableRows[this.rowIndex][this.columnIndex].el.click();
-						else if(this.tableableRows[0] && this.tableableRows[0].length == 1)
+						}else if(this.tableableRows[0] && this.tableableRows[0].length == 1){
 							// this is when only one element in a filter, then we click it!
 							this.tableableRows[0][0].el.click();
+						}
 					}
 
 					if(!this.validateRowColIndexes()){
@@ -148,14 +173,16 @@ namespace cf {
 				}
 			}
 
-			if(!userInput.active && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
+			if(!userInput.active && this.validateRowColIndexes() && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)){
 				this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+			}else if(!userInput.active){
+				userInput.setFocusOnInput();
 			}
 		}
 
 		private validateRowColIndexes():boolean{
 			const maxRowIndex: number = (this.el.classList.contains("two-row") ? 1 : 0)
-			if(this.tableableRows[this.rowIndex]){
+			if(this.rowIndex != -1 && this.tableableRows[this.rowIndex]){
 				// columnIndex is only valid if rowIndex is valid
 				if(this.columnIndex < 0){
 					this.columnIndex = this.tableableRows[this.rowIndex].length - 1;
@@ -175,8 +202,6 @@ namespace cf {
 		private updateRowIndex(direction: number){
 			const oldRowIndex: number = this.rowIndex;
 			this.rowIndex += direction;
-
-			// console.log("updateRowIndex:", this.tableableRows);
 
 			if(this.tableableRows[this.rowIndex]){
 				// when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
@@ -312,11 +337,20 @@ namespace cf {
 						this.tableableRows[0].push(element);
 				}
 			}
+		}
 
-			// console.log("this.tableableRows created:", this.tableableRows)
+		public resetAfterErrorMessage(){
+			if(this.currentControlElement){
+				//reverse value of currentControlElement.
+				(<RadioButton | CheckboxButton>this.currentControlElement).checked = !(<RadioButton | CheckboxButton>this.currentControlElement).checked;
+				this.currentControlElement = null;
+			}
+
+			this.disabled = false;
 		}
 		
 		public focusFrom(angle: string){
+			
 			if(!this.tableableRows)
 				return;
 
@@ -333,20 +367,12 @@ namespace cf {
 			}else{
 				this.resetTabList();
 			}
-
-			// console.log("focusFrom", angle, "this.rowIndex:", this.rowIndex);
-		}
-		public setFocusOnElement(index: number){
-			const elements: Array<IControlElement> = this.getElements();
-			if(this.tableableRows && index != -1){
-				this.tableableRows[0][0].el.focus();
-			}else{
-				this.rowIndex = 0;
-			}
 		}
 
 		public updateStateOnElements(controlElement: IControlElement){
-			this.list.classList.add("disabled");
+			this.disabled = true;
+			this.currentControlElement = controlElement;
+
 			if(controlElement.type == "RadioButton"){
 				// uncheck other radio buttons...
 				const elements: Array<IControlElement> = this.getElements();
@@ -434,7 +460,7 @@ namespace cf {
 		}
 
 		public buildTags(tags: Array<ITag>){
-			this.list.classList.remove("disabled");
+			this.disabled = false;
 
 			const topList: HTMLUListElement = (<HTMLUListElement > this.el.parentNode).getElementsByTagName("ul")[0];
 			const bottomList: HTMLUListElement = (<HTMLUListElement> this.el.parentNode).getElementsByTagName("ul")[1];
@@ -559,7 +585,8 @@ namespace cf {
 						// sort the list so we can set tabIndex properly
 						var elementsCopyForSorting: Array <IControlElement> = elements.slice();
 						const tabIndexFilteredElements: Array<IControlElement> = elementsCopyForSorting.sort((a: IControlElement, b: IControlElement) => {
-							return a.positionVector.x == b.positionVector.x ? 0 : a.positionVector.x < b.positionVector.x ? -1 : 1;
+							const aOverB: boolean = a.positionVector.y > b.positionVector.y;
+							return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
 						});
 
 						let tabIndex: number = 0;
@@ -597,6 +624,7 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.currentControlElement = null;
 			this.tableableRows = null;
 
 			cancelAnimationFrame(this.rAF);
@@ -608,8 +636,8 @@ namespace cf {
 			document.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 			this.onElementFocusCallback = null;
 
-			document.removeEventListener(ChatResponseEvents.AI_QUESTION_ASKED, this.onChatAIReponseCallback, false);
-			this.onChatAIReponseCallback = null;
+			document.removeEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+			this.onChatRobotReponseCallback = null;
 
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;

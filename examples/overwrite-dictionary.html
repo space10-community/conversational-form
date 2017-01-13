@@ -6,10 +6,9 @@
 
 		<style>
 			.form-outer{
-				background: yellow;
+				background: lightgrey;
 				width: 600px;
-				height: 800px;
-				padding-top: 200px;
+				height: 100vh;
 			}
 		</style>
 
@@ -21,8 +20,8 @@
 
 
 
-			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
-			<!--<form id="co-billing-form" action="" cf-form-element>-->
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<!--<form id="co-billing-form" action="" cf-form>-->
 			<form id="co-billing-form" action="">
 
 				<input type="password" name="password" value="" id="password">
@@ -152,10 +151,6 @@
 								title="Fornavn"
 								maxlength="255"
 								class="input-text required-entry"
-
-								cf-validation="window.testValidation"
-								cf-questions="Put on the sherlock holmes hat to get past this step, and look at the custom validation method window.testValidation"
-								cf-error="This value goes through the window.javascript called testValidation, check that for guide.."
 							>
 						</div>
 					</div>
@@ -351,14 +346,6 @@
 
 
 
-		<script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
-
-
-
-
 
 
 
@@ -530,16 +517,10 @@
 		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
 
 		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>-->
+		<!--<script type="text/javascript" id="conversational-form-development" src="http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
 
 
 		<script>
-			var testValidation = function(value){
-				if(value.indexOf("world") != -1)
-					return true;
-				return false;
-			};
-
 			// Self-Invoking Anonymous Function to get started
 			(function(){
 		// 		var tags = [],
@@ -554,12 +535,12 @@
 		// 		}
 
 
-				var formEl = document.getElementById("co-billing-form");
-				window.ConversationalForm = new cf.ConversationalForm({
-					formEl: formEl,
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("co-billing-form"),
 					dictionaryData: {
 						"entry-not-found": "Wörterbuchschlüssel wird nicht gefunden.",
 						"input-placeholder": "Geben Sie hier Ihre Antwort ein ...",
+						"input-placeholder-required": "Eingabe erforderlich ...",
 						"input-placeholder-error": "Ihre Eingabe ist nicht korrekt ...",
 						"input-placeholder-file-error": "Datei-Upload fehlgeschlagen ...",
 						"input-placeholder-file-size-error": "Dateigröße zu groß ...",
@@ -568,8 +549,9 @@
 						"user-reponse-missing": "Fehlende Eingabe ...",
 						"general": "Allgemeiner Typ1|Allgemeiner Typ2"
 					},// empty will throw error
-					dictionaryAI: {
+					dictionaryRobot: {
 						"text": "Bitte schreiben Sie etwas Text.",
+						"input": "Bitte schreiben Sie etwas Text.",
 						"name": "Wie heißen Sie?",
 						"email": "Brauchen Sie Ihre E-Mail.",
 						"password": "Bitte geben Sie das Passwort ein",

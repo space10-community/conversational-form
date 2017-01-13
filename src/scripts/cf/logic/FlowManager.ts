@@ -27,10 +27,12 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
+		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 
 		private cuiReference: ConversationalForm;
 		private tags: Array<ITag>;
 
+		private stopped: boolean = false;
 		private maxSteps: number = 0;
 		private step: number = 0;
 		private stepTimer: number = 0;
@@ -53,32 +55,88 @@ namespace cf {
 		public userInputSubmit(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			var appDTO: FlowDTO = event.detail;
+			let appDTO: FlowDTO = event.detail;
+			let isTagValid: Boolean = this.currentTag.setTagValueAndIsValid(appDTO);
+			let hasCheckedForTagSpecificValidation: boolean = false;
+			let hasCheckedForGlobalFlowValidation: boolean = false;
 
-			if(this.currentTag.setTagValueAndIsValid(appDTO)){
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
+			const onValidationCallback = () =>{
+				// check 1
+				if(this.currentTag.validationCallback && typeof this.currentTag.validationCallback == "function"){
+					if(!hasCheckedForTagSpecificValidation && isTagValid){
+						hasCheckedForTagSpecificValidation = true;
+						this.currentTag.validationCallback(appDTO, () => {
+							isTagValid = true;
+							onValidationCallback();
+						}, (optionalErrorMessage?: string) => {
+							isTagValid = false;
+							if(optionalErrorMessage)
+								appDTO.errorText = optionalErrorMessage;
+							onValidationCallback();
+						});
 
-				// update to latest DTO because values can be changed in validation flow...
-				appDTO = appDTO.input.getFlowDTO();
+						return;
+					}
+				}
 
-				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-					detail: appDTO //UserInput value
-				}));
+				// check 2
+				if(this.currentTag.required && FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+					if(!hasCheckedForGlobalFlowValidation && isTagValid){
+						hasCheckedForGlobalFlowValidation = true;
+						// use global validationCallback method
+						FlowManager.generalFlowStepCallback(appDTO, () => {
+							isTagValid = true;
+							onValidationCallback();
+						}, (optionalErrorMessage?: string) => {
+							isTagValid = false;
+							if(optionalErrorMessage)
+								appDTO.errorText = optionalErrorMessage;
+							onValidationCallback();
+						});
 
-				// goto next step when user has answered
-				setTimeout(() => this.nextStep(), 250);
-			}else{
-				ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
+						return;
+					}
+				}
 
-				// Value not valid
-				document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-					detail: appDTO //UserInput value
-				}));
+				// go on with the flow
+				if(isTagValid){
+					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
+
+					// update to latest DTO because values can be changed in validation flow...
+					appDTO = appDTO.input.getFlowDTO();
+
+					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
+						detail: appDTO //UserInput value
+					}));
+
+					// goto next step when user has answered
+					setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0);
+				}else{
+					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
+
+					// Value not valid
+					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+						detail: appDTO //UserInput value
+					}));
+				}
 			}
+
+			// TODO, make into promises when IE is rolling with it..
+			onValidationCallback();
+		}
+
+		public startFrom(index: number){
+			this.step = index;
+			this.validateStepAndUpdate();
 		}
 
 		public start(){
+			this.stopped = false;
 			this.validateStepAndUpdate();
+		}
+
+		public stop(){
+			this.stopped = true;
 		}
 
 		public nextStep(){
@@ -101,6 +159,10 @@ namespace cf {
 			this.userInputSubmitCallback = null;
 		}
 
+		private skipStep(){
+			this.nextStep();
+		}
+
 		private validateStepAndUpdate(){
 			if(this.step == this.maxSteps){
 				// console.warn("We are at the end..., submit click")
@@ -112,11 +174,21 @@ namespace cf {
 		}
 
 		private showStep(){
-			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag)
+			if(this.stopped)
+				return;
 
-			document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
-				detail: this.currentTag
-			}));
+			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag);
+
+			if(this.currentTag.disabled){
+				// check if current tag has become or is disabled, if it is, then skip step.
+				this.skipStep();
+			}else{
+				// 
+				document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
+					detail: this.currentTag
+				}));
+			}
+
 		}
 	}
 }

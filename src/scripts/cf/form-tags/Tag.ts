@@ -28,33 +28,39 @@ namespace cf {
 		label: string,
 		question: string,
 		errorMessage:string,
-		setTagValueAndIsValid(value: FlowDTO):boolean;
+		setTagValueAndIsValid(dto: FlowDTO):boolean;
 		dealloc():void;
-		value:string;
+		refresh():void;
+		value:string | Array <string>;
+		required: boolean;
+		disabled: boolean;
+
+		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
 
 	export interface ITagOptions{
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
-		validationCallback?: (value: string, tag: ITag) => boolean,// can also be set through cf-validation attribute
+		validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void,// can be set through cf-validation attribute
 	}
 
 	// class
 	export class Tag implements ITag {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
-		protected defaultValue: string | number;
 
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
-		protected _label: string;
 
-		private validationCallback?: (value: string, tag: ITag) => boolean; // can also be set through cf-validation attribute.
+		protected _label: string;
+		protected defaultValue: string | number;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
+		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
+
 		public get type (): string{
-			return this.domElement.getAttribute("type");
+			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
 		}
 
 		public get name (): string{
@@ -68,17 +74,25 @@ namespace cf {
 			if(this._label)
 				return this._label;
 			
-			return Dictionary.getAIResponse(this.type);
+			return Dictionary.getRobotResponse(this.type);
 		}
 
-		public get value (): string{
+		public get value (): string | Array<string> {
 			return this.domElement.value;
+		}
+
+		public get disabled (): boolean{
+			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
+		}
+
+		public get required(): boolean{
+			return !!this.domElement.getAttribute("required") || this.domElement.getAttribute("required") == "";
 		}
 
 		public get question():string{
 			// if questions are empty, then fall back to dictionary, every time
 			if(!this.questions || this.questions.length == 0)
-				return Dictionary.getAIResponse(this.type);
+				return Dictionary.getRobotResponse(this.type);
 			else
 				return this.questions[Math.floor(Math.random() * this.questions.length)];
 		}
@@ -86,16 +100,21 @@ namespace cf {
 		public get errorMessage():string{
 			if(!this.errorMessages){
 				// custom tag error messages
-				
 				if(this.domElement.getAttribute("cf-error")){
 					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
+				}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error")){
+					this.errorMessages = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error").split("|");
+				}else if(this.required){
+					this.errorMessages = [Dictionary.get("input-placeholder-required")]
 				}else{
 					if(this.type == "file")
 						this.errorMessages = [Dictionary.get("input-placeholder-file-error")];
-					else
+					else{
 						this.errorMessages = [Dictionary.get("input-placeholder-error")];
+					}
 				}
 			}
+
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
 
@@ -132,7 +151,7 @@ namespace cf {
 				console.log('Tag registered:', this.type);
 			}
 
-			this.findAndSetQuestions();
+			this.refresh();
 		}
 
 		public dealloc(){
@@ -182,6 +201,10 @@ namespace cf {
 					tag = new InputTag({
 						domElement: element
 					});
+				}else if(element.tagName.toLowerCase() == "textarea"){
+					tag = new InputTag({
+						domElement: element
+					});
 				}else if(element.tagName.toLowerCase() == "select"){
 					tag = new SelectTag({
 						domElement: element
@@ -201,24 +224,35 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
-
 		}
 
-		public setTagValueAndIsValid(value: FlowDTO):boolean{
+		public refresh(){
+			this.questions = null;
+			this.findAndSetQuestions();
+		}
+
+		public setTagValueAndIsValid(dto: FlowDTO):boolean{
 			// this sets the value of the tag in the DOM
 			// validation
 			let isValid: boolean = true;
-			let valueText: string = value.text;
+			let valueText: string = dto.text;
 
 			if(this.pattern){
 				isValid = this.pattern.test(valueText);
 			}
 
-			if(isValid && this.validationCallback){
-				isValid = this.validationCallback(valueText, this);
+			if(valueText == "" && this.required){
+				isValid = false;
 			}
 
-			if(valueText == ""){
+			const min: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
+			const max: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+
+			if(min != -1 && valueText.length < min){
+				isValid = false;
+			}
+
+			if(max != -1 && valueText.length > max){
 				isValid = false;
 			}
 
@@ -245,6 +279,9 @@ namespace cf {
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
+			}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions")){
+				// for groups the parentNode can have the cf-questions..
+				this.questions = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions").split("|");
 			}else{
 				// questions not set, so find it in the DOM
 				// try a broader search using for and id attributes

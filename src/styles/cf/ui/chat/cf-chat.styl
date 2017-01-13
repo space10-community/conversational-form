@@ -15,7 +15,8 @@ cf-chat
 	align-items baseline
 
 	will-change padding-bottom
-	transition padding-bottom $anim-time * 0.5 $anim-easeOut
+	.conversational-form--enable-animation &
+		transition padding-bottom $anim-time * 0.5 $anim-easeOut
 
 	&:before
 		content ""

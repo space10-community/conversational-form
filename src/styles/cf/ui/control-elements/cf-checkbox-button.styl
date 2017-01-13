@@ -22,10 +22,11 @@
 		border-radius 3px
 		background $color-chat-reponse-user-bg
 		will-change background
-		transition background $anim-time * 0.5 $anim-easeOut
 		margin-right 10px
 		margin-left -10px
 		position relative
+		.conversational-form--enable-animation &
+			transition background $anim-time * 0.5 $anim-easeOut
 
 		&:after
 			content ""
@@ -40,8 +41,9 @@
 			background-repeat no-repeat
 			transform-origin: 50% 50%
 			will-change transform
-			transition transform $anim-time * 0.5 $anim-easeOut
 			transform scale(0, 0)
+			.conversational-form--enable-animation &
+				transition transform $anim-time * 0.5 $anim-easeOut
 	
 	&[checked="checked"], &[selected="selected"]
 		cf-checkbox
@@ -49,4 +51,5 @@
 
 			&:after
 				transform scale(1, 1)
-				transition-timing-function: $anim-easeOutBack
+				.conversational-form--enable-animation &
+					transition-timing-function: $anim-easeOutBack
