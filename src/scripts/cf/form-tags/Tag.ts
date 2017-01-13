@@ -27,11 +27,12 @@ namespace cf {
 		name: string,
 		label: string,
 		question: string,
-		errorMessage:string,
-		setTagValueAndIsValid(dto: FlowDTO):boolean;
-		dealloc():void;
-		refresh():void;
+		errorMessage: string,
+		setTagValueAndIsValid(dto: FlowDTO): boolean;
+		dealloc(): void;
+		refresh(): void;
 		value:string | Array <string>;
+		inputPlaceholder?: string;
 		required: boolean;
 		disabled: boolean;
 
@@ -49,9 +50,11 @@ namespace cf {
 	export class Tag implements ITag {
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		
-
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
+
+		// input placeholder text, this is for the UserInput and not the tag it self.
+		protected _inputPlaceholder: string;
 
 		protected _label: string;
 		protected defaultValue: string | number;
@@ -65,6 +68,10 @@ namespace cf {
 
 		public get name (): string{
 			return this.domElement.getAttribute("name");
+		}
+
+		public get inputPlaceholder (): string{
+			return this._inputPlaceholder;
 		}
 
 		public get label (): string{
@@ -279,17 +286,23 @@ namespace cf {
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
+				if(this.domElement.getAttribute("cf-input-placeholder"))
+					this._inputPlaceholder = this.domElement.getAttribute("cf-input-placeholder");
 			}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions")){
 				// for groups the parentNode can have the cf-questions..
-				this.questions = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions").split("|");
+				const parent: HTMLElement = (<HTMLElement> this.domElement.parentNode);
+				this.questions = parent.getAttribute("cf-questions").split("|");
+				if(parent.getAttribute("cf-input-placeholder"))
+					this._inputPlaceholder = parent.getAttribute("cf-input-placeholder");
 			}else{
 				// questions not set, so find it in the DOM
 				// try a broader search using for and id attributes
 				const elId: string = this.domElement.getAttribute("id");
 				const forLabel: HTMLElement = <HTMLElement> document.querySelector("label[for='"+elId+"']");
 
-				if(forLabel)
+				if(forLabel){
 					this.questions = [Helpers.getInnerTextOfElement(forLabel)];
+				}
 			}
 
 			if(!this.questions && this.domElement.getAttribute("placeholder")){

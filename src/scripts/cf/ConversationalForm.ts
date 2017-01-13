@@ -1,3 +1,5 @@
+// version 0.9.0
+
 /// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
@@ -32,8 +34,8 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 
 		public dictionary: Dictionary;
+		public el: HTMLElement;
 
-		private el: HTMLElement;
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
