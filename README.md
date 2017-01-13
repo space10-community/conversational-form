@@ -117,6 +117,12 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 <input type="text" cf-questions="What is your name?|Please tell me your name." ..
 ```
 
+### cf-input-placeholder
+* tag specific, set the placeholder text on the UserInput field
+```html
+<input type="text" cf-input-placeholder="Should include http" ..
+```
+
 ### {One way value-binding} with cf-questions:
 For cui-questions, add {previous-answer} to insert the value from the previous user-answer.
 ```html

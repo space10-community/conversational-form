@@ -200,7 +200,13 @@ namespace cf {
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
-			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+
+			if(this._currentTag.inputPlaceholder){
+				this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
+			}else{
+				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+			}
+
 			this.resetValue();
 
 			if(!UserInput.preventAutoFocus)
