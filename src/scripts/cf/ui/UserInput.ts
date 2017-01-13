@@ -32,6 +32,7 @@ namespace cf {
 
 		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
+		private inputPadding: number;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -154,6 +155,14 @@ namespace cf {
 			
 			this.disabled = true;
 			this.visible = false;
+		}
+
+		private onInputChange(){
+			if(isNaN(this.inputPadding))
+				this.inputPadding = Math.ceil(parseInt(window.getComputedStyle(this.inputElement).getPropertyValue("padding-top"), 10) * 0.5) + 1;
+
+			this.inputElement.style.height = "2px";
+			this.inputElement.style.height = (this.inputElement.scrollHeight) + this.inputPadding + "px";
 		}
 
 		private inputInvalid(event: CustomEvent){
@@ -340,6 +349,8 @@ namespace cf {
 			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
 				this.dispatchKeyChange(value, event.keyCode)
 			}
+
+			this.onInputChange();
 		}
 
 		private dispatchKeyChange(dto: FlowDTO, keyCode: number){
@@ -364,6 +375,7 @@ namespace cf {
 
 		private onInputFocus(event: FocusEvent){
 			this._active = true;
+			this.onInputChange();
 		}
 
 		public setFocusOnInput(){
@@ -396,9 +408,11 @@ namespace cf {
 
 		private resetValue(){
 			this.inputElement.value = "";
+			this.onInputChange();
 		}
 
 		public dealloc(){
+
 			this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			this.onInputBlurCallback = null;
 
