@@ -30,7 +30,7 @@ namespace cf {
 		public static ERROR_TIME: number = 2000;
 		public el: HTMLElement;
 
-		private inputElement: HTMLInputElement;
+		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
@@ -84,7 +84,7 @@ namespace cf {
 			super(options);
 
 			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-			this.inputElement = this.el.getElementsByTagName("input")[0];
+			this.inputElement = this.el.getElementsByTagName("textarea")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputBlurCallback = this.onInputBlur.bind(this);
@@ -448,7 +448,7 @@ namespace cf {
 					<div class="cf-icon-attachment"></div>
 				</cf-input-button>
 				
-				<input type='input' tabindex="1">
+				<textarea type='input' tabindex="1" rows="1"></textarea>
 
 			</cf-input>
 			`;
