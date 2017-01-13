@@ -97,7 +97,7 @@ namespace cf {
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
-				const githubMasterUrl: string = "http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.css";
+				const githubMasterUrl: string = "//conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.css";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
