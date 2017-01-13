@@ -36,7 +36,7 @@
 
 
 
-		<div class="form-outer">
+		<div class="form-outer" cf-context>
 
 
 
@@ -44,7 +44,8 @@
 
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="form" action="">
+			<form id="form" action="" cf-form>
+				<input type="text" required cf-questions="text field multiline....." name="password" value="">
 
 				<input type="text" disabled cf-questions="Skip this field" name="password" value="">
 				<input type="password" cf-questions="password field.. (NOT required)" name="password" value="">
@@ -578,18 +579,18 @@
 			};
 
 			(function(){
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form"),
-					flowStepCallback: function(dto, success, error){
-						success();
-					},
-					submitCallback: function(){
-						// remove Conversational Form
-						conversationalForm.remove();
+				// var conversationalForm = new cf.ConversationalForm({
+				// 	formEl: document.getElementById("form"),
+				// 	flowStepCallback: function(dto, success, error){
+				// 		success();
+				// 	},
+				// 	submitCallback: function(){
+				// 		// remove Conversational Form
+				// 		conversationalForm.remove();
 
-						alert("Custom submit callback reached, see markup of this file:190")
-					}
-				});
+				// 		alert("Custom submit callback reached, see markup of this file:190")
+				// 	}
+				// });
 			})();
 		</script>
 
