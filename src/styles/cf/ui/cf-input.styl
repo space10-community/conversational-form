@@ -31,12 +31,16 @@ cf-input
 
 
 	input, textarea
+		&:not(:focus)
+			height $input-field-height !important
+
+	input, textarea
 		// resets..
 		&:-webkit-autofill
 			// -webkit-box-shadow 0 0 0px 1000px white inset
 			background-color white
 
-		&:focus, &:focus, &:focus
+		&:focus, &:active
 			outline none
 			-webkit-appearance none
 			box-shadow 0px 0px 30px rgba(0,0,0,0.2)
@@ -138,7 +142,7 @@ cf-input-button.cf-input-button
 	position: absolute
 	overflow hidden
 	right 5px
-	bottom 12px
+	bottom 11px
 	z-index 3
 	cursor pointer
 	border-radius 50%
