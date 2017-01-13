@@ -18,14 +18,30 @@ namespace cf {
 	export interface ITagGroup extends ITag{
 		elements: Array <ITag>;
 		getGroupTagType: () => string;
+		refresh():void;
 		dealloc():void;
+		required: boolean;
+		disabled: boolean;
 	}
 
 	// class
 	export class TagGroup implements ITagGroup {
 
-		private errorMessages: Array<string>;
+		private onInputKeyChangeCallback: () => void;
+		private _values: Array<string>;
+
 		public elements: Array <ITag>;
+		
+		public get required(): boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(this.elements[i].required){
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		public get type (): string{
 			return "group";
@@ -46,32 +62,38 @@ namespace cf {
 			if(tagQuestion){
 				return tagQuestion;
 			}else{
-				// fallback to AI response from dictionary
-				const aiReponse: string = Dictionary.getAIResponse(this.getGroupTagType());
-				return aiReponse;
+				// fallback to robot response from dictionary
+				const robotReponse: string = Dictionary.getRobotResponse(this.getGroupTagType());
+				return robotReponse;
 			}
 		}
 
-		public get value (): string{
+		public get value (): Array<string>{
 			// TODO: fix value???
-			return "";
+			return this._values;
+		}
+
+		public get disabled (): boolean{
+			let disabled: boolean = false;
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.disabled)
+					disabled = true;
+			}
+
+			return disabled;
 		}
 		
 		public get errorMessage():string{
-			if(!this.errorMessages){
-				this.errorMessages = [Dictionary.get("input-placeholder-error")];
-				for (let i = 0; i < this.elements.length; i++) {
-					let element: ITag = <ITag>this.elements[i];
-					if(this.elements[i].domElement.getAttribute("cf-error")){
-						this.errorMessages = this.elements[i].domElement.getAttribute("cf-error").split("|");
-					}
-				}
+			var errorMessage = Dictionary.get("input-placeholder-error");
+
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				errorMessage = element.errorMessage;
 			}
 
-			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
+			return errorMessage;
 		}
-
-		private onInputKeyChangeCallback: () => void;
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
@@ -85,7 +107,13 @@ namespace cf {
 			}
 
 			this.elements = null;
-			this.errorMessages = null;
+		}
+
+		public refresh(){
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.refresh();
+			}
 		}
 
 		public getGroupTagType():string{
@@ -96,6 +124,7 @@ namespace cf {
 			let isValid: boolean = false;
 
 			const groupType: string = this.elements[0].type;
+			this._values = [];
 
 			switch(groupType){
 				case "radio" :
@@ -109,6 +138,9 @@ namespace cf {
 
 							if(tag == element.referenceTag){
 								(<HTMLInputElement> tag.domElement).checked = element.checked;
+								
+								if(element.checked)
+									this._values.push(<string> tag.value);
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
@@ -123,6 +155,9 @@ namespace cf {
 						element.checked = true;
 						(<HTMLInputElement> tag.domElement).checked = true;
 						isValid = true;
+
+						if(element.checked)
+							this._values.push(<string> tag.value);
 					}else if(!isValid && wasRadioButtonChecked){
 						// a radio button needs to be checked of
 						isValid = wasRadioButtonChecked;
@@ -138,6 +173,9 @@ namespace cf {
 						let element: CheckboxButton = <CheckboxButton> value.controlElements[i];
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
 						(<HTMLInputElement> tag.domElement).checked = element.checked;
+
+						if(element.checked)
+							this._values.push(<string> tag.value);
 					}
 
 					break;

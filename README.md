@@ -14,12 +14,12 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form-element`, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
 ```html
-<form id="my-form-element" cf-form-element ...>
+<form id="my-form-element" cf-form ...>
 ```
 
 That's it! Your form is now conversational :thumbsup:  
@@ -36,24 +36,28 @@ If you want to have the ConversationalForm appended to a certain element (when a
 If you don't want to have the UserInput to auto focus.
 
 ```html
-<form id="my-form-element" cf-form-element cf-prevent-autofocus>
+<form id="my-form-element" cf-form cf-prevent-autofocus>
 ```
 
 ## Customization
 
-For more control over the output exclude the attribute `cf-form-element` from the form element and instantiate either with vanilla JS or jQuery:
+For more control over the output exclude the attribute `cf-form` from the form element and instantiate either with vanilla JS or jQuery:
 
 ### Self-instantiate with vanilla JS
 
 ```javascript
-new cf.ConversationalForm({
+new cf.ConversationalForm(<ConversationalFormOptions> {
 	formEl: <HTMLFormElement>,
-	// dictionaryData?: {}, // empty will throw error, see Dictionaty.ts for values
-	// dictionaryAI?: {}, // empty will throw error, see Dictionaty.ts for values
+	// dictionaryData?: {}, // overwrite the default user Dictionary items
+	// dictionaryRobot?: {}, // overwrite the default robot Dictionary items
 	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
-	// userImage: "..." //base64 || image url
+	// flowStepCallback? (dto: FlowDTO, success: () => void, error: () => void) => boolean // allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
+	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
+	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
+	// loadExternalStyleSheet?: boolean // can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
+	// scrollAccerlation?: number // optional horizontal scroll accerlation value
 });
 ```
 
@@ -61,7 +65,9 @@ new cf.ConversationalForm({
 ### Instantiate with jQuery
 
 ```javascript
-$("form").conversationalForm();
+$("form").conversationalForm(<ConversationalFormOptions> {
+	...
+});
 ```
 
 
@@ -132,9 +138,11 @@ previous input could be a select:option list with countries.
 ### cf-validation
 * Javascript validate a <Tag> before submitting
 * OBS. eval is used.
-* two parameters is passed to the method
-	* value: String, the value of the input field
-	* tag: ITag, the actual DOM tag
+* Asyncronous, so a value can be validated through a server
+* three parameters is passed to the method
+	* dto: FlowDTO
+	* success: () => void //callback
+	* error: (optionalErrorMessage?: string) => void //callback
 ```html
 <input type="text" cf-validation="window.validateFunction" ..
 ```
@@ -154,10 +162,26 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
-using this reference you are able to remove the ConversationalForm by calling:
+### addRobotChatResponse
+add a robot reponse, this you would usually do at the end of a process.
+
+````javascript
+window.ConversationalForm.addRobotChatResponse("You have reached the end of the form!");
+````
+See example of end-message [here](TBD....)
+ 
+### remove
+remove the ConversationalForm by calling:
 
 ```javascript
 window.ConversationalForm.remove();
+```
+
+### remapTagsAndStartFrom: 
+remap registered tags and start flow from {index}
+
+```javascript
+window.ConversationalForm.remapTagsAndStartFrom(index);
 ```
 
 # Overwrite styles
@@ -216,8 +240,8 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	$ npm install --save-dev XX
 
 
-## Tests
-When you are up and running, you can find a few form tests in the /test folder.
+## Examples and tests
+When you are up and running, you can find a few form tests and examples in the /examples folder.
 
 ## Browser support
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.
@@ -226,4 +250,4 @@ Tested in latest Chrome, Firefox, Safari and Internet Explorer.
 
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
 
-- http://www.be-the-first-one-here.com
+- ...

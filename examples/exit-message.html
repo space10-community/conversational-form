@@ -6,24 +6,48 @@
 
 		<style>
 			.form-outer{
-				background: yellow;
+				background: lightgrey;
 				width: 600px;
-				height: 800px;
-				padding-top: 200px;
+				height: 100vh;
 			}
+
+			cf-chat-response:first-of-type text{
+				background: #0facf3 !important;
+				color: white;
+				font-size: 120%;
+			}
+
+			.conversational-form.done cf-chat-response:last-of-type text{
+				background: #f0f3bd !important;
+				color: #00a896;
+				font-size: 120%;
+			}
+
+
 		</style>
 
 
 		<div class="form-outer">
 
-			<!-- Conversational Form will auto-run because of attribute "cf-form-element" -->
-			<!--<form id="co-billing-form" action="" cf-form-element>-->
-			<form id="form" onsubmit="event.preventDefault(); return false;">
-				<input type="text" cf-questions="Your answer needs to include 'hello'" />
-				<input type="text" cf-questions="What is your name?|Please tell me your name." />
+			<form id="form">
+				<label for="radio">
+					<input cf-questions="Hi friend, this is a welcome message example, let's begin?" cf-label="Yes, let's begin!" type="radio" value="0">
+					Newsletter
+				</label>
 			</form>
 
 		</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,18 +204,16 @@
 		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
 
 		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="https://cdn.rawgit.com/space10-community/conversational-form/master/dist/conversational-form.min.js" crossorigin></script>-->
+		<!--<script type="text/javascript" id="conversational-form-development" src="http://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
 
 
 		<script>
 			(function(){
-				var formEl = document.getElementById("form");
-				window.ConversationalForm = new cf.ConversationalForm({
-					formEl: formEl,
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
 					submitCallback: function(){
-						console.log("custom submit callback reached");
-						// remove Conversational Form
-						window.ConversationalForm.remove();
+						// window.ConversationalForm
+						conversationalForm.addRobotChatResponse("Congratulations, you have reached the end of the form!");
 					}
 				});
 			})();

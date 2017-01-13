@@ -56,6 +56,7 @@ global.gulp.task('styles-build', ['stylus'], function(){
 		global.buildFolder + "cf/ui/cf-list-button.css",
 		global.buildFolder + "cf/ui/chat/cf-chat-response.css",
 		global.buildFolder + "cf/ui/chat/cf-chat.css",
+		
 		"!" + global.buildFolder + "conversational-form.css",
 		"!" + global.distFolder + "conversational-form.min.css",
 	]

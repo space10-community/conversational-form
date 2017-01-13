@@ -7,9 +7,12 @@
 
 // boilerplate
 .conversational-form
+	// if you want to hide the Conversational Form, use display none.
+	visibility visible !important
+
 	*, *:before, *:after
 		box-sizing border-box
-		outline none
+		outline none	
 
 	button
 		border none
@@ -65,7 +68,9 @@
 
 	opacity 0
 	will-change opacity
-	transition opacity $anim-time * 0.25 $anim-easeOut
+
+	.conversational-form--enable-animation &
+		transition opacity $anim-time * 0.25 $anim-easeOut
 
 	// test
 
