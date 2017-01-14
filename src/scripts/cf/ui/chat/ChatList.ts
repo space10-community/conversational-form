@@ -12,7 +12,6 @@ namespace cf {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
-		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
 		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
@@ -31,16 +30,6 @@ namespace cf {
 			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
-
-			// user input key change
-			this.onControlElementsAddedToUserInputCallback = this.onControlElementsAddedToUserInput.bind(this);
-			document.addEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
-		}
-
-		private onControlElementsAddedToUserInput(event: CustomEvent){
-			const dto: ControlElementsDTO = event.detail;
-			const paddingBottom: number = 30;
-			this.el.style.paddingBottom = (dto.height + paddingBottom) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -117,8 +106,6 @@ namespace cf {
 			this.userInputUpdateCallback = null;
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 			this.onInputKeyChangeCallback = null
-			document.removeEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
-			this.onControlElementsAddedToUserInputCallback = null
 			super.dealloc();
 		}
 	}
