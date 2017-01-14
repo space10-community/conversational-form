@@ -256,12 +256,16 @@ namespace cf {
 			//hide until stylesheet is rendered
 			this.el.style.visibility = "hidden";
 
+			var innerWrap = document.createElement("div");
+			innerWrap.className = "conversational-form-inner";
+			this.el.appendChild(innerWrap);
+
 			// Conversational Form UI
 			this.chatList = new ChatList({});
-			this.el.appendChild(this.chatList.el);
+			innerWrap.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({});
-			this.el.appendChild(this.userInput.el);
+			innerWrap.appendChild(this.userInput.el);
 
 			setTimeout(() => {
 				this.el.classList.add("conversational-form--show")
