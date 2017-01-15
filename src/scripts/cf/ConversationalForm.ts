@@ -27,7 +27,7 @@ namespace cf {
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
 		scrollAccerlation?: number;
-		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be set on each Tag.ts
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
 	}
 
 	export class ConversationalForm{

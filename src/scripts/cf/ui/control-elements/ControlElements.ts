@@ -48,6 +48,9 @@ namespace cf {
 		}
 
 		public get focus():boolean{
+			if(!this.elements)
+				return false;
+
 			const elements: Array<IControlElement> = this.getElements();
 			for (var i = 0; i < elements.length; i++) {
 				let element: ControlElement = <ControlElement>elements[i];
@@ -283,14 +286,16 @@ namespace cf {
 		}
 
 		private animateElementsIn(){
-			const elements: Array<IControlElement> = this.getElements();
-			if(elements.length > 0){
-				if(!this.el.classList.contains("animate-in"))
-					this.el.classList.add("animate-in");
-				
-				for (let i = 0; i < elements.length; i++) {
-					let element: ControlElement = <ControlElement>elements[i];
-					element.animateIn();
+			if(this.elements){
+				const elements: Array<IControlElement> = this.getElements();
+				if(elements.length > 0){
+					if(!this.el.classList.contains("animate-in"))
+						this.el.classList.add("animate-in");
+					
+					for (let i = 0; i < elements.length; i++) {
+						let element: ControlElement = <ControlElement>elements[i];
+						element.animateIn();
+					}
 				}
 			}
 		}

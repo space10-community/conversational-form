@@ -158,6 +158,9 @@ namespace cf {
 		}
 
 		private onInputChange(){
+			if(!this.active && !this.controlElements.active)
+				return;
+
 			if(isNaN(this.inputPadding))
 				this.inputPadding = Math.ceil(parseInt(window.getComputedStyle(this.inputElement).getPropertyValue("padding-top"), 10) * 0.5) + 1;
 
@@ -229,6 +232,10 @@ namespace cf {
 				this.buildControlElements([this._currentTag]);
 			}
 
+			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
+				this.inputElement.value = this._currentTag.defaultValue.toString();
+			}
+
 			setTimeout(() => {
 				this.disabled = false;
 			}, 150);
@@ -259,11 +266,17 @@ namespace cf {
 		}
 
 		private onKeyDown(event: KeyboardEvent){
+			if(!this.active && !this.controlElements.focus)
+				return;
+
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 		}
 
 		private onKeyUp(event: KeyboardEvent){
+			if(!this.active && !this.controlElements.focus)
+				return;
+
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
 			}else if(event.keyCode == Dictionary.keyCodes["up"]){
