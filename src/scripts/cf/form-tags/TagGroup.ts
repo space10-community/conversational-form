@@ -30,6 +30,7 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private _values: Array<string>;
 
+		public defaultValue: string; // not getting set... as taggroup differs from tag
 		public elements: Array <ITag>;
 		
 		public get required(): boolean{

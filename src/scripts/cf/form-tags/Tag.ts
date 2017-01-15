@@ -34,6 +34,7 @@ namespace cf {
 		value:string | Array <string>;
 		inputPlaceholder?: string;
 		required: boolean;
+		defaultValue: string | number;
 		disabled: boolean;
 
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
@@ -57,7 +58,7 @@ namespace cf {
 		protected _inputPlaceholder: string;
 
 		protected _label: string;
-		protected defaultValue: string | number;
+		public defaultValue: string | number;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
