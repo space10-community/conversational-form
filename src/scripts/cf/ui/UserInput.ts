@@ -32,7 +32,6 @@ namespace cf {
 
 		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
-		private inputPadding: number;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -160,11 +159,8 @@ namespace cf {
 			if(!this.active && !this.controlElements.active)
 				return;
 
-			if(isNaN(this.inputPadding))
-				this.inputPadding = Math.ceil(parseInt(window.getComputedStyle(this.inputElement).getPropertyValue("padding-top"), 10) * 0.5) + 1;
-
-			this.inputElement.style.height = "2px";
-			this.inputElement.style.height = (this.inputElement.scrollHeight) + this.inputPadding + "px";
+			this.inputElement.style.height = "0px";
+			this.inputElement.style.height = this.inputElement.scrollHeight + "px";
 		}
 
 		private inputInvalid(event: CustomEvent){
