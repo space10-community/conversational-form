@@ -84,7 +84,6 @@ namespace cf {
 		constructor(options: IBasicElementOptions){
 			super(options);
 
-			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
@@ -186,13 +185,25 @@ namespace cf {
 				this.el.removeAttribute("error");
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
-				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+				this.setPlaceholder();
 				this.setFocusOnInput();
 
 				if(this.controlElements)
 					this.controlElements.resetAfterErrorMessage();
 
 			}, UserInput.ERROR_TIME);
+		}
+
+		private setPlaceholder() {
+			if(this._currentTag){
+				if(this._currentTag.inputPlaceholder){
+					this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
+				}else{
+					this.inputElement.setAttribute("placeholder", this._currentTag.type == "group" ? Dictionary.get("group-placeholder") : Dictionary.get("input-placeholder"));
+				}
+			}else{
+				this.inputElement.setAttribute("placeholder", Dictionary.get("group-placeholder"));
+			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
@@ -213,11 +224,7 @@ namespace cf {
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
 
-			if(this._currentTag.inputPlaceholder){
-				this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
-			}else{
-				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-			}
+			this.setPlaceholder();
 
 			this.resetValue();
 
