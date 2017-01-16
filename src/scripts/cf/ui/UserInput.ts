@@ -271,6 +271,10 @@ namespace cf {
 
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
+			
+			// prevent textarea line breaks
+			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey)
+				event.preventDefault();
 		}
 
 		private onKeyUp(event: KeyboardEvent){
@@ -316,7 +320,7 @@ namespace cf {
 
 			const value: FlowDTO = this.getFlowDTO();
 
-			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
+			if((event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == Dictionary.keyCodes["space"]){
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
 					event.preventDefault();
 
