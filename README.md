@@ -34,9 +34,15 @@ If you want to have the ConversationalForm appended to a certain element (when a
 
 **cf-prevent-autofocus**  
 If you don't want to have the UserInput to auto focus.
-
 ```html
 <form id="my-form-element" cf-form cf-prevent-autofocus>
+```
+
+**cf-no-animation**  
+Add this to <form> tag to disable animations completly.
+
+```html
+<form id="my-form-element" cf-form cf-no-animation>
 ```
 
 ## Customization
