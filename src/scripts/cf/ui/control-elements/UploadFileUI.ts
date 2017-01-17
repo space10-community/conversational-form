@@ -12,10 +12,15 @@ namespace cf {
 		private progressBar: HTMLElement;
 		private loading: boolean = false;
 		private submitTimer: number = 0;
-		private fileName: string = "";
+		private _fileName: string = "";
+		private readerResult: string;
 
 		public get value():string{
-			return this.fileName;
+			return this.readerResult || this.fileName;
+		}
+
+		public get fileName():string{
+			return this._fileName;
 		}
 
 		public get type():string{
@@ -70,7 +75,7 @@ namespace cf {
 					}));
 				}else{
 					// good to go
-					this.fileName = file.name;
+					this._fileName = file.name;
 					this.loading = true;
 					this.animateIn();
 					// set text
@@ -87,19 +92,21 @@ namespace cf {
 					}));
 				}
 			}
+
 			reader.onload = (event: any) => {
+				this.readerResult = event.target.result;
 				this.progressBar.classList.add("loaded");
 				this.submitTimer = setTimeout(() =>{
+					this.el.classList.remove("animate-in");
+					this.onChoose(); // submit the file
+
 					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
 						detail: ControlElementProgressStates.READY
 					}));
-
-					this.el.classList.remove("animate-in");
-					this.onChoose(); // submit the file
-				}, 1000);//ConversationalForm.animationsEnabled ? 2000 : 0);
+				}, 0);
 			}
 
-			reader.readAsBinaryString(event.target.files[0]);
+			reader.readAsDataURL(event.target.files[0]);
 		}
 
 		public animateIn(){
