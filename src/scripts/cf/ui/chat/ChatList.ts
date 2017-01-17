@@ -43,11 +43,7 @@ namespace cf {
 
 			if(this.currentUserResponse){
 				const response: FlowDTO = event.detail;
-				this.flowDTOFromUserInputUpdate = response;
-
-				if(!this.flowDTOFromUserInputUpdate.text)
-					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
-				this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
+				this.setCurrentResponse(response);
 			}
 			else{
 				// this should never happen..
@@ -77,6 +73,19 @@ namespace cf {
 
 			// user reponse, create the waiting response
 			this.createResponse(false, currentTag);
+		}
+
+		/**
+		* @name setCurrentResponse
+		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
+		* reponse: FlowDTO
+		*/
+		public setCurrentResponse(response: FlowDTO){
+			this.flowDTOFromUserInputUpdate = response;
+
+			if(!this.flowDTOFromUserInputUpdate.text)
+				this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
 		}
 
 		public updateThumbnail(robot: boolean, img: string){
