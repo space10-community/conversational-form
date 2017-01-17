@@ -169,6 +169,21 @@ namespace cf {
 			return this;
 		}
 
+		/**
+		* @name updateDictionaryValue
+		* set a dictionary value at "runtime"
+		*	id: string, id of the value to update
+		*	type: string, "human" || "robot"
+		*	value: string, value to be inserted
+		*/
+		public updateDictionaryValue(id:string, type: string, value: string){
+			Dictionary.set(id, type, value);
+
+			if(["robot-image", "user-image"].indexOf(id) != -1){
+				this.chatList.updateThumbnail(id == "robot-image", value);
+			}
+		}
+
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
 		}

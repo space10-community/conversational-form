@@ -67,6 +67,21 @@ namespace cf {
 			return value;
 		}
 
+		/**
+		* @name set
+		* set a dictionary value
+		*	id: string, id of the value to update
+		*	type: string, "human" || "robot"
+		*	value: string, value to be inserted
+		*/
+		public static set(id:string, type: string, value: string): string{
+			const ins: Dictionary = Dictionary.instance;
+			let obj: any = type == "robot" ? ins.robotData : ins.data;
+
+			obj[id] = value;
+			return obj[id];
+		}
+
 		public static getRobotResponse(tagType:string): string{
 			const ins: Dictionary = Dictionary.instance;
 			let value: string = ins.robotData[tagType];

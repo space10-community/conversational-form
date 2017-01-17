@@ -15,6 +15,7 @@ namespace cf {
 		private currentResponse: ChatResponse;
 		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
+		private responses: Array<ChatResponse>;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -78,14 +79,35 @@ namespace cf {
 			this.createResponse(false, currentTag);
 		}
 
+		public updateThumbnail(robot: boolean, img: string){
+			Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
+
+			const newImage: string = robot ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image");
+			for (let i = 0; i < this.responses.length; i++) {
+				let element: ChatResponse = <ChatResponse>this.responses[i];
+				if(robot && element.isRobotReponse){
+					element.updateThumbnail(newImage);
+				}else if(!robot && !element.isRobotReponse){
+					element.updateThumbnail(newImage);
+				}
+
+			}
+		}
+
 		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null){
-			this.currentResponse = new ChatResponse({
+			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
 				isRobotReponse: isRobotReponse,
 				response: value,// || input-response,
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
+
+			if(!this.responses)
+				this.responses = [];
+			this.responses.push(response);
+
+			this.currentResponse = response;
 
 			if(!isRobotReponse)
 				this.currentUserResponse = this.currentResponse;

@@ -18,9 +18,10 @@ namespace cf {
 
 	// class
 	export class ChatResponse extends BasicElement {
+		public isRobotReponse: boolean;
+
 		private response: string;
 		private image: string;
-		private isRobotReponse: boolean;
 		private tag: ITag
 
 		public set visible(value: boolean){
@@ -75,6 +76,12 @@ namespace cf {
 					}));
 				}
 			}
+		}
+
+		public updateThumbnail(src: string){
+			this.image = src;
+			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
+			thumbEl.style.backgroundImage = "url(" + this.image + ")";
 		}
 
 		private processResponse(){
