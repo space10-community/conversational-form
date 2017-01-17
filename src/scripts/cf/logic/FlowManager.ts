@@ -79,8 +79,8 @@ namespace cf {
 					}
 				}
 
-				// check 2
-				if(this.currentTag.required && FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+				// check 2, this.currentTag.required <- required should be handled in the callback.
+				if(FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
 					if(!hasCheckedForGlobalFlowValidation && isTagValid){
 						hasCheckedForGlobalFlowValidation = true;
 						// use global validationCallback method
