@@ -294,7 +294,15 @@ namespace cf {
 			// })
 		}
 
-		public remapTagsAndStartFrom(index: number = 0){
+		/**
+		* @name remapTagsAndStartFrom
+		* index: number, what index to start from
+		* setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the valie of the current tag before changing index.
+		*/
+		public remapTagsAndStartFrom(index: number = 0, setCurrentTagValue: boolean = false){
+			if(setCurrentTagValue){
+				this.chatList.setCurrentResponse(this.userInput.getFlowDTO());
+			}
 			// possibility to start the form flow over from {index}
 			for(var i = 0; i < this.tags.length; i++){
 				const tag: ITag | ITagGroup = this.tags[i];
