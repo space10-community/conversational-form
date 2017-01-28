@@ -2,10 +2,12 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
 
-
 // namespace
 namespace cf {
 	// interface
+	export const ChatListEvents = {
+		CHATLIST_UPDATED: "cf-chatlist-updated"
+	}
 
 	// class
 	export class ChatList extends BasicElement {
@@ -123,6 +125,12 @@ namespace cf {
 			
 			this.el.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;
+
+			setTimeout(() => {
+				document.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+					detail: this
+				}));
+			}, 0);
 		}
 
 		public getTemplate () : string {
