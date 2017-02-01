@@ -184,6 +184,11 @@ namespace cf {
 			}
 		}
 
+		public getFormData(): FormData{
+			var formData: FormData = new FormData(this.formEl);
+			return formData;
+		}
+
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
 		}

@@ -189,6 +189,13 @@ remove the ConversationalForm by calling:
 window.ConversationalForm.remove();
 ```
 
+### getFormData
+get the FormData object of mapped form element
+
+```javascript
+window.ConversationalForm.getFormData();
+```
+
 ### remapTagsAndStartFrom: 
 remap registered tags and start flow from {index}
 
