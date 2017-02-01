@@ -237,6 +237,7 @@ namespace cf {
 
 			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
 				this.inputElement.value = this._currentTag.defaultValue.toString();
+				this.onInputChange();
 			}
 
 			setTimeout(() => {
