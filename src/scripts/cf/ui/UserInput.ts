@@ -326,7 +326,6 @@ namespace cf {
 			if((event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == Dictionary.keyCodes["space"]){
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
 					event.preventDefault();
-
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
@@ -403,14 +402,16 @@ namespace cf {
 		}
 
 		private onEnterOrSubmitButtonSubmit(){
+			this.doSubmit();
+
 			// we need to check if current tag is file
-			if(this._currentTag.type == "file"){
-				// trigger <input type="file"
-				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
-			}else{
-				// for groups, we expect that there is always a default value set
-				this.doSubmit();
-			}
+			// if(this._currentTag.type == "file"){
+			// 	// trigger <input type="file"
+			// 	(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+			// }else{
+			// 	// for groups, we expect that there is always a default value set
+			// 	this.doSubmit();
+			// }
 		}
 
 		private doSubmit(){
