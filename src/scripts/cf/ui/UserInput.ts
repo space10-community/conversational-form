@@ -266,7 +266,7 @@ namespace cf {
 		}
 
 		private onSubmitButtonClick(event: MouseEvent){
-			this.onEnterOrSubmitButtonSubmit();
+			this.onEnterOrSubmitButtonSubmit(event);
 		}
 
 		private onKeyDown(event: KeyboardEvent){
@@ -402,17 +402,15 @@ namespace cf {
 			this.inputElement.focus();
 		}
 
-		private onEnterOrSubmitButtonSubmit(){
-			this.doSubmit();
-
+		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			// we need to check if current tag is file
-			// if(this._currentTag.type == "file"){
-			// 	// trigger <input type="file"
-			// 	(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
-			// }else{
-			// 	// for groups, we expect that there is always a default value set
-			// 	this.doSubmit();
-			// }
+			if(this._currentTag.type == "file" && event){
+				// trigger <input type="file" but only when it's from clicking button
+				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+			}else{
+				// for groups, we expect that there is always a default value set
+				this.doSubmit();
+			}
 		}
 
 		private doSubmit(){
