@@ -160,14 +160,6 @@
     <script>
       (function(){
         setTimeout(function() {
-          if(!window.ConversationalForm){
-            window.ConversationalForm = new cf.ConversationalForm({
-              formEl: document.getElementById("conversational"),
-              context: document.getElementById("form-outer"),
-              userImage: "img/human.png"
-            });
-          }
-
           $('#toggleSwitch').on("click", function(e) {
             if( e.target.tagName.toUpperCase() !== 'INPUT' ) {
               var checkbox = $(this).find("input:checkbox");
@@ -182,6 +174,14 @@
           });
 
           function enableConversation() {
+            if(!window.ConversationalForm){
+              window.ConversationalForm = new cf.ConversationalForm({
+                formEl: document.getElementById("conversational"),
+                context: document.getElementById("form-outer"),
+                userImage: "img/human.png"
+              });
+            }
+
             var form = $(".conversational-form");
             form.addClass("conversational-form--show");
           };
