@@ -49,3 +49,7 @@ h1, h2, h3, h4, h5 {
   left:50%;
   transform: translate(-50%,-50%);
 }
+
+.toggleSwitchText {
+  color: #b9b9b9;
+}
