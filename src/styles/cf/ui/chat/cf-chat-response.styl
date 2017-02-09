@@ -18,6 +18,15 @@ cf-chat-response
 	margin-right auto
 	word-break break-all
 
+	
+	&.can-edit
+		cursor pointer
+
+		&:hover
+			color darken($color-chat-reponse-default-text, 25%)
+			text
+				background lighten($color-chat-reponse-user-bg, 50%)
+
 	&.user// user..
 		margin-right 0px
 		margin-left auto
@@ -49,6 +58,13 @@ cf-chat-response
 				opacity 1
 				.conversational-form--enable-animation &
 					transition-delay 0s, 0s, 0s
+	
+	&.disabled
+		pointer-events none
+		color lighten($color-chat-reponse-default-text, 25%)
+
+		text
+			background lighten($color-chat-reponse-user-bg, 50%)
 
 	text
 		user-select none

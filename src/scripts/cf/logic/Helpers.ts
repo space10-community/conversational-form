@@ -40,6 +40,7 @@ namespace cf {
 
 		public static getMouseEvent(eventString: string): string{
 			let mappings: any = [];
+			mappings["click"] = "ontouchstart" in window ? "touchstart" : "click";
 			mappings["mousedown"] = "ontouchstart" in window ? "touchstart" : "mousedown";
 			mappings["mouseup"] = "ontouchstart" in window ? "touchend" : "mouseup";
 			mappings["mousemove"] = "ontouchstart" in window ? "touchmove" : "mousemove";

@@ -78,6 +78,15 @@ namespace cf {
 		}
 
 		/**
+		* @name onUserAnswerClicked
+		* on user ChatReponse clicked
+		*/
+		public onUserWantToEditPreviousAnswer(tag: ITag): void {
+			console.log((<any>this.constructor).name, 'this.onUserWantToEditPreviousAnswer:', this.currentUserResponse);
+			this.currentUserResponse.skippedBecauseOfEdit();
+		}
+
+		/**
 		* @name setCurrentResponse
 		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
 		* reponse: FlowDTO
@@ -141,8 +150,10 @@ namespace cf {
 		public dealloc(){
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
+
 			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
+
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 			this.onInputKeyChangeCallback = null
 			super.dealloc();
