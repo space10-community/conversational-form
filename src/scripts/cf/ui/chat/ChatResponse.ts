@@ -94,7 +94,7 @@ namespace cf {
 		 * skippedBecauseOfEdit
 		 */
 		public skippedBecauseOfEdit() {
-			this.setValue({text: Dictionary.get("ok-editing-previous-answer")});
+			// this.setValue({text: Dictionary.get("ok-editing-previous-answer")});
 			this.el.classList.add("disabled");
 		}
 
