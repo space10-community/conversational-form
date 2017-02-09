@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toggle.css">
 
     <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
   </head>
@@ -31,10 +32,22 @@
             <div class="col-md-12 text-center">
               <h1>Conversational Form</h1>
               <p class="lead">Turning web forms into conversations.</p>
-              <p>
-                <button id="toggle-conversation" type="button" class="btn btn-default">Turn on conversation</button>
-              </p>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <label id="toggleSwitch" class="switch">
+                <input type="checkbox">
+                <div class="slider round"></div>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <p class="toggleSwitchText"><strong>Toggle Conversational Form</strong></p>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-12">
               <div id="form-outer" class="panel panel-default">
                 <div class="panel-body">
@@ -109,7 +122,7 @@
           </div>
           <div class="row">
             <div class="col-md-12 text-center">
-              <p><a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq" target="_blank">Learn why we did it</a></p>
+              <p><a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq" target="_blank">Learn why we built Conversational Form</a></p>
             </div>
           </div>
         </div>
@@ -147,7 +160,20 @@
     <script>
       (function(){
         setTimeout(function() {
-          $(document).on("click", "#toggle-conversation", function(){
+          $('#toggleSwitch').on("click", function(e) {
+            if( e.target.tagName.toUpperCase() !== 'INPUT' ) {
+              var checkbox = $(this).find("input:checkbox");
+              setTimeout(function() {
+                if (checkbox.is(":checked")) {
+                  enableConversation();
+                } else {
+                  disableConversation();
+                }
+              }, 200);
+            };
+          });
+
+          function enableConversation() {
             if(!window.ConversationalForm){
               window.ConversationalForm = new cf.ConversationalForm({
                 formEl: document.getElementById("conversational"),
@@ -155,19 +181,15 @@
                 userImage: "img/human.png"
               });
             }
-            $(this).addClass("disabled");
+
             var form = $(".conversational-form");
-            if (form.hasClass("conversational-form--show")) {
-              $(this).removeClass("active");
-              $(this).text("Turn on conversation");
-              $(".conversational-form").removeClass("conversational-form--show");
-            } else {
-              $(this).addClass("active");
-              $(this).text("Turn off conversation");
-              $(".conversational-form").addClass("conversational-form--show");
-            }
-            $(this).removeClass("disabled");
-          });
+            form.addClass("conversational-form--show");
+          };
+
+          function disableConversation() {
+            var form = $(".conversational-form");
+            form.removeClass("conversational-form--show");
+          };
         }, 200);
       })();
     </script>
