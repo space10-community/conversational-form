@@ -32,6 +32,7 @@ namespace cf {
 
 		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
+		private currentValue: string = "";
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -279,11 +280,29 @@ namespace cf {
 			// prevent textarea line breaks
 			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey)
 				event.preventDefault();
+			else{
+				// handle password input
+				if(this._currentTag.type == "password"){
+					const canSetValue: boolean = event.key.toLowerCase() == "backspace" || event.key.toLowerCase() == "space" || event.code.toLowerCase().indexOf("key") != -1;
+					if(canSetValue){
+						this.inputElement.value = this.currentValue.replace(/./g, () => "*");
+
+						if(event.key.toLowerCase() == "backspace")
+							this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
+						else
+							this.currentValue += event.key;
+					}
+				}
+			}
 		}
 
 		private onKeyUp(event: KeyboardEvent){
 			if(!this.active && !this.controlElements.focus)
 				return;
+
+			// reset current value, happens when user selects all text and delete or cmd+backspace
+			if(this.inputElement.value == "" || this.inputElement.selectionStart != this.inputElement.selectionEnd)
+				this.currentValue = "";
 
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
