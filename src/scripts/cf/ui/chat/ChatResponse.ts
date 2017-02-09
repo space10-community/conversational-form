@@ -13,7 +13,8 @@ namespace cf {
 	}
 
 	export const ChatResponseEvents = {
-		ROBOT_QUESTION_ASKED: "cf-on-robot-asked-question"
+		ROBOT_QUESTION_ASKED: "cf-on-robot-asked-question",
+		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
 	}
 
 	// class
@@ -23,6 +24,8 @@ namespace cf {
 		private response: string;
 		private image: string;
 		private tag: ITag
+
+		private onClickCallback: () => void;
 
 		public set visible(value: boolean){
 			if(value){
@@ -69,11 +72,14 @@ namespace cf {
 
 				if(this.isRobotReponse){
 					// Robot Reponse ready to ask question.
-
 					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.ROBOT_QUESTION_ASKED, this.response);
 					document.dispatchEvent(new CustomEvent(ChatResponseEvents.ROBOT_QUESTION_ASKED, {
 						detail: this
 					}));
+				}else if(!this.onClickCallback){
+					this.el.classList.add("can-edit");
+					this.onClickCallback = this.onClick.bind(this);
+					this.el.addEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				}
 			}
 		}
@@ -82,6 +88,25 @@ namespace cf {
 			this.image = src;
 			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
 			thumbEl.style.backgroundImage = "url(" + this.image + ")";
+		}
+
+		/**
+		 * skippedBecauseOfEdit
+		 */
+		public skippedBecauseOfEdit() {
+			this.setValue({text: Dictionary.get("ok-editing-previous-answer")});
+			this.el.classList.add("disabled");
+		}
+
+		/**
+		* @name onClickCallback
+		* click handler for el
+		*/
+		private onClick(event: MouseEvent): void {
+			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
+			document.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
+				detail: this.tag
+			}));
 		}
 
 		private processResponse(){
@@ -113,6 +138,15 @@ namespace cf {
 					setTimeout(() => this.el.classList.add("peak-thumb"), ConversationalForm.animationsEnabled ? 1400 : 0);
 				}
 			}, 0);
+		}
+
+		public dealloc(){
+			if(this.onClickCallback){
+				this.el.removeEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
+				this.onClickCallback = null;
+			}
+
+			super.dealloc();
 		}
 
 		// template, can be overwritten ...

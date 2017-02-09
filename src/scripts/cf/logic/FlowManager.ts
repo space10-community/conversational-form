@@ -35,6 +35,7 @@ namespace cf {
 		private stopped: boolean = false;
 		private maxSteps: number = 0;
 		private step: number = 0;
+		private savedStep: number = -1;
 		private stepTimer: number = 0;
 		private userInputSubmitCallback: () => void;
 
@@ -125,8 +126,14 @@ namespace cf {
 			onValidationCallback();
 		}
 
-		public startFrom(index: number){
-			this.step = index;
+		public startFrom(indexOrTag: number | ITag){
+			if(typeof indexOrTag == "number")
+				this.step = indexOrTag;
+			else{
+				// find the index..
+				this.step = this.tags.indexOf(indexOrTag);
+			}
+
 			this.validateStepAndUpdate();
 		}
 
@@ -140,6 +147,11 @@ namespace cf {
 		}
 
 		public nextStep(){
+			if(this.savedStep != -1)
+				this.step = this.savedStep;
+			
+			this.savedStep = -1;//reset saved step
+
 			this.step++;
 			this.validateStepAndUpdate();
 		}
@@ -157,6 +169,15 @@ namespace cf {
 		public dealloc(){
 			document.removeEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 			this.userInputSubmitCallback = null;
+		}
+
+		/**
+		* @name editTag
+		* go back in time and edit a tag.
+		*/
+		public editTag(tag: ITag): void {
+			this.savedStep = this.step - 1;
+			this.startFrom(tag);
 		}
 
 		private skipStep(){

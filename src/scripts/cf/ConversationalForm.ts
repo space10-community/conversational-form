@@ -39,6 +39,7 @@ namespace cf {
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
+		private onUserAnswerClickedCallback: () => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
@@ -287,10 +288,22 @@ namespace cf {
 			this.userInput = new UserInput({});
 			innerWrap.appendChild(this.userInput.el);
 
+			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
+			document.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+
 			setTimeout(() => {
 				this.el.classList.add("conversational-form--show")
 				this.flowManager.start();
 			}, 0);
+		}
+
+		/**
+		* @name onUserAnswerClicked
+		* on user ChatReponse clicked
+		*/
+		private onUserAnswerClicked(event: CustomEvent): void {
+			this.chatList.onUserWantToEditPreviousAnswer(<ITag> event.detail);
+			this.flowManager.editTag(<ITag> event.detail);
 		}
 
 		/**
@@ -324,6 +337,9 @@ namespace cf {
 		}
 
 		public remove(){
+			document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+			this.onUserAnswerClickedCallback = null;
+
 			this.flowManager.dealloc();
 			this.userInput.dealloc();
 			this.chatList.dealloc();
