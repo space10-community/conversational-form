@@ -91,10 +91,11 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form.js'))
 		.pipe(global.gulp.dest(global.buildFolder))
+		.pipe(global.gulp.dest(global.distFolder))
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(global.gulp.dest(global.distFolder));
-	
+
 	return stream;
 });
 
