@@ -7,6 +7,7 @@
   "devDependencies": {
     "gulp-bower": "*",
     "gulp-changed": "*",
+    "gulp-clean-css": "^3.0.2",
     "gulp-concat": "^2.6.0",
     "gulp-flatten": "*",
     "gulp-insert-lines": "*",
