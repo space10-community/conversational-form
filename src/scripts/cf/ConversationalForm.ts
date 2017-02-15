@@ -12,6 +12,8 @@
 
 interface Window { ConversationalForm: any; }
 
+//TODO: delete this line..
+
 namespace cf {
 
 	// CUI options
