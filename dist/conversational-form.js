@@ -202,8 +202,11 @@ var cf;
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
             document.addEventListener(cf.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
             setTimeout(function () {
-                _this.el.classList.add("conversational-form--show");
-                _this.flowManager.start();
+                // if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
+                if (_this.el && _this.flowManager) {
+                    _this.el.classList.add("conversational-form--show");
+                    _this.flowManager.start();
+                }
             }, 0);
         };
         /**
