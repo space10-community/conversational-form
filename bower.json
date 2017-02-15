@@ -2,14 +2,14 @@
     "name": "conversational-form",
     "version": "0.9.1",
     "authors": [{
-	        "name" : "Felix Nielsen",
-	        "email": "felix.nielsen@rwatgg.dk",
-	        "url"  : "http://rwatgg.dk"
-	    }
+            "name" : "Felix Nielsen",
+            "email": "felix.nielsen@rwatgg.dk",
+            "url"  : "http://rwatgg.dk"
+        }
     ],
     "devDependencies": {
-    	"promise-polyfill": "^6.0.2",
-    	"custom-event-polyfill": "^0.3.0"
+        "promise-polyfill": "^6.0.2",
+        "custom-event-polyfill": "^0.3.0"
     },
     "main": ["dist/conversational-form.min.js", "dist/conversational-form.min.css"],
     "license": "MIT",
