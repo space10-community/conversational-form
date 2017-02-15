@@ -292,8 +292,11 @@ namespace cf {
 			document.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
 			setTimeout(() => {
-				this.el.classList.add("conversational-form--show")
-				this.flowManager.start();
+				// if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
+				if(this.el && this.flowManager){
+					this.el.classList.add("conversational-form--show")
+					this.flowManager.start();
+				}
 			}, 0);
 		}
 
