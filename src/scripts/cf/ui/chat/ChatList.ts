@@ -94,8 +94,13 @@ namespace cf {
 		public setCurrentResponse(response: FlowDTO){
 			this.flowDTOFromUserInputUpdate = response;
 
-			if(!this.flowDTOFromUserInputUpdate.text)
-				this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+			if(!this.flowDTOFromUserInputUpdate.text){
+				if(response.input.currentTag.type == "group")
+					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing-group");
+				else
+					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+			}
+
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
 		}
 
@@ -132,7 +137,8 @@ namespace cf {
 			if(!isRobotReponse)
 				this.currentUserResponse = this.currentResponse;
 			
-			this.el.appendChild(this.currentResponse.el);
+			const scrollable = this.el.querySelector("scrollable");
+			scrollable.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;
 
 			setTimeout(() => {
@@ -144,6 +150,7 @@ namespace cf {
 
 		public getTemplate () : string {
 			return `<cf-chat type='pluto'>
+						<scrollable></scrollable>
 					</cf-chat>`;
 		}
 
