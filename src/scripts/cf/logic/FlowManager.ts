@@ -206,7 +206,8 @@ namespace cf {
 				// check if current tag has become or is disabled, if it is, then skip step.
 				this.skipStep();
 			}else{
-				// 
+				this.currentTag.refresh();
+
 				document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 					detail: this.currentTag
 				}));

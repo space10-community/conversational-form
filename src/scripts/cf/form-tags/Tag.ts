@@ -152,9 +152,6 @@ namespace cf {
 			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
 			// }
 
-			// default value of Tag
-			this.defaultValue = this.domElement.value;
-
 			if(this.type != "group"){
 				console.log('Tag registered:', this.type);
 			}
@@ -235,6 +232,9 @@ namespace cf {
 		}
 
 		public refresh(){
+			// default value of Tag, check every refresh
+			this.defaultValue = this.domElement.value;
+
 			this.questions = null;
 			this.findAndSetQuestions();
 		}
