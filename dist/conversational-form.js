@@ -152,6 +152,7 @@ var cf;
                 if (tag.type == "radio" || tag.type == "checkbox") {
                     if (!groups[tag.name])
                         groups[tag.name] = [];
+                    console.log(this.constructor.name, 'tag.name]:', tag.name);
                     groups[tag.name].push(tag);
                 }
             }
@@ -446,6 +447,7 @@ var cf;
         SUBMIT_VALUE: "cf-basic-element-submit",
         PROGRESS_CHANGE: "cf-basic-element-progress",
         ON_FOCUS: "cf-basic-element-on-focus",
+        ON_LOADED: "cf-basic-element-on-loaded",
     };
     cf.ControlElementProgressStates = {
         BUSY: "cf-control-element-progress-BUSY",
@@ -525,6 +527,13 @@ var cf;
                 detail: this.positionVector
             }));
         };
+        /**
+        * @name hasImage
+        * if control element contains an image element
+        */
+        ControlElement.prototype.hasImage = function () {
+            return false;
+        };
         ControlElement.prototype.calcPosition = function () {
             var mr = parseInt(window.getComputedStyle(this.el).getPropertyValue("margin-right"), 10);
             // try not to do this to often, re-paint whammy!
@@ -594,6 +603,8 @@ var cf;
             this.el.addEventListener('scroll', this.onScrollCallback, false);
             this.onElementFocusCallback = this.onElementFocus.bind(this);
             document.addEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
+            this.onElementLoadedCallback = this.onElementLoaded.bind(this);
+            document.addEventListener(cf.ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
             this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
             document.addEventListener(cf.ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
             this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
@@ -651,6 +662,13 @@ var cf;
         ControlElements.prototype.onScroll = function (event) {
             // some times the tabbing will result in el scroll, reset this.
             this.el.scrollLeft = 0;
+        };
+        /**
+        * @name onElementLoaded
+        * when element is loaded, usally image loaded.
+        */
+        ControlElements.prototype.onElementLoaded = function (event) {
+            this.resize();
         };
         ControlElements.prototype.onElementFocus = function (event) {
             var vector = event.detail;
@@ -1031,6 +1049,7 @@ var cf;
             // scrollbar things
             // Element.offsetWidth - Element.clientWidth
             this.list.style.width = "100%";
+            this.el.classList.remove("resized");
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
             this.elementWidth = 0;
@@ -1040,6 +1059,7 @@ var cf;
                 if (elements.length > 0) {
                     var listWidthValues = [];
                     var listWidthValues2 = [];
+                    var containsElementWithImage = false;
                     for (var i = 0; i < elements.length; i++) {
                         var element = elements[i];
                         if (element.visible) {
@@ -1048,10 +1068,12 @@ var cf;
                             listWidthValues.push(element.positionVector.x + element.positionVector.width);
                             listWidthValues2.push(element);
                         }
+                        if (element.hasImage())
+                            containsElementWithImage = true;
                     }
                     var elOffsetWidth_1 = _this.el.offsetWidth;
                     var isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
-                    if (isListWidthOverElementWidth_1) {
+                    if (isListWidthOverElementWidth_1 && !containsElementWithImage) {
                         _this.el.classList.add("two-row");
                         _this.listWidth = Math.max(elOffsetWidth_1, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
                         _this.list.style.width = _this.listWidth + "px";
@@ -1098,6 +1120,7 @@ var cf;
                         // resize scroll
                         _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
                         _this.buildTabableRows();
+                        _this.el.classList.add("resized");
                     }, 0);
                 }
                 if (resolve)
@@ -1119,6 +1142,8 @@ var cf;
             this.onUserInputKeyChangeCallback = null;
             document.removeEventListener(cf.FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
             this.userInputUpdateCallback = null;
+            document.removeEventListener(cf.ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
+            this.onElementLoadedCallback = null;
             this.listScrollController.dealloc();
         };
         return ControlElements;
@@ -1313,6 +1338,7 @@ var cf;
                 "input-no-filter": "No results found for <strong>{input-value}</strong>",
                 "user-reponse-and": " and ",
                 "user-reponse-missing": "Missing input ...",
+                "user-reponse-missing-group": "Nothing selected ...",
                 "general": "General type1|General type2",
                 "icon-type-file": "<svg class='cf-icon-file' viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'><g transform='translate(-756.000000, -549.000000)' fill='#0D83FF'><g transform='translate(736.000000, 127.000000)'><g transform='translate(0.000000, 406.000000)'><polygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'></polygon></g></g></g></g></svg>",
             };
@@ -1457,8 +1483,6 @@ var cf;
             // 	// set a standard e-mail pattern for email type input
             // 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
             // }
-            // default value of Tag
-            this.defaultValue = this.domElement.value;
             if (this.type != "group") {
                 console.log('Tag registered:', this.type);
             }
@@ -1622,6 +1646,8 @@ var cf;
             }
         };
         Tag.prototype.refresh = function () {
+            // default value of Tag, check every refresh
+            this.defaultValue = this.domElement.value;
             this.questions = null;
             this.findAndSetQuestions();
         };
@@ -2128,6 +2154,8 @@ var cf;
             _this.el.addEventListener("click", _this.clickCallback, false);
             _this.mouseDownCallback = _this.onMouseDown.bind(_this);
             _this.el.addEventListener("mousedown", _this.mouseDownCallback, false);
+            //image
+            _this.checkForImage();
             return _this;
         }
         Object.defineProperty(Button.prototype, "type", {
@@ -2137,6 +2165,30 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Button.prototype.hasImage = function () {
+            var hasImage = !!this.referenceTag.domElement.getAttribute("cf-image");
+            return hasImage;
+        };
+        /**
+        * @name checkForImage
+        * checks if element has cf-image, if it has then change UI
+        */
+        Button.prototype.checkForImage = function () {
+            var hasImage = this.hasImage();
+            if (hasImage) {
+                this.el.classList.add("has-image");
+                this.imgEl = document.createElement("img");
+                this.imageLoadedCallback = this.onImageLoaded.bind(this);
+                this.imgEl.classList.add("cf-image");
+                this.imgEl.addEventListener("load", this.imageLoadedCallback, false);
+                this.imgEl.src = this.referenceTag.domElement.getAttribute("cf-image");
+                this.el.insertBefore(this.imgEl, this.el.children[0]);
+            }
+        };
+        Button.prototype.onImageLoaded = function () {
+            this.imgEl.classList.add("loaded");
+            document.dispatchEvent(new CustomEvent(cf.ControlElementEvents.ON_LOADED, {}));
+        };
         Button.prototype.onMouseDown = function (event) {
             event.preventDefault();
         };
@@ -2146,6 +2198,10 @@ var cf;
         Button.prototype.dealloc = function () {
             this.el.removeEventListener("click", this.clickCallback, false);
             this.clickCallback = null;
+            if (this.imageLoadedCallback) {
+                this.imgEl.removeEventListener("load", this.imageLoadedCallback, false);
+                this.imageLoadedCallback = null;
+            }
             this.el.removeEventListener("mousedown", this.mouseDownCallback, false);
             this.mouseDownCallback = null;
             _super.prototype.dealloc.call(this);
@@ -2205,7 +2261,7 @@ var cf;
         // override
         RadioButton.prototype.getTemplate = function () {
             var isChecked = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
-            return "<cf-radio-button class=\"cf-button\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<cf-radio></cf-radio>\n\t\t\t\t" + this.referenceTag.label + "\n\t\t\t</cf-radio-button>\n\t\t\t";
+            return "<cf-radio-button class=\"cf-button\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-radio></cf-radio>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-radio-button>\n\t\t\t";
         };
         return RadioButton;
     }(cf.Button));
@@ -2242,9 +2298,13 @@ var cf;
             set: function (value) {
                 if (!value) {
                     this.el.removeAttribute("checked");
+                    this.referenceTag.domElement.value = "0";
+                    this.referenceTag.domElement.removeAttribute("checked");
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
+                    this.referenceTag.domElement.value = "1";
+                    this.referenceTag.domElement.setAttribute("checked", "checked");
                 }
             },
             enumerable: true,
@@ -2256,7 +2316,7 @@ var cf;
         // override
         CheckboxButton.prototype.getTemplate = function () {
             var isChecked = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
-            return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t" + this.referenceTag.label + "\n\t\t\t</cf-button>\n\t\t\t";
+            return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-button>\n\t\t\t";
         };
         return CheckboxButton;
     }(cf.Button));
@@ -2320,9 +2380,11 @@ var cf;
         OptionButton.prototype.getTemplate = function () {
             // be aware that first option element on none multiple select tags will be selected by default
             var tmpl = '<cf-button class="cf-button ' + (this.isMultiChoice ? "cf-checkbox-button" : "") + '" ' + (this.referenceTag.domElement.selected ? "selected='selected'" : "") + '>';
+            tmpl += "<div>";
             if (this.isMultiChoice)
                 tmpl += "<cf-checkbox></cf-checkbox>";
             tmpl += this.referenceTag.label;
+            tmpl += "</div>";
             tmpl += "</cf-button>";
             return tmpl;
         };
@@ -3207,8 +3269,12 @@ var cf;
         */
         ChatList.prototype.setCurrentResponse = function (response) {
             this.flowDTOFromUserInputUpdate = response;
-            if (!this.flowDTOFromUserInputUpdate.text)
-                this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
+            if (!this.flowDTOFromUserInputUpdate.text) {
+                if (response.input.currentTag.type == "group")
+                    this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing-group");
+                else
+                    this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
+            }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
         };
         ChatList.prototype.updateThumbnail = function (robot, img) {
@@ -3240,7 +3306,8 @@ var cf;
             this.currentResponse = response;
             if (!isRobotReponse)
                 this.currentUserResponse = this.currentResponse;
-            this.el.appendChild(this.currentResponse.el);
+            var scrollable = this.el.querySelector("scrollable");
+            scrollable.appendChild(this.currentResponse.el);
             // this.el.scrollTop = 1000000000;
             setTimeout(function () {
                 document.dispatchEvent(new CustomEvent(cf.ChatListEvents.CHATLIST_UPDATED, {
@@ -3249,7 +3316,7 @@ var cf;
             }, 0);
         };
         ChatList.prototype.getTemplate = function () {
-            return "<cf-chat type='pluto'>\n\t\t\t\t\t</cf-chat>";
+            return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";
         };
         ChatList.prototype.dealloc = function () {
             document.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -3427,7 +3494,7 @@ var cf;
                 this.skipStep();
             }
             else {
-                // 
+                this.currentTag.refresh();
                 document.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
                     detail: this.currentTag
                 }));

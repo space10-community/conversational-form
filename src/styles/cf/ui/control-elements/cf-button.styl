@@ -7,17 +7,28 @@
 	cursor pointer
 	// display inline-table
 	border 1px solid alpha($color-dark-blue, 10%)
-	padding 12px 24px
+	
 	border-radius 24px
 	color $color-chat-reponse-user-text
 	line-height 1
 	user-select none
+	max-width 150px
+	overflow hidden
 
-	transform-origin 25% 0%
-	will-change transform, background
-	transform scale(0, 0)
+	> div
+		padding 12px 24px
+
+	&.has-image
+		max-width 250px
+	
+	> div
+		position relative
+
+	transform-origin 0% 100%
+	will-change opacity, background
+	opacity 0
 	.conversational-form--enable-animation &
-		transition transform 0s $anim-easeOut, background $anim-time $anim-easeOut
+		transition opacity 0s $anim-easeOut, background $anim-time $anim-easeOut
 
 	&.animate-in
 		.conversational-form--enable-animation &
@@ -27,12 +38,12 @@
 				transition-delay 0.15s, 0s
 
 			transition-duration $anim-time * 0.5, $anim-time
-			transition-timing-function $anim-easeOutBack, $anim-easeOut
+			transition-timing-function $anim-easeOut, $anim-easeOut
 
-		transform scale(1, 1)
+		opacity 1
 		&.animate-out
 			transform-origin 75% 100%
-			transform scale(0, 0)
+			opacity 0
 
 	&:not(:last-child)
 		margin-right 10px
@@ -42,3 +53,13 @@
 
 	&:active
 		background alpha($color-dark-blue, 20%)
+	
+
+	.cf-image
+		width 100%
+		height auto
+		will-change opacity
+		transition opacity $anim-time $anim-easeOut
+		opacity 0
+		&.loaded
+			opacity 1

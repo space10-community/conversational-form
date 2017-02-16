@@ -10,6 +10,8 @@ cf-input-control-elements
 	position relative
 	z-index 0
 	user-select none
+	visibility hidden
+	height 0px
 
 	.cf-button
 		margin-bottom 10px
@@ -17,20 +19,24 @@ cf-input-control-elements
 
 		&.hide
 			display none
+	
+	&.resized
+		visibility visible
+		height auto
 
 	&.one-row
 		// remember to set values in ControlElements.ts
 		cf-list
-			height 62px
+			height auto//62px
 
 		cf-list-button
 			opacity 0
-			pointer-events none
+			// pointer-events none
 
 	&.two-row
 		cf-list
 			white-space normal
-			height 112px
+			height auto//112px
 	
 	// &.hide-nav-buttons
 

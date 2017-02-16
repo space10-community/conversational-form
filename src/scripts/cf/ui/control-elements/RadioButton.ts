@@ -33,8 +33,10 @@ namespace cf {
 		public getTemplate () : string {
 			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
 			return `<cf-radio-button class="cf-button" checked=`+(isChecked ? "checked" : "")+`>
-				<cf-radio></cf-radio>
-				` + this.referenceTag.label + `
+				<div>
+					<cf-radio></cf-radio>
+					` + this.referenceTag.label + `
+				</div>
 			</cf-radio-button>
 			`;
 		}
