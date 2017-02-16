@@ -163,6 +163,12 @@ namespace cf {
 				this.tags.splice(this.tags.indexOf(tag), 1);
 			}
 
+			if(!this.tags || this.tags.length == 0){
+				console.warn("Conversational Form: no tags registered.. cannot continue.");
+				this.remove();
+				return;
+			}
+
 			//let's start the conversation
 			this.setupTagGroups();
 			this.setupUI();
@@ -340,22 +346,27 @@ namespace cf {
 		}
 
 		public remove(){
-			document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
-			this.onUserAnswerClickedCallback = null;
+			if(this.onUserAnswerClickedCallback){
+				document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+				this.onUserAnswerClickedCallback = null;
+			}
 
-			this.flowManager.dealloc();
-			this.userInput.dealloc();
-			this.chatList.dealloc();
+			if(this.flowManager)
+				this.flowManager.dealloc();
+			if(this.userInput)
+				this.userInput.dealloc();
+			if(this.chatList)
+				this.chatList.dealloc();
 
 			this.dictionary = null;
 			this.flowManager = null;
 			this.userInput = null;
 			this.chatList = null;
-			this.el.parentNode.removeChild(this.el);
-			this.el = null;
 			this.context = null;
 			this.formEl = null;
 			this.submitCallback = null;
+			this.el.parentNode.removeChild(this.el);
+			this.el = null;
 		}
 
 		// to illustrate the event flow of the app
