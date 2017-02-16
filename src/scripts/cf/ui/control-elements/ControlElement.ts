@@ -28,6 +28,7 @@ namespace cf {
 		tabIndex: number;
 		visible: boolean;
 		focus: boolean;
+		hasImage(): boolean;
 		calcPosition(): void;
 		dealloc(): void;
 	}
@@ -36,6 +37,7 @@ namespace cf {
 		SUBMIT_VALUE: "cf-basic-element-submit",
 		PROGRESS_CHANGE: "cf-basic-element-progress", // busy, ready
 		ON_FOCUS: "cf-basic-element-on-focus", // busy, ready
+		ON_LOADED: "cf-basic-element-on-loaded", // busy, loaded
 	}
 
 	export const ControlElementProgressStates = {
@@ -106,6 +108,14 @@ namespace cf {
 			document.dispatchEvent(new CustomEvent(ControlElementEvents.ON_FOCUS, {
 				detail: this.positionVector
 			}));
+		}
+
+		/**
+		* @name hasImage
+		* if control element contains an image element
+		*/
+		public hasImage(): boolean {
+			return false;
 		}
 
 		public calcPosition(){

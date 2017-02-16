@@ -232,6 +232,7 @@ namespace cf {
 					if(!groups[tag.name])
 						groups[tag.name] = [];
 					
+					console.log((<any>this.constructor).name, 'tag.name]:', tag.name);
 					groups[tag.name].push(tag);
 				}
 			}

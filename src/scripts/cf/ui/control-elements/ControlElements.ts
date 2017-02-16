@@ -35,6 +35,7 @@ namespace cf {
 		private onUserInputKeyChangeCallback: () => void;
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
+		private onElementLoadedCallback: () => void;
 
 		private elementWidth: number = 0;
 		private filterListNumberOfVisible: number = 0;
@@ -85,6 +86,9 @@ namespace cf {
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
 			document.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
+			this.onElementLoadedCallback = this.onElementLoaded.bind(this);
+			document.addEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
+
 			this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
 			document.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
 
@@ -105,6 +109,14 @@ namespace cf {
 		private onScroll(event: Event){
 			// some times the tabbing will result in el scroll, reset this.
 			this.el.scrollLeft = 0;
+		}
+
+		/**
+		* @name onElementLoaded
+		* when element is loaded, usally image loaded.
+		*/
+		private onElementLoaded(event: CustomEvent){
+			this.resize();
 		}
 
 		private onElementFocus(event: CustomEvent){
@@ -544,6 +556,7 @@ namespace cf {
 			// scrollbar things
 			// Element.offsetWidth - Element.clientWidth
 			this.list.style.width = "100%";
+			this.el.classList.remove("resized")
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
 			this.elementWidth = 0;
@@ -555,6 +568,7 @@ namespace cf {
 				if(elements.length > 0){
 					const listWidthValues: Array<number> = [];
 					const listWidthValues2: Array<IControlElement> = [];
+					let containsElementWithImage: boolean = false;
 					for (let i = 0; i < elements.length; i++) {
 						let element: IControlElement = <IControlElement>elements[i];
 						if(element.visible){
@@ -563,11 +577,14 @@ namespace cf {
 							listWidthValues.push(element.positionVector.x + element.positionVector.width);
 							listWidthValues2.push(element);
 						}
+
+						if(element.hasImage())
+							containsElementWithImage = true;
 					}
 
 					const elOffsetWidth: number = this.el.offsetWidth;
 					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
-					if(isListWidthOverElementWidth){
+					if(isListWidthOverElementWidth && !containsElementWithImage){
 						this.el.classList.add("two-row");
 						this.listWidth = Math.max(elOffsetWidth, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
 						this.list.style.width = this.listWidth + "px";
@@ -619,6 +636,8 @@ namespace cf {
 						this.listScrollController.resize(this.listWidth, this.elementWidth);
 
 						this.buildTabableRows();
+
+						this.el.classList.add("resized");
 					}, 0);
 				}
 
@@ -649,6 +668,9 @@ namespace cf {
 
 			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
+
+			document.removeEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
+			this.onElementLoadedCallback = null;
 
 			this.listScrollController.dealloc();
 		}
