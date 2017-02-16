@@ -164,9 +164,7 @@ namespace cf {
 			}
 
 			if(!this.tags || this.tags.length == 0){
-				console.warn("Conversational Form: no tags registered.. cannot continue.");
-				this.remove();
-				return;
+				console.warn("Conversational Form: no tags found/registered!");
 			}
 
 			//let's start the conversation
