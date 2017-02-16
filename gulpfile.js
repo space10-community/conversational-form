@@ -21,7 +21,7 @@ var distFolder = './dist/';
 global.distFolder = distFolder;
 
 // Watch Files For Changes
-global.gulp.task('watch', ['bower', 'typescript', 'stylus', 'copy-images'], function() {
+global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-images'], function() {
 	livereload.listen();
 
 	console.log("Watch task started");

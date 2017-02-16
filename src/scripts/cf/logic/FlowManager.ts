@@ -185,12 +185,14 @@ namespace cf {
 		}
 
 		private validateStepAndUpdate(){
-			if(this.step == this.maxSteps){
-				// console.warn("We are at the end..., submit click")
-				this.cuiReference.doSubmitForm();
-			}else{
-				this.step %= this.maxSteps;
-				this.showStep();
+			if(this.maxSteps > 0){
+				if(this.step == this.maxSteps){
+					// console.warn("We are at the end..., submit click")
+					this.cuiReference.doSubmitForm();
+				}else{
+					this.step %= this.maxSteps;
+					this.showStep();
+				}
 			}
 		}
 
