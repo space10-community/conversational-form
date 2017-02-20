@@ -30,8 +30,9 @@ namespace cf {
 		public static ERROR_TIME: number = 2000;
 		public el: HTMLElement;
 
-		private inputElement: HTMLInputElement;
+		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
+		private currentValue: string = "";
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -83,8 +84,7 @@ namespace cf {
 		constructor(options: IBasicElementOptions){
 			super(options);
 
-			this.el.setAttribute("placeholder", Dictionary.get("input-placeholder"));
-			this.inputElement = this.el.getElementsByTagName("input")[0];
+			this.inputElement = this.el.getElementsByTagName("textarea")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputBlurCallback = this.onInputBlur.bind(this);
@@ -156,6 +156,14 @@ namespace cf {
 			this.visible = false;
 		}
 
+		private onInputChange(){
+			if(!this.active && !this.controlElements.active)
+				return;
+
+			this.inputElement.style.height = "0px";
+			this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+		}
+
 		private inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			const dto: FlowDTO = event.detail;
@@ -174,13 +182,25 @@ namespace cf {
 				this.el.removeAttribute("error");
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
-				this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+				this.setPlaceholder();
 				this.setFocusOnInput();
 
 				if(this.controlElements)
 					this.controlElements.resetAfterErrorMessage();
 
 			}, UserInput.ERROR_TIME);
+		}
+
+		private setPlaceholder() {
+			if(this._currentTag){
+				if(this._currentTag.inputPlaceholder){
+					this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
+				}else{
+					this.inputElement.setAttribute("placeholder", this._currentTag.type == "group" ? Dictionary.get("group-placeholder") : Dictionary.get("input-placeholder"));
+				}
+			}else{
+				this.inputElement.setAttribute("placeholder", Dictionary.get("group-placeholder"));
+			}
 		}
 
 		private onFlowUpdate(event: CustomEvent){
@@ -200,7 +220,9 @@ namespace cf {
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
-			this.inputElement.setAttribute("placeholder", Dictionary.get("input-placeholder"));
+
+			this.setPlaceholder();
+
 			this.resetValue();
 
 			if(!UserInput.preventAutoFocus)
@@ -212,6 +234,11 @@ namespace cf {
 				this.buildControlElements((<ITagGroup> this._currentTag).elements);
 			}else{
 				this.buildControlElements([this._currentTag]);
+			}
+
+			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
+				this.inputElement.value = this._currentTag.defaultValue.toString();
+				this.onInputChange();
 			}
 
 			setTimeout(() => {
@@ -240,15 +267,43 @@ namespace cf {
 		}
 
 		private onSubmitButtonClick(event: MouseEvent){
-			this.onEnterOrSubmitButtonSubmit();
+			this.onEnterOrSubmitButtonSubmit(event);
 		}
 
 		private onKeyDown(event: KeyboardEvent){
+			if(!this.active && !this.controlElements.focus)
+				return;
+
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
+			
+			// prevent textarea line breaks
+			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey)
+				event.preventDefault();
+			else{
+				// handle password input
+				if(this._currentTag.type == "password"){
+					const canSetValue: boolean = event.key.toLowerCase() == "backspace" || event.key.toLowerCase() == "space" || event.code.toLowerCase().indexOf("key") != -1;
+					if(canSetValue){
+						this.inputElement.value = this.currentValue.replace(/./g, () => "*");
+
+						if(event.key.toLowerCase() == "backspace")
+							this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
+						else
+							this.currentValue += event.key;
+					}
+				}
+			}
 		}
 
 		private onKeyUp(event: KeyboardEvent){
+			if(!this.active && !this.controlElements.focus)
+				return;
+
+			// reset current value, happens when user selects all text and delete or cmd+backspace
+			if(this.inputElement.value == "" || this.inputElement.selectionStart != this.inputElement.selectionEnd)
+				this.currentValue = "";
+
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
 			}else if(event.keyCode == Dictionary.keyCodes["up"]){
@@ -288,10 +343,9 @@ namespace cf {
 
 			const value: FlowDTO = this.getFlowDTO();
 
-			if(event.keyCode == Dictionary.keyCodes["enter"] || event.keyCode == Dictionary.keyCodes["space"]){
+			if((event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == Dictionary.keyCodes["space"]){
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
 					event.preventDefault();
-
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
 					// either click on submit button or do something with control elements
@@ -334,6 +388,8 @@ namespace cf {
 			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
 				this.dispatchKeyChange(value, event.keyCode)
 			}
+
+			this.onInputChange();
 		}
 
 		private dispatchKeyChange(dto: FlowDTO, keyCode: number){
@@ -358,16 +414,17 @@ namespace cf {
 
 		private onInputFocus(event: FocusEvent){
 			this._active = true;
+			this.onInputChange();
 		}
 
 		public setFocusOnInput(){
 			this.inputElement.focus();
 		}
 
-		private onEnterOrSubmitButtonSubmit(){
+		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			// we need to check if current tag is file
-			if(this._currentTag.type == "file"){
-				// trigger <input type="file"
+			if(this._currentTag.type == "file" && event){
+				// trigger <input type="file" but only when it's from clicking button
 				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
 			}else{
 				// for groups, we expect that there is always a default value set
@@ -390,9 +447,11 @@ namespace cf {
 
 		private resetValue(){
 			this.inputElement.value = "";
+			this.onInputChange();
 		}
 
 		public dealloc(){
+
 			this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			this.onInputBlurCallback = null;
 
@@ -442,7 +501,7 @@ namespace cf {
 					<div class="cf-icon-attachment"></div>
 				</cf-input-button>
 				
-				<input type='input' tabindex="1">
+				<textarea type='input' tabindex="1" rows="1"></textarea>
 
 			</cf-input>
 			`;

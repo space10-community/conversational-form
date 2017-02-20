@@ -6,7 +6,6 @@
 /// <reference path="UploadFileUI.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
-/// <reference path="../../../typings/globals/es6-promise/index.d.ts"/>
 
 // namespace
 namespace cf {
@@ -48,6 +47,9 @@ namespace cf {
 		}
 
 		public get focus():boolean{
+			if(!this.elements)
+				return false;
+
 			const elements: Array<IControlElement> = this.getElements();
 			for (var i = 0; i < elements.length; i++) {
 				let element: ControlElement = <ControlElement>elements[i];
@@ -283,14 +285,16 @@ namespace cf {
 		}
 
 		private animateElementsIn(){
-			const elements: Array<IControlElement> = this.getElements();
-			if(elements.length > 0){
-				if(!this.el.classList.contains("animate-in"))
-					this.el.classList.add("animate-in");
-				
-				for (let i = 0; i < elements.length; i++) {
-					let element: ControlElement = <ControlElement>elements[i];
-					element.animateIn();
+			if(this.elements){
+				const elements: Array<IControlElement> = this.getElements();
+				if(elements.length > 0){
+					if(!this.el.classList.contains("animate-in"))
+						this.el.classList.add("animate-in");
+					
+					for (let i = 0; i < elements.length; i++) {
+						let element: ControlElement = <ControlElement>elements[i];
+						element.animateIn();
+					}
 				}
 			}
 		}
@@ -450,7 +454,7 @@ namespace cf {
 						break;
 					
 					case "UploadFileUI":
-						dto.text = (<UploadFileUI> this.elements[0]).value;//Dictionary.parseAndGetMultiValueString(values);
+						dto.text = (<UploadFileUI> this.elements[0]).fileName;//Dictionary.parseAndGetMultiValueString(values);
 						dto.controlElements.push(<UploadFileUI> this.elements[0]);
 						break;
 				}
@@ -521,7 +525,7 @@ namespace cf {
 				this.filterListNumberOfVisible = tags.length;
 			}
 
-			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
+			new ((<any> window).Promise)((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
 				const h: number = this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
 
 				const controlElementsAddedDTO: ControlElementsDTO = {

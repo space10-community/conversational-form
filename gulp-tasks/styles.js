@@ -7,6 +7,7 @@ var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
 var notify = require("gulp-notify");
 var concat = require('gulp-concat');
+var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
 
 function swallowError(error) {
@@ -30,8 +31,7 @@ global.gulp.task('stylus', function() {
 		}))
 		.pipe(stylus({
 			use: [nib(), rupture()],
-			errors: true,
-			compress: true
+			errors: true
 		}))
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
@@ -63,7 +63,8 @@ global.gulp.task('styles-build', ['stylus'], function(){
 
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form.css'))
-		.pipe(global.gulp.dest(global.buildFolder))
+		.pipe(global.gulp.dest(global.distFolder))
+		.pipe(cleanCSS())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(global.gulp.dest(global.distFolder));
 	

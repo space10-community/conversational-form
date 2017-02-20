@@ -36,7 +36,7 @@
 
 
 
-		<div class="form-outer">
+		<div class="form-outer" cf-context>
 
 
 
@@ -44,38 +44,91 @@
 
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="form" action="">
+			<form id="form" action="" cf-form>
+				<input type="password" cf-questions="password field.. (NOT required)" name="password" value="">
+				
+				<li class="control">
+					<label>
+						<input cf-questions="-one way-> {previous-answer} <-binding-|-one way-> {previous-answer} <-binding-2-" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-4" value="0" class="checkbox">Bird
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-5" checked value="1" class="checkbox">Parrot
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-6" value="0" class="checkbox">Hedgehog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-7" checked value="1" class="checkbox">Turtle
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-8" checked value="1" class="checkbox">Duck
+					</label>
+					<label>
+						<input cf-questions="-one way-> {previous-answer} <-binding-|-one way-> {previous-answer} <-binding-2-" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-4" value="0" class="checkbox">Bird
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-5" checked value="1" class="checkbox">Parrot
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-6" value="0" class="checkbox">Hedgehog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-7" checked value="1" class="checkbox">Turtle
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-8" checked value="1" class="checkbox">Duck
+					</label>
+					<label>
+						<input cf-questions="-one way-> {previous-answer} <-binding-|-one way-> {previous-answer} <-binding-2-" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-4" value="0" class="checkbox">Bird
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-5" checked value="1" class="checkbox">Parrot
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-6" value="0" class="checkbox">Hedgehog
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-7" checked value="1" class="checkbox">Turtle
+					</label>
+					<label>
+						<input type="checkbox" name="account-information" id="account_information-flue-8" checked value="1" class="checkbox">Duck
+					</label>
+				</li>
+
+
+				<input type="text" required cf-questions="text field multiline....." name="password" value="">
 
 				<input type="text" disabled cf-questions="Skip this field" name="password" value="">
 				<input type="password" cf-questions="password field.. (NOT required)" name="password" value="">
 				<input type="text" required cf-questions="text field.. (IS required)" name="password" value="">
 
-				<li class="control">
-									<label>
-										<input cf-questions="-one way-> {previous-answer} <-binding-|-one way-> {previous-answer} <-binding-2-" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-4" value="0" class="checkbox">Bird
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-5" checked value="1" class="checkbox">Parrot
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-6" value="0" class="checkbox">Hedgehog
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-7" checked value="1" class="checkbox">Turtle
-									</label>
-									<label>
-										<input type="checkbox" name="account-information" id="account_information-flue-8" checked value="1" class="checkbox">Duck
-									</label>
-								</li>
 
 				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
 
@@ -578,18 +631,18 @@
 			};
 
 			(function(){
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form"),
-					flowStepCallback: function(dto, success, error){
-						success();
-					},
-					submitCallback: function(){
-						// remove Conversational Form
-						conversationalForm.remove();
+				// var conversationalForm = new cf.ConversationalForm({
+				// 	formEl: document.getElementById("form"),
+				// 	flowStepCallback: function(dto, success, error){
+				// 		success();
+				// 	},
+				// 	submitCallback: function(){
+				// 		// remove Conversational Form
+				// 		conversationalForm.remove();
 
-						alert("Custom submit callback reached, see markup of this file:190")
-					}
-				});
+				// 		alert("Custom submit callback reached, see markup of this file:190")
+				// 	}
+				// });
 			})();
 		</script>
 

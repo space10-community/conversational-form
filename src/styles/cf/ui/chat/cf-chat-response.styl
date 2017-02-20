@@ -16,6 +16,16 @@ cf-chat-response
 	color $color-chat-reponse-default-text
 	margin-left 0px
 	margin-right auto
+	word-break break-all
+
+	
+	&.can-edit
+		cursor pointer
+
+		&:hover
+			color darken($color-chat-reponse-default-text, 25%)
+			text
+				background lighten($color-chat-reponse-user-bg, 50%)
 
 	&.user// user..
 		margin-right 0px
@@ -48,6 +58,13 @@ cf-chat-response
 				opacity 1
 				.conversational-form--enable-animation &
 					transition-delay 0s, 0s, 0s
+	
+	&.disabled
+		pointer-events none
+		color lighten($color-chat-reponse-default-text, 25%)
+
+		text
+			background lighten($color-chat-reponse-user-bg, 50%)
 
 	text
 		user-select none
@@ -58,6 +75,7 @@ cf-chat-response
 		background $color-chat-reponse-default-bg
 		border-radius 0px 20px 20px 20px
 		opacity 0
+		word-break break-word
 		transform-origin 0% 0%
 		transform translateY(-10px) translateX(10px) scale(0.001, 0.001)
 		will-change transform, opacity, background

@@ -5,29 +5,21 @@
 cf-chat
 	display block
 	width 100%
-	height s("calc(100% - %s)", $input-field-height)
-	overflow-x hidden
+	// height s("calc(100% - %s)", $input-field-height)
+	height auto
+	overflow visible
+	// overflow-x hidden
 
 	// flow children to bottom
 	display flex
 	flex-flow column nowrap
 	justify-content flex-end
 	align-items baseline
+	padding-bottom 20px
 
 	will-change padding-bottom
 	.conversational-form--enable-animation &
 		transition padding-bottom $anim-time * 0.5 $anim-easeOut
-
-	&:before
-		content ""
-		width: 100%
-		height 148px
-		pointer-events none
-		background linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)
-		position absolute
-		top 0px
-		left 0px
-		z-index 2
 
 	// TODO: Style scrollbars... if we need it
 	// &::-webkit-scrollbar

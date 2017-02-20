@@ -2,20 +2,22 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
 
-
 // namespace
 namespace cf {
 	// interface
+	export const ChatListEvents = {
+		CHATLIST_UPDATED: "cf-chatlist-updated"
+	}
 
 	// class
 	export class ChatList extends BasicElement {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
-		private onControlElementsAddedToUserInputCallback: () => void;
 		private currentResponse: ChatResponse;
 		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
+		private responses: Array<ChatResponse>;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -31,16 +33,6 @@ namespace cf {
 			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
 			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
-
-			// user input key change
-			this.onControlElementsAddedToUserInputCallback = this.onControlElementsAddedToUserInput.bind(this);
-			document.addEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
-		}
-
-		private onControlElementsAddedToUserInput(event: CustomEvent){
-			const dto: ControlElementsDTO = event.detail;
-			const paddingBottom: number = 30;
-			this.el.style.paddingBottom = (dto.height + paddingBottom) + "px";
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -53,11 +45,7 @@ namespace cf {
 
 			if(this.currentUserResponse){
 				const response: FlowDTO = event.detail;
-				this.flowDTOFromUserInputUpdate = response;
-
-				if(!this.flowDTOFromUserInputUpdate.text)
-					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
-				this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
+				this.setCurrentResponse(response);
 			}
 			else{
 				// this should never happen..
@@ -89,8 +77,45 @@ namespace cf {
 			this.createResponse(false, currentTag);
 		}
 
+		/**
+		* @name onUserAnswerClicked
+		* on user ChatReponse clicked
+		*/
+		public onUserWantToEditPreviousAnswer(tag: ITag): void {
+			console.log((<any>this.constructor).name, 'this.onUserWantToEditPreviousAnswer:', this.currentUserResponse);
+			this.currentUserResponse.skippedBecauseOfEdit();
+		}
+
+		/**
+		* @name setCurrentResponse
+		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
+		* reponse: FlowDTO
+		*/
+		public setCurrentResponse(response: FlowDTO){
+			this.flowDTOFromUserInputUpdate = response;
+
+			if(!this.flowDTOFromUserInputUpdate.text)
+				this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
+		}
+
+		public updateThumbnail(robot: boolean, img: string){
+			Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
+
+			const newImage: string = robot ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image");
+			for (let i = 0; i < this.responses.length; i++) {
+				let element: ChatResponse = <ChatResponse>this.responses[i];
+				if(robot && element.isRobotReponse){
+					element.updateThumbnail(newImage);
+				}else if(!robot && !element.isRobotReponse){
+					element.updateThumbnail(newImage);
+				}
+
+			}
+		}
+
 		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null){
-			this.currentResponse = new ChatResponse({
+			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
 				isRobotReponse: isRobotReponse,
@@ -98,11 +123,23 @@ namespace cf {
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
 
+			if(!this.responses)
+				this.responses = [];
+			this.responses.push(response);
+
+			this.currentResponse = response;
+
 			if(!isRobotReponse)
 				this.currentUserResponse = this.currentResponse;
 			
 			this.el.appendChild(this.currentResponse.el);
 			// this.el.scrollTop = 1000000000;
+
+			setTimeout(() => {
+				document.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+					detail: this
+				}));
+			}, 0);
 		}
 
 		public getTemplate () : string {
@@ -113,12 +150,12 @@ namespace cf {
 		public dealloc(){
 			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
+
 			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
+
 			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 			this.onInputKeyChangeCallback = null
-			document.removeEventListener(UserInputEvents.CONTROL_ELEMENTS_ADDED, this.onControlElementsAddedToUserInputCallback, false);
-			this.onControlElementsAddedToUserInputCallback = null
 			super.dealloc();
 		}
 	}

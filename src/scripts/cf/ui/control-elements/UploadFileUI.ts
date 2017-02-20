@@ -12,10 +12,24 @@ namespace cf {
 		private progressBar: HTMLElement;
 		private loading: boolean = false;
 		private submitTimer: number = 0;
-		private fileName: string = "";
+		private _fileName: string = "";
+		private _readerResult: string = "";
+		private _files: FileList;
 
 		public get value():string{
-			return this.fileName;
+			return (<HTMLInputElement> this.referenceTag.domElement).value;//;this.readerResult || this.fileName;
+		}
+
+		public get readerResult():string{
+			return this._readerResult;
+		}
+
+		public get files():FileList{
+			return this._files;
+		}
+
+		public get fileName():string{
+			return this._fileName;
 		}
 
 		public get type():string{
@@ -43,6 +57,8 @@ namespace cf {
 
 		private onDomElementChange(event: any){
 			var reader: FileReader = new FileReader();
+			this._files = (<HTMLInputElement> this.referenceTag.domElement).files;
+
 			reader.onerror = (event: any) => {
 				console.log("onerror", event);
 			}
@@ -56,7 +72,7 @@ namespace cf {
 			}
 			reader.onloadstart = (event: any) => {
 				// check for file size
-				const file: File = (<HTMLInputElement> this.referenceTag.domElement).files[0];
+				const file: File = this.files[0];
 				const fileSize: number = file ? file.size : this.maxFileSize + 1;// if file is undefined then abort ...
 				if(fileSize > this.maxFileSize){
 					reader.abort();
@@ -70,7 +86,7 @@ namespace cf {
 					}));
 				}else{
 					// good to go
-					this.fileName = file.name;
+					this._fileName = file.name;
 					this.loading = true;
 					this.animateIn();
 					// set text
@@ -87,19 +103,21 @@ namespace cf {
 					}));
 				}
 			}
+
 			reader.onload = (event: any) => {
+				this._readerResult = event.target.result;
 				this.progressBar.classList.add("loaded");
 				this.submitTimer = setTimeout(() =>{
+					this.el.classList.remove("animate-in");
+					this.onChoose(); // submit the file
+
 					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
 						detail: ControlElementProgressStates.READY
 					}));
-
-					this.el.classList.remove("animate-in");
-					this.onChoose(); // submit the file
-				}, 1000);//ConversationalForm.animationsEnabled ? 2000 : 0);
+				}, 0);
 			}
 
-			reader.readAsBinaryString(event.target.files[0]);
+			reader.readAsDataURL(this.files[0]);
 		}
 
 		public animateIn(){

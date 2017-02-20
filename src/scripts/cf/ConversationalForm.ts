@@ -1,3 +1,5 @@
+// version 0.9.0
+
 /// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
@@ -9,6 +11,8 @@
 /// <reference path="data/Dictionary.ts"/>
 
 interface Window { ConversationalForm: any; }
+
+//TODO: delete this line.. tag tag tag test
 
 namespace cf {
 
@@ -25,18 +29,19 @@ namespace cf {
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
 		scrollAccerlation?: number;
-		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be set on each Tag.ts
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
 	}
 
 	export class ConversationalForm{
 		public static animationsEnabled: boolean = true;
 
 		public dictionary: Dictionary;
+		public el: HTMLElement;
 
-		private el: HTMLElement;
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
+		private onUserAnswerClickedCallback: () => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
@@ -167,6 +172,26 @@ namespace cf {
 			return this;
 		}
 
+		/**
+		* @name updateDictionaryValue
+		* set a dictionary value at "runtime"
+		*	id: string, id of the value to update
+		*	type: string, "human" || "robot"
+		*	value: string, value to be inserted
+		*/
+		public updateDictionaryValue(id:string, type: string, value: string){
+			Dictionary.set(id, type, value);
+
+			if(["robot-image", "user-image"].indexOf(id) != -1){
+				this.chatList.updateThumbnail(id == "robot-image", value);
+			}
+		}
+
+		public getFormData(): FormData{
+			var formData: FormData = new FormData(this.formEl);
+			return formData;
+		}
+
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
 		}
@@ -254,26 +279,47 @@ namespace cf {
 			//hide until stylesheet is rendered
 			this.el.style.visibility = "hidden";
 
+			var innerWrap = document.createElement("div");
+			innerWrap.className = "conversational-form-inner";
+			this.el.appendChild(innerWrap);
+
 			// Conversational Form UI
 			this.chatList = new ChatList({});
-			this.el.appendChild(this.chatList.el);
+			innerWrap.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({});
-			this.el.appendChild(this.userInput.el);
+			innerWrap.appendChild(this.userInput.el);
+
+			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
+			document.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
 			setTimeout(() => {
-				this.el.classList.add("conversational-form--show")
-				this.flowManager.start();
+				// if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
+				if(this.el && this.flowManager){
+					this.el.classList.add("conversational-form--show")
+					this.flowManager.start();
+				}
 			}, 0);
-
-			// s10context.addEventListener('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
-			// 	e.preventDefault();
-			// 	e.stopPropagation();
-			// 	console.log(e);
-			// })
 		}
 
-		public remapTagsAndStartFrom(index: number = 0){
+		/**
+		* @name onUserAnswerClicked
+		* on user ChatReponse clicked
+		*/
+		private onUserAnswerClicked(event: CustomEvent): void {
+			this.chatList.onUserWantToEditPreviousAnswer(<ITag> event.detail);
+			this.flowManager.editTag(<ITag> event.detail);
+		}
+
+		/**
+		* @name remapTagsAndStartFrom
+		* index: number, what index to start from
+		* setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the valie of the current tag before changing index.
+		*/
+		public remapTagsAndStartFrom(index: number = 0, setCurrentTagValue: boolean = false){
+			if(setCurrentTagValue){
+				this.chatList.setCurrentResponse(this.userInput.getFlowDTO());
+			}
 			// possibility to start the form flow over from {index}
 			for(var i = 0; i < this.tags.length; i++){
 				const tag: ITag | ITagGroup = this.tags[i];
@@ -296,6 +342,9 @@ namespace cf {
 		}
 
 		public remove(){
+			document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+			this.onUserAnswerClickedCallback = null;
+
 			this.flowManager.dealloc();
 			this.userInput.dealloc();
 			this.chatList.dealloc();
