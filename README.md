@@ -11,3 +11,5 @@ Release/Tag fix...
 Tag igen..
 
 Commit efter tag push
+
+0.1.0.2
