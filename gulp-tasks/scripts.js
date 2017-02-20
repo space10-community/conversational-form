@@ -15,6 +15,26 @@ function swallowError(error) {
 	this.emit('end');
 }
 
+global.gulp.task('typescript-declaration', function() {
+	var tsProject = typescript.createProject({
+		declaration: true,
+		noImplicitAny: true,
+		target: "ES5",
+		module: "none"//AMD... etc.
+	});
+
+	var src = [
+		global.srcFolder + "/scripts/**/*.ts",
+		"!" + global.srcFolder + "/scripts/typings/**/*.d.ts"
+		];
+
+	var tsResult = global.gulp.src(src)
+		.pipe(tsProject());
+
+	tsResult.dts
+		.pipe(global.gulp.dest(global.distFolder+"/typings"))
+});
+
 global.gulp.task('typescript', function() {
 	var src = [
 		global.srcFolder + "/scripts/**/*.ts",
@@ -57,7 +77,7 @@ global.gulp.task('scripts', function() {
 	return stream
 });
 
-global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
+global.gulp.task('scripts-build', ['typescript', 'typescript-declaration', 'scripts'], function(){
 	// build order is important in a inheritance world
 	var src = [
 		global.buildFolder + "scripts/bower_components/promise-polyfill/promise.js",

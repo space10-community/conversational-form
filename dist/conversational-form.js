@@ -568,7 +568,6 @@ var cf;
 /// <reference path="UploadFileUI.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
-/// <reference path="../../../typings/globals/es6-promise/index.d.ts"/>
 // namespace
 var cf;
 (function (cf) {
@@ -1008,7 +1007,7 @@ var cf;
             else {
                 this.filterListNumberOfVisible = tags.length;
             }
-            new Promise(function (resolve, reject) { return _this.resize(resolve, reject); }).then(function () {
+            new (window.Promise)(function (resolve, reject) { return _this.resize(resolve, reject); }).then(function () {
                 var h = _this.el.classList.contains("one-row") ? 52 : _this.el.classList.contains("two-row") ? 102 : 0;
                 var controlElementsAddedDTO = {
                     height: h,

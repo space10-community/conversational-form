@@ -6,7 +6,6 @@
 /// <reference path="UploadFileUI.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
-/// <reference path="../../../typings/globals/es6-promise/index.d.ts"/>
 
 // namespace
 namespace cf {
@@ -526,7 +525,7 @@ namespace cf {
 				this.filterListNumberOfVisible = tags.length;
 			}
 
-			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
+			new ((<any> window).Promise)((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
 				const h: number = this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
 
 				const controlElementsAddedDTO: ControlElementsDTO = {
