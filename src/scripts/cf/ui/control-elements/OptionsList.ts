@@ -7,6 +7,7 @@ namespace cf {
 
 	export interface IOptionsListOptions{
 		context: HTMLElement;
+		eventTarget: EventDispatcher;
 		referenceTag: ITag;
 	}
 
@@ -15,6 +16,7 @@ namespace cf {
 	export class OptionsList {
 
 		public elements: Array<OptionButton>;
+		private eventTarget: EventDispatcher;
 		private context: HTMLElement;
 		private multiChoice: boolean;
 		private referenceTag: ITag;
@@ -26,13 +28,14 @@ namespace cf {
 
 		constructor(options: IOptionsListOptions){
 			this.context = options.context;
+			this.eventTarget = options.eventTarget;
 			this.referenceTag = options.referenceTag;
 
 			// check for multi choice select tag
 			this.multiChoice = this.referenceTag.domElement.hasAttribute("multiple");
 			
 			this.onOptionButtonClickCallback = this.onOptionButtonClick.bind(this);
-			document.addEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
+			this.eventTarget.addEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
 
 			this.createElements();
 		}
@@ -67,7 +70,7 @@ namespace cf {
 				}
 
 				ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.SUBMIT_VALUE, this.referenceTag);
-				document.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
+				this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
 					detail: <OptionButton> event.detail
 				}));
 			}else{
@@ -84,6 +87,7 @@ namespace cf {
 				const btn: OptionButton = new OptionButton(<IOptionButtonOptions> {
 					referenceTag: tag,
 					isMultiChoice: (<SelectTag>this.referenceTag).multipleChoice,
+					eventTarget: this.eventTarget
 				});
 
 				this.elements.push(btn);
@@ -93,7 +97,7 @@ namespace cf {
 		}
 
 		public dealloc(){
-			document.removeEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
+			this.eventTarget.removeEventListener(OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
 			this.onOptionButtonClickCallback = null;
 
 			while(this.elements.length > 0)

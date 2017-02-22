@@ -81,7 +81,7 @@ namespace cf {
 					};
 
 					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, dto)
-					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
 						detail: dto
 					}));
 				}else{
@@ -98,7 +98,7 @@ namespace cf {
 					const text: string = file.name + " ("+humanSizeString+")";
 					this.el.getElementsByTagName("cf-upload-file-text")[0].innerHTML = text;
 
-					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+					this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
 						detail: ControlElementProgressStates.BUSY
 					}));
 				}
@@ -111,7 +111,7 @@ namespace cf {
 					this.el.classList.remove("animate-in");
 					this.onChoose(); // submit the file
 
-					document.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+					this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
 						detail: ControlElementProgressStates.READY
 					}));
 				}, 0);

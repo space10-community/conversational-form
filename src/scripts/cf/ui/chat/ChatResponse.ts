@@ -5,7 +5,7 @@
 // namespace
 namespace cf {
 	// interface
-	export interface IChatResponseOptions{
+	export interface IChatResponseOptions extends IBasicElementOptions{
 		response: string;
 		image: string;
 		isRobotReponse: boolean;
@@ -73,7 +73,7 @@ namespace cf {
 				if(this.isRobotReponse){
 					// Robot Reponse ready to ask question.
 					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.ROBOT_QUESTION_ASKED, this.response);
-					document.dispatchEvent(new CustomEvent(ChatResponseEvents.ROBOT_QUESTION_ASKED, {
+					this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.ROBOT_QUESTION_ASKED, {
 						detail: this
 					}));
 				}else if(!this.onClickCallback){
@@ -104,7 +104,7 @@ namespace cf {
 		*/
 		private onClick(event: MouseEvent): void {
 			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
-			document.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
+			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this.tag
 			}));
 		}
