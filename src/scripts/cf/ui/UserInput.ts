@@ -283,7 +283,7 @@ namespace cf {
 			else{
 				// handle password input
 				if(this._currentTag && this._currentTag.type == "password"){
-					const canSetValue: boolean = event.key.toLowerCase() == "backspace" || event.key.toLowerCase() == "space" || event.code.toLowerCase().indexOf("key") != -1;
+					const canSetValue: boolean = true;
 					if(canSetValue){
 						this.inputElement.value = this.currentValue.replace(/./g, () => "*");
 
