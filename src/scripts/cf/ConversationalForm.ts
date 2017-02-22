@@ -27,6 +27,7 @@ namespace cf {
 		submitCallback?: () => void | HTMLButtonElement,
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
+		preventAutoInit?: boolean;
 		scrollAccerlation?: number;
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
 	}
@@ -73,6 +74,7 @@ namespace cf {
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
+		private preventAutoInit: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -89,9 +91,9 @@ namespace cf {
 
 			if(!isNaN(options.scrollAccerlation))
 				ScrollController.accerlation = options.scrollAccerlation;
-
-			if(options.preventAutoAppend == true)
-				this.preventAutoAppend = true;
+			
+			this.preventAutoInit = options.preventAutoInit;
+			this.preventAutoAppend = options.preventAutoAppend;
 
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
@@ -115,15 +117,17 @@ namespace cf {
 			});
 
 			// emoji.. fork and set your own values..
-			Helpers.setEmojiLib();
 
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			this.init();
+			if(!this.preventAutoInit)
+				this.init();
 		}
 
 		public init(): ConversationalForm{
+			Helpers.setEmojiLib();
+
 			if(this.loadExternalStyleSheet){
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
