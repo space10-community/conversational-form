@@ -12,7 +12,8 @@ namespace cf {
 	}
 
 	export interface FlowManagerOptions{
-		cuiReference: ConversationalForm;
+		cfReference: ConversationalForm;
+		eventTarget: EventDispatcher;
 		tags: Array<ITag>;
 	}
 
@@ -29,7 +30,9 @@ namespace cf {
 		private static STEP_TIME: number = 1000;
 		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 
-		private cuiReference: ConversationalForm;
+		private eventTarget: EventDispatcher;
+
+		private cfReference: ConversationalForm;
 		private tags: Array<ITag>;
 
 		private stopped: boolean = false;
@@ -44,13 +47,14 @@ namespace cf {
 		}
 
 		constructor(options: FlowManagerOptions){
-			this.cuiReference = options.cuiReference;
+			this.cfReference = options.cfReference;
+			this.eventTarget = options.eventTarget;
 			this.tags = options.tags;
 
 			this.maxSteps = this.tags.length;
 
 			this.userInputSubmitCallback = this.userInputSubmit.bind(this);
-			document.addEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
+			this.eventTarget.addEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 		}
 
 		public userInputSubmit(event: CustomEvent){
@@ -106,7 +110,7 @@ namespace cf {
 					// update to latest DTO because values can be changed in validation flow...
 					appDTO = appDTO.input.getFlowDTO();
 
-					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
+					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
 						detail: appDTO //UserInput value
 					}));
 
@@ -116,7 +120,7 @@ namespace cf {
 					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, appDTO)
 
 					// Value not valid
-					document.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
 						detail: appDTO //UserInput value
 					}));
 				}
@@ -167,7 +171,7 @@ namespace cf {
 		}
 
 		public dealloc(){
-			document.removeEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
+			this.eventTarget.removeEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 			this.userInputSubmitCallback = null;
 		}
 
@@ -188,7 +192,7 @@ namespace cf {
 			if(this.maxSteps > 0){
 				if(this.step == this.maxSteps){
 					// console.warn("We are at the end..., submit click")
-					this.cuiReference.doSubmitForm();
+					this.cfReference.doSubmitForm();
 				}else{
 					this.step %= this.maxSteps;
 					this.showStep();
@@ -208,7 +212,7 @@ namespace cf {
 			}else{
 				this.currentTag.refresh();
 
-				document.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
+				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 					detail: this.currentTag
 				}));
 			}

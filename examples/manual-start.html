@@ -1,32 +1,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
-
 		<style>
-			.form-outer{
-				background: lightgrey;
-				width: 600px;
-				height: 100vh;
+			body{
+				height: 50vh;
+			}
+			#count{
+				position: absolute;
+				bottom: 0px;
+				font-size: 30px;
 			}
 		</style>
 
+		<div id="count"></div>
 
-		<div class="form-outer">
-
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
-			</form>
-
-		</div>
-
-
-
-
-
+		<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+		<form id="form">
+			<input required cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
+		</form>
 
 
 
@@ -199,14 +192,27 @@
 
 		<script>
 			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method.");
-					}
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
+					preventAutoInit: true,
 				});
+
+				var seconds = 2;
+				var fps = 60;
+				var c = seconds * fps;
+				var countEl = document.getElementById("count");
+				countEl.innerHTML = "2.0 and counting.."
+				setTimeout(function(){
+					var interval = setInterval(function(){
+						c--;
+						countEl.innerHTML = (Math.floor(c / 60)) + "." + c.toString();
+						if(c <= 0){
+							// start the conversation
+							conversationalForm.init();
+							clearInterval(interval);
+						}
+					}, fps/1000)
+				}, 500);
 			})();
 		</script>
 

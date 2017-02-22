@@ -1,9 +1,11 @@
 /// <reference path="../logic/Helpers.ts"/>
+/// <reference path="../logic/EventDispatcher.ts"/>
 
 // namespace
 namespace cf {
 	export interface IScrollControllerOptions{
 		interactionListener: HTMLElement;
+		eventTarget: EventDispatcher;
 		listToScroll: HTMLElement;
 		listNavButtons: NodeListOf<Element>;
 
@@ -11,6 +13,7 @@ namespace cf {
 	export class ScrollController{
 		public static accerlation: number = 0.1;
 
+		private eventTarget: EventDispatcher;
 		private interactionListener: HTMLElement;
 		private listToScroll: HTMLElement;
 		private listWidth: number = 0;
@@ -41,6 +44,7 @@ namespace cf {
 
 		constructor(options: IScrollControllerOptions){
 			this.interactionListener = options.interactionListener;
+			this.eventTarget = options.eventTarget;
 			this.listToScroll = options.listToScroll;
 			this.prevButton = options.listNavButtons[0];
 			this.nextButton = options.listNavButtons[1];
@@ -188,6 +192,7 @@ namespace cf {
 			this.nextButton = null;
 
 			document.removeEventListener("mouseleave", this.documentLeaveCallback, false);
+			document.removeEventListener(Helpers.getMouseEvent("mouseup"), this.documentLeaveCallback, false);
 			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mousedown"), this.onInteractStartCallback, false);
 			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mouseup"), this.onInteractEndCallback, false);
 			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mousemove"), this.onInteractMoveCallback, false);

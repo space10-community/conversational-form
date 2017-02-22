@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
 
@@ -10,18 +8,48 @@
 			.form-outer{
 				background: lightgrey;
 				width: 600px;
-				height: 100vh;
+				height: 80vh;
 			}
 		</style>
 
-
 		<div class="form-outer">
 
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form" action="">
+				<div class="radio-control" cf-questions="Check flowStepCallback for hints" >
+					<input required cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
+					<input required cf-label="Sign-in with Twitter" type="radio" name="login-type" tabindex="2" value="twitter">
+					<input required cf-label="Sign-in with E-mail" type="radio" name="login-type" tabindex="3" value="email">
+					<input required cf-label="Sherlock will sign in for you'" type="radio" name="login-type" tabindex="4" value="sherlock">
+				</div>
+
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
 			</form>
 
 		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -198,15 +226,31 @@
 
 
 		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
+			var testValidation = function(dto, success, error){
+				console.log("testValidation, dto:", dto);
+				if(dto.text.indexOf("holmes") != -1)
+					return success();
+				return error();
+			};
 
-						alert("Reached custom submit callback method.");
-					}
-				});
+			(function(){
+				var conversationalForm
+				var numInstances = 1000;
+
+				function create(){
+					if(conversationalForm)
+						conversationalForm.remove();
+
+					delete conversationalForm;
+
+					conversationalForm = new cf.ConversationalForm({
+						formEl: document.getElementById("form")
+					});
+				}
+
+				while(numInstances-- > 0){
+					create();
+				}
 			})();
 		</script>
 

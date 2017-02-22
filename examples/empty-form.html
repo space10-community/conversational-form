@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
 
@@ -10,18 +8,59 @@
 			.form-outer{
 				background: lightgrey;
 				width: 600px;
-				height: 100vh;
+				height: 80vh;
 			}
 		</style>
+
+		<div id="random-interface">
+			<style>
+				#random-interface{
+					position: absolute;
+					z-index: 1000;
+					top: 0px;
+					left: 0px;
+				}
+				#random-interface button{
+					color: red;
+				}
+			</style>
+			<script>
+				function addRandomClick(){
+					var ran = ["Random message 1", "Random message 2"];
+					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
+				}
+			</script>
+			<h2>Add random robot response</h2>
+			<button onclick="addRandomClick()">Add random text</button>
+		</div>
+
 
 
 		<div class="form-outer">
 
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form" cf-form>
 			</form>
 
 		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -195,20 +234,6 @@
 
 		<!-- OR -->
 		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
-
-
-		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method.");
-					}
-				});
-			})();
-		</script>
 
 	</body>
 </html>
