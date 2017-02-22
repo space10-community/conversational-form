@@ -33,9 +33,14 @@ namespace cf {
 		}
 
 		public static getInnerTextOfElement(element: Element): string {
-			var tmp = document.createElement("DIV");
+			const tmp = document.createElement("DIV");
 			tmp.innerHTML = element.innerHTML;
-			return tmp.textContent || tmp.innerText || "";
+			// return 
+			let text: string = tmp.textContent || tmp.innerText || "";
+			// text = String(text).replace('\t','');
+			text = String(text).replace(/^\s+|\s+$/g, '');
+			
+			return text;
 		}
 
 		public static getMouseEvent(eventString: string): string{
