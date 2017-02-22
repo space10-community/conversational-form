@@ -3,6 +3,7 @@
 /// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
+/// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
 /// <reference path="form-tags/InputTag.ts"/>
@@ -33,6 +34,28 @@ namespace cf {
 	export class ConversationalForm{
 		public static animationsEnabled: boolean = true;
 
+		/**
+		 * createId
+		 * Id of the instance, to isolate events
+		 */
+		private _createId: string
+		public get createId(): string{
+			if(!this._createId){
+				this._createId = new Date().getTime().toString();
+			}
+
+			return this._createId;
+		}
+
+		// instance specific event target
+		private _eventTarget: EventDispatcher;
+		public get eventTarget(): EventDispatcher{
+			if(!this._eventTarget){
+				this._eventTarget = new EventDispatcher();
+			}
+			return this._eventTarget;
+		}
+
 		public dictionary: Dictionary;
 		public el: HTMLElement;
 
@@ -50,8 +73,11 @@ namespace cf {
 		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
+
 			if(!window.ConversationalForm)
 				window.ConversationalForm = this;
+			
+			window.ConversationalForm[this.createId] = this;
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
@@ -71,6 +97,8 @@ namespace cf {
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
 			this.formEl = options.formEl;
+			this.formEl.setAttribute("cf-create-id", this.createId);
+
 			this.submitCallback = options.submitCallback;
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
@@ -265,6 +293,7 @@ namespace cf {
 			// start the flow
 			this.flowManager = new FlowManager({
 				cuiReference: this,
+				eventTarget: this.eventTarget,
 				tags: this.tags
 			});
 
@@ -287,14 +316,18 @@ namespace cf {
 			this.el.appendChild(innerWrap);
 
 			// Conversational Form UI
-			this.chatList = new ChatList({});
+			this.chatList = new ChatList({
+				eventTarget: this.eventTarget
+			});
 			innerWrap.appendChild(this.chatList.el);
 
-			this.userInput = new UserInput({});
+			this.userInput = new UserInput({
+				eventTarget: this.eventTarget
+			});
 			innerWrap.appendChild(this.userInput.el);
 
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
-			document.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+			this.eventTarget.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
 			setTimeout(() => {
 				// if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
@@ -346,7 +379,7 @@ namespace cf {
 
 		public remove(){
 			if(this.onUserAnswerClickedCallback){
-				document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+				this.eventTarget.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 				this.onUserAnswerClickedCallback = null;
 			}
 

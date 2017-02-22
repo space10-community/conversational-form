@@ -84,6 +84,7 @@ namespace cf {
 		constructor(options: IBasicElementOptions){
 			super(options);
 
+			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
@@ -92,7 +93,8 @@ namespace cf {
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
-				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0]
+				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0],
+				eventTarget: this.eventTarget
 			})
 
 			// setup event listeners
@@ -106,16 +108,16 @@ namespace cf {
 			document.addEventListener("keydown", this.keyDownCallback, false);
 
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
-			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			this.inputInvalidCallback = this.inputInvalid.bind(this);
-			document.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 
 			this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this);
-			document.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+			this.eventTarget.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 
 			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
-			document.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
+			this.eventTarget.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
 
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
@@ -394,7 +396,7 @@ namespace cf {
 
 		private dispatchKeyChange(dto: FlowDTO, keyCode: number){
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, dto);
-			document.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 				detail: <InputKeyChangeDTO> {
 					dto: dto,
 					keyCode: keyCode,
@@ -440,7 +442,7 @@ namespace cf {
 			this.inputElement.setAttribute("data-value", "");
 
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
-			document.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 				detail: value
 			}));
 		}
@@ -467,13 +469,13 @@ namespace cf {
 			document.removeEventListener("keyup", this.keyUpCallback, false);
 			this.keyUpCallback = null;
 
-			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			this.eventTarget.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 
-			document.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 			this.inputInvalidCallback = null;
 
-			document.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
+			this.eventTarget.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 			this.onControlElementSubmitCallback = null;
 
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];

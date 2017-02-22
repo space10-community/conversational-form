@@ -39,7 +39,7 @@ namespace cf {
 
 		protected onClick(event: MouseEvent){
 			ConversationalForm.illustrateFlow(this, "dispatch", OptionButtonEvents.CLICK, this);
-			document.dispatchEvent(new CustomEvent(OptionButtonEvents.CLICK, {
+			this.eventTarget.dispatchEvent(new CustomEvent(OptionButtonEvents.CLICK, {
 				detail: this
 			}));
 		}

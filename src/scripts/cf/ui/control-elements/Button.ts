@@ -52,7 +52,7 @@ namespace cf {
 
 		private onImageLoaded(){
 			this.imgEl.classList.add("loaded");
-			document.dispatchEvent(new CustomEvent(ControlElementEvents.ON_LOADED, {}));
+			this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.ON_LOADED, {}));
 		}
 
 		private onMouseDown(event:MouseEvent){

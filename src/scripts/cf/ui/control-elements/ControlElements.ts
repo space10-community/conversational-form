@@ -4,6 +4,7 @@
 /// <reference path="CheckboxButton.ts"/>
 /// <reference path="OptionsList.ts"/>
 /// <reference path="UploadFileUI.ts"/>
+/// <reference path="../../logic/EventDispatcher.ts"/>
 /// <reference path="../ScrollController.ts"/>
 /// <reference path="../chat/ChatResponse.ts"/>
 /// <reference path="../../../typings/globals/es6-promise/index.d.ts"/>
@@ -16,10 +17,12 @@ namespace cf {
 
 	export interface IControlElementsOptions{
 		el: HTMLElement;
+		eventTarget: EventDispatcher;
 	}
 
 	export class ControlElements {
 		private elements: Array<IControlElement | OptionsList>;
+		private eventTarget: EventDispatcher;
 		private el: HTMLElement;
 		private list: HTMLElement;
 		private infoElement: HTMLElement;
@@ -77,6 +80,7 @@ namespace cf {
 
 		constructor(options: IControlElementsOptions){
 			this.el = options.el;
+			this.eventTarget = options.eventTarget;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 			this.infoElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
 
@@ -84,24 +88,25 @@ namespace cf {
 			this.el.addEventListener('scroll', this.onScrollCallback, false);
 
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
-			document.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
+			this.eventTarget.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
 			this.onElementLoadedCallback = this.onElementLoaded.bind(this);
-			document.addEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
+			this.eventTarget.addEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
 
 			this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
-			document.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+			this.eventTarget.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
-			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+			this.eventTarget.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 
 			// user input update
 			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
-			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 
 			this.listScrollController = new ScrollController({
 				interactionListener: this.el,
 				listToScroll: this.list,
+				eventTarget: this.eventTarget,
 				listNavButtons: this.el.getElementsByTagName("cf-list-button"),
 			});
 		}
@@ -497,12 +502,14 @@ namespace cf {
 				switch(tag.type){
 					case "radio" :
 						this.elements.push(new RadioButton({
-							referenceTag: tag
+							referenceTag: tag,
+							eventTarget: this.eventTarget
 						}));
 						break;
 					case "checkbox" :
 						this.elements.push(new CheckboxButton({
-							referenceTag: tag
+							referenceTag: tag,
+							eventTarget: this.eventTarget
 						}));
 					
 						break;
@@ -510,6 +517,7 @@ namespace cf {
 						this.elements.push(new OptionsList({
 							referenceTag: tag,
 							context: this.list,
+							eventTarget: this.eventTarget
 						}));
 						break;
 					
@@ -518,6 +526,7 @@ namespace cf {
 						if(tag.type == "file"){
 							this.elements.push(new UploadFileUI({
 								referenceTag: tag,
+								eventTarget: this.eventTarget
 							}));
 						}
 						// nothing to add.
@@ -546,7 +555,7 @@ namespace cf {
 				};
 
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
-				document.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
+				this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
 					detail: controlElementsAddedDTO
 				}));
 			});
@@ -657,19 +666,19 @@ namespace cf {
 			this.el.removeEventListener('scroll', this.onScrollCallback, false);
 			this.onScrollCallback = null;
 
-			document.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
+			this.eventTarget.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 			this.onElementFocusCallback = null;
 
-			document.removeEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+			this.eventTarget.removeEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
 			this.onChatRobotReponseCallback = null;
 
-			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
+			this.eventTarget.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;
 
-			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
 
-			document.removeEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
+			this.eventTarget.removeEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
 			this.onElementLoadedCallback = null;
 
 			this.listScrollController.dealloc();

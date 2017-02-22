@@ -24,15 +24,15 @@ namespace cf {
 
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
-			document.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			// user input update
 			this.userInputUpdateCallback = this.onUserInputUpdate.bind(this);
-			document.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 
 			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
-			document.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+			this.eventTarget.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -123,6 +123,7 @@ namespace cf {
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
+				eventTarget: this.eventTarget,
 				isRobotReponse: isRobotReponse,
 				response: value,// || input-response,
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
@@ -142,7 +143,7 @@ namespace cf {
 			// this.el.scrollTop = 1000000000;
 
 			setTimeout(() => {
-				document.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
 			}, 0);
@@ -155,13 +156,13 @@ namespace cf {
 		}
 
 		public dealloc(){
-			document.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+			this.eventTarget.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
 
-			document.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
+			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
 			this.userInputUpdateCallback = null;
 
-			document.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+			this.eventTarget.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
 			this.onInputKeyChangeCallback = null
 			super.dealloc();
 		}
