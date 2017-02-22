@@ -75,9 +75,7 @@ namespace cf {
 		private preventAutoAppend: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
-
-			if(!window.ConversationalForm)
-				window.ConversationalForm = this;
+			window.ConversationalForm = this;
 			
 			window.ConversationalForm[this.createId] = this;
 
@@ -337,18 +335,13 @@ namespace cf {
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
 			this.eventTarget.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
-			setTimeout(() => {
-				// if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
-				if(this.el && this.flowManager){
-					this.el.classList.add("conversational-form--show")
-					this.flowManager.start();
-				}
+			this.el.classList.add("conversational-form--show")
+			this.flowManager.start();
 
-				if(!this.tags || this.tags.length == 0){
-					// no tags, so just so the input
-					this.userInput.visible = true;
-				}
-			}, 0);
+			if(!this.tags || this.tags.length == 0){
+				// no tags, so just so the input
+				this.userInput.visible = true;
+			}
 		}
 
 		/**
@@ -409,9 +402,13 @@ namespace cf {
 			this.chatList = null;
 			this.context = null;
 			this.formEl = null;
+			this.tags = null;
+
 			this.submitCallback = null;
 			this.el.parentNode.removeChild(this.el);
 			this.el = null;
+
+			window.ConversationalForm[this.createId] = null;
 		}
 
 		// to illustrate the event flow of the app
