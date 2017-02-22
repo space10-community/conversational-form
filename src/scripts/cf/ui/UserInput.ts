@@ -424,13 +424,18 @@ namespace cf {
 		}
 
 		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
-			// we need to check if current tag is file
-			if(this._currentTag.type == "file" && event){
-				// trigger <input type="file" but only when it's from clicking button
-				(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+			if(!this._currentTag){
+				// happens when a form is empty, so just play along and submit response to chatlist..
+				this.eventTarget.cf.addUserChatResponse(this.inputElement.value);
 			}else{
-				// for groups, we expect that there is always a default value set
-				this.doSubmit();
+				// we need to check if current tag is file
+				if(this._currentTag.type == "file" && event){
+					// trigger <input type="file" but only when it's from clicking button
+					(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+				}else{
+					// for groups, we expect that there is always a default value set
+					this.doSubmit();
+				}
 			}
 		}
 

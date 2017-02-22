@@ -125,7 +125,7 @@ namespace cf {
 				tag: currentTag,
 				eventTarget: this.eventTarget,
 				isRobotReponse: isRobotReponse,
-				response: value,// || input-response,
+				response: value,
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
 

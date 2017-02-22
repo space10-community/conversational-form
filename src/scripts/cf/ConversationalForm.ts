@@ -32,6 +32,8 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
+		// public version: string = "0.9.1";
+
 		public static animationsEnabled: boolean = true;
 
 		/**
@@ -51,7 +53,7 @@ namespace cf {
 		private _eventTarget: EventDispatcher;
 		public get eventTarget(): EventDispatcher{
 			if(!this._eventTarget){
-				this._eventTarget = new EventDispatcher();
+				this._eventTarget = new EventDispatcher(this);
 			}
 			return this._eventTarget;
 		}
@@ -192,7 +194,7 @@ namespace cf {
 			}
 
 			if(!this.tags || this.tags.length == 0){
-				console.warn("Conversational Form: no tags found/registered!");
+				console.warn("Conversational Form: No tags found or registered.");
 			}
 
 			//let's start the conversation
@@ -224,6 +226,11 @@ namespace cf {
 
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
+		}
+
+		public addUserChatResponse(response: string){
+			// add a "fake" user response..
+			this.chatList.createResponse(false, null, response);
 		}
 
 		public stop(optionalStoppingMessage: string = ""){
@@ -292,7 +299,7 @@ namespace cf {
 
 			// start the flow
 			this.flowManager = new FlowManager({
-				cuiReference: this,
+				cfReference: this,
 				eventTarget: this.eventTarget,
 				tags: this.tags
 			});
@@ -324,6 +331,7 @@ namespace cf {
 			this.userInput = new UserInput({
 				eventTarget: this.eventTarget
 			});
+
 			innerWrap.appendChild(this.userInput.el);
 
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
@@ -334,6 +342,11 @@ namespace cf {
 				if(this.el && this.flowManager){
 					this.el.classList.add("conversational-form--show")
 					this.flowManager.start();
+				}
+
+				if(!this.tags || this.tags.length == 0){
+					// no tags, so just so the input
+					this.userInput.visible = true;
 				}
 			}, 0);
 		}
