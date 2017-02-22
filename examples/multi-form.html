@@ -1,27 +1,102 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
 
 		<style>
+			body{
+				display: flex;
+				justify-content: center;
+				flex-flow: row;
+			}
+
 			.form-outer{
 				background: lightgrey;
-				width: 600px;
-				height: 100vh;
+				width: 33%;
+				height: 50vh;
+			}
+
+			.form1{
+				background: red;
+			}
+
+			.form2{
+				background: green;
+			}
+
+			.form3{
+				background: blue;
 			}
 		</style>
 
 
-		<div class="form-outer">
+		<script>
+			window.addEventListener("load", () =>{
+				document.getElementById("form-1").addEventListener("submit", function(event){
+					event.preventDefault();
+					console.log("form 1 submitted");
+				});
 
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+				console.log("???", document.getElementById("form-3"), document.getElementById("form-3-context"));
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form-3"),
+					context: document.getElementById("form-3-context"),
+					submitCallback: function(){
+						// remove Conversational Form
+						conversationalForm.remove();
+						console.log("form 3 submitted");
+					}
+				});
+			});
+
+			function form2submitted(event){
+				event.preventDefault();
+				console.log("form 2 submitted");
+			}
+
+		</script>
+
+		<!-- Conversational Form will inject into "cf-context" -->
+		<div class="form-outer form1" cf-context>
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form-1" cf-form>
+				<input type="text" cf-questions="Form 1 question 1/1.." />
 			</form>
-
 		</div>
+
+		<!-- Conversational Form will inject into "cf-context" -->
+		<div class="form-outer form2" cf-context>
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form-2" cf-form onsubmit="return form2submitted(event)">
+				<input type="text" cf-questions="Form 2 question 1/2 .." />
+				<input type="text" cf-questions="Form 2 question 2/2.." />
+			</form>
+		</div>
+
+
+		<!-- Conversational Form will inject into "cf-context" -->
+		<div class="form-outer form3" id="form-3-context">
+			<form id="form-3">
+				<input type="text" cf-questions="Form 3 question 1/1 .." />
+			</form>
+		</div>
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -195,20 +270,6 @@
 
 		<!-- OR -->
 		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
-
-
-		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method.");
-					}
-				});
-			})();
-		</script>
 
 	</body>
 </html>

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 	</head>
 	<body>
 
@@ -10,18 +8,35 @@
 			.form-outer{
 				background: lightgrey;
 				width: 600px;
-				height: 100vh;
+				height: 80vh;
 			}
 		</style>
 
-
-		<div class="form-outer">
-
-			<form id="form">
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+		<!-- Conversational Form will inject into "cf-context" -->
+		<div class="form-outer" cf-context>
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form" cf-form>
+				<input type="text" cf-input-placeholder="This is a custom placeholder text" cf-questions="Check out the placeholder text below:" />
 			</form>
-
 		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
 
 
 
@@ -195,20 +210,6 @@
 
 		<!-- OR -->
 		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
-
-
-		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method.");
-					}
-				});
-			})();
-		</script>
 
 	</body>
 </html>

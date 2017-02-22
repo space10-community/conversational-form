@@ -65,6 +65,7 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 		global.buildFolder + "cf/ConversationalForm.js",
 		global.buildFolder + "cf/ConversationalForm.plugin.js",
 		global.buildFolder + "cf/logic/Helpers.js",
+		global.buildFolder + "cf/logic/EventDispatcher.js",
 		global.buildFolder + "cf/ui/BasicElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElements.js",

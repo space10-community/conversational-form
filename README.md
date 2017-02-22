@@ -60,6 +60,8 @@ new cf.ConversationalForm(<ConversationalFormOptions> {
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
 	// flowStepCallback? (dto: FlowDTO, success: () => void, error: () => void) => boolean // allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
+	// preventAutoInit? boolean // start the form in your own time, {cf-instance}.init(), exclude cf-form from form tag.
+	// preventAutoAppend? boolean // prevent the form from auto appending, this means you have to do it yourself at some point x.appendChild({cf-instance}.el);
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
 	// loadExternalStyleSheet?: boolean // can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
@@ -182,6 +184,14 @@ window.ConversationalForm.addRobotChatResponse("You have reached the end of the 
 ````
 See example of end-message [here](TBD....)
  
+### addUserChatResponse
+add a robot reponse, this you would usually do at the end of a process.
+
+````javascript
+window.ConversationalForm.addUserChatResponse("Hello from user.");
+````
+See example of end-message [here](TBD....)
+
 ### remove
 remove the ConversationalForm by calling:
 

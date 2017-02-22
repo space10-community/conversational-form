@@ -3,6 +3,7 @@
 /// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
+/// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
 /// <reference path="form-tags/InputTag.ts"/>
@@ -26,12 +27,37 @@ namespace cf {
 		submitCallback?: () => void | HTMLButtonElement,
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
+		preventAutoInit?: boolean;
 		scrollAccerlation?: number;
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
 	}
 
 	export class ConversationalForm{
+		public version: string = "pre-0.9.1";
+
 		public static animationsEnabled: boolean = true;
+
+		/**
+		 * createId
+		 * Id of the instance, to isolate events
+		 */
+		private _createId: string
+		public get createId(): string{
+			if(!this._createId){
+				this._createId = new Date().getTime().toString();
+			}
+
+			return this._createId;
+		}
+
+		// instance specific event target
+		private _eventTarget: EventDispatcher;
+		public get eventTarget(): EventDispatcher{
+			if(!this._eventTarget){
+				this._eventTarget = new EventDispatcher(this);
+			}
+			return this._eventTarget;
+		}
 
 		public dictionary: Dictionary;
 		public el: HTMLElement;
@@ -48,10 +74,12 @@ namespace cf {
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
+		private preventAutoInit: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
-			if(!window.ConversationalForm)
-				window.ConversationalForm = this;
+			window.ConversationalForm = this;
+			
+			window.ConversationalForm[this.createId] = this;
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
@@ -63,14 +91,16 @@ namespace cf {
 
 			if(!isNaN(options.scrollAccerlation))
 				ScrollController.accerlation = options.scrollAccerlation;
-
-			if(options.preventAutoAppend == true)
-				this.preventAutoAppend = true;
+			
+			this.preventAutoInit = options.preventAutoInit;
+			this.preventAutoAppend = options.preventAutoAppend;
 
 			if(!options.formEl)
 				throw new Error("Conversational Form error, the formEl needs to be defined.");
 
 			this.formEl = options.formEl;
+			this.formEl.setAttribute("cf-create-id", this.createId);
+
 			this.submitCallback = options.submitCallback;
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
@@ -87,15 +117,17 @@ namespace cf {
 			});
 
 			// emoji.. fork and set your own values..
-			Helpers.setEmojiLib();
 
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			this.init();
+			if(!this.preventAutoInit)
+				this.init();
 		}
 
 		public init(): ConversationalForm{
+			Helpers.setEmojiLib();
+
 			if(this.loadExternalStyleSheet){
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
@@ -164,7 +196,7 @@ namespace cf {
 			}
 
 			if(!this.tags || this.tags.length == 0){
-				console.warn("Conversational Form: no tags found/registered!");
+				console.warn("Conversational Form: No tags found or registered.");
 			}
 
 			//let's start the conversation
@@ -196,6 +228,11 @@ namespace cf {
 
 		public addRobotChatResponse(response: string){
 			this.chatList.createResponse(true, null, response);
+		}
+
+		public addUserChatResponse(response: string){
+			// add a "fake" user response..
+			this.chatList.createResponse(false, null, response);
 		}
 
 		public stop(optionalStoppingMessage: string = ""){
@@ -264,7 +301,8 @@ namespace cf {
 
 			// start the flow
 			this.flowManager = new FlowManager({
-				cuiReference: this,
+				cfReference: this,
+				eventTarget: this.eventTarget,
 				tags: this.tags
 			});
 
@@ -287,22 +325,27 @@ namespace cf {
 			this.el.appendChild(innerWrap);
 
 			// Conversational Form UI
-			this.chatList = new ChatList({});
+			this.chatList = new ChatList({
+				eventTarget: this.eventTarget
+			});
 			innerWrap.appendChild(this.chatList.el);
 
-			this.userInput = new UserInput({});
+			this.userInput = new UserInput({
+				eventTarget: this.eventTarget
+			});
+
 			innerWrap.appendChild(this.userInput.el);
 
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
-			document.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+			this.eventTarget.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
-			setTimeout(() => {
-				// if for some reason conversational form is removed prematurely, then make sure it does not throw an error..
-				if(this.el && this.flowManager){
-					this.el.classList.add("conversational-form--show")
-					this.flowManager.start();
-				}
-			}, 0);
+			this.el.classList.add("conversational-form--show")
+			this.flowManager.start();
+
+			if(!this.tags || this.tags.length == 0){
+				// no tags, so just so the input
+				this.userInput.visible = true;
+			}
 		}
 
 		/**
@@ -339,14 +382,25 @@ namespace cf {
 				// remove should be called in the submitCallback
 				this.submitCallback();
 			}else{
-				this.formEl.submit();
+				// this.formEl.submit();
+				// doing classic .submit wont trigger onsubmit if that is present on form element
+				// as described here: http://wayback.archive.org/web/20090323062817/http://blogs.vertigosoftware.com/snyholm/archive/2006/09/27/3788.aspx
+				// so we mimic a click.
+				var button: HTMLButtonElement = this.formEl.ownerDocument.createElement('input');
+				button.style.display = 'none';
+				button.type = 'submit';
+				this.formEl.appendChild(button);
+				button.click();
+				this.formEl.removeChild(button);
+
+				// remove conversational
 				this.remove();
 			}
 		}
 
 		public remove(){
 			if(this.onUserAnswerClickedCallback){
-				document.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+				this.eventTarget.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 				this.onUserAnswerClickedCallback = null;
 			}
 
@@ -363,9 +417,13 @@ namespace cf {
 			this.chatList = null;
 			this.context = null;
 			this.formEl = null;
+			this.tags = null;
+
 			this.submitCallback = null;
 			this.el.parentNode.removeChild(this.el);
 			this.el = null;
+
+			window.ConversationalForm[this.createId] = null;
 		}
 
 		// to illustrate the event flow of the app
@@ -388,13 +446,17 @@ namespace cf {
 // check for a form element with attribute:
 
 window.addEventListener("load", () =>{
-	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form]") || <HTMLFormElement> document.querySelector("form[cf-form-element]");
-	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
+	const formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+	const formContexts: NodeListOf<Element> = document.querySelectorAll("*[cf-context]");
 
-	if(formEl && !window.ConversationalForm){
-		window.ConversationalForm = new cf.ConversationalForm({
-			formEl: formEl,
-			context: contextEl
-		});
+	if(formElements && formElements.length > 0){
+		for (let i = 0; i < formElements.length; i++) {
+			let form: HTMLFormElement = <HTMLFormElement>formElements[i];
+			let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
+			new cf.ConversationalForm({
+				formEl: form,
+				context: context
+			});
+		}
 	}
 }, false);

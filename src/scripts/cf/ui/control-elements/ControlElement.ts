@@ -105,7 +105,7 @@ namespace cf {
 		private onFocus(event: Event){
 			this._focus = true;
 			ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.ON_FOCUS, this.referenceTag);
-			document.dispatchEvent(new CustomEvent(ControlElementEvents.ON_FOCUS, {
+			this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.ON_FOCUS, {
 				detail: this.positionVector
 			}));
 		}
@@ -149,7 +149,7 @@ namespace cf {
 
 		public onChoose(){
 			ConversationalForm.illustrateFlow(this, "dispatch", ControlElementEvents.SUBMIT_VALUE, this.referenceTag);
-			document.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
+			this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
 				detail: this
 			}));
 		}

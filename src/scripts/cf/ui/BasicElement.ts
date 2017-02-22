@@ -1,8 +1,10 @@
+/// <reference path="../logic/EventDispatcher.ts"/>
+
 // namespace
 namespace cf {
 	// interface
 	export interface IBasicElementOptions{
-
+		eventTarget: EventDispatcher;
 	}
 
 	export interface IBasicElement{
@@ -15,8 +17,15 @@ namespace cf {
 	// class
 	export class BasicElement implements IBasicElement{
 		public el: HTMLElement;
+		protected eventTarget: EventDispatcher;
 
 		constructor(options: IBasicElementOptions){
+			this.eventTarget = options.eventTarget;
+
+			// TODO: remove
+			if(!this.eventTarget)
+				throw new Error("this.eventTarget not set!! : " + (<any>this.constructor).name);
+
 			this.setData(options);
 			this.createElement();
 		}

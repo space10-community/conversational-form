@@ -1,7 +1,6 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
 .conversational-form {
   visibility: visible !important;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   font-size: 12px;
   line-height: 1.416666667;
   position: absolute;
@@ -1457,6 +1456,7 @@ cf-chat-response text {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+  white-space: pre-wrap;
   word-break: break-word;
   -webkit-transform-origin: 0% 0%;
   -moz-transform-origin: 0% 0%;
@@ -1893,7 +1893,6 @@ cf-chat scrollable {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  max-width: 150px;
   overflow: hidden;
   -webkit-transform-origin: 0% 100%;
   -moz-transform-origin: 0% 100%;
