@@ -12,7 +12,7 @@ namespace cf {
 	}
 
 	export interface FlowManagerOptions{
-		cuiReference: ConversationalForm;
+		cfReference: ConversationalForm;
 		eventTarget: EventDispatcher;
 		tags: Array<ITag>;
 	}
@@ -32,7 +32,7 @@ namespace cf {
 
 		private eventTarget: EventDispatcher;
 
-		private cuiReference: ConversationalForm;
+		private cfReference: ConversationalForm;
 		private tags: Array<ITag>;
 
 		private stopped: boolean = false;
@@ -47,7 +47,7 @@ namespace cf {
 		}
 
 		constructor(options: FlowManagerOptions){
-			this.cuiReference = options.cuiReference;
+			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.tags = options.tags;
 
@@ -192,7 +192,7 @@ namespace cf {
 			if(this.maxSteps > 0){
 				if(this.step == this.maxSteps){
 					// console.warn("We are at the end..., submit click")
-					this.cuiReference.doSubmitForm();
+					this.cfReference.doSubmitForm();
 				}else{
 					this.step %= this.maxSteps;
 					this.showStep();

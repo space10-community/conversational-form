@@ -182,6 +182,14 @@ window.ConversationalForm.addRobotChatResponse("You have reached the end of the 
 ````
 See example of end-message [here](TBD....)
  
+### addUserChatResponse
+add a robot reponse, this you would usually do at the end of a process.
+
+````javascript
+window.ConversationalForm.addUserChatResponse("Hello from user.");
+````
+See example of end-message [here](TBD....)
+
 ### remove
 remove the ConversationalForm by calling:
 

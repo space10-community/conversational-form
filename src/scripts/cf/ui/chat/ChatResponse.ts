@@ -130,11 +130,12 @@ namespace cf {
 			setTimeout(() => {
 				this.setValue();
 
-				if(this.isRobotReponse){
-					// Robot is pseudo thinking
+				if(this.isRobotReponse || options.response != null){
+					// Robot is pseudo thinking, can also be user -->
+					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), 0);//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 				}else{
-					// show the 3 dots automatically
+					// show the 3 dots automatically, we expect the reponse to be empty upon creation
 					setTimeout(() => this.el.classList.add("peak-thumb"), ConversationalForm.animationsEnabled ? 1400 : 0);
 				}
 			}, 0);
