@@ -32,7 +32,7 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		// public version: string = "0.9.1";
+		public version: string = "pre-0.9.1";
 
 		public static animationsEnabled: boolean = true;
 
@@ -378,7 +378,18 @@ namespace cf {
 				// remove should be called in the submitCallback
 				this.submitCallback();
 			}else{
-				this.formEl.submit();
+				// this.formEl.submit();
+				// doing classic .submit wont trigger onsubmit if that is present on form element
+				// as described here: http://wayback.archive.org/web/20090323062817/http://blogs.vertigosoftware.com/snyholm/archive/2006/09/27/3788.aspx
+				// so we mimic a click.
+				var button: HTMLButtonElement = this.formEl.ownerDocument.createElement('input');
+				button.style.display = 'none';
+				button.type = 'submit';
+				this.formEl.appendChild(button);
+				button.click();
+				this.formEl.removeChild(button);
+
+				// remove conversational
 				this.remove();
 			}
 		}
@@ -431,13 +442,17 @@ namespace cf {
 // check for a form element with attribute:
 
 window.addEventListener("load", () =>{
-	const formEl: HTMLFormElement = <HTMLFormElement> document.querySelector("form[cf-form]") || <HTMLFormElement> document.querySelector("form[cf-form-element]");
-	const contextEl: HTMLFormElement = <HTMLFormElement> document.querySelector("*[cf-context]");
+	const formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+	const formContexts: NodeListOf<Element> = document.querySelectorAll("*[cf-context]");
 
-	if(formEl && !window.ConversationalForm){
-		window.ConversationalForm = new cf.ConversationalForm({
-			formEl: formEl,
-			context: contextEl
-		});
+	if(formElements && formElements.length > 0){
+		for (let i = 0; i < formElements.length; i++) {
+			let form: HTMLFormElement = <HTMLFormElement>formElements[i];
+			let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
+			new cf.ConversationalForm({
+				formEl: form,
+				context: context
+			});
+		}
 	}
 }, false);
