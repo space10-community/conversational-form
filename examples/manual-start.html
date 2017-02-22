@@ -3,99 +3,23 @@
 	<head>
 	</head>
 	<body>
-
 		<style>
-			.form-outer{
-				background: lightgrey;
-				width: 600px;
-				height: 80vh;
+			body{
+				height: 50vh;
+			}
+			#count{
+				position: absolute;
+				bottom: 0px;
+				font-size: 30px;
 			}
 		</style>
 
-		<div id="random-interface">
-			<style>
-				#random-interface{
-					position: absolute;
-					z-index: 1000;
-					top: 0px;
-					left: 0px;
-				}
-				#random-interface button{
-					color: red;
-				}
-			</style>
-		</div>
+		<div id="count"></div>
 
-
-
-		<div class="form-outer">
-
-
-
-
-
-
-			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="form">
-
-				<div class="field name-firstname">
-					<label for="billing:firstname" class="required"><em>*</em>Fornavn</label>
-					<div class="input-box">
-						<input
-							type="text"
-							id="billing:firstname"
-							name="billing[firstname]"
-							value=""
-							title="Fornavn"
-							maxlength="255"
-							class="input-text required-entry"
-
-							cf-validation="window.testValidation"
-							cf-questions="Put on the sherlock holmes hat to get past this step, and look at the custom validation method window.testValidation"
-							cf-error="This value goes through the window.javascript method called testValidation, check that for guide.."
-						>
-					</div>
-				</div>
-
-
-					<div class="radio-control" cf-questions="Check flowStepCallback for hints" >
-						<input required cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
-						<input required cf-label="Sign-in with Twitter" type="radio" name="login-type" tabindex="2" value="twitter">
-						<input required cf-label="Sign-in with E-mail" type="radio" name="login-type" tabindex="3" value="email">
-						<input required cf-label="Sherlock will sign in for you'" type="radio" name="login-type" tabindex="4" value="sherlock">
-					</div>
-				
-					</div>
-				</div>
-
-	</form>
-
-
-
-		</div>
-
-
-
-
-
-
-		<!-- <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
+		<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+		<form id="form">
+			<input required cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
+		</form>
 
 
 
@@ -267,30 +191,28 @@
 
 
 		<script>
-			var testValidation = function(dto, success, error){
-				console.log("testValidation, dto:", dto);
-				if(dto.text.indexOf("holmes") != -1)
-					return success();
-				return error();
-			};
-
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
-					flowStepCallback: function(dto, success, error){
-						console.log("flowStepCallback, dto:", dto);
-						if(dto.text.indexOf("holmes") != -1 || dto.input.currentTag.value[0].indexOf("sherlock") != -1)
-							success();
-						else
-							error();
-					},
-					submitCallback: function(){
-						// remove Conversational Form
-						conversationalForm.remove();
-
-						alert("Custom submit callback reached, removing Conversational Form, see markup of this file")
-					}
+					preventAutoInit: true,
 				});
+
+				var seconds = 2;
+				var fps = 60;
+				var c = seconds * fps;
+				var countEl = document.getElementById("count");
+				countEl.innerHTML = "2.0 and counting.."
+				setTimeout(function(){
+					var interval = setInterval(function(){
+						c--;
+						countEl.innerHTML = (Math.floor(c / 60)) + "." + c.toString();
+						if(c <= 0){
+							// start the conversation
+							conversationalForm.init();
+							clearInterval(interval);
+						}
+					}, fps/1000)
+				}, 500);
 			})();
 		</script>
 
