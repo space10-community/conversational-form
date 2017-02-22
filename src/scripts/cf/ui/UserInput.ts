@@ -440,15 +440,15 @@ namespace cf {
 		}
 
 		private doSubmit(){
-			const value: FlowDTO = this.getFlowDTO();
+			const dto: FlowDTO = this.getFlowDTO();
 
 			this.disabled = true;
 			this.el.removeAttribute("error");
 			this.inputElement.setAttribute("data-value", "");
 
-			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, value);
+			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, dto);
 			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
-				detail: value
+				detail: dto
 			}));
 		}
 

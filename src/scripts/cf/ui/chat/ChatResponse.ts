@@ -51,7 +51,8 @@ namespace cf {
 				this.visible = true;
 			}
 
-			if(!this.response || this.response.length == 0){
+			const isThinking: boolean = text.hasAttribute("thinking");
+			if(!isThinking && (!this.response || this.response.length == 0)){
 				text.setAttribute("thinking", "");
 			}else{
 				text.innerHTML = this.response;
