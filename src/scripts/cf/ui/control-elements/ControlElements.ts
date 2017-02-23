@@ -17,6 +17,7 @@ namespace cf {
 
 	export interface IControlElementsOptions{
 		el: HTMLElement;
+		infoEl: HTMLElement;
 		eventTarget: EventDispatcher;
 	}
 
@@ -82,7 +83,7 @@ namespace cf {
 			this.el = options.el;
 			this.eventTarget = options.eventTarget;
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
-			this.infoElement = <HTMLElement> this.el.getElementsByTagName("cf-info")[0];
+			this.infoElement = options.infoEl;
 
 			this.onScrollCallback = this.onScroll.bind(this);
 			this.el.addEventListener('scroll', this.onScrollCallback, false);

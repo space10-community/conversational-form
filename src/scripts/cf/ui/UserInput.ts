@@ -94,6 +94,7 @@ namespace cf {
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0],
+				infoEl: <HTMLElement> this.el.getElementsByTagName("cf-info")[0],
 				eventTarget: this.eventTarget
 			})
 
@@ -493,13 +494,13 @@ namespace cf {
 		// override
 		public getTemplate () : string {
 			return `<cf-input>
+				<cf-info></cf-info>
 				<cf-input-control-elements>
 					<cf-list-button direction="prev">
 					</cf-list-button>
 					<cf-list-button direction="next">
 					</cf-list-button>
 					<cf-list>
-						<cf-info></cf-info>
 					</cf-list>
 				</cf-input-control-elements>
 

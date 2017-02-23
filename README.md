@@ -60,7 +60,7 @@ new cf.ConversationalForm(<ConversationalFormOptions> {
 	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
 	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
 	// flowStepCallback? (dto: FlowDTO, success: () => void, error: () => void) => boolean // allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
-	// preventAutoInit? boolean // start the form in your own time, {cf-instance}.init(), exclude cf-form from form tag.
+	// preventAutoStart? boolean // start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 	// preventAutoAppend? boolean // prevent the form from auto appending, this means you have to do it yourself at some point x.appendChild({cf-instance}.el);
 	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
 	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
