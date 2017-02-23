@@ -31,20 +31,15 @@ cf-input
 		overflow hidden
 		padding 15px 40px 15px 15px
 
-
-	input, textarea
-		&:not(:focus)
-			height auto !important
-
 	input, textarea
 		// resets..
 		&:-webkit-autofill
-			// -webkit-box-shadow 0 0 0px 1000px white inset
 			background-color white
 
+		outline none
+		-webkit-appearance none
+
 		&:focus, &:active
-			outline none
-			-webkit-appearance none
 			box-shadow 0px 0px 30px rgba(0,0,0,0.2)
 		
 		border-radius 0
@@ -54,11 +49,12 @@ cf-input
 		z-index 2
 
 		// styling
-		font-family 'Roboto', sans-serif
+		font-family 'Helvetica Neue', sans-serif
 		font-size 12px
 
 		width 100%
 		height $input-field-height
+		min-height $input-field-height
 		color $color-input-text
 		will-change box-shadow, background, color, transform, opacity
 		background white

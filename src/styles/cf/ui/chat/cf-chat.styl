@@ -5,50 +5,21 @@
 cf-chat
 	display block
 	width 100%
-	// height s("calc(100% - %s)", $input-field-height)
 	height auto
 	overflow visible
-	// overflow-x hidden
-
 	// flow children to bottom
 	display flex
 	flex-flow column nowrap
 	justify-content flex-end
 	align-items baseline
-	padding-bottom 20px
 
-	will-change padding-bottom
-	.conversational-form--enable-animation &
-		transition padding-bottom $anim-time * 0.5 $anim-easeOut
 	
 	scrollable
 		display block
 		width 100%
 		height auto
-		// max-height 100%
-		// overflow-y scroll
-
-	// TODO: Style scrollbars... if we need it
-	// &::-webkit-scrollbar
-	// 	background red
-	// 	width 12px
-	// &::-webkit-scrollbar-button
-	// 	background yellow
-	// 	width 12px
-	// &::-webkit-scrollbar-track
-	// 	background brown
-	// 	width 12px
-	// &::-webkit-scrollbar-track-piece
-	// 	background pink
-	// 	width 12px
-	// &::-webkit-scrollbar-thumb
-	// 	background orange
-	// 	width 12px
-	// &::-webkit-scrollbar-corner
-	// 	background blue
-	// 	width 12px
-	// &::-webkit-resizer
-	// 	background green
-	// 	width 12px
+		max-height 100%
+		overflow-y auto
+		margin-bottom 20px
 
 

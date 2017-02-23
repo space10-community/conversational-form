@@ -159,9 +159,9 @@ namespace cf {
 			}
 
 			if(xRounded <= this.max){
-				if(!this.nextButton.classList.contains("active"))
+				if(this.nextButton.classList.contains("active"))
 					this.nextButton.classList.remove("active");
-				if(!this.nextButton.classList.contains("cf-gradient"))
+				if(this.nextButton.classList.contains("cf-gradient"))
 					this.nextButton.classList.remove("cf-gradient");
 			}
 

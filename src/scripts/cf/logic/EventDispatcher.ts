@@ -1,3 +1,5 @@
+/// <reference path="../ConversationalForm.ts"/>
+
 namespace cf {
 	// interface
 
