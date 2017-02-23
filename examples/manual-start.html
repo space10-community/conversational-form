@@ -198,7 +198,7 @@
 				});
 
 				var seconds = 3;
-				conversationalForm.addRobotChatResponse("Wait before we start the questions: " + seconds + "sec.");
+				conversationalForm.addRobotChatResponse("Wait before we start the questions: <strong>" + seconds + "sec.</strong>");
 				setTimeout(function(){
 					var interval = setInterval(function(){
 						seconds--;
@@ -207,7 +207,7 @@
 							conversationalForm.start();
 							clearInterval(interval);
 						}else{
-							conversationalForm.addRobotChatResponse("Counting ... " + seconds + "sec.");
+							conversationalForm.addRobotChatResponse("Counting ... <strong>" + seconds + "sec.</strong>");
 						}
 					}, 1000)
 				}, 500);
