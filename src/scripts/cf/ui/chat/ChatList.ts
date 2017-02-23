@@ -82,7 +82,6 @@ namespace cf {
 		* on user ChatReponse clicked
 		*/
 		public onUserWantToEditPreviousAnswer(tag: ITag): void {
-			console.log((<any>this.constructor).name, 'this.onUserWantToEditPreviousAnswer:', this.currentUserResponse);
 			this.currentUserResponse.skippedBecauseOfEdit();
 		}
 
@@ -102,6 +101,8 @@ namespace cf {
 			}
 
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
+
+			this.scrollListToBottom();
 		}
 
 		public updateThumbnail(robot: boolean, img: string){
@@ -115,7 +116,6 @@ namespace cf {
 				}else if(!robot && !element.isRobotReponse){
 					element.updateThumbnail(newImage);
 				}
-
 			}
 		}
 
@@ -137,16 +137,28 @@ namespace cf {
 
 			if(!isRobotReponse)
 				this.currentUserResponse = this.currentResponse;
-			
-			const scrollable = this.el.querySelector("scrollable");
-			scrollable.appendChild(this.currentResponse.el);
-			// this.el.scrollTop = 1000000000;
 
+			
+			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
+			scrollable.appendChild(this.currentResponse.el);
+			
 			setTimeout(() => {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
+
+				this.scrollListToBottom();
 			}, 0);
+		}
+
+		public scrollListToBottom(){
+			try{
+				const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
+				scrollable.scrollTop = 1000000000;
+				setTimeout(() => scrollable.scrollTop = 1000000000, 100);
+			}catch(e){
+				// catch errors where CF have been removed
+			}
 		}
 
 		public getTemplate () : string {

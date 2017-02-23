@@ -83,11 +83,16 @@
 		padding 0px 20px
 		position absolute
 		width 100%
-		// max-height 100%
+		max-height 100%
 		bottom 0px
 		height auto
 		overflow hidden
 		margin-bottom auto
+		// flow children to bottom
+		display flex
+		flex-flow column nowrap
+		justify-content flex-end
+		align-items baseline
 
 	.conversational-form--enable-animation &
 		transition opacity $anim-time * 0.25 $anim-easeOut
