@@ -29,8 +29,7 @@ namespace cf {
 		}
 
 		public hasImage(): boolean {
-			const hasImage: boolean = !!this.referenceTag.domElement.getAttribute("cf-image")
-			return hasImage;
+			return (<Tag>this.referenceTag).hasImage;
 		}
 
 		/**

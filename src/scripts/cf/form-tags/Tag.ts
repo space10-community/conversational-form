@@ -89,6 +89,10 @@ namespace cf {
 			return this.domElement.value;
 		}
 
+		public get hasImage (): boolean{
+			return !!this.domElement.getAttribute("cf-image");
+		}
+
 		public get disabled (): boolean{
 			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
 		}
