@@ -5,7 +5,7 @@
 	<body>
 		<style>
 			body{
-				height: 50vh;
+				height: 100vh;
 			}
 			#count{
 				position: absolute;
@@ -194,24 +194,22 @@
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
-					preventAutoInit: true,
+					preventAutoStart: true,
 				});
 
-				var seconds = 2;
-				var fps = 60;
-				var c = seconds * fps;
-				var countEl = document.getElementById("count");
-				countEl.innerHTML = "2.0 and counting.."
+				var seconds = 3;
+				conversationalForm.addRobotChatResponse("Wait before we start the questions: " + seconds + "sec.");
 				setTimeout(function(){
 					var interval = setInterval(function(){
-						c--;
-						countEl.innerHTML = (Math.floor(c / 60)) + "." + c.toString();
-						if(c <= 0){
+						seconds--;
+						if(seconds <= 0){
 							// start the conversation
-							conversationalForm.init();
+							conversationalForm.start();
 							clearInterval(interval);
+						}else{
+							conversationalForm.addRobotChatResponse("Counting ... " + seconds + "sec.");
 						}
-					}, fps/1000)
+					}, 1000)
 				}, 500);
 			})();
 		</script>
