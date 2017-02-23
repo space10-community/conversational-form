@@ -27,7 +27,7 @@ namespace cf {
 		submitCallback?: () => void | HTMLButtonElement,
 		loadExternalStyleSheet?: boolean;
 		preventAutoAppend?: boolean;
-		preventAutoInit?: boolean;
+		preventAutoStart?: boolean;
 		scrollAccerlation?: number;
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
 	}
@@ -74,7 +74,7 @@ namespace cf {
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
-		private preventAutoInit: boolean = false;
+		private preventAutoStart: boolean = false;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -92,7 +92,7 @@ namespace cf {
 			if(!isNaN(options.scrollAccerlation))
 				ScrollController.accerlation = options.scrollAccerlation;
 			
-			this.preventAutoInit = options.preventAutoInit;
+			this.preventAutoStart = options.preventAutoStart;
 			this.preventAutoAppend = options.preventAutoAppend;
 
 			if(!options.formEl)
@@ -121,8 +121,7 @@ namespace cf {
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			if(!this.preventAutoInit)
-				this.init();
+			this.init();
 		}
 
 		public init(): ConversationalForm{
@@ -340,7 +339,9 @@ namespace cf {
 			this.eventTarget.addEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 
 			this.el.classList.add("conversational-form--show")
-			this.flowManager.start();
+			
+			if(!this.preventAutoStart)
+				this.flowManager.start();
 
 			if(!this.tags || this.tags.length == 0){
 				// no tags, so just so the input
