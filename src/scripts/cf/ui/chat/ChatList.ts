@@ -193,8 +193,7 @@ namespace cf {
 		public scrollListTo(response: ChatResponse = null){
 			try{
 				const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
-				const y: number = response ? response.el.offsetTop : 1000000000;
-				console.log(y);
+				const y: number = response ? response.el.offsetTop - 50 : 1000000000;
 				scrollable.scrollTop = y;
 				setTimeout(() => scrollable.scrollTop = y, 100);
 			}catch(e){

@@ -163,6 +163,7 @@ namespace cf {
 		* click handler for el
 		*/
 		private onClick(event: MouseEvent): void {
+			this.el.classList.remove("can-edit");
 			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
 			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this._tag
