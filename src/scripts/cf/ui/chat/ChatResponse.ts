@@ -22,10 +22,11 @@ namespace cf {
 
 		public isRobotReponse: boolean;
 
-		private response: string;
+		public response: string;
+		public parsedResponse: string;
 		private image: string;
 		private _tag: ITag
-		private responseLink: ChatResponse;
+		private responseLink: ChatResponse; // robot reference from use
 
 		private onClickCallback: () => void;
 
@@ -55,10 +56,6 @@ namespace cf {
 		}
 
 		public setValue(dto: FlowDTO = null){
-			this.response = dto ? dto.text : "";
-
-			this.processResponse();
-			
 			const text: Element = this.el.getElementsByTagName("text")[0];
 
 			if(!this.visible){
@@ -73,23 +70,24 @@ namespace cf {
 				this.disabled = false;
 			}
 
-			if(!isThinking || (!this.response || this.response.length == 0)){
+			if(!dto || dto.text == ""){
 				text.innerHTML = ChatResponse.THINKING_MARKUP;
 				this.el.classList.remove("can-edit");
 				text.setAttribute("thinking", "");
 			}else{
-				text.innerHTML = this.response;
-				text.setAttribute("value-added", "");
-				text.removeAttribute("thinking");
+				this.response = dto.text;
+				const processedResponse: string = this.processResponseAndSetText(dto);
 
-				// check for if reponse type is file upload...
+				if(this.responseLink && !this.isRobotReponse){
+					// call robot and update for binding values ->
+					this.responseLink.processResponseAndSetText(dto);
+				}
+
+				// check for if response type is file upload...
 				if(dto && dto.controlElements && dto.controlElements[0]){
 					switch(dto.controlElements[0].type){
 						case "UploadFileUI" :
 							text.classList.add("file-icon");
-							var icon = document.createElement("span");
-							icon.innerHTML = Dictionary.get("icon-type-file");
-							text.insertBefore(icon.children[0], text.firstChild)
 							break;
 					}
 				}
@@ -112,6 +110,40 @@ namespace cf {
 			this.responseLink = response;
 		}
 
+		public processResponseAndSetText(dto: FlowDTO): string{
+			const text: Element = this.el.getElementsByTagName("text")[0];
+
+			var innerResponse: string = this.response;
+			
+			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
+				var newStr: string = "";
+				for (let i = 0; i < innerResponse.length; i++) {
+					newStr += "*";
+				}
+				innerResponse = newStr;
+			}else{
+				innerResponse = Helpers.emojify(innerResponse)
+			}
+
+			if(this.responseLink && this.isRobotReponse){
+				// if robot, then check linked response for binding values
+				
+				// one way data binding values:
+				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+				// add more..
+				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
+			}
+
+			// now set it
+			text.innerHTML = innerResponse;
+			text.setAttribute("value-added", "");
+			text.removeAttribute("thinking");
+
+			this.parsedResponse = innerResponse;
+
+			return innerResponse;
+		}
+
 		/**
 		* @name onClickCallback
 		* click handler for el
@@ -121,18 +153,6 @@ namespace cf {
 			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this._tag
 			}));
-		}
-
-		private processResponse(){
-			this.response = Helpers.emojify(this.response);
-			
-			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
-				var newStr: string = "";
-				for (let i = 0; i < this.response.length; i++) {
-					newStr += "*";
-				}
-				this.response = newStr;
-			}
 		}
 
 		protected setData(options: IChatResponseOptions):void{
