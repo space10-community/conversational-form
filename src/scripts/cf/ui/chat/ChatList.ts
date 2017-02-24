@@ -22,6 +22,8 @@ namespace cf {
 		constructor(options: IBasicElementOptions){
 			super(options);
 
+			this.responses = [];
+
 			// flow update
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -45,7 +47,7 @@ namespace cf {
 
 			if(this.currentUserResponse){
 				const response: FlowDTO = event.detail;
-				this.setCurrentResponse(response);
+				this.setCurrentUserResponse(response);
 			}
 			else{
 				// this should never happen..
@@ -57,52 +59,101 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
+			if(this.currentResponse)
+				this.currentResponse.disabled = false;
 
-			// robot response
-			let robotReponse: string = "";
+			if(this.containsTagResponse(currentTag)){
+				// because user maybe has scrolled up
 
-			robotReponse = currentTag.question;
+				// tag is already in list, so re-activate it
+				this.onUserWantToEditPreviousAnswer(currentTag);
+			}else{
+				// robot response
+				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
+				if(this.currentUserResponse){
+					// linked
+					this.currentUserResponse.setLinkToOtherReponse(robot);
+					robot.setLinkToOtherReponse(this.currentUserResponse);
+				}
 
-			// one way data binding values:
-			if(this.flowDTOFromUserInputUpdate){
-				// previous answer..
-				robotReponse = robotReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
-				
-				// add other patterns here..
-				// robotReponse = robotReponse.split("{...}").join(this.flowDTOFromUserInputUpdate.text);
+				// user response, create the waiting response
+				this.currentUserResponse = this.createResponse(false, currentTag);
 			}
-			this.createResponse(true, currentTag, robotReponse);
-
-			// user reponse, create the waiting response
-			this.createResponse(false, currentTag);
 		}
 
+		/**
+		* @name containsTagResponse
+		* @return boolean
+		* check if tag has already been responded to
+		*/
+		private containsTagResponse(tagToChange: ITag): boolean {
+			for (let i = 0; i < this.responses.length; i++) {
+				let element: ChatResponse = <ChatResponse>this.responses[i];
+				if(!element.isRobotReponse && element.tag == tagToChange){
+					return true;
+				}
+			}
+
+			return false;
+		}
 		/**
 		* @name onUserAnswerClicked
 		* on user ChatReponse clicked
 		*/
-		public onUserWantToEditPreviousAnswer(tag: ITag): void {
-			this.currentUserResponse.skippedBecauseOfEdit();
+		private onUserWantToEditPreviousAnswer(tagToChange: ITag): void {
+			let oldReponse: ChatResponse;
+			for (let i = 0; i < this.responses.length; i++) {
+				let element: ChatResponse = <ChatResponse>this.responses[i];
+				if(!element.isRobotReponse && element.tag == tagToChange){
+					// update element thhat user wants to edit
+					oldReponse = element;
+					break;
+				}
+			}
+
+			if(oldReponse){
+				oldReponse.setValue(<FlowDTO>{
+					text: "" // blank means thinking
+				});
+				
+				// only disable latest tag when we jump back
+				if(this.currentUserResponse == this.responses[this.responses.length - 1]){
+					this.currentUserResponse.disabled = true;
+				}
+
+				this.currentUserResponse = oldReponse;
+
+				this.onListUpdate(this.currentUserResponse);
+			}
+		}
+
+		private onListUpdate(chatResponse: ChatResponse){
+			setTimeout(() => {
+				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+					detail: this
+				}));
+
+				this.scrollListTo(chatResponse);
+			}, 0);
 		}
 
 		/**
-		* @name setCurrentResponse
+		* @name setCurrentUserResponse
 		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
 		* reponse: FlowDTO
 		*/
-		public setCurrentResponse(response: FlowDTO){
-			this.flowDTOFromUserInputUpdate = response;
+		public setCurrentUserResponse(dto: FlowDTO){
+			this.flowDTOFromUserInputUpdate = dto;
 
 			if(!this.flowDTOFromUserInputUpdate.text){
-				if(response.input.currentTag.type == "group")
+				if(dto.input.currentTag.type == "group"){
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing-group");
-				else if(response.input.currentTag.type != "password")
+				}else if(dto.input.currentTag.type != "password")
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
 			}
 
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-
-			this.scrollListToBottom();
+			this.scrollListTo();
 		}
 
 		public updateThumbnail(robot: boolean, img: string){
@@ -119,7 +170,7 @@ namespace cf {
 			}
 		}
 
-		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null){
+		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,
@@ -129,33 +180,25 @@ namespace cf {
 				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
 
-			if(!this.responses)
-				this.responses = [];
 			this.responses.push(response);
 
 			this.currentResponse = response;
 
-			if(!isRobotReponse)
-				this.currentUserResponse = this.currentResponse;
-
-			
 			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
 			scrollable.appendChild(this.currentResponse.el);
-			
-			setTimeout(() => {
-				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
-					detail: this
-				}));
 
-				this.scrollListToBottom();
-			}, 0);
+			this.onListUpdate(response);
+
+			return response;
 		}
 
-		public scrollListToBottom(){
+		public scrollListTo(response: ChatResponse = null){
 			try{
 				const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
-				scrollable.scrollTop = 1000000000;
-				setTimeout(() => scrollable.scrollTop = 1000000000, 100);
+				const y: number = response ? response.el.offsetTop : 1000000000;
+				console.log(y);
+				scrollable.scrollTop = y;
+				setTimeout(() => scrollable.scrollTop = y, 100);
 			}catch(e){
 				// catch errors where CF have been removed
 			}

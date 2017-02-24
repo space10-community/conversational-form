@@ -55,7 +55,16 @@ namespace cf {
 			}
 		}
 
+		public getFilesAsString(): string{
+			// value is for the chat response -->
+			var icon = document.createElement("span");
+			icon.innerHTML = Dictionary.get("icon-type-file") + this.fileName;
+			return icon.outerHTML;
+		}
+
 		private onDomElementChange(event: any){
+			console.log("...onDomElementChange");
+
 			var reader: FileReader = new FileReader();
 			this._files = (<HTMLInputElement> this.referenceTag.domElement).files;
 

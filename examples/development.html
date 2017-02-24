@@ -58,7 +58,7 @@
 				
 				<li class="control">
 					<label>
-						<input cf-questions="-one way-> {previous-answer} <-binding-|-one way-> {previous-answer} <-binding-2-" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
+						<input cf-questions="Choose and edit .. bind {previous-answer}" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
 					</label>
 					<label>
 						<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
@@ -132,8 +132,10 @@
 				</li>
 
 				<input type="text" disabled cf-questions="Skip this field" name="password" value="">
-				<input type="password" cf-questions="password field.. (NOT required)" name="password" value="">
+				<input type="password" cf-questions="Password .. -one way-> {previous-answer} <-binding-" name="password" value="">
 				<input type="text" required cf-questions="text field.. (IS required)" name="password" value="">
+
+				<input type="file" name="fileupload" value="fileupload" id="fileupload" accept="image/*" cf-max-size="10000000000000000"> 
 
 
 				<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
@@ -177,7 +179,6 @@
 					</li>
 
 				<textarea name="textarea" value="" id="textarea"></textarea>
-				<input type="file" name="fileupload" value="fileupload" id="fileupload" accept="image/*" cf-max-size="10000000000000000"> 
 
 
 				<li class="fields">
