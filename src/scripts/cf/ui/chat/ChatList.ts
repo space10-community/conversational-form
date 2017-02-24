@@ -70,11 +70,14 @@ namespace cf {
 			}else{
 				// robot response
 				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
+				if(this.currentUserResponse){
+					// linked
+					this.currentUserResponse.setLinkToOtherReponse(robot);
+					robot.setLinkToOtherReponse(this.currentUserResponse);
+				}
 
 				// user response, create the waiting response
 				this.currentUserResponse = this.createResponse(false, currentTag);
-
-				robot.setLinkToOtherReponse(this.currentUserResponse);
 			}
 		}
 
@@ -111,7 +114,7 @@ namespace cf {
 			if(oldReponse){
 				oldReponse.setValue(<FlowDTO>{
 					text: "" // blank means thinking
-				})
+				});
 				
 				// only disable latest tag when we jump back
 				if(this.currentUserResponse == this.responses[this.responses.length - 1]){
@@ -168,12 +171,6 @@ namespace cf {
 		}
 
 		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
-			// one way data binding values:
-			if(isRobotReponse && this.flowDTOFromUserInputUpdate){
-				// instead
-				value = value.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
-			}
-
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				tag: currentTag,

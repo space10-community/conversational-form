@@ -473,7 +473,7 @@ namespace cf {
 						break;
 					
 					case "UploadFileUI":
-						dto.text = (<UploadFileUI> this.elements[0]).fileName;//Dictionary.parseAndGetMultiValueString(values);
+						dto.text = (<UploadFileUI> this.elements[0]).getFilesAsString();//Dictionary.parseAndGetMultiValueString(values);
 						dto.controlElements.push(<UploadFileUI> this.elements[0]);
 						break;
 				}
