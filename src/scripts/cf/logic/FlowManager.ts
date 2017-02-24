@@ -105,6 +105,7 @@ namespace cf {
 
 				// go on with the flow
 				if(isTagValid){
+					// do the normal flow..
 					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
 
 					// update to latest DTO because values can be changed in validation flow...
@@ -181,7 +182,8 @@ namespace cf {
 		*/
 		public editTag(tag: ITag): void {
 			this.savedStep = this.step - 1;
-			this.startFrom(tag);
+			this.step = this.tags.indexOf(tag); // === this.currentTag
+			this.validateStepAndUpdate();
 		}
 
 		private skipStep(){
@@ -195,7 +197,12 @@ namespace cf {
 					this.cfReference.doSubmitForm();
 				}else{
 					this.step %= this.maxSteps;
-					this.showStep();
+					if(this.currentTag.disabled){
+						// check if current tag has become or is disabled, if it is, then skip step.
+						this.skipStep();
+					}else{
+						this.showStep();
+					}
 				}
 			}
 		}
@@ -206,17 +213,11 @@ namespace cf {
 
 			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.FLOW_UPDATE, this.currentTag);
 
-			if(this.currentTag.disabled){
-				// check if current tag has become or is disabled, if it is, then skip step.
-				this.skipStep();
-			}else{
-				this.currentTag.refresh();
+			this.currentTag.refresh();
 
-				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
-					detail: this.currentTag
-				}));
-			}
-
+			this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
+				detail: this.currentTag
+			}));
 		}
 	}
 }

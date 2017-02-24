@@ -98,6 +98,7 @@ namespace cf {
 		}
 
 		public static parseAndGetMultiValueString(arr: Array<string>):string{
+			// check ControlElement.ts for value(s)
 			let value: string = "";
 			for (let i = 0; i < arr.length; i++) {
 				let str: string = <string>arr[i];

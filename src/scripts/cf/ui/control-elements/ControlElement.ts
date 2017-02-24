@@ -61,7 +61,13 @@ namespace cf {
 		}
 
 		public get value():string{
-			return Helpers.getInnerTextOfElement(this.el);
+			// value is for the chat response -->
+			const hasTagImage: boolean = (<Tag> this.referenceTag).hasImage;
+			// const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+			// let str: string = "<div>" + (hasTagImage ? image : Helpers.getInnerTextOfElement(this.el)) + "</div>";
+			let str: string = "<div>" + Helpers.getInnerTextOfElement(this.el) + "</div>";
+			
+			return str;
 		}
 
 		public get positionVector():ControlElementVector{

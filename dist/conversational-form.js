@@ -17,7 +17,7 @@ var cf;
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
-            this.preventAutoInit = false;
+            this.preventAutoStart = false;
             window.ConversationalForm = this;
             window.ConversationalForm[this.createId] = this;
             // set a general step validation callback
@@ -28,7 +28,7 @@ var cf;
             }
             if (!isNaN(options.scrollAccerlation))
                 cf.ScrollController.accerlation = options.scrollAccerlation;
-            this.preventAutoInit = options.preventAutoInit;
+            this.preventAutoStart = options.preventAutoStart;
             this.preventAutoAppend = options.preventAutoAppend;
             if (!options.formEl)
                 throw new Error("Conversational Form error, the formEl needs to be defined.");
@@ -48,8 +48,7 @@ var cf;
             // emoji.. fork and set your own values..
             this.context = options.context ? options.context : document.body;
             this.tags = options.tags;
-            if (!this.preventAutoInit)
-                this.init();
+            this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {
             get: function () {
@@ -238,7 +237,8 @@ var cf;
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
             this.eventTarget.addEventListener(cf.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
             this.el.classList.add("conversational-form--show");
-            this.flowManager.start();
+            if (!this.preventAutoStart)
+                this.flowManager.start();
             if (!this.tags || this.tags.length == 0) {
                 // no tags, so just so the input
                 this.userInput.visible = true;
@@ -456,6 +456,7 @@ var cf;
     cf.Helpers = Helpers;
 })(cf || (cf = {}));
 
+/// <reference path="../ConversationalForm.ts"/>
 var cf;
 (function (cf) {
     // interface
@@ -686,7 +687,7 @@ var cf;
             this.el = options.el;
             this.eventTarget = options.eventTarget;
             this.list = this.el.getElementsByTagName("cf-list")[0];
-            this.infoElement = this.el.getElementsByTagName("cf-info")[0];
+            this.infoElement = options.infoEl;
             this.onScrollCallback = this.onScroll.bind(this);
             this.el.addEventListener('scroll', this.onScrollCallback, false);
             this.onElementFocusCallback = this.onElementFocus.bind(this);
@@ -1355,9 +1356,9 @@ var cf;
                     this.nextButton.classList.add("cf-gradient");
             }
             if (xRounded <= this.max) {
-                if (!this.nextButton.classList.contains("active"))
+                if (this.nextButton.classList.contains("active"))
                     this.nextButton.classList.remove("active");
-                if (!this.nextButton.classList.contains("cf-gradient"))
+                if (this.nextButton.classList.contains("cf-gradient"))
                     this.nextButton.classList.remove("cf-gradient");
             }
             // set css transforms
@@ -2776,6 +2777,7 @@ var cf;
             //<cf-input-control-elements> is defined in the ChatList.ts
             _this.controlElements = new cf.ControlElements({
                 el: _this.el.getElementsByTagName("cf-input-control-elements")[0],
+                infoEl: _this.el.getElementsByTagName("cf-info")[0],
                 eventTarget: _this.eventTarget
             });
             // setup event listeners
@@ -3149,7 +3151,7 @@ var cf;
         };
         // override
         UserInput.prototype.getTemplate = function () {
-            return "<cf-input>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t\t<cf-info></cf-info>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
+            return "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
         };
         return UserInput;
     }(cf.BasicElement));
@@ -3367,7 +3369,6 @@ var cf;
         * on user ChatReponse clicked
         */
         ChatList.prototype.onUserWantToEditPreviousAnswer = function (tag) {
-            console.log(this.constructor.name, 'this.onUserWantToEditPreviousAnswer:', this.currentUserResponse);
             this.currentUserResponse.skippedBecauseOfEdit();
         };
         /**
@@ -3384,6 +3385,7 @@ var cf;
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
+            this.scrollListToBottom();
         };
         ChatList.prototype.updateThumbnail = function (robot, img) {
             cf.Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
@@ -3417,12 +3419,21 @@ var cf;
                 this.currentUserResponse = this.currentResponse;
             var scrollable = this.el.querySelector("scrollable");
             scrollable.appendChild(this.currentResponse.el);
-            // this.el.scrollTop = 1000000000;
             setTimeout(function () {
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatListEvents.CHATLIST_UPDATED, {
                     detail: _this
                 }));
+                _this.scrollListToBottom();
             }, 0);
+        };
+        ChatList.prototype.scrollListToBottom = function () {
+            try {
+                var scrollable_1 = this.el.querySelector("scrollable");
+                scrollable_1.scrollTop = 1000000000;
+                setTimeout(function () { return scrollable_1.scrollTop = 1000000000; }, 100);
+            }
+            catch (e) {
+            }
         };
         ChatList.prototype.getTemplate = function () {
             return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";

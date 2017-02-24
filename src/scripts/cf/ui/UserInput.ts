@@ -286,15 +286,10 @@ namespace cf {
 			else{
 				// handle password input
 				if(this._currentTag && this._currentTag.type == "password"){
-					const canSetValue: boolean = true;
-					if(canSetValue){
-						this.inputElement.value = this.currentValue.replace(/./g, () => "*");
-
-						if(event.key.toLowerCase() == "backspace")
-							this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-						else
-							this.currentValue += event.key;
-					}
+					if(event.key.toLowerCase() == "backspace")
+						this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
+					else
+						this.currentValue += event.key;
 				}
 			}
 		}
@@ -390,6 +385,11 @@ namespace cf {
 				}
 			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
 				this.dispatchKeyChange(value, event.keyCode)
+			}
+
+			// handle password input
+			if(this._currentTag && this._currentTag.type == "password"){
+				this.inputElement.value = this.currentValue.replace(/./g, () => "*");
 			}
 
 			this.onInputChange();
