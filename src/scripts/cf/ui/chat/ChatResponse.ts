@@ -24,6 +24,7 @@ namespace cf {
 
 		public response: string;
 		public parsedResponse: string;
+		private textEl: Element;
 		private image: string;
 		private _tag: ITag
 		private responseLink: ChatResponse; // robot reference from use
@@ -53,16 +54,15 @@ namespace cf {
 		constructor(options: IChatResponseOptions){
 			super(options);
 			this._tag = options.tag;
+			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
 		}
 
 		public setValue(dto: FlowDTO = null){
-			const text: Element = this.el.getElementsByTagName("text")[0];
-
 			if(!this.visible){
 				this.visible = true;
 			}
 
-			const isThinking: boolean = text.hasAttribute("thinking");
+			const isThinking: boolean = this.textEl.hasAttribute("thinking");
 
 			if(!this.isRobotReponse && dto){
 				// presume reponse is added
@@ -71,10 +71,11 @@ namespace cf {
 			}
 
 			if(!dto || dto.text == ""){
-				text.innerHTML = ChatResponse.THINKING_MARKUP;
+				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
 				this.el.classList.remove("can-edit");
-				text.setAttribute("thinking", "");
+				this.textEl.setAttribute("thinking", "");
 			}else{
+
 				this.response = dto.text;
 				const processedResponse: string = this.processResponseAndSetText(dto);
 
@@ -87,7 +88,7 @@ namespace cf {
 				if(dto && dto.controlElements && dto.controlElements[0]){
 					switch(dto.controlElements[0].type){
 						case "UploadFileUI" :
-							text.classList.add("file-icon");
+							this.textEl.classList.add("file-icon");
 							break;
 					}
 				}
@@ -97,6 +98,16 @@ namespace cf {
 					this.el.addEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				}
 			}
+		}
+
+		public hide(){
+			this.el.classList.remove("show");
+			this.disabled = true;
+		}
+
+		public show(){
+			this.el.classList.add("show");
+			this.disabled = false;
 		}
 
 		public updateThumbnail(src: string){
@@ -111,8 +122,6 @@ namespace cf {
 		}
 
 		public processResponseAndSetText(dto: FlowDTO): string{
-			const text: Element = this.el.getElementsByTagName("text")[0];
-
 			var innerResponse: string = this.response;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
@@ -120,6 +129,7 @@ namespace cf {
 				for (let i = 0; i < innerResponse.length; i++) {
 					newStr += "*";
 				}
+
 				innerResponse = newStr;
 			}else{
 				innerResponse = Helpers.emojify(innerResponse)
@@ -135,11 +145,15 @@ namespace cf {
 			}
 
 			// now set it
-			text.innerHTML = innerResponse;
-			text.setAttribute("value-added", "");
-			text.removeAttribute("thinking");
-
+			this.textEl.innerHTML = innerResponse;
 			this.parsedResponse = innerResponse;
+
+			// bounce
+			this.textEl.removeAttribute("thinking");
+			this.textEl.removeAttribute("value-added");
+			setTimeout(() => {
+				this.textEl.setAttribute("value-added", "");
+			}, 0)
 
 			return innerResponse;
 		}
@@ -149,6 +163,7 @@ namespace cf {
 		* click handler for el
 		*/
 		private onClick(event: MouseEvent): void {
+			this.el.classList.remove("can-edit");
 			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
 			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this._tag
@@ -169,8 +184,8 @@ namespace cf {
 					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), 0);//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 				}else{
-					this.disabled = false;
-					// show the 3 dots automatically, we expect the reponse to be empty upon creation
+					// shows the 3 dots automatically, we expect the reponse to be empty upon creation
+					// TODO: Auto completion insertion point
 					setTimeout(() => this.el.classList.add("peak-thumb"), ConversationalForm.animationsEnabled ? 1400 : 0);
 				}
 			}, 0);
