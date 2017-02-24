@@ -63,7 +63,7 @@ namespace cf {
 				this.currentResponse.disabled = false;
 
 			if(this.containsTagResponse(currentTag)){
-				// because user maybe has scrolled up
+				// because user maybe have scrolled up
 
 				// tag is already in list, so re-activate it
 				this.onUserWantToEditPreviousAnswer(currentTag);
@@ -112,13 +112,9 @@ namespace cf {
 			}
 
 			if(oldReponse){
-				oldReponse.setValue(<FlowDTO>{
-					text: "" // blank means thinking
-				});
-				
 				// only disable latest tag when we jump back
 				if(this.currentUserResponse == this.responses[this.responses.length - 1]){
-					this.currentUserResponse.disabled = true;
+					this.currentUserResponse.hide();
 				}
 
 				this.currentUserResponse = oldReponse;
@@ -132,6 +128,8 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
+
+				chatResponse.show();
 
 				this.scrollListTo(chatResponse);
 			}, 0);
