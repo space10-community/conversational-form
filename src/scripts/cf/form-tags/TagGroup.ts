@@ -17,6 +17,7 @@ namespace cf {
 
 	export interface ITagGroup extends ITag{
 		elements: Array <ITag>;
+		activeElements: Array <ITag>;
 		getGroupTagType: () => string;
 		refresh():void;
 		dealloc():void;
@@ -29,6 +30,11 @@ namespace cf {
 
 		private onInputKeyChangeCallback: () => void;
 		private _values: Array<string>;
+		
+		/**
+		* Array checked/choosen ITag's
+		*/
+		private _activeElements: Array<ITag>;
 
 		public defaultValue: string; // not getting set... as taggroup differs from tag
 		public elements: Array <ITag>;
@@ -67,6 +73,10 @@ namespace cf {
 				const robotReponse: string = Dictionary.getRobotResponse(this.getGroupTagType());
 				return robotReponse;
 			}
+		}
+
+		public get activeElements (): Array<ITag>{
+			return this._activeElements;
 		}
 
 		public get value (): Array<string>{
@@ -126,6 +136,7 @@ namespace cf {
 
 			const groupType: string = this.elements[0].type;
 			this._values = [];
+			this._activeElements = [];
 
 			switch(groupType){
 				case "radio" :
@@ -140,8 +151,10 @@ namespace cf {
 							if(tag == element.referenceTag){
 								(<HTMLInputElement> tag.domElement).checked = element.checked;
 								
-								if(element.checked)
+								if(element.checked){
 									this._values.push(<string> tag.value);
+									this._activeElements.push(tag);
+								}
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
@@ -157,8 +170,10 @@ namespace cf {
 						(<HTMLInputElement> tag.domElement).checked = true;
 						isValid = true;
 
-						if(element.checked)
+						if(element.checked){
 							this._values.push(<string> tag.value);
+							this._activeElements.push(tag);
+						}
 					}else if(!isValid && wasRadioButtonChecked){
 						// a radio button needs to be checked of
 						isValid = wasRadioButtonChecked;
@@ -175,8 +190,10 @@ namespace cf {
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
 						(<HTMLInputElement> tag.domElement).checked = element.checked;
 
-						if(element.checked)
+						if(element.checked){
 							this._values.push(<string> tag.value);
+							this._activeElements.push(tag);
+						}
 					}
 
 					break;

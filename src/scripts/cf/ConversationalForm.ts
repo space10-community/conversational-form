@@ -354,8 +354,8 @@ namespace cf {
 		* on user ChatReponse clicked
 		*/
 		private onUserAnswerClicked(event: CustomEvent): void {
-			this.chatList.onUserWantToEditPreviousAnswer(<ITag> event.detail);
-			this.flowManager.editTag(<ITag> event.detail);
+			const tag: ITag | ITagGroup = event.detail;
+			this.flowManager.editTag(tag);
 		}
 
 		/**
@@ -365,7 +365,7 @@ namespace cf {
 		*/
 		public remapTagsAndStartFrom(index: number = 0, setCurrentTagValue: boolean = false){
 			if(setCurrentTagValue){
-				this.chatList.setCurrentResponse(this.userInput.getFlowDTO());
+				this.chatList.setCurrentUserResponse(this.userInput.getFlowDTO());
 			}
 			// possibility to start the form flow over from {index}
 			for(var i = 0; i < this.tags.length; i++){

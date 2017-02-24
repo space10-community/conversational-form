@@ -57,8 +57,8 @@ namespace cf {
 		// input placeholder text, this is for the UserInput and not the tag it self.
 		protected _inputPlaceholder: string;
 
-		protected _label: string;
 		public defaultValue: string | number;
+		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
@@ -90,7 +90,7 @@ namespace cf {
 		}
 
 		public get hasImage (): boolean{
-			return !!this.domElement.getAttribute("cf-image");
+			return !!this.domElement.getAttribute("cf-image") || this.domElement.getAttribute("cf-image") == "";
 		}
 
 		public get disabled (): boolean{
