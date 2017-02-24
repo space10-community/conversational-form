@@ -63,6 +63,8 @@ namespace cf {
 				this.currentResponse.disabled = false;
 
 			if(this.containsTagResponse(currentTag)){
+				// because user maybe has scrolled up
+
 				// tag is already in list, so re-activate it
 				this.onUserWantToEditPreviousAnswer(currentTag);
 			}else{
@@ -74,7 +76,6 @@ namespace cf {
 
 				robot.setLinkToOtherReponse(this.currentUserResponse);
 			}
-
 		}
 
 		/**
@@ -113,11 +114,24 @@ namespace cf {
 				})
 				
 				// only disable latest tag when we jump back
-				if(this.currentUserResponse == this.responses[this.responses.length - 1])
+				if(this.currentUserResponse == this.responses[this.responses.length - 1]){
 					this.currentUserResponse.disabled = true;
+				}
 
 				this.currentUserResponse = oldReponse;
+
+				this.onListUpdate(this.currentUserResponse);
 			}
+		}
+
+		private onListUpdate(chatResponse: ChatResponse){
+			setTimeout(() => {
+				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+					detail: this
+				}));
+
+				this.scrollListTo(chatResponse);
+			}, 0);
 		}
 
 		/**
@@ -136,7 +150,7 @@ namespace cf {
 			}
 
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-			this.scrollListToBottom();
+			this.scrollListTo();
 		}
 
 		public updateThumbnail(robot: boolean, img: string){
@@ -176,22 +190,18 @@ namespace cf {
 			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
 			scrollable.appendChild(this.currentResponse.el);
 
-			setTimeout(() => {
-				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
-					detail: this
-				}));
-
-				this.scrollListToBottom();
-			}, 0);
+			this.onListUpdate(response);
 
 			return response;
 		}
 
-		public scrollListToBottom(){
+		public scrollListTo(response: ChatResponse = null){
 			try{
 				const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
-				scrollable.scrollTop = 1000000000;
-				setTimeout(() => scrollable.scrollTop = 1000000000, 100);
+				const y: number = response ? response.el.offsetTop : 1000000000;
+				console.log(y);
+				scrollable.scrollTop = y;
+				setTimeout(() => scrollable.scrollTop = y, 100);
 			}catch(e){
 				// catch errors where CF have been removed
 			}

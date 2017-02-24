@@ -35,7 +35,7 @@ namespace cf {
 		private tableableRows: Array<Array<IControlElement>>;
 
 		private userInputUpdateCallback: () => void;
-		private onChatRobotReponseCallback: () => void;
+		private onChatReponsesUpdatedCallback: () => void;
 		private onUserInputKeyChangeCallback: () => void;
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
@@ -94,8 +94,8 @@ namespace cf {
 			this.onElementLoadedCallback = this.onElementLoaded.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
 
-			this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
-			this.eventTarget.addEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+			this.onChatReponsesUpdatedCallback = this.onChatReponsesUpdated.bind(this);
+			this.eventTarget.addEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
 
 			this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
 			this.eventTarget.addEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
@@ -150,7 +150,7 @@ namespace cf {
 			}
 		}
 
-		private onChatRobotReponse(event:CustomEvent){
+		private onChatReponsesUpdated(event:CustomEvent){
 			this.animateElementsIn();
 		}
 
@@ -303,7 +303,7 @@ namespace cf {
 			}
 		}
 
-		private animateElementsIn(){
+		public animateElementsIn(){
 			if(this.elements){
 				const elements: Array<IControlElement> = this.getElements();
 				if(elements.length > 0){
@@ -670,8 +670,8 @@ namespace cf {
 			this.eventTarget.removeEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 			this.onElementFocusCallback = null;
 
-			this.eventTarget.removeEventListener(ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
-			this.onChatRobotReponseCallback = null;
+			this.eventTarget.removeEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
+			this.onChatReponsesUpdatedCallback = null;
 
 			this.eventTarget.removeEventListener(UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
 			this.onUserInputKeyChangeCallback = null;

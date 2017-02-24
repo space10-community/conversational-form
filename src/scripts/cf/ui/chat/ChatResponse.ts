@@ -13,7 +13,6 @@ namespace cf {
 	}
 
 	export const ChatResponseEvents = {
-		ROBOT_QUESTION_ASKED: "cf-on-robot-asked-question",
 		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
 	}
 
@@ -95,13 +94,7 @@ namespace cf {
 					}
 				}
 
-				if(this.isRobotReponse){
-					// Robot Reponse ready to ask question.
-					ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.ROBOT_QUESTION_ASKED, this.response);
-					this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.ROBOT_QUESTION_ASKED, {
-						detail: this
-					}));
-				}else if(!this.onClickCallback){
+				if(!this.isRobotReponse && !this.onClickCallback){
 					this.onClickCallback = this.onClick.bind(this);
 					this.el.addEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				}
