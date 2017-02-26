@@ -77,12 +77,12 @@ namespace cf {
 			let str: string;
 			if(hasTagImage && !this.partOfSeveralChoices){
 				const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
-				str = "<div>"
+				str = "<div class='contains-image'>"
 				str += image;
-				str += Helpers.getInnerTextOfElement(this.el);
+				str += "<span>" + Helpers.getInnerTextOfElement(this.el) + "</span>";
 				str += "</div>";
 			}else{
-				str = "<div>" + Helpers.getInnerTextOfElement(this.el) + "</div>";
+				str = "<div><span>" + Helpers.getInnerTextOfElement(this.el) + "</span></div>";
 			}
 			
 			return str;
