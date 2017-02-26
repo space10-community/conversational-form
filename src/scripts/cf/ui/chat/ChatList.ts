@@ -111,6 +111,9 @@ namespace cf {
 				}
 			}
 
+			// reset the current user response
+			this.currentUserResponse.processResponseAndSetText();
+
 			if(oldReponse){
 				// only disable latest tag when we jump back
 				if(this.currentUserResponse == this.responses[this.responses.length - 1]){

@@ -64,21 +64,15 @@ namespace cf {
 
 			const isThinking: boolean = this.textEl.hasAttribute("thinking");
 
-			if(!this.isRobotReponse && dto){
-				// presume reponse is added
-				this.el.classList.add("can-edit");
-				this.disabled = false;
-			}
-
 			if(!dto){
 				this.setToThinking();
 			}else{
 				this.response = dto.text;
-				const processedResponse: string = this.processResponseAndSetText(dto);
+				const processedResponse: string = this.processResponseAndSetText();
 
 				if(this.responseLink && !this.isRobotReponse){
 					// call robot and update for binding values ->
-					this.responseLink.processResponseAndSetText(dto);
+					this.responseLink.processResponseAndSetText();
 				}
 
 				// check for if response type is file upload...
@@ -105,6 +99,12 @@ namespace cf {
 		public show(){
 			this.el.classList.add("show");
 			this.disabled = false;
+			if(!this.response){
+				this.setToThinking();
+			}else{
+				this.checkForEditMode();
+			}
+			
 		}
 
 		public updateThumbnail(src: string){
@@ -118,7 +118,7 @@ namespace cf {
 			this.responseLink = response;
 		}
 
-		public processResponseAndSetText(dto: FlowDTO): string{
+		public processResponseAndSetText(): string{
 			var innerResponse: string = this.response;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
@@ -150,9 +150,18 @@ namespace cf {
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
-			}, 0)
+			}, 0);
+
+			this.checkForEditMode();
 
 			return innerResponse;
+		}
+
+		private checkForEditMode(){
+			if(!this.isRobotReponse){
+				this.el.classList.add("can-edit");
+				this.disabled = false;
+			}
 		}
 
 		private setToThinking(){
