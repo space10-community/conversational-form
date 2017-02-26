@@ -71,9 +71,7 @@ namespace cf {
 			}
 
 			if(!dto || dto.text == ""){
-				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-				this.el.classList.remove("can-edit");
-				this.textEl.setAttribute("thinking", "");
+				this.setToThinking()
 			}else{
 
 				this.response = dto.text;
@@ -158,12 +156,19 @@ namespace cf {
 			return innerResponse;
 		}
 
+		private setToThinking(){
+			this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+			this.el.classList.remove("can-edit");
+			this.textEl.setAttribute("thinking", "");
+		}
+
 		/**
 		* @name onClickCallback
 		* click handler for el
 		*/
 		private onClick(event: MouseEvent): void {
-			this.el.classList.remove("can-edit");
+			this.setToThinking();
+
 			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
 			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this._tag
