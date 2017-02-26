@@ -28,6 +28,7 @@ namespace cf {
 		tabIndex: number;
 		visible: boolean;
 		focus: boolean;
+		partOfSeveralChoices: boolean;
 		hasImage(): boolean;
 		calcPosition(): void;
 		dealloc(): void;
@@ -51,6 +52,7 @@ namespace cf {
 		public referenceTag: ITag;
 
 		private animateInTimer: number = 0;
+		private _partOfSeveralChoices: boolean = false;
 		private _positionVector: ControlElementVector;
 		private _focus: boolean = false;
 		private onFocusCallback: () => void;
@@ -60,12 +62,28 @@ namespace cf {
 			return "ControlElement";
 		}
 
+		public set partOfSeveralChoices(value: boolean) {
+			this._partOfSeveralChoices = value;
+		}
+
+		public get partOfSeveralChoices() : boolean {
+			return this._partOfSeveralChoices;
+		}
+		
+
 		public get value():string{
 			// value is for the chat response -->
 			const hasTagImage: boolean = (<Tag> this.referenceTag).hasImage;
-			// const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
-			// let str: string = "<div>" + (hasTagImage ? image : Helpers.getInnerTextOfElement(this.el)) + "</div>";
-			let str: string = "<div>" + Helpers.getInnerTextOfElement(this.el) + "</div>";
+			let str: string;
+			if(hasTagImage && !this.partOfSeveralChoices){
+				const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+				str = "<div>"
+				str += image;
+				str += Helpers.getInnerTextOfElement(this.el);
+				str += "</div>";
+			}else{
+				str = "<div>" + Helpers.getInnerTextOfElement(this.el) + "</div>";
+			}
 			
 			return str;
 		}
