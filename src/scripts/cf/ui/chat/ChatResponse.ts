@@ -70,10 +70,9 @@ namespace cf {
 				this.disabled = false;
 			}
 
-			if(!dto || dto.text == ""){
-				this.setToThinking()
+			if(!dto){
+				this.setToThinking();
 			}else{
-
 				this.response = dto.text;
 				const processedResponse: string = this.processResponseAndSetText(dto);
 
