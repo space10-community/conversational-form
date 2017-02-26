@@ -78,7 +78,9 @@ namespace cf {
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
-			
+
+			console.log('Conversational Form > version:', this.version);
+
 			window.ConversationalForm[this.createId] = this;
 
 			// set a general step validation callback
@@ -440,24 +442,39 @@ namespace cf {
 					console.log("** event flow detail:", detail);
 			}
 		}
-	}
-}
 
+		private static hasAutoInstantiated: boolean = false;
+		public static autoStartTheConversation() {
+			if(ConversationalForm.hasAutoInstantiated)
+				return;
 
-// check for a form element with attribute:
+			// auto start the conversation
+			const formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+			const formContexts: NodeListOf<Element> = document.querySelectorAll("*[cf-context]");
 
-window.addEventListener("load", () =>{
-	const formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
-	const formContexts: NodeListOf<Element> = document.querySelectorAll("*[cf-context]");
+			if(formElements && formElements.length > 0){
+				for (let i = 0; i < formElements.length; i++) {
+					let form: HTMLFormElement = <HTMLFormElement>formElements[i];
+					let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
+					new cf.ConversationalForm({
+						formEl: form,
+						context: context
+					});
+				}
 
-	if(formElements && formElements.length > 0){
-		for (let i = 0; i < formElements.length; i++) {
-			let form: HTMLFormElement = <HTMLFormElement>formElements[i];
-			let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
-			new cf.ConversationalForm({
-				formEl: form,
-				context: context
-			});
+				ConversationalForm.hasAutoInstantiated = true;
+			}
 		}
 	}
-}, false);
+
+}
+
+if(document.readyState == "complete"){
+	// if document alread instantiated, usually this happens if Conversational Form is injected through JS
+	cf.ConversationalForm.autoStartTheConversation();
+}else{
+	// await for when document is ready
+	window.addEventListener("load", () =>{
+		cf.ConversationalForm.autoStartTheConversation();
+	}, false);
+}
