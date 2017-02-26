@@ -18,5 +18,5 @@
     },
     "main": ["dist/conversational-form.js", "dist/conversational-form.css"],
     "license": "MIT",
-    "ignore": [ "build", "bower_components", "gulpfile.js", "docs", "examples", "gulp-tasks"]
+    "ignore": ["build"]
 }
