@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+
+		<style>
+			.form-outer{
+				position: relative;
+				background: lightgrey;
+				width: 600px;
+				height: 80vh;
+			}
+		</style>
+
+
+		<div class="form-outer" cf-context>
+
+			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+			<form id="form" cf-form>
+				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+			</form>
+
+		</div>
+
+
+		<!-- OR -->
+		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
+		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
+
+
+		<script>
+		</script>
+
+	</body>
+</html>
