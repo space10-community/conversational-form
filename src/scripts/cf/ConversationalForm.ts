@@ -332,7 +332,8 @@ namespace cf {
 			innerWrap.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({
-				eventTarget: this.eventTarget
+				eventTarget: this.eventTarget,
+				cfReference: this
 			});
 
 			innerWrap.appendChild(this.userInput.el);
