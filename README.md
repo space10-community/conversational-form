@@ -224,6 +224,11 @@ We welcome contributions in the form of bug reports, pull requests, or thoughtfu
 
 ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
 
+## Get the source
+### Bower
+
+	$ bower install conversational-form --save
+
 ## Build the source
 
 ### NPM
