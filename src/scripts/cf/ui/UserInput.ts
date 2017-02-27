@@ -12,6 +12,10 @@ namespace cf {
 		inputFieldActive: boolean
 	}
 
+	export interface IUserInputOptions extends IBasicElementOptions{
+		cfReference: ConversationalForm
+	}
+
 	export const UserInputEvents = {
 		SUBMIT: "cf-input-user-input-submit",
 		//	detail: string
@@ -30,6 +34,7 @@ namespace cf {
 		public static ERROR_TIME: number = 2000;
 		public el: HTMLElement;
 
+		private cfReference: ConversationalForm;
 		private inputElement: HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
 		private currentValue: string = "";
@@ -81,9 +86,10 @@ namespace cf {
 			}
 		}
 
-		constructor(options: IBasicElementOptions){
+		constructor(options: IUserInputOptions){
 			super(options);
 
+			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
@@ -320,7 +326,7 @@ namespace cf {
 				var doesKeyTargetExistInCF: boolean = false;
 				var node = (<HTMLElement> event.target).parentNode;
 				while (node != null) {
-					if (node === window.ConversationalForm.el) {
+					if (node === this.cfReference.el) {
 						doesKeyTargetExistInCF = true;
 						break;
 					}
@@ -425,17 +431,22 @@ namespace cf {
 		}
 
 		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
-			if(!this._currentTag){
-				// happens when a form is empty, so just play along and submit response to chatlist..
-				this.eventTarget.cf.addUserChatResponse(this.inputElement.value);
+			if(this.active && this.controlElements.highlighted){
+				// active input field and focus on control elements happens when a control element is highlighted
+				this.controlElements.clickOnHighlighted();
 			}else{
-				// we need to check if current tag is file
-				if(this._currentTag.type == "file" && event){
-					// trigger <input type="file" but only when it's from clicking button
-					(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+				if(!this._currentTag){
+					// happens when a form is empty, so just play along and submit response to chatlist..
+					this.eventTarget.cf.addUserChatResponse(this.inputElement.value);
 				}else{
-					// for groups, we expect that there is always a default value set
-					this.doSubmit();
+					// we need to check if current tag is file
+					if(this._currentTag.type == "file" && event){
+						// trigger <input type="file" but only when it's from clicking button
+						(<UploadFileUI> this.controlElements.getElement(0)).triggerFileSelect();
+					}else{
+						// for groups, we expect that there is always a default value set
+						this.doSubmit();
+					}
 				}
 			}
 		}
@@ -459,7 +470,6 @@ namespace cf {
 		}
 
 		public dealloc(){
-
 			this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			this.onInputBlurCallback = null;
 

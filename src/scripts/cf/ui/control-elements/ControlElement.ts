@@ -28,6 +28,7 @@ namespace cf {
 		tabIndex: number;
 		visible: boolean;
 		focus: boolean;
+		highlight: boolean;
 		partOfSeveralChoices: boolean;
 		hasImage(): boolean;
 		calcPosition(): void;
@@ -69,7 +70,6 @@ namespace cf {
 		public get partOfSeveralChoices() : boolean {
 			return this._partOfSeveralChoices;
 		}
-		
 
 		public get value():string{
 			// value is for the chat response -->
@@ -95,9 +95,25 @@ namespace cf {
 		public set tabIndex(value: number){
 			this.el.tabIndex = value;
 		}
+
+		public get highlight(): boolean{
+			return this.el.classList.contains("highlight");
+		}
+
+		public set highlight(value: boolean){
+			this.el.classList.toggle("highlight", value);
+		}
 	
 		public get focus(): boolean{
 			return this._focus;
+		}
+
+		public set focus(value: boolean){
+			this._focus = value;
+			if(this._focus)
+				this.el.focus();
+			else
+				this.el.blur();
 		}
 	
 		public get visible(): boolean{
@@ -110,6 +126,7 @@ namespace cf {
 			}else{
 				this.el.classList.add("hide");
 				this.tabIndex = -1;
+				this.highlight = false;
 			}
 		}
 
