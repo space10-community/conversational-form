@@ -157,7 +157,7 @@ namespace cf {
 			// }
 
 			if(this.type != "group"){
-				console.log('Tag registered:', this.type);
+				console.log('Conversational Form > Tag registered:', this.type);
 			}
 
 			this.refresh();

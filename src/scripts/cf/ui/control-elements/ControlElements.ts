@@ -428,10 +428,22 @@ namespace cf {
 			if(this.elements && this.elements.length > 0){
 				switch(this.elements[0].type){
 					case "CheckboxButton" :
+						let numChecked: number = 0;// check if more than 1 is checked.
 						var values: Array<string> = [];
 						for (var i = 0; i < this.elements.length; i++) {
 							let element: CheckboxButton = <CheckboxButton> this.elements[i];
 							if(element.checked){
+								if(numChecked++ > 1)
+									break;
+							}
+						}
+
+						for (var i = 0; i < this.elements.length; i++) {
+							let element: CheckboxButton = <CheckboxButton> this.elements[i];
+							if(element.checked){
+								if(numChecked > 1)
+									element.partOfSeveralChoices = true;
+
 								values.push(element.value);
 							}
 
@@ -499,7 +511,7 @@ namespace cf {
 
 			for (var i = 0; i < tags.length; i++) {
 				var tag: ITag = tags[i];
-				
+
 				switch(tag.type){
 					case "radio" :
 						this.elements.push(new RadioButton({
@@ -521,7 +533,6 @@ namespace cf {
 							eventTarget: this.eventTarget
 						}));
 						break;
-					
 					case "input" :
 					default :
 						if(tag.type == "file"){

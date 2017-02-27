@@ -64,24 +64,15 @@ namespace cf {
 
 			const isThinking: boolean = this.textEl.hasAttribute("thinking");
 
-			if(!this.isRobotReponse && dto){
-				// presume reponse is added
-				this.el.classList.add("can-edit");
-				this.disabled = false;
-			}
-
-			if(!dto || dto.text == ""){
-				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-				this.el.classList.remove("can-edit");
-				this.textEl.setAttribute("thinking", "");
+			if(!dto){
+				this.setToThinking();
 			}else{
-
 				this.response = dto.text;
-				const processedResponse: string = this.processResponseAndSetText(dto);
+				const processedResponse: string = this.processResponseAndSetText();
 
 				if(this.responseLink && !this.isRobotReponse){
 					// call robot and update for binding values ->
-					this.responseLink.processResponseAndSetText(dto);
+					this.responseLink.processResponseAndSetText();
 				}
 
 				// check for if response type is file upload...
@@ -108,6 +99,12 @@ namespace cf {
 		public show(){
 			this.el.classList.add("show");
 			this.disabled = false;
+			if(!this.response){
+				this.setToThinking();
+			}else{
+				this.checkForEditMode();
+			}
+			
 		}
 
 		public updateThumbnail(src: string){
@@ -121,7 +118,7 @@ namespace cf {
 			this.responseLink = response;
 		}
 
-		public processResponseAndSetText(dto: FlowDTO): string{
+		public processResponseAndSetText(): string{
 			var innerResponse: string = this.response;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
@@ -144,6 +141,10 @@ namespace cf {
 				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}
 
+			// check if response contains an image as answer
+			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
+			this.textEl.classList.toggle("contains-image", responseContains);
+
 			// now set it
 			this.textEl.innerHTML = innerResponse;
 			this.parsedResponse = innerResponse;
@@ -153,9 +154,24 @@ namespace cf {
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
-			}, 0)
+			}, 0);
+
+			this.checkForEditMode();
 
 			return innerResponse;
+		}
+
+		private checkForEditMode(){
+			if(!this.isRobotReponse){
+				this.el.classList.add("can-edit");
+				this.disabled = false;
+			}
+		}
+
+		private setToThinking(){
+			this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+			this.el.classList.remove("can-edit");
+			this.textEl.setAttribute("thinking", "");
 		}
 
 		/**
@@ -163,7 +179,8 @@ namespace cf {
 		* click handler for el
 		*/
 		private onClick(event: MouseEvent): void {
-			this.el.classList.remove("can-edit");
+			this.setToThinking();
+
 			ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.USER_ANSWER_CLICKED, event);
 			this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
 				detail: this._tag

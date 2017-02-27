@@ -68,8 +68,8 @@ cf-chat-response
 	text
 		user-select none
 		display block
+		overflow hidden
 		position relative
-		padding 12px 24px 12px 24px
 		min-height 40px
 		background $color-chat-reponse-default-bg
 		border-radius 0px 20px 20px 20px
@@ -81,15 +81,30 @@ cf-chat-response
 		will-change transform, opacity, background
 		backface-visibility hidden
 		height auto
+
 		.conversational-form--enable-animation &
 			transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
 		
 		> div
 			display inline-block
 
-			> img
-				width 30px
-				height auto
+		&:not(.contains-image)
+			padding 12px 24px 12px 24px
+
+		&.contains-image
+			> div
+				max-width 140px
+				text-align left
+				padding-bottom 10px
+				> span
+					padding-left 24px
+
+				> img
+					padding-bottom 5px
+					width 100%
+					height auto
+					display block
+					margin-bottom 4px
 
 		&:after
 			content ""
