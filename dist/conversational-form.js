@@ -19,6 +19,7 @@ var cf;
             this.preventAutoAppend = false;
             this.preventAutoStart = false;
             window.ConversationalForm = this;
+            console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
             // set a general step validation callback
             if (options.flowStepCallback)
@@ -249,8 +250,8 @@ var cf;
         * on user ChatReponse clicked
         */
         ConversationalForm.prototype.onUserAnswerClicked = function (event) {
-            this.chatList.onUserWantToEditPreviousAnswer(event.detail);
-            this.flowManager.editTag(event.detail);
+            var tag = event.detail;
+            this.flowManager.editTag(tag);
         };
         /**
         * @name remapTagsAndStartFrom
@@ -261,7 +262,7 @@ var cf;
             if (index === void 0) { index = 0; }
             if (setCurrentTagValue === void 0) { setCurrentTagValue = false; }
             if (setCurrentTagValue) {
-                this.chatList.setCurrentResponse(this.userInput.getFlowDTO());
+                this.chatList.setCurrentUserResponse(this.userInput.getFlowDTO());
             }
             // possibility to start the form flow over from {index}
             for (var i = 0; i < this.tags.length; i++) {
@@ -325,28 +326,42 @@ var cf;
                     console.log("** event flow detail:", detail);
             }
         };
+        ConversationalForm.autoStartTheConversation = function () {
+            if (ConversationalForm.hasAutoInstantiated)
+                return;
+            // auto start the conversation
+            var formElements = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+            var formContexts = document.querySelectorAll("*[cf-context]");
+            if (formElements && formElements.length > 0) {
+                for (var i = 0; i < formElements.length; i++) {
+                    var form = formElements[i];
+                    var context = formContexts[i];
+                    new cf.ConversationalForm({
+                        formEl: form,
+                        context: context
+                    });
+                }
+                ConversationalForm.hasAutoInstantiated = true;
+            }
+        };
         return ConversationalForm;
     }());
     ConversationalForm.animationsEnabled = true;
     // to illustrate the event flow of the app
     ConversationalForm.ILLUSTRATE_APP_FLOW = true;
+    ConversationalForm.hasAutoInstantiated = false;
     cf.ConversationalForm = ConversationalForm;
 })(cf || (cf = {}));
-// check for a form element with attribute:
-window.addEventListener("load", function () {
-    var formElements = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
-    var formContexts = document.querySelectorAll("*[cf-context]");
-    if (formElements && formElements.length > 0) {
-        for (var i = 0; i < formElements.length; i++) {
-            var form = formElements[i];
-            var context = formContexts[i];
-            new cf.ConversationalForm({
-                formEl: form,
-                context: context
-            });
-        }
-    }
-}, false);
+if (document.readyState == "complete") {
+    // if document alread instantiated, usually this happens if Conversational Form is injected through JS
+    cf.ConversationalForm.autoStartTheConversation();
+}
+else {
+    // await for when document is ready
+    window.addEventListener("load", function () {
+        cf.ConversationalForm.autoStartTheConversation();
+    }, false);
+}
 
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -546,6 +561,7 @@ var cf;
         function ControlElement(options) {
             var _this = _super.call(this, options) || this;
             _this.animateInTimer = 0;
+            _this._partOfSeveralChoices = false;
             _this._focus = false;
             _this.onFocusCallback = _this.onFocus.bind(_this);
             _this.el.addEventListener('focus', _this.onFocusCallback, false);
@@ -560,9 +576,32 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ControlElement.prototype, "partOfSeveralChoices", {
+            get: function () {
+                return this._partOfSeveralChoices;
+            },
+            set: function (value) {
+                this._partOfSeveralChoices = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ControlElement.prototype, "value", {
             get: function () {
-                return cf.Helpers.getInnerTextOfElement(this.el);
+                // value is for the chat response -->
+                var hasTagImage = this.referenceTag.hasImage;
+                var str;
+                if (hasTagImage && !this.partOfSeveralChoices) {
+                    var image = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+                    str = "<div class='contains-image'>";
+                    str += image;
+                    str += "<span>" + cf.Helpers.getInnerTextOfElement(this.el) + "</span>";
+                    str += "</div>";
+                }
+                else {
+                    str = "<div><span>" + cf.Helpers.getInnerTextOfElement(this.el) + "</span></div>";
+                }
+                return str;
             },
             enumerable: true,
             configurable: true
@@ -694,8 +733,8 @@ var cf;
             this.eventTarget.addEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
             this.onElementLoadedCallback = this.onElementLoaded.bind(this);
             this.eventTarget.addEventListener(cf.ControlElementEvents.ON_LOADED, this.onElementLoadedCallback, false);
-            this.onChatRobotReponseCallback = this.onChatRobotReponse.bind(this);
-            this.eventTarget.addEventListener(cf.ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
+            this.onChatReponsesUpdatedCallback = this.onChatReponsesUpdated.bind(this);
+            this.eventTarget.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
             this.onUserInputKeyChangeCallback = this.onUserInputKeyChange.bind(this);
             this.eventTarget.addEventListener(cf.UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
             // user input update
@@ -780,7 +819,7 @@ var cf;
                 }
             }
         };
-        ControlElements.prototype.onChatRobotReponse = function (event) {
+        ControlElements.prototype.onChatReponsesUpdated = function (event) {
             this.animateElementsIn();
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
@@ -1028,23 +1067,33 @@ var cf;
             if (this.elements && this.elements.length > 0) {
                 switch (this.elements[0].type) {
                     case "CheckboxButton":
+                        var numChecked = 0; // check if more than 1 is checked.
                         var values = [];
                         for (var i = 0; i < this.elements.length; i++) {
                             var element_1 = this.elements[i];
                             if (element_1.checked) {
-                                values.push(element_1.value);
+                                if (numChecked++ > 1)
+                                    break;
                             }
-                            dto.controlElements.push(element_1);
+                        }
+                        for (var i = 0; i < this.elements.length; i++) {
+                            var element_2 = this.elements[i];
+                            if (element_2.checked) {
+                                if (numChecked > 1)
+                                    element_2.partOfSeveralChoices = true;
+                                values.push(element_2.value);
+                            }
+                            dto.controlElements.push(element_2);
                         }
                         dto.text = cf.Dictionary.parseAndGetMultiValueString(values);
                         break;
                     case "RadioButton":
                         for (var i = 0; i < this.elements.length; i++) {
-                            var element_2 = this.elements[i];
-                            if (element_2.checked) {
-                                dto.text = element_2.value;
+                            var element_3 = this.elements[i];
+                            if (element_3.checked) {
+                                dto.text = element_3.value;
                             }
-                            dto.controlElements.push(element_2);
+                            dto.controlElements.push(element_3);
                         }
                         break;
                     case "OptionsList":
@@ -1053,7 +1102,7 @@ var cf;
                         var values = [];
                         if (dto.controlElements && dto.controlElements[0]) {
                             for (var i_2 = 0; i_2 < dto.controlElements.length; i_2++) {
-                                var element_3 = dto.controlElements[i_2];
+                                var element_4 = dto.controlElements[i_2];
                                 values.push(dto.controlElements[i_2].value);
                             }
                         }
@@ -1062,7 +1111,7 @@ var cf;
                         dto.text = cf.Dictionary.parseAndGetMultiValueString(values);
                         break;
                     case "UploadFileUI":
-                        dto.text = this.elements[0].fileName; //Dictionary.parseAndGetMultiValueString(values);
+                        dto.text = this.elements[0].getFilesAsString(); //Dictionary.parseAndGetMultiValueString(values);
                         dto.controlElements.push(this.elements[0]);
                         break;
                 }
@@ -1230,8 +1279,8 @@ var cf;
             this.onScrollCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
             this.onElementFocusCallback = null;
-            this.eventTarget.removeEventListener(cf.ChatResponseEvents.ROBOT_QUESTION_ASKED, this.onChatRobotReponseCallback, false);
-            this.onChatRobotReponseCallback = null;
+            this.eventTarget.removeEventListener(cf.ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
+            this.onChatReponsesUpdatedCallback = null;
             this.eventTarget.removeEventListener(cf.UserInputEvents.KEY_CHANGE, this.onUserInputKeyChangeCallback, false);
             this.onUserInputKeyChangeCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false);
@@ -1507,6 +1556,7 @@ var cf;
             return value;
         };
         Dictionary.parseAndGetMultiValueString = function (arr) {
+            // check ControlElement.ts for value(s)
             var value = "";
             for (var i = 0; i < arr.length; i++) {
                 var str = arr[i];
@@ -1581,7 +1631,7 @@ var cf;
             // 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
             // }
             if (this.type != "group") {
-                console.log('Tag registered:', this.type);
+                console.log('Conversational Form > Tag registered:', this.type);
             }
             this.refresh();
         }
@@ -1620,6 +1670,13 @@ var cf;
         Object.defineProperty(Tag.prototype, "value", {
             get: function () {
                 return this.domElement.value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tag.prototype, "hasImage", {
+            get: function () {
+                return !!this.domElement.getAttribute("cf-image") || this.domElement.getAttribute("cf-image") == "";
             },
             enumerable: true,
             configurable: true
@@ -1900,6 +1957,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "activeElements", {
+            get: function () {
+                return this._activeElements;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TagGroup.prototype, "value", {
             get: function () {
                 // TODO: fix value???
@@ -1953,6 +2017,7 @@ var cf;
             var isValid = false;
             var groupType = this.elements[0].type;
             this._values = [];
+            this._activeElements = [];
             switch (groupType) {
                 case "radio":
                     var numberRadioButtonsVisible = [];
@@ -1964,8 +2029,10 @@ var cf;
                             numberRadioButtonsVisible.push(element);
                             if (tag == element.referenceTag) {
                                 tag.domElement.checked = element.checked;
-                                if (element.checked)
+                                if (element.checked) {
                                     this._values.push(tag.value);
+                                    this._activeElements.push(tag);
+                                }
                                 // a radio button was checked
                                 if (!wasRadioButtonChecked && element.checked)
                                     wasRadioButtonChecked = true;
@@ -1979,8 +2046,10 @@ var cf;
                         element.checked = true;
                         tag.domElement.checked = true;
                         isValid = true;
-                        if (element.checked)
+                        if (element.checked) {
                             this._values.push(tag.value);
+                            this._activeElements.push(tag);
+                        }
                     }
                     else if (!isValid && wasRadioButtonChecked) {
                         // a radio button needs to be checked of
@@ -1994,8 +2063,10 @@ var cf;
                         var element = value.controlElements[i];
                         var tag = this.elements[this.elements.indexOf(element.referenceTag)];
                         tag.domElement.checked = element.checked;
-                        if (element.checked)
+                        if (element.checked) {
                             this._values.push(tag.value);
+                            this._activeElements.push(tag);
+                        }
                     }
                     break;
             }
@@ -2263,8 +2334,7 @@ var cf;
             configurable: true
         });
         Button.prototype.hasImage = function () {
-            var hasImage = !!this.referenceTag.domElement.getAttribute("cf-image");
-            return hasImage;
+            return this.referenceTag.hasImage;
         };
         /**
         * @name checkForImage
@@ -2357,7 +2427,7 @@ var cf;
         };
         // override
         RadioButton.prototype.getTemplate = function () {
-            var isChecked = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
+            var isChecked = this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-radio-button class=\"cf-button\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-radio></cf-radio>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-radio-button>\n\t\t\t";
         };
         return RadioButton;
@@ -2650,8 +2720,15 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        UploadFileUI.prototype.getFilesAsString = function () {
+            // value is for the chat response -->
+            var icon = document.createElement("span");
+            icon.innerHTML = cf.Dictionary.get("icon-type-file") + this.fileName;
+            return icon.outerHTML;
+        };
         UploadFileUI.prototype.onDomElementChange = function (event) {
             var _this = this;
+            console.log("...onDomElementChange");
             var reader = new FileReader();
             this._files = this.referenceTag.domElement.files;
             reader.onerror = function (event) {
@@ -2970,14 +3047,10 @@ var cf;
             else {
                 // handle password input
                 if (this._currentTag && this._currentTag.type == "password") {
-                    var canSetValue = true;
-                    if (canSetValue) {
-                        this.inputElement.value = this.currentValue.replace(/./g, function () { return "*"; });
-                        if (event.key.toLowerCase() == "backspace")
-                            this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-                        else
-                            this.currentValue += event.key;
-                    }
+                    if (event.key.toLowerCase() == "backspace")
+                        this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
+                    else
+                        this.currentValue += event.key;
                 }
             }
         };
@@ -3068,6 +3141,10 @@ var cf;
             }
             else if (event.keyCode != cf.Dictionary.keyCodes["shift"] && event.keyCode != cf.Dictionary.keyCodes["tab"]) {
                 this.dispatchKeyChange(value, event.keyCode);
+            }
+            // handle password input
+            if (this._currentTag && this._currentTag.type == "password") {
+                this.inputElement.value = this.currentValue.replace(/./g, function () { return "*"; });
             }
             this.onInputChange();
         };
@@ -3172,7 +3249,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 var cf;
 (function (cf) {
     cf.ChatResponseEvents = {
-        ROBOT_QUESTION_ASKED: "cf-on-robot-asked-question",
         USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
     };
     // class
@@ -3180,9 +3256,27 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
-            _this.tag = options.tag;
+            _this._tag = options.tag;
+            _this.textEl = _this.el.getElementsByTagName("text")[0];
             return _this;
         }
+        Object.defineProperty(ChatResponse.prototype, "tag", {
+            get: function () {
+                return this._tag;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ChatResponse.prototype, "disabled", {
+            get: function () {
+                return this.el.classList.contains("disabled");
+            },
+            set: function (value) {
+                this.el.classList.toggle("disabled", value);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
                 if (value) {
@@ -3197,43 +3291,46 @@ var cf;
         });
         ChatResponse.prototype.setValue = function (dto) {
             if (dto === void 0) { dto = null; }
-            this.response = dto ? dto.text : "";
-            this.processResponse();
-            var text = this.el.getElementsByTagName("text")[0];
             if (!this.visible) {
                 this.visible = true;
             }
-            var isThinking = text.hasAttribute("thinking");
-            if (!isThinking && (!this.response || this.response.length == 0)) {
-                text.setAttribute("thinking", "");
+            var isThinking = this.textEl.hasAttribute("thinking");
+            if (!dto) {
+                this.setToThinking();
             }
             else {
-                text.innerHTML = this.response;
-                text.setAttribute("value-added", "");
-                text.removeAttribute("thinking");
-                // check for if reponse type is file upload...
+                this.response = dto.text;
+                var processedResponse = this.processResponseAndSetText();
+                if (this.responseLink && !this.isRobotReponse) {
+                    // call robot and update for binding values ->
+                    this.responseLink.processResponseAndSetText();
+                }
+                // check for if response type is file upload...
                 if (dto && dto.controlElements && dto.controlElements[0]) {
                     switch (dto.controlElements[0].type) {
                         case "UploadFileUI":
-                            text.classList.add("file-icon");
-                            var icon = document.createElement("span");
-                            icon.innerHTML = cf.Dictionary.get("icon-type-file");
-                            text.insertBefore(icon.children[0], text.firstChild);
+                            this.textEl.classList.add("file-icon");
                             break;
                     }
                 }
-                if (this.isRobotReponse) {
-                    // Robot Reponse ready to ask question.
-                    cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.ChatResponseEvents.ROBOT_QUESTION_ASKED, this.response);
-                    this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatResponseEvents.ROBOT_QUESTION_ASKED, {
-                        detail: this
-                    }));
-                }
-                else if (!this.onClickCallback) {
-                    this.el.classList.add("can-edit");
+                if (!this.isRobotReponse && !this.onClickCallback) {
                     this.onClickCallback = this.onClick.bind(this);
                     this.el.addEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
                 }
+            }
+        };
+        ChatResponse.prototype.hide = function () {
+            this.el.classList.remove("show");
+            this.disabled = true;
+        };
+        ChatResponse.prototype.show = function () {
+            this.el.classList.add("show");
+            this.disabled = false;
+            if (!this.response) {
+                this.setToThinking();
+            }
+            else {
+                this.checkForEditMode();
             }
         };
         ChatResponse.prototype.updateThumbnail = function (src) {
@@ -3241,32 +3338,64 @@ var cf;
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
             thumbEl.style.backgroundImage = "url(" + this.image + ")";
         };
-        /**
-         * skippedBecauseOfEdit
-         */
-        ChatResponse.prototype.skippedBecauseOfEdit = function () {
-            // this.setValue({text: Dictionary.get("ok-editing-previous-answer")});
-            this.el.classList.add("disabled");
+        ChatResponse.prototype.setLinkToOtherReponse = function (response) {
+            // link reponse to another one, keeping the update circle complete.
+            this.responseLink = response;
+        };
+        ChatResponse.prototype.processResponseAndSetText = function () {
+            var _this = this;
+            var innerResponse = this.response;
+            if (this._tag && this._tag.type == "password" && !this.isRobotReponse) {
+                var newStr = "";
+                for (var i = 0; i < innerResponse.length; i++) {
+                    newStr += "*";
+                }
+                innerResponse = newStr;
+            }
+            else {
+                innerResponse = cf.Helpers.emojify(innerResponse);
+            }
+            if (this.responseLink && this.isRobotReponse) {
+                // if robot, then check linked response for binding values
+                // one way data binding values:
+                innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+            }
+            // check if response contains an image as answer
+            var responseContains = innerResponse.indexOf("contains-image") != -1;
+            this.textEl.classList.toggle("contains-image", responseContains);
+            // now set it
+            this.textEl.innerHTML = innerResponse;
+            this.parsedResponse = innerResponse;
+            // bounce
+            this.textEl.removeAttribute("thinking");
+            this.textEl.removeAttribute("value-added");
+            setTimeout(function () {
+                _this.textEl.setAttribute("value-added", "");
+            }, 0);
+            this.checkForEditMode();
+            return innerResponse;
+        };
+        ChatResponse.prototype.checkForEditMode = function () {
+            if (!this.isRobotReponse) {
+                this.el.classList.add("can-edit");
+                this.disabled = false;
+            }
+        };
+        ChatResponse.prototype.setToThinking = function () {
+            this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+            this.el.classList.remove("can-edit");
+            this.textEl.setAttribute("thinking", "");
         };
         /**
         * @name onClickCallback
         * click handler for el
         */
         ChatResponse.prototype.onClick = function (event) {
+            this.setToThinking();
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.ChatResponseEvents.USER_ANSWER_CLICKED, event);
             this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatResponseEvents.USER_ANSWER_CLICKED, {
-                detail: this.tag
+                detail: this._tag
             }));
-        };
-        ChatResponse.prototype.processResponse = function () {
-            this.response = cf.Helpers.emojify(this.response);
-            if (this.tag && this.tag.type == "password" && !this.isRobotReponse) {
-                var newStr = "";
-                for (var i = 0; i < this.response.length; i++) {
-                    newStr += "*";
-                }
-                this.response = newStr;
-            }
         };
         ChatResponse.prototype.setData = function (options) {
             var _this = this;
@@ -3282,7 +3411,8 @@ var cf;
                     setTimeout(function () { return _this.setValue({ text: options.response }); }, 0); //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
                 }
                 else {
-                    // show the 3 dots automatically, we expect the reponse to be empty upon creation
+                    // shows the 3 dots automatically, we expect the reponse to be empty upon creation
+                    // TODO: Auto completion insertion point
                     setTimeout(function () { return _this.el.classList.add("peak-thumb"); }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
                 }
             }, 0);
@@ -3296,10 +3426,11 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb style=\"background-image: url(" + this.image + ")\"></thumb>\n\t\t\t\t<text>" + (!this.response ? "<thinking><span>.</span><span>.</span><span>.</span></thinking>" : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb style=\"background-image: url(" + this.image + ")\"></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
+    ChatResponse.THINKING_MARKUP = "<thinking><span>.</span><span>.</span><span>.</span></thinking>";
     cf.ChatResponse = ChatResponse;
 })(cf || (cf = {}));
 
@@ -3323,6 +3454,7 @@ var cf;
         __extends(ChatList, _super);
         function ChatList(options) {
             var _this = _super.call(this, options) || this;
+            _this.responses = [];
             // flow update
             _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
             _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
@@ -3342,7 +3474,7 @@ var cf;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             if (this.currentUserResponse) {
                 var response = event.detail;
-                this.setCurrentResponse(response);
+                this.setCurrentUserResponse(response);
             }
             else {
                 // this should never happen..
@@ -3352,40 +3484,90 @@ var cf;
         ChatList.prototype.onFlowUpdate = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var currentTag = event.detail;
-            // robot response
-            var robotReponse = "";
-            robotReponse = currentTag.question;
-            // one way data binding values:
-            if (this.flowDTOFromUserInputUpdate) {
-                // previous answer..
-                robotReponse = robotReponse.split("{previous-answer}").join(this.flowDTOFromUserInputUpdate.text);
+            if (this.currentResponse)
+                this.currentResponse.disabled = false;
+            if (this.containsTagResponse(currentTag)) {
+                // because user maybe have scrolled up
+                // tag is already in list, so re-activate it
+                this.onUserWantToEditPreviousAnswer(currentTag);
             }
-            this.createResponse(true, currentTag, robotReponse);
-            // user reponse, create the waiting response
-            this.createResponse(false, currentTag);
+            else {
+                // robot response
+                var robot = this.createResponse(true, currentTag, currentTag.question);
+                if (this.currentUserResponse) {
+                    // linked
+                    this.currentUserResponse.setLinkToOtherReponse(robot);
+                    robot.setLinkToOtherReponse(this.currentUserResponse);
+                }
+                // user response, create the waiting response
+                this.currentUserResponse = this.createResponse(false, currentTag);
+            }
+        };
+        /**
+        * @name containsTagResponse
+        * @return boolean
+        * check if tag has already been responded to
+        */
+        ChatList.prototype.containsTagResponse = function (tagToChange) {
+            for (var i = 0; i < this.responses.length; i++) {
+                var element = this.responses[i];
+                if (!element.isRobotReponse && element.tag == tagToChange) {
+                    return true;
+                }
+            }
+            return false;
         };
         /**
         * @name onUserAnswerClicked
         * on user ChatReponse clicked
         */
-        ChatList.prototype.onUserWantToEditPreviousAnswer = function (tag) {
-            this.currentUserResponse.skippedBecauseOfEdit();
+        ChatList.prototype.onUserWantToEditPreviousAnswer = function (tagToChange) {
+            var oldReponse;
+            for (var i = 0; i < this.responses.length; i++) {
+                var element = this.responses[i];
+                if (!element.isRobotReponse && element.tag == tagToChange) {
+                    // update element thhat user wants to edit
+                    oldReponse = element;
+                    break;
+                }
+            }
+            // reset the current user response
+            this.currentUserResponse.processResponseAndSetText();
+            if (oldReponse) {
+                // only disable latest tag when we jump back
+                if (this.currentUserResponse == this.responses[this.responses.length - 1]) {
+                    this.currentUserResponse.hide();
+                }
+                this.currentUserResponse = oldReponse;
+                this.onListUpdate(this.currentUserResponse);
+            }
+        };
+        ChatList.prototype.onListUpdate = function (chatResponse) {
+            var _this = this;
+            setTimeout(function () {
+                _this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatListEvents.CHATLIST_UPDATED, {
+                    detail: _this
+                }));
+                chatResponse.show();
+                _this.scrollListTo(chatResponse);
+            }, 0);
         };
         /**
-        * @name setCurrentResponse
+        * @name setCurrentUserResponse
         * Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
         * reponse: FlowDTO
         */
-        ChatList.prototype.setCurrentResponse = function (response) {
-            this.flowDTOFromUserInputUpdate = response;
+        ChatList.prototype.setCurrentUserResponse = function (dto) {
+            this.flowDTOFromUserInputUpdate = dto;
             if (!this.flowDTOFromUserInputUpdate.text) {
-                if (response.input.currentTag.type == "group")
+                if (dto.input.currentTag.type == "group") {
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing-group");
-                else if (response.input.currentTag.type != "password")
+                }
+                else if (dto.input.currentTag.type != "password")
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-            this.scrollListToBottom();
+            this.scrollListTo();
         };
         ChatList.prototype.updateThumbnail = function (robot, img) {
             cf.Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
@@ -3401,7 +3583,6 @@ var cf;
             }
         };
         ChatList.prototype.createResponse = function (isRobotReponse, currentTag, value) {
-            var _this = this;
             if (value === void 0) { value = null; }
             var response = new cf.ChatResponse({
                 // image: null,
@@ -3411,26 +3592,20 @@ var cf;
                 response: value,
                 image: isRobotReponse ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image"),
             });
-            if (!this.responses)
-                this.responses = [];
             this.responses.push(response);
             this.currentResponse = response;
-            if (!isRobotReponse)
-                this.currentUserResponse = this.currentResponse;
             var scrollable = this.el.querySelector("scrollable");
             scrollable.appendChild(this.currentResponse.el);
-            setTimeout(function () {
-                _this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatListEvents.CHATLIST_UPDATED, {
-                    detail: _this
-                }));
-                _this.scrollListToBottom();
-            }, 0);
+            this.onListUpdate(response);
+            return response;
         };
-        ChatList.prototype.scrollListToBottom = function () {
+        ChatList.prototype.scrollListTo = function (response) {
+            if (response === void 0) { response = null; }
             try {
                 var scrollable_1 = this.el.querySelector("scrollable");
-                scrollable_1.scrollTop = 1000000000;
-                setTimeout(function () { return scrollable_1.scrollTop = 1000000000; }, 100);
+                var y_1 = response ? response.el.offsetTop - 50 : 1000000000;
+                scrollable_1.scrollTop = y_1;
+                setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
             }
             catch (e) {
             }
@@ -3528,6 +3703,7 @@ var cf;
                 }
                 // go on with the flow
                 if (isTagValid) {
+                    // do the normal flow..
                     cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.FlowEvents.USER_INPUT_UPDATE, appDTO);
                     // update to latest DTO because values can be changed in validation flow...
                     appDTO = appDTO.input.getFlowDTO();
@@ -3589,7 +3765,8 @@ var cf;
         */
         FlowManager.prototype.editTag = function (tag) {
             this.savedStep = this.step - 1;
-            this.startFrom(tag);
+            this.step = this.tags.indexOf(tag); // === this.currentTag
+            this.validateStepAndUpdate();
         };
         FlowManager.prototype.skipStep = function () {
             this.nextStep();
@@ -3602,7 +3779,13 @@ var cf;
                 }
                 else {
                     this.step %= this.maxSteps;
-                    this.showStep();
+                    if (this.currentTag.disabled) {
+                        // check if current tag has become or is disabled, if it is, then skip step.
+                        this.skipStep();
+                    }
+                    else {
+                        this.showStep();
+                    }
                 }
             }
         };
@@ -3610,16 +3793,10 @@ var cf;
             if (this.stopped)
                 return;
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.FlowEvents.FLOW_UPDATE, this.currentTag);
-            if (this.currentTag.disabled) {
-                // check if current tag has become or is disabled, if it is, then skip step.
-                this.skipStep();
-            }
-            else {
-                this.currentTag.refresh();
-                this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
-                    detail: this.currentTag
-                }));
-            }
+            this.currentTag.refresh();
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
+                detail: this.currentTag
+            }));
         };
         return FlowManager;
     }());

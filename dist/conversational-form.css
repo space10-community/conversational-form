@@ -28,7 +28,7 @@
 .conversational-form:before {
   content: "";
   width: 100%;
-  height: 148px;
+  height: 50px;
   pointer-events: none;
   background: -webkit-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
   background: -moz-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
@@ -77,6 +77,7 @@
   padding: 0px 20px;
   position: absolute;
   width: 100%;
+  min-height: 100%;
   max-height: 100%;
   bottom: 0px;
   height: auto;
@@ -1367,6 +1368,565 @@ cf-list-button:after {
   }
 }
 
+cf-chat-response {
+  display: table;
+  max-width: 50%;
+  min-width: 120px;
+  width: auto;
+  position: relative;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding-left: 34px;
+  padding-top: 16px;
+  color: #aaafb0;
+  margin-left: 0px;
+  margin-right: auto;
+  word-break: break-all;
+}
+cf-chat-response.can-edit {
+  cursor: pointer;
+}
+cf-chat-response.can-edit:hover {
+  color: #7d8586;
+}
+cf-chat-response.can-edit:hover text {
+  background: #f2f9fe;
+}
+cf-chat-response.user {
+  margin-right: 0px;
+  margin-left: auto;
+  padding-left: 0;
+  padding-right: 34px;
+  color: #1b9bfc;
+}
+cf-chat-response.user thumb {
+  left: auto;
+  right: 0px;
+}
+cf-chat-response.user text {
+  border-radius: 20px 0px 20px 20px;
+  background: #e6f3fe;
+  -webkit-transform-origin: 100% 0%;
+  -moz-transform-origin: 100% 0%;
+  -o-transform-origin: 100% 0%;
+  -ms-transform-origin: 100% 0%;
+  transform-origin: 100% 0%;
+  -webkit-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+  -moz-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+  -o-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+  -ms-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+  transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+}
+cf-chat-response.user text thinking {
+  left: 24px;
+  right: auto;
+}
+cf-chat-response.user text thinking span:nth-child(1) {
+  -webkit-animation-delay: 0.666666666666667s;
+  -moz-animation-delay: 0.666666666666667s;
+  -o-animation-delay: 0.666666666666667s;
+  -ms-animation-delay: 0.666666666666667s;
+  animation-delay: 0.666666666666667s;
+}
+cf-chat-response.user text thinking span:nth-child(2) {
+  -webkit-animation-delay: 1.333333333333333s;
+  -moz-animation-delay: 1.333333333333333s;
+  -o-animation-delay: 1.333333333333333s;
+  -ms-animation-delay: 1.333333333333333s;
+  animation-delay: 1.333333333333333s;
+}
+cf-chat-response.user text thinking span:nth-child(3) {
+  -webkit-animation-delay: 2s;
+  -moz-animation-delay: 2s;
+  -o-animation-delay: 2s;
+  -ms-animation-delay: 2s;
+  animation-delay: 2s;
+}
+cf-chat-response.user.peak-thumb thumb {
+  -webkit-transform: scale(1, 1) translateY(0px);
+  -moz-transform: scale(1, 1) translateY(0px);
+  -o-transform: scale(1, 1) translateY(0px);
+  -ms-transform: scale(1, 1) translateY(0px);
+  transform: scale(1, 1) translateY(0px);
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.conversational-form--enable-animation cf-chat-response.user.peak-thumb thumb {
+  -webkit-transition-delay: 0s, 0s, 0s;
+  -moz-transition-delay: 0s, 0s, 0s;
+  -o-transition-delay: 0s, 0s, 0s;
+  -ms-transition-delay: 0s, 0s, 0s;
+  transition-delay: 0s, 0s, 0s;
+}
+cf-chat-response.disabled {
+  pointer-events: none;
+  color: #bfc3c4;
+}
+cf-chat-response.disabled text {
+  background: #f2f9fe;
+}
+cf-chat-response text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  min-height: 40px;
+  background: #f8f8f8;
+  border-radius: 0px 20px 20px 20px;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  white-space: pre-wrap;
+  word-break: break-word;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  -o-transform-origin: 0% 0%;
+  -ms-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+  -webkit-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+  -moz-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+  -o-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+  -ms-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+  transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+  will-change: transform, opacity, background;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  height: auto;
+}
+.conversational-form--enable-animation cf-chat-response text {
+  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+cf-chat-response text > div {
+  display: inline-block;
+}
+cf-chat-response text:not(.contains-image) {
+  padding: 12px 24px 12px 24px;
+}
+cf-chat-response text.contains-image > div {
+  max-width: 140px;
+  text-align: left;
+  padding-bottom: 10px;
+}
+cf-chat-response text.contains-image > div > span {
+  padding-left: 24px;
+}
+cf-chat-response text.contains-image > div > img {
+  padding-bottom: 5px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 4px;
+}
+cf-chat-response text:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  padding-right: 20px;
+}
+cf-chat-response text thinking {
+  position: absolute;
+  top: 6px;
+  left: 24px;
+  display: table;
+  font-size: 150%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+cf-chat-response text thinking span:nth-child(1) {
+  -webkit-animation: dot-fade 1s linear 0.333333333333333s infinite;
+  -moz-animation: dot-fade 1s linear 0.333333333333333s infinite;
+  -o-animation: dot-fade 1s linear 0.333333333333333s infinite;
+  -ms-animation: dot-fade 1s linear 0.333333333333333s infinite;
+  animation: dot-fade 1s linear 0.333333333333333s infinite;
+}
+cf-chat-response text thinking span:nth-child(2) {
+  -webkit-animation: dot-fade 1s linear 0.666666666666667s infinite;
+  -moz-animation: dot-fade 1s linear 0.666666666666667s infinite;
+  -o-animation: dot-fade 1s linear 0.666666666666667s infinite;
+  -ms-animation: dot-fade 1s linear 0.666666666666667s infinite;
+  animation: dot-fade 1s linear 0.666666666666667s infinite;
+}
+cf-chat-response text thinking span:nth-child(3) {
+  -webkit-animation: dot-fade 1s linear 1s infinite;
+  -moz-animation: dot-fade 1s linear 1s infinite;
+  -o-animation: dot-fade 1s linear 1s infinite;
+  -ms-animation: dot-fade 1s linear 1s infinite;
+  animation: dot-fade 1s linear 1s infinite;
+}
+cf-chat-response text svg.cf-icon-file {
+  width: 10px;
+  height: auto;
+  display: inline-block;
+  margin-right: 7px;
+}
+cf-chat-response thumb {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  background-position: 50% 50%;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  -webkit-transform: scale(0.001, 0.001) translateY(50px);
+  -moz-transform: scale(0.001, 0.001) translateY(50px);
+  -o-transform: scale(0.001, 0.001) translateY(50px);
+  -ms-transform: scale(0.001, 0.001) translateY(50px);
+  transform: scale(0.001, 0.001) translateY(50px);
+  will-change: transform, opacity;
+}
+.conversational-form--enable-animation cf-chat-response thumb {
+  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+}
+cf-chat-response.show text {
+  -webkit-transform: translateY(0px) translateX(0px) scale(1, 1);
+  -moz-transform: translateY(0px) translateX(0px) scale(1, 1);
+  -o-transform: translateY(0px) translateX(0px) scale(1, 1);
+  -ms-transform: translateY(0px) translateX(0px) scale(1, 1);
+  transform: translateY(0px) translateX(0px) scale(1, 1);
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.conversational-form--enable-animation cf-chat-response.show text {
+  -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition-delay: 0.1875s, 0.1875s, 0s;
+  -moz-transition-delay: 0.1875s, 0.1875s, 0s;
+  -o-transition-delay: 0.1875s, 0.1875s, 0s;
+  -ms-transition-delay: 0.1875s, 0.1875s, 0s;
+  transition-delay: 0.1875s, 0.1875s, 0s;
+}
+cf-chat-response.show text[value-added] {
+  will-change: auto;
+}
+.conversational-form--enable-animation cf-chat-response.show text[value-added] {
+  -webkit-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  -moz-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  -o-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  -ms-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+cf-chat-response.show thumb {
+  -webkit-transform: scale(1, 1) translateY(0px);
+  -moz-transform: scale(1, 1) translateY(0px);
+  -o-transform: scale(1, 1) translateY(0px);
+  -ms-transform: scale(1, 1) translateY(0px);
+  transform: scale(1, 1) translateY(0px);
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.conversational-form--enable-animation cf-chat-response.show thumb {
+  -webkit-transition-delay: 0s, 0s, 0s;
+  -moz-transition-delay: 0s, 0s, 0s;
+  -o-transition-delay: 0s, 0s, 0s;
+  -ms-transition-delay: 0s, 0s, 0s;
+  transition-delay: 0s, 0s, 0s;
+}
+@-moz-keyframes dot-fade {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  15.1111% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  33.333% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-webkit-keyframes dot-fade {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  15.1111% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  33.333% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-o-keyframes dot-fade {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  15.1111% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  33.333% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@keyframes dot-fade {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  15.1111% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  33.333% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-moz-keyframes bounce {
+  0% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  50% {
+    -webkit-transform: scale(1.05, 1.05);
+    -moz-transform: scale(1.05, 1.05);
+    -o-transform: scale(1.05, 1.05);
+    -ms-transform: scale(1.05, 1.05);
+    transform: scale(1.05, 1.05);
+    opacity: 0.85;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+    filter: alpha(opacity=85);
+  }
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-webkit-keyframes bounce {
+  0% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  50% {
+    -webkit-transform: scale(1.05, 1.05);
+    -moz-transform: scale(1.05, 1.05);
+    -o-transform: scale(1.05, 1.05);
+    -ms-transform: scale(1.05, 1.05);
+    transform: scale(1.05, 1.05);
+    opacity: 0.85;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+    filter: alpha(opacity=85);
+  }
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-o-keyframes bounce {
+  0% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  50% {
+    -webkit-transform: scale(1.05, 1.05);
+    -moz-transform: scale(1.05, 1.05);
+    -o-transform: scale(1.05, 1.05);
+    -ms-transform: scale(1.05, 1.05);
+    transform: scale(1.05, 1.05);
+    opacity: 0.85;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+    filter: alpha(opacity=85);
+  }
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@keyframes bounce {
+  0% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  50% {
+    -webkit-transform: scale(1.05, 1.05);
+    -moz-transform: scale(1.05, 1.05);
+    -o-transform: scale(1.05, 1.05);
+    -ms-transform: scale(1.05, 1.05);
+    transform: scale(1.05, 1.05);
+    opacity: 0.85;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+    filter: alpha(opacity=85);
+  }
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+
+cf-chat {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-box-lines: single;
+  -moz-box-lines: single;
+  -o-box-lines: single;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -o-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-box-align: baseline;
+  -moz-box-align: baseline;
+  -o-box-align: baseline;
+  -ms-flex-align: baseline;
+  -webkit-align-items: baseline;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+cf-chat scrollable {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  min-height: 40px;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  padding-top: 40px;
+}
+
 .cf-button {
   background: #fff;
   cursor: pointer;
@@ -1775,538 +2335,4 @@ cf-upload-file-progress cf-upload-file-progress-bar {
 }
 cf-upload-file-progress cf-upload-file-progress-bar.loaded {
   border-radius: 7px 7px 7px 7px;
-}
-
-cf-chat-response {
-  display: table;
-  max-width: 50%;
-  min-width: 120px;
-  width: auto;
-  position: relative;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  backface-visibility: hidden;
-  padding-left: 34px;
-  padding-top: 16px;
-  color: #aaafb0;
-  margin-left: 0px;
-  margin-right: auto;
-  word-break: break-all;
-}
-cf-chat-response.can-edit {
-  cursor: pointer;
-}
-cf-chat-response.can-edit:hover {
-  color: #7d8586;
-}
-cf-chat-response.can-edit:hover text {
-  background: #f2f9fe;
-}
-cf-chat-response.user {
-  margin-right: 0px;
-  margin-left: auto;
-  padding-left: 0;
-  padding-right: 34px;
-  color: #1b9bfc;
-}
-cf-chat-response.user thumb {
-  left: auto;
-  right: 0px;
-}
-cf-chat-response.user text {
-  border-radius: 20px 0px 20px 20px;
-  background: #e6f3fe;
-  -webkit-transform-origin: 100% 0%;
-  -moz-transform-origin: 100% 0%;
-  -o-transform-origin: 100% 0%;
-  -ms-transform-origin: 100% 0%;
-  transform-origin: 100% 0%;
-  -webkit-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-  -moz-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-  -o-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-  -ms-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-  transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-}
-cf-chat-response.user text thinking {
-  left: 24px;
-  right: auto;
-}
-cf-chat-response.user text thinking span:nth-child(1) {
-  -webkit-animation-delay: 0.666666666666667s;
-  -moz-animation-delay: 0.666666666666667s;
-  -o-animation-delay: 0.666666666666667s;
-  -ms-animation-delay: 0.666666666666667s;
-  animation-delay: 0.666666666666667s;
-}
-cf-chat-response.user text thinking span:nth-child(2) {
-  -webkit-animation-delay: 1.333333333333333s;
-  -moz-animation-delay: 1.333333333333333s;
-  -o-animation-delay: 1.333333333333333s;
-  -ms-animation-delay: 1.333333333333333s;
-  animation-delay: 1.333333333333333s;
-}
-cf-chat-response.user text thinking span:nth-child(3) {
-  -webkit-animation-delay: 2s;
-  -moz-animation-delay: 2s;
-  -o-animation-delay: 2s;
-  -ms-animation-delay: 2s;
-  animation-delay: 2s;
-}
-cf-chat-response.user.peak-thumb thumb {
-  -webkit-transform: scale(1, 1) translateY(0px);
-  -moz-transform: scale(1, 1) translateY(0px);
-  -o-transform: scale(1, 1) translateY(0px);
-  -ms-transform: scale(1, 1) translateY(0px);
-  transform: scale(1, 1) translateY(0px);
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-.conversational-form--enable-animation cf-chat-response.user.peak-thumb thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
-}
-cf-chat-response.disabled {
-  pointer-events: none;
-  color: #bfc3c4;
-}
-cf-chat-response.disabled text {
-  background: #f2f9fe;
-}
-cf-chat-response text {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  display: block;
-  position: relative;
-  padding: 12px 24px 12px 24px;
-  min-height: 40px;
-  background: #f8f8f8;
-  border-radius: 0px 20px 20px 20px;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  white-space: pre-wrap;
-  word-break: break-word;
-  -webkit-transform-origin: 0% 0%;
-  -moz-transform-origin: 0% 0%;
-  -o-transform-origin: 0% 0%;
-  -ms-transform-origin: 0% 0%;
-  transform-origin: 0% 0%;
-  -webkit-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-  -moz-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-  -o-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-  -ms-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-  transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-  will-change: transform, opacity, background;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  backface-visibility: hidden;
-  height: auto;
-}
-.conversational-form--enable-animation cf-chat-response text {
-  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-cf-chat-response text:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  padding-right: 20px;
-}
-cf-chat-response text thinking {
-  position: absolute;
-  top: 6px;
-  left: 24px;
-  display: table;
-  font-size: 150%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-cf-chat-response text thinking span:nth-child(1) {
-  -webkit-animation: dot-fade 1s linear 0.333333333333333s infinite;
-  -moz-animation: dot-fade 1s linear 0.333333333333333s infinite;
-  -o-animation: dot-fade 1s linear 0.333333333333333s infinite;
-  -ms-animation: dot-fade 1s linear 0.333333333333333s infinite;
-  animation: dot-fade 1s linear 0.333333333333333s infinite;
-}
-cf-chat-response text thinking span:nth-child(2) {
-  -webkit-animation: dot-fade 1s linear 0.666666666666667s infinite;
-  -moz-animation: dot-fade 1s linear 0.666666666666667s infinite;
-  -o-animation: dot-fade 1s linear 0.666666666666667s infinite;
-  -ms-animation: dot-fade 1s linear 0.666666666666667s infinite;
-  animation: dot-fade 1s linear 0.666666666666667s infinite;
-}
-cf-chat-response text thinking span:nth-child(3) {
-  -webkit-animation: dot-fade 1s linear 1s infinite;
-  -moz-animation: dot-fade 1s linear 1s infinite;
-  -o-animation: dot-fade 1s linear 1s infinite;
-  -ms-animation: dot-fade 1s linear 1s infinite;
-  animation: dot-fade 1s linear 1s infinite;
-}
-cf-chat-response text svg.cf-icon-file {
-  width: 10px;
-  height: auto;
-  display: inline-block;
-  margin-right: 7px;
-}
-cf-chat-response thumb {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  background-position: 50% 50%;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  -webkit-transform-origin: 50% 50%;
-  -moz-transform-origin: 50% 50%;
-  -o-transform-origin: 50% 50%;
-  -ms-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
-  -webkit-transform: scale(0.001, 0.001) translateY(50px);
-  -moz-transform: scale(0.001, 0.001) translateY(50px);
-  -o-transform: scale(0.001, 0.001) translateY(50px);
-  -ms-transform: scale(0.001, 0.001) translateY(50px);
-  transform: scale(0.001, 0.001) translateY(50px);
-  will-change: transform, opacity;
-}
-.conversational-form--enable-animation cf-chat-response thumb {
-  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
-  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
-  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
-  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
-  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
-}
-cf-chat-response.show text {
-  -webkit-transform: translateY(0px) translateX(0px) scale(1, 1);
-  -moz-transform: translateY(0px) translateX(0px) scale(1, 1);
-  -o-transform: translateY(0px) translateX(0px) scale(1, 1);
-  -ms-transform: translateY(0px) translateX(0px) scale(1, 1);
-  transform: translateY(0px) translateX(0px) scale(1, 1);
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-.conversational-form--enable-animation cf-chat-response.show text {
-  -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
-  -webkit-transition-delay: 0.1875s, 0.1875s, 0s;
-  -moz-transition-delay: 0.1875s, 0.1875s, 0s;
-  -o-transition-delay: 0.1875s, 0.1875s, 0s;
-  -ms-transition-delay: 0.1875s, 0.1875s, 0s;
-  transition-delay: 0.1875s, 0.1875s, 0s;
-}
-cf-chat-response.show text[value-added] {
-  will-change: auto;
-}
-.conversational-form--enable-animation cf-chat-response.show text[value-added] {
-  -webkit-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -moz-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -o-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -ms-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-}
-cf-chat-response.show thumb {
-  -webkit-transform: scale(1, 1) translateY(0px);
-  -moz-transform: scale(1, 1) translateY(0px);
-  -o-transform: scale(1, 1) translateY(0px);
-  -ms-transform: scale(1, 1) translateY(0px);
-  transform: scale(1, 1) translateY(0px);
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-.conversational-form--enable-animation cf-chat-response.show thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
-}
-@-moz-keyframes dot-fade {
-  0% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  15.1111% {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-  }
-  33.333% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  100% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@-webkit-keyframes dot-fade {
-  0% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  15.1111% {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-  }
-  33.333% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  100% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@-o-keyframes dot-fade {
-  0% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  15.1111% {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-  }
-  33.333% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  100% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@keyframes dot-fade {
-  0% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  15.1111% {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-  }
-  33.333% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  100% {
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@-moz-keyframes bounce {
-  0% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  50% {
-    -webkit-transform: scale(1.05, 1.05);
-    -moz-transform: scale(1.05, 1.05);
-    -o-transform: scale(1.05, 1.05);
-    -ms-transform: scale(1.05, 1.05);
-    transform: scale(1.05, 1.05);
-    opacity: 0.85;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-    filter: alpha(opacity=85);
-  }
-  100% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@-webkit-keyframes bounce {
-  0% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  50% {
-    -webkit-transform: scale(1.05, 1.05);
-    -moz-transform: scale(1.05, 1.05);
-    -o-transform: scale(1.05, 1.05);
-    -ms-transform: scale(1.05, 1.05);
-    transform: scale(1.05, 1.05);
-    opacity: 0.85;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-    filter: alpha(opacity=85);
-  }
-  100% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@-o-keyframes bounce {
-  0% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  50% {
-    -webkit-transform: scale(1.05, 1.05);
-    -moz-transform: scale(1.05, 1.05);
-    -o-transform: scale(1.05, 1.05);
-    -ms-transform: scale(1.05, 1.05);
-    transform: scale(1.05, 1.05);
-    opacity: 0.85;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-    filter: alpha(opacity=85);
-  }
-  100% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-@keyframes bounce {
-  0% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-  50% {
-    -webkit-transform: scale(1.05, 1.05);
-    -moz-transform: scale(1.05, 1.05);
-    -o-transform: scale(1.05, 1.05);
-    -ms-transform: scale(1.05, 1.05);
-    transform: scale(1.05, 1.05);
-    opacity: 0.85;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-    filter: alpha(opacity=85);
-  }
-  100% {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
-  }
-}
-
-cf-chat {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  -o-box-orient: vertical;
-  -webkit-box-lines: single;
-  -moz-box-lines: single;
-  -o-box-lines: single;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
-  flex-flow: column nowrap;
-  -webkit-box-pack: end;
-  -moz-box-pack: end;
-  -o-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-  -webkit-box-align: baseline;
-  -moz-box-align: baseline;
-  -o-box-align: baseline;
-  -ms-flex-align: baseline;
-  -webkit-align-items: baseline;
-  align-items: baseline;
-}
-cf-chat scrollable {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-  overflow-y: auto;
-  margin-bottom: 20px;
 }
