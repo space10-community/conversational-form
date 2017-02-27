@@ -33,7 +33,8 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		public version: string = "pre-0.9.1";
+		public version: string = "0.9.1";
+		private cdnPath: string = "//conversational-form-091-0iznjsw.stackpathdns.com/";
 
 		public static animationsEnabled: boolean = true;
 
@@ -133,7 +134,7 @@ namespace cf {
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
-				const githubMasterUrl: string = "//conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.css";
+				const githubMasterUrl: string = this.cdnPath + "conversational-form.min.css";
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
@@ -332,7 +333,8 @@ namespace cf {
 			innerWrap.appendChild(this.chatList.el);
 
 			this.userInput = new UserInput({
-				eventTarget: this.eventTarget
+				eventTarget: this.eventTarget,
+				cfReference: this
 			});
 
 			innerWrap.appendChild(this.userInput.el);

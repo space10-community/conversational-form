@@ -15,7 +15,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://conversational-form-091-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
@@ -224,6 +224,11 @@ We welcome contributions in the form of bug reports, pull requests, or thoughtfu
 
 ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
 
+## Get the source
+### Bower
+
+	$ bower install conversational-form --save
+
 ## Build the source
 
 ### NPM
@@ -269,6 +274,14 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	$ cd gulp-tasks
 	$ npm install --save-dev XX
 
+### Version log
+User previous versions. These versions are also available through bower and Github tags
+
+[v0.9.0](https://github.com/space10-community/conversational-form/tree/0.9.0)
+```html
+<!-- v0.9.0 -->
+<script type="text/javascript" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
+```
 
 ## Examples and tests
 When you are up and running, you can find a few form tests and examples in the /examples folder.
