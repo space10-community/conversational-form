@@ -1,4 +1,5 @@
 @import "../cf-docs-variables"
+@import "../../../src/styles/mixins/_cf-mixins.styl"
 
 #conversational-form-docs
 	&.menu-toggle
@@ -24,22 +25,19 @@
 			display none
 
 		h2
-			font-weight 900
-			font-size 16px
+			font-weight $font-weight-bold
 			transform translateY(-50%)
 			position absolute
 			left 24px
 			top 50%
+			font-size responsivePXValue(14, 16)
 
-			+below(374px)
-				font-size 14px
-
-		button.switch-btn
+		.switch-btn
 			position absolute
 			right 63px
 			top 16px
 
-		button.hamburger-btn
+		.hamburger-btn
 			position absolute
 			height 14px
 			width 29px
