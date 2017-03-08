@@ -383,6 +383,8 @@ namespace cf {
 		public doSubmitForm(){
 			this.el.classList.add("done");
 
+			this.userInput.reset()
+
 			if(this.submitCallback){
 				// remove should be called in the submitCallback
 				this.submitCallback();
