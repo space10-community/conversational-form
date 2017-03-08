@@ -38,7 +38,7 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
 
 	if(isDocs){
-		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus', 'styles-build']);
+		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['styles-build']);
 	}else{
 		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
 	}
@@ -46,5 +46,5 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 
 // Default tasks
 global.gulp.task('default', ['watch']);
-global.gulp.task('build', ['bower', 'scripts-build', 'stylus', 'styles-build', 'copy-images']);
-global.gulp.task('dist', ['bower', 'scripts-build', 'stylus', 'styles-build', 'copy-images']);
+global.gulp.task('build', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
+global.gulp.task('dist', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
