@@ -215,7 +215,7 @@
 
 					<fieldset>
 						<label for="email">Email</label>
-						<input cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="email" id="your-email">
+						<input pattern=".+\@.+\..+" cf-error="E-mail not correct" cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="email" id="your-email">
 					</fieldset>
 
 					<fieldset>
