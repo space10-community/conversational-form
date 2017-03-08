@@ -164,11 +164,10 @@
 			</section>
 
 			<section id="form" role="form">
-				<!-- <form cf-form cf-prevent-autofocus>-->
-				<form cf-prevent-autofocus>
+				<form id="cf-form" cf-prevent-autofocus>
 					<fieldset>
 						<label for="name">What's your name?</label>
-						<input cf-questions="Hi there! What's your name?" type="text" class="form-control" name="name" id="name">
+						<input required cf-questions="Hi there! What's your name?" type="text" class="form-control" name="name" id="name">
 					</fieldset>
 
 					<fieldset>
@@ -231,7 +230,7 @@
 				</form>
 			</section>
 
-			<section id="cf" role="cf-context" cf-context>
+			<section id="cf-context" role="cf-context" cf-context>
 				
 			</section>
 		</main>
