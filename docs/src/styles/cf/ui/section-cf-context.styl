@@ -3,27 +3,27 @@
 #conversational-form-docs
 	&.cf-toggle:not(.menu-toggle)
 		section[role="cf-context"]
-			transform translateX(0%)
+			pointer-events auto
+			opacity 1
 
 	section[role="cf-context"]
 		position absolute
 		z-index $zIndex-middle
+		pointer-events none
 		overflow hidden
 		height 100%
 		width 100%
 		top 0px
 		left 0px
-		transform translateX(-100%)
-		will-change transform
-		transition transform $anim-time-2 $anim-easeOut
-		backface-visibility hidden
+		opacity 0
+		will-change opacity
+		transition opacity $anim-time-2 $anim-easeOut
 
 		+above($breakpoint-1)
 			width 50%
 			z-index $zIndex-high - 1
 			right 0px
 			left auto
-			transform translateX(100%)
 		
 		.close-btn
 			position absolute
