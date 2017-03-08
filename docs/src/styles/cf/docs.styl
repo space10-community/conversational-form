@@ -1,0 +1,68 @@
+@import "nib"
+@import "rupture"
+@import "cf-docs-variables"
+
+// boilerplate
+global-reset()
+
+button
+	border none
+	background none
+	padding 0
+	margin 0
+
+*
+	outline none
+	-moz-appearance none
+	-webkit-appearance none
+	-webkit-touch-callout none
+	-webkit-user-select none
+	-khtml-user-select none
+	-moz-user-select none
+	-ms-user-select none
+	user-select none
+	-webkit-tap-highlight-color rgba(255, 255, 255, 0)
+
+html, body
+	height 100vh
+	width 100%
+	overflow hidden
+
+#conversational-form-docs
+	font-family Helvetica Neue, Helvetica
+	height 100%
+	width 100%
+	position relative
+	overflow hidden
+
+	> button.switch-btn
+		+above($breakpoint-1)
+			position absolute
+			top 40px
+			z-index $zIndex-high
+			right 32px
+
+			&:after
+				content attr(data-label)
+				display block
+				position absolute
+				left 0px
+				transform translateX(-100%)
+
+		+below($breakpoint-1)
+			display none
+
+
+// 	color $color-white
+
+// #toggle-conversation
+// 	margin-bottom 30px
+// 	border 2px solid #000
+// 	text-transform uppercase
+// 	padding 13px 25px
+// 	font-size 13px
+// 	font-weight 600
+
+// #toggle-conversation:hover, #toggle-conversation.active, #toggle-conversation.active:hover
+// 	border-color #000
+

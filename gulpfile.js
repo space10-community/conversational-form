@@ -11,13 +11,18 @@ require("./gulp-tasks/images");
 require("./gulp-tasks/bower");
 
 //options
-var srcFolder = './src/';
+var isDocs = process.argv.indexOf("--docs") != -1;
+global.isDocs = isDocs;
+
+var rootPath = isDocs ? "./docs/" : "./";
+
+var srcFolder = rootPath + 'src/';
 global.srcFolder = srcFolder;
 
-var buildFolder = './build/';
+var buildFolder = rootPath + 'build/';
 global.buildFolder = buildFolder;
 
-var distFolder = './dist/';
+var distFolder = isDocs ? rootPath + 'build/' : rootPath + 'dist/';
 global.distFolder = distFolder;
 
 // Watch Files For Changes
@@ -32,7 +37,11 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 
 	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
 
-	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
+	if(isDocs){
+		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['styles-build']);
+	}else{
+		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
+	}
 });
 
 // Default tasks

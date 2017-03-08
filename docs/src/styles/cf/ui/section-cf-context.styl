@@ -1,0 +1,35 @@
+@import "../cf-docs-variables"
+
+#conversational-form-docs
+	&.cf-toggle:not(.menu-toggle)
+		section[role="cf-context"]
+			transform translateX(0%)
+
+	section[role="cf-context"]
+		background green
+		position absolute
+		z-index $zIndex-middle
+		height 100%
+		width 100%
+		transform translateX(-100%)
+		will-change transform
+		transition transform $anim-time-2 $anim-easeOut
+
+		+above($breakpoint-1)
+			width 50%
+			z-index $zIndex-high - 1
+			right 0px
+			transform translateX(100%)
+		
+		button.close-btn
+			position absolute
+			z-index $zIndex-high
+			right 24px
+			top 18px
+			width 24px
+			height 24px
+
+			svg
+				width 100%
+				height 100%
+	
