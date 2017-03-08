@@ -380,10 +380,19 @@ namespace cf {
 			this.flowManager.startFrom(index);
 		}
 
+		/**
+		* @name focus
+		* Sets focus on Conversational Form
+		*/
+		public focus(){
+			if(this.userInput)
+				this.userInput.setFocusOnInput();
+		}
+
 		public doSubmitForm(){
 			this.el.classList.add("done");
 
-			this.userInput.reset()
+			this.userInput.reset();
 
 			if(this.submitCallback){
 				// remove should be called in the submitCallback

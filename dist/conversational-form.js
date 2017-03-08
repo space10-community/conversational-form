@@ -273,6 +273,14 @@ var cf;
             }
             this.flowManager.startFrom(index);
         };
+        /**
+        * @name focus
+        * Sets focus on Conversational Form
+        */
+        ConversationalForm.prototype.focus = function () {
+            if (this.userInput)
+                this.userInput.setFocusOnInput();
+        };
         ConversationalForm.prototype.doSubmitForm = function () {
             this.el.classList.add("done");
             this.userInput.reset();
