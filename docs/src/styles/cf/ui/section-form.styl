@@ -1,0 +1,34 @@
+@import "../cf-docs-variables"
+
+#conversational-form-docs
+	section[role="form"]
+		background yellow
+		position absolute
+		top 0px
+		z-index $zIndex-low
+		height 100%
+		width 100%
+
+		+above($breakpoint-1)
+			width 50vw
+			z-index $zIndex-middle
+			right 0px
+			will-change transform
+			transition transform $anim-time-2 $anim-easeOut
+			transform translateX(100%)
+
+			&.show
+				transform translateX(0%)
+		
+		button.close-btn
+			position absolute
+			z-index $zIndex-high - 1
+			right 24px
+			top 18px
+			width 24px
+			height 24px
+
+			svg
+				width 100%
+				height 100%
+	

@@ -268,6 +268,12 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	# compiles distribution files
 	$ gulp dist
 
+	# run docs
+	$ gulp --docs
+
+	# build docs
+	$ gulp build --docs
+
 
 ### install new packages for dev
 
