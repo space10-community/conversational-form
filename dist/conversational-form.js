@@ -13,7 +13,8 @@ var cf;
 (function (cf) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "pre-0.9.1";
+            this.version = "0.9.1";
+            this.cdnPath = "//conversational-form-091-0iznjsw.stackpathdns.com/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
@@ -77,7 +78,7 @@ var cf;
                 // not in development/examples, so inject production css
                 var head = document.head || document.getElementsByTagName("head")[0];
                 var style = document.createElement("link");
-                var githubMasterUrl = "//conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.css";
+                var githubMasterUrl = this.cdnPath + "conversational-form.min.css";
                 style.type = "text/css";
                 style.media = "all";
                 style.setAttribute("rel", "stylesheet");
@@ -232,7 +233,8 @@ var cf;
             });
             innerWrap.appendChild(this.chatList.el);
             this.userInput = new cf.UserInput({
-                eventTarget: this.eventTarget
+                eventTarget: this.eventTarget,
+                cfReference: this
             });
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
@@ -273,6 +275,7 @@ var cf;
         };
         ConversationalForm.prototype.doSubmitForm = function () {
             this.el.classList.add("done");
+            this.userInput.reset();
             if (this.submitCallback) {
                 // remove should be called in the submitCallback
                 this.submitCallback();
@@ -620,9 +623,26 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ControlElement.prototype, "highlight", {
+            get: function () {
+                return this.el.classList.contains("highlight");
+            },
+            set: function (value) {
+                this.el.classList.toggle("highlight", value);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ControlElement.prototype, "focus", {
             get: function () {
                 return this._focus;
+            },
+            set: function (value) {
+                this._focus = value;
+                if (this._focus)
+                    this.el.focus();
+                else
+                    this.el.blur();
             },
             enumerable: true,
             configurable: true
@@ -638,6 +658,7 @@ var cf;
                 else {
                     this.el.classList.add("hide");
                     this.tabIndex = -1;
+                    this.highlight = false;
                 }
             },
             enumerable: true,
@@ -770,6 +791,22 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ControlElements.prototype, "highlighted", {
+            get: function () {
+                if (!this.elements)
+                    return false;
+                var elements = this.getElements();
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (element.highlight) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ControlElements.prototype, "disabled", {
             set: function (value) {
                 if (value)
@@ -830,7 +867,8 @@ var cf;
             var dto = event.detail;
             var userInput = dto.dto.input;
             if (this.active) {
-                var shouldFilter = dto.inputFieldActive;
+                var isNavKey = [cf.Dictionary.keyCodes["left"], cf.Dictionary.keyCodes["right"], cf.Dictionary.keyCodes["down"], cf.Dictionary.keyCodes["up"]].indexOf(dto.keyCode) != -1;
+                var shouldFilter = dto.inputFieldActive && !isNavKey;
                 if (shouldFilter) {
                     // input field is active, so we should filter..
                     var dto_1 = event.detail.dto;
@@ -865,7 +903,7 @@ var cf;
                 }
             }
             if (!userInput.active && this.validateRowColIndexes() && this.tableableRows && (this.rowIndex == 0 || this.rowIndex == 1)) {
-                this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+                this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
             }
             else if (!userInput.active) {
                 userInput.setFocusOnInput();
@@ -893,13 +931,13 @@ var cf;
             this.rowIndex += direction;
             if (this.tableableRows[this.rowIndex]) {
                 // when row index is changed we need to find the closest column element, we cannot expect them to be indexly aligned
-                var oldVector = this.tableableRows[oldRowIndex][this.columnIndex].positionVector;
+                var centerX = this.tableableRows[oldRowIndex] ? this.tableableRows[oldRowIndex][this.columnIndex].positionVector.centerX : 0;
                 var items = this.tableableRows[this.rowIndex];
                 var currentDistance = 10000000000000;
                 for (var i = 0; i < items.length; i++) {
                     var element = items[i];
-                    if (currentDistance > Math.abs(oldVector.centerX - element.positionVector.centerX)) {
-                        currentDistance = Math.abs(oldVector.centerX - element.positionVector.centerX);
+                    if (currentDistance > Math.abs(centerX - element.positionVector.centerX)) {
+                        currentDistance = Math.abs(centerX - element.positionVector.centerX);
                         this.columnIndex = i;
                     }
                 }
@@ -930,6 +968,7 @@ var cf;
                 var itemsVisible = [];
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
+                    element.highlight = false;
                     var elementVisibility = true;
                     // check for all words of input
                     for (var i_1 = 0; i_1 < inputValuesLowerCase.length; i_1++) {
@@ -958,6 +997,19 @@ var cf;
                     this.animateElementsIn();
                 }
                 this.filterListNumberOfVisible = itemsVisible.length;
+                // highlight first item
+                if (value != "" && this.filterListNumberOfVisible > 0)
+                    itemsVisible[0].highlight = true;
+            }
+        };
+        ControlElements.prototype.clickOnHighlighted = function () {
+            var elements = this.getElements();
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+                if (element.highlight) {
+                    element.el.click();
+                    break;
+                }
             }
         };
         ControlElements.prototype.animateElementsIn = function () {
@@ -1031,7 +1083,7 @@ var cf;
             }
             if (this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]) {
                 this.ignoreKeyboardInput = true;
-                this.tableableRows[this.rowIndex][this.columnIndex].el.focus();
+                this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
             }
             else {
                 this.resetTabList();
@@ -1118,17 +1170,21 @@ var cf;
             }
             return dto;
         };
+        ControlElements.prototype.clearTagsAndReset = function () {
+            this.reset();
+            if (this.elements) {
+                while (this.elements.length > 0) {
+                    this.elements.pop().dealloc();
+                }
+            }
+        };
         ControlElements.prototype.buildTags = function (tags) {
             var _this = this;
             this.disabled = false;
             var topList = this.el.parentNode.getElementsByTagName("ul")[0];
             var bottomList = this.el.parentNode.getElementsByTagName("ul")[1];
             // remove old elements
-            if (this.elements) {
-                while (this.elements.length > 0) {
-                    this.elements.pop().dealloc();
-                }
-            }
+            this.clearTagsAndReset();
             this.elements = [];
             for (var i = 0; i < tags.length; i++) {
                 var tag = tags[i];
@@ -2845,6 +2901,7 @@ var cf;
             _this._disabled = false;
             //acts as a fallb ack for ex. shadow dom implementation
             _this._active = false;
+            _this.cfReference = options.cfReference;
             _this.eventTarget = options.eventTarget;
             _this.inputElement = _this.el.getElementsByTagName("textarea")[0];
             _this.onInputFocusCallback = _this.onInputFocus.bind(_this);
@@ -2940,9 +2997,14 @@ var cf;
             value.input = this;
             return value;
         };
+        UserInput.prototype.reset = function () {
+            if (this.controlElements) {
+                this.controlElements.clearTagsAndReset();
+            }
+        };
         UserInput.prototype.onFlowStopped = function () {
             if (this.controlElements)
-                this.controlElements.reset();
+                this.controlElements.clearTagsAndReset();
             this.disabled = true;
             this.visible = false;
         };
@@ -3078,7 +3140,7 @@ var cf;
                 var doesKeyTargetExistInCF = false;
                 var node = event.target.parentNode;
                 while (node != null) {
-                    if (node === window.ConversationalForm.el) {
+                    if (node === this.cfReference.el) {
                         doesKeyTargetExistInCF = true;
                         break;
                     }
@@ -3174,19 +3236,25 @@ var cf;
         };
         UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
-            if (!this._currentTag) {
-                // happens when a form is empty, so just play along and submit response to chatlist..
-                this.eventTarget.cf.addUserChatResponse(this.inputElement.value);
+            if (this.active && this.controlElements.highlighted) {
+                // active input field and focus on control elements happens when a control element is highlighted
+                this.controlElements.clickOnHighlighted();
             }
             else {
-                // we need to check if current tag is file
-                if (this._currentTag.type == "file" && event) {
-                    // trigger <input type="file" but only when it's from clicking button
-                    this.controlElements.getElement(0).triggerFileSelect();
+                if (!this._currentTag) {
+                    // happens when a form is empty, so just play along and submit response to chatlist..
+                    this.eventTarget.cf.addUserChatResponse(this.inputElement.value);
                 }
                 else {
-                    // for groups, we expect that there is always a default value set
-                    this.doSubmit();
+                    // we need to check if current tag is file
+                    if (this._currentTag.type == "file" && event) {
+                        // trigger <input type="file" but only when it's from clicking button
+                        this.controlElements.getElement(0).triggerFileSelect();
+                    }
+                    else {
+                        // for groups, we expect that there is always a default value set
+                        this.doSubmit();
+                    }
                 }
             }
         };

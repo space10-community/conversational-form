@@ -128,6 +128,7 @@
   filter: none;
 }
 
+
 cf-info {
   position: absolute;
   pointer-events: none;
@@ -2015,8 +2016,7 @@ cf-chat scrollable {
   margin-right: 10px;
 }
 .cf-button:hover,
-.cf-button:focus,
-.cf-button.highlight {
+.cf-button:focus {
   background: rgba(13,131,255,0.1);
 }
 .cf-button:active {
