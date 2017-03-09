@@ -42,27 +42,35 @@ global.gulp.task('stylus', function() {
 });
 
 global.gulp.task('styles-build', ['stylus'], function(){
-	var src = [
-		global.buildFolder + "**/*.css",
-		global.buildFolder + "cf/cf.css",
-		global.buildFolder + "cf/ui/control-elements/cf-control-elements.css",
-		global.buildFolder + "cf/ui/control-elements/cf-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-radio-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-checkbox-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-options-list.css",
-		global.buildFolder + "cf/ui/control-elements/cf-upload-file-ui.css",
-		global.buildFolder + "cf/ui/cf-input.css",
-		global.buildFolder + "cf/ui/cf-info.css",
-		global.buildFolder + "cf/ui/cf-list-button.css",
-		global.buildFolder + "cf/ui/chat/cf-chat-response.css",
-		global.buildFolder + "cf/ui/chat/cf-chat.css",
-		
-		"!" + global.buildFolder + "conversational-form.css",
-		"!" + global.distFolder + "conversational-form.min.css",
-	]
+	if(global.isDocs){
+		var src = [
+			global.buildFolder + "**/*.css",
+			"!" + global.buildFolder + "conversational-form-docs.css",
+			"!" + global.buildFolder + "conversational-form-docs.min.css",
+		]
+	}else{
+		var src = [
+			global.buildFolder + "**/*.css",
+			global.buildFolder + "cf/cf.css",
+			global.buildFolder + "cf/ui/control-elements/cf-control-elements.css",
+			global.buildFolder + "cf/ui/control-elements/cf-button.css",
+			global.buildFolder + "cf/ui/control-elements/cf-radio-button.css",
+			global.buildFolder + "cf/ui/control-elements/cf-checkbox-button.css",
+			global.buildFolder + "cf/ui/control-elements/cf-options-list.css",
+			global.buildFolder + "cf/ui/control-elements/cf-upload-file-ui.css",
+			global.buildFolder + "cf/ui/cf-input.css",
+			global.buildFolder + "cf/ui/cf-info.css",
+			global.buildFolder + "cf/ui/cf-list-button.css",
+			global.buildFolder + "cf/ui/chat/cf-chat-response.css",
+			global.buildFolder + "cf/ui/chat/cf-chat.css",
+			
+			"!" + global.buildFolder + "conversational-form.css",
+			"!" + global.distFolder + "conversational-form.min.css",
+		]
+	}
 
 	var stream = global.gulp.src(src)
-		.pipe(concat('conversational-form.css'))
+		.pipe(concat(global.isDocs ? 'conversational-form-docs.css' : 'conversational-form.css'))
 		.pipe(global.gulp.dest(global.distFolder))
 		.pipe(cleanCSS())
 		.pipe(rename({suffix: '.min'}))

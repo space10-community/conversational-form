@@ -16,6 +16,7 @@
     "gulp-prompt": "*",
     "gulp-rename": "^1.2.2",
     "gulp-stylus": "*",
+    "gulp-sync": "^0.1.4",
     "gulp-typescript": "*",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "*",
