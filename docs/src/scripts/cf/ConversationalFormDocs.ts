@@ -111,9 +111,9 @@ class ConversationalFormDocs{
 								const xhr: XMLHttpRequest = new XMLHttpRequest();
 								xhr.addEventListener("load", () =>{
 									this.cf.addRobotChatResponse("We received your submission 🙌");
-									setTimeout(() => success(), 2000);
+									success();
 								});
-								xhr.open('POST', "https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B");
+								xhr.open('POST', document.getElementById("cf-form").getAttribute("action"));
 								xhr.setRequestHeader("accept", "application/javascript");
 								xhr.setRequestHeader("Content-Type", "application/json");
 								xhr.send(JSON.stringify(this.cf.getFormData(true)));

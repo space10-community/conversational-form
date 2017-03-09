@@ -19,6 +19,9 @@
 				.slider:before
 					transform translateX(26px)
 
+					+above($breakpoint-1)
+						transform translateX(39px)
+
 	.switch-btn
 		font-size 13px
 		font-weight $font-weight-bold
@@ -50,6 +53,11 @@
 			display inline-block
 			width 56px
 			height 28px
+
+			+above($breakpoint-1)
+				width 80px
+				height 40px
+
 			padding 0
 			margin 0
 			border none
@@ -84,5 +92,12 @@
 					width 20px
 					left 4px
 					bottom 4px
+
+					+above($breakpoint-1)
+						height 30px
+						width 30px
+						left 5px
+						bottom 5px
+
 					background-color white
 					transition transform $anim-time-2 $anim-easeOut
