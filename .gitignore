@@ -2,5 +2,5 @@
 node_modules
 bower_components
 .vscode
-build
+/build
 src/scripts/typings
