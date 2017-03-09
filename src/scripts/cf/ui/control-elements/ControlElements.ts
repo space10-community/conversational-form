@@ -525,6 +525,16 @@ namespace cf {
 			return dto;
 		}
 
+		public clearTagsAndReset(){
+			this.reset();
+
+			if(this.elements){
+				while(this.elements.length > 0){
+					this.elements.pop().dealloc();
+				}
+			}
+		}
+
 		public buildTags(tags: Array<ITag>){
 			this.disabled = false;
 
@@ -532,11 +542,7 @@ namespace cf {
 			const bottomList: HTMLUListElement = (<HTMLUListElement> this.el.parentNode).getElementsByTagName("ul")[1];
 
 			// remove old elements
-			if(this.elements ){
-				while(this.elements.length > 0){
-					this.elements.pop().dealloc();
-				}
-			}
+			this.clearTagsAndReset();
 
 			this.elements = [];
 

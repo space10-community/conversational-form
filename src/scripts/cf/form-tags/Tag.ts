@@ -90,7 +90,7 @@ namespace cf {
 		}
 
 		public get hasImage (): boolean{
-			return !!this.domElement.getAttribute("cf-image") || this.domElement.getAttribute("cf-image") == "";
+			return this.domElement.hasAttribute("cf-image");
 		}
 
 		public get disabled (): boolean{

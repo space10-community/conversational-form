@@ -1,0 +1,3 @@
+responsivePXValue(min, max, minSize = 320, maxSize = 1600)
+	//calc( min + ((max - min) * ((100vw - minSize) / (maxSize - minSize))))
+	s('calc(%spx + ((%s - %s) * ((100vw - %spx) / (%s - %s))))', min, max, min, minSize, maxSize, minSize)
