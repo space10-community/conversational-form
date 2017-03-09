@@ -157,9 +157,15 @@ namespace cf {
 			return value;
 		}
 
+		public reset(){
+			if(this.controlElements){
+				this.controlElements.clearTagsAndReset()
+			}
+		}
+
 		public onFlowStopped(){
 			if(this.controlElements)
-				this.controlElements.reset();
+				this.controlElements.clearTagsAndReset();
 			
 			this.disabled = true;
 			this.visible = false;

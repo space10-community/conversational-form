@@ -5,7 +5,7 @@
 
 <a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq" target="_blank">Learn why we did it</a>
 
-<a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/readme-cf.gif)</a>
+<a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/images/readme-cf.gif)</a>
 
 Below you will find guides to inlcude the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
 
@@ -177,6 +177,12 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
+### focus
+Sets focus on Conversational Form'
+````javascript
+window.ConversationalForm.focus();
+````
+
 ### addRobotChatResponse
 add a robot reponse, this you would usually do at the end of a process.
 
@@ -267,6 +273,12 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 	# compiles distribution files
 	$ gulp dist
+
+	# run docs
+	$ gulp --docs
+
+	# build docs
+	$ gulp build --docs
 
 
 ### install new packages for dev

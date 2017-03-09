@@ -39,6 +39,14 @@ cf-input
 		outline none
 		-webkit-appearance none
 
+		// make sure no one can overwrite user-select as it has unintended behavior in safari..
+		-webkit-touch-callout auto !important
+		-webkit-user-select auto !important
+		-khtml-user-select auto !important
+		-moz-user-select auto !important
+		-ms-user-select auto !important
+		user-select auto !important
+
 		&:focus, &:active
 			box-shadow 0px 0px 30px rgba(0,0,0,0.2)
 		

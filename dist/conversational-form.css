@@ -128,6 +128,7 @@
   filter: none;
 }
 
+
 cf-info {
   position: absolute;
   pointer-events: none;
@@ -216,6 +217,15 @@ cf-input input,
 cf-input textarea {
   outline: none;
   -webkit-appearance: none;
+  -webkit-touch-callout: auto !important;
+  -webkit-user-select: auto !important;
+  -khtml-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  user-select: auto !important;
   border-radius: 0;
   border: none;
   -webkit-appearance: none;
