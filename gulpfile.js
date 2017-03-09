@@ -1,6 +1,7 @@
 global.gulp = require('gulp');
 var fs = require('fs');
 var livereload = require('./gulp-tasks/node_modules/gulp-livereload');
+var gulpsync = require('./gulp-tasks/node_modules/gulp-sync')(global.gulp);
 
 var package = JSON.parse(fs.readFileSync('gulp-tasks/package.json'));
 
@@ -38,7 +39,7 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
 
 	if(isDocs){
-		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['styles-build']);
+		global.gulp.watch(srcFolder + '/styles/**/*.styl', gulpsync.sync(['stylus', 'styles-build']));
 	}else{
 		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
 	}
@@ -46,5 +47,5 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 
 // Default tasks
 global.gulp.task('default', ['watch']);
-global.gulp.task('build', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
-global.gulp.task('dist', ['bower', 'scripts-build', 'styles-build', 'copy-images']);
+global.gulp.task('build', gulpsync.sync(['bower', 'scripts-build', 'styles-build', 'copy-images']));
+global.gulp.task('dist', gulpsync.sync(['bower', 'scripts-build', 'styles-build', 'copy-images']));
