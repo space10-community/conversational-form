@@ -11,6 +11,8 @@ $color-cf-white = white
 		cf-chat-response
 			padding-top 0px
 			min-width 200px
+			+below($breakpoint-1)
+				max-width 83%
 
 			text
 				font-weight $font-weight-bold
@@ -31,6 +33,7 @@ $color-cf-white = white
 			text
 				background $color-cf-grey
 				color $color-cf-black
+				border-radius 4px 20px 20px 20px
 
 			thumb
 				background-color $color-cf-grey
@@ -43,19 +46,27 @@ $color-cf-white = white
 			text
 				background $color-cf-black
 				color $color-cf-white
+				border-radius 20px 4px 20px 20px
 
 			thumb
 				background-color $color-cf-black
 				background-size 20px 16px
 				background-repeat no-repeat
+				background-position 11px 12px
 
 		cf-input input, cf-input textarea
 			border-radius 40px
 			min-height 56px
-			font-size 16px
+			font-size 14px
+			+above($breakpoint-1)
+				font-size 16px
 			padding 19px 60px 19px 40px
 			height 56px
 			color rgba($color-cf-black, 0.4)
+			font-weight $font-weight-bold
+			&:not(:focus)
+				box-shadow 0 0 1px #C7C7C7
+
 
 		cf-input-button
 			background $color-cf-black
@@ -72,6 +83,8 @@ $color-cf-white = white
 			border-color #DDDDDD
 			transition border-color $anim-time $anim-easeOut, color $anim-time $anim-easeOut
 			background none !important
+			font-weight $font-weight-bold
+			line-height 1.2
 
 			> div
 				padding 14px 24px
@@ -85,4 +98,11 @@ $color-cf-white = white
 
 				cf-radio, cf-radio, cf-radio
 					background $color-cf-black
+		
+		cf-list-button:after
+			background-image none
+			background black
+			width 5px
+			height 5px
+			border-radius 50%
 

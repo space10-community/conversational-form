@@ -89,7 +89,7 @@
 
 				<h3>
 					Conversational Form is licensed under <a href="https://github.com/space10-community/conversational-form/blob/master/LICENSE.md" target="_blank">MIT</a>,
-					</br>documentation under CC BY 3.0.
+					</br>documentation under <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
 					</br>Development by <a href="http://rwatgg.com" target="_blank">Felix Nielsen, RWATGG</a>.
 					</br>Design by <a href="http://www.charlieisslander.com/" target="_blank">Charlie Isslander</a> and <a href="http://norgram.co/" target="_blank">Norgram®</a>.
 
@@ -97,8 +97,8 @@
 				</h3>
 
 				<article>
-					<h1>
-						Turning webforms into  conversations.
+					<h1 id="writer">
+						Turning webforms into conversations.
 					</h1>
 					<h2>
 						Conversational Form is an open-source concept by <a href="http://space10.io" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface.
@@ -149,10 +149,10 @@
 			</section>
 
 			<section id="form" role="form">
-				<form id="cf-form" cf-prevent-autofocus>
+				<form id="cf-form" cf-prevent-autofocus method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
 					<fieldset>
 						<label for="name">What's your name?</label>
-						<input required cf-questions="Hi there! What's your name?" type="text" class="form-control" name="name" id="name">
+						<input required cf-questions="Hi there! What's your name? 😊" type="text" class="form-control" name="name" id="name">
 					</fieldset>
 
 					<fieldset>
@@ -204,10 +204,18 @@
 					</fieldset>
 
 					<fieldset>
-						<label for="thats-all">Final go</label>
-						<select cf-questions="That's it for now! Have a great day." id="thats-all" class="form-control">
+						<label for="thats-all">Are you ready to submit the form?</label>
+						<select cf-questions="Are you ready to submit the form?" name="submit-form" id="submit-form" class="form-control">
 							<option></option>
-							<option>You too!</option>
+							<option>Yup</option>
+						</select>
+					</fieldset>
+
+					<fieldset>
+						<label for="thats-all">Want to start over?</label>
+						<select cf-questions="Want to start over?" name="repeat" id="repeat" class="form-control">
+							<option></option>
+							<option>Yes, let's go again</option>
 						</select>
 					</fieldset>
 
