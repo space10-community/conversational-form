@@ -223,9 +223,20 @@ namespace cf {
 			}
 		}
 
-		public getFormData(): FormData{
-			var formData: FormData = new FormData(this.formEl);
-			return formData;
+		public getFormData(serialized: boolean = false): FormData | any{
+			if(serialized){
+				const serialized: any = {}
+				for(var i = 0; i < this.tags.length; i++){
+					const element = this.tags[i];
+					if(element.name && element.value)
+						serialized[element.name] = element.value
+				}
+
+				return serialized
+			}else{
+				var formData: FormData = new FormData(this.formEl);
+				return formData;
+			}
 		}
 
 		public addRobotChatResponse(response: string){
@@ -380,8 +391,19 @@ namespace cf {
 			this.flowManager.startFrom(index);
 		}
 
+		/**
+		* @name focus
+		* Sets focus on Conversational Form
+		*/
+		public focus(){
+			if(this.userInput)
+				this.userInput.setFocusOnInput();
+		}
+
 		public doSubmitForm(){
 			this.el.classList.add("done");
+
+			this.userInput.reset();
 
 			if(this.submitCallback){
 				// remove should be called in the submitCallback

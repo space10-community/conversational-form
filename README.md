@@ -177,6 +177,12 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
+### focus
+Sets focus on Conversational Form'
+````javascript
+window.ConversationalForm.focus();
+````
+
 ### addRobotChatResponse
 add a robot reponse, this you would usually do at the end of a process.
 
@@ -267,6 +273,12 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 	# compiles distribution files
 	$ gulp dist
+
+	# run docs
+	$ gulp --docs
+
+	# build docs
+	$ gulp build --docs
 
 
 ### install new packages for dev

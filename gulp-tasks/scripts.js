@@ -60,8 +60,8 @@ global.gulp.task('scripts', function() {
 global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 	// build order is important in a inheritance world
 	var src = [
-		global.buildFolder + "scripts/bower_components/promise-polyfill/promise.js",
-		global.buildFolder + "scripts/bower_components/custom-event-polyfill/custom-event-polyfill.js",
+		global.buildFolder + "bower_components/promise-polyfill/promise.js",
+		global.buildFolder + "bower_components/custom-event-polyfill/custom-event-polyfill.js",
 		global.buildFolder + "cf/ConversationalForm.js",
 		global.buildFolder + "cf/ConversationalForm.plugin.js",
 		global.buildFolder + "cf/logic/Helpers.js",
