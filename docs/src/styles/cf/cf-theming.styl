@@ -70,8 +70,7 @@ $color-cf-white = white
 		.cf-button
 			color $color-cf-black
 			border-color #DDDDDD
-			// $color-cf-black
-
+			transition border-color $anim-time $anim-easeOut, color $anim-time $anim-easeOut
 			background none !important
 
 			> div
@@ -80,5 +79,10 @@ $color-cf-white = white
 			cf-radio
 				background rgba($color-cf-black, 0.2)
 
-			&.highlight cf-radio, &:focus cf-radio, &:hover cf-radio
-				background $color-cf-black
+			&.highlight, &:focus, &:hover
+				border-color darken(#DDDDDD, 50%)
+				color lighten($color-cf-black, 75%)
+
+				cf-radio, cf-radio, cf-radio
+					background $color-cf-black
+
