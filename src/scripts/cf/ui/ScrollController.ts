@@ -210,6 +210,7 @@ namespace cf {
 			this.inputAccerlation = 0;
 			this.x = 0;
 			this.xTarget = 0;
+			Helpers.setTransform(this.listToScroll, "translateX(0px)");
 			this.render();
 			this.prevButton.classList.remove("active");
 			this.nextButton.classList.remove("active");
