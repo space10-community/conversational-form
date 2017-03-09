@@ -24,7 +24,7 @@
 			opacity 1
 			+above($breakpoint-1)
 				will-change opacity
-				transition opacity $anim-time-2 $anim-easeOut
+				transition opacity $anim-time $anim-easeOut
 
 				&:hover
 					opacity 0.5
@@ -35,10 +35,48 @@
 
 		+above($breakpoint-1)
 			padding 37px 40px
-			transform translateX(-50%)
+			transform translateX(0%)
+
+			will-change opacity
+			transition opacity $anim-time $anim-easeOut
+
+			> article h1
+				opacity 0
+				&.show
+					opacity 1
+
+			.github-button__outer
+				visibility hidden
+
+			> h3, > article h2, > article .github-button__outer iframe, footer > h3, footer > a svg
+				will-change opacity
+				transition opacity $anim-time $anim-easeOut
+				opacity 0
+
+			> h3
+				transition-delay 2s
+
+			> article
+				> h2
+					transition-delay 0.5s
+				> .github-button__outer iframe:nth-child(1)
+					transition-delay 0.7s
+				> .github-button__outer iframe:nth-child(2)
+					transition-delay 0.9s
+
+				footer > h3
+					transition-delay 2s
+				footer > a svg
+					transition-delay 3s
 
 			&.show
-				transform translateX(0%)
+				.github-button__outer
+					visibility visible
+
+				> h3, > article h2
+					opacity 0.7
+				> article .github-button__outer iframe, footer > h3, footer > a svg
+					opacity 1
 
 		.close-btn
 			display none
@@ -62,7 +100,6 @@
 					height 100%
 
 		> h3
-			opacity 0.7
 			line-height 1.25
 			font-weight $font-weight-bold
 			font-size responsivePXValue(9, 12)
@@ -83,7 +120,6 @@
 				padding-right 20px
 			
 			h2
-				opacity 0.7
 				line-height 1.2
 				letter-spacing -0.1px
 				font-weight $font-weight-regular

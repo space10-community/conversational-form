@@ -27,8 +27,13 @@ class ConversationalFormDocs{
 	*/
 	private el: HTMLElement;
 	private introTimer: any = 0;
+	private h1writer: H1Writer;
 	constructor(){
 		this.el = document.getElementById("conversational-form-docs");
+
+		this.h1writer = new H1Writer({
+			el: document.getElementById("writer")
+		})
 
 		const isMenuVisible = window.getComputedStyle(document.getElementById("small-screen-menu")).getPropertyValue("display") != "none";
 		if(isMenuVisible)
@@ -44,6 +49,7 @@ class ConversationalFormDocs{
 	private introFlow1(): void {
 		this.introTimer = setTimeout(() => {
 			this.toggleMenuState();
+			this.h1writer.start();
 
 			this.introTimer = setTimeout(() => {
 				this.toggleConversation()
@@ -56,18 +62,21 @@ class ConversationalFormDocs{
 	* flow for larger screens
 	*/
 	private introFlow2(): void {
+		this.h1writer.start();
+
 		this.introTimer = setTimeout(() => {
 			document.getElementById("info").classList.add('show');
 
 			this.introTimer = setTimeout(() => {
+
 				document.getElementById("form").classList.add('show');
 				document.getElementById("cf-toggle-btn").classList.add('show');
 
 				this.introTimer = setTimeout(() => {
 					this.toggleConversation()
 				}, 1500);
-			}, 1500);
-		}, 500);
+			}, 3000);
+		}, 1500);
 	}
 
 	public toggleMenuState(){
@@ -135,6 +144,61 @@ class ConversationalFormDocs{
 	public static start(){
 		if(!ConversationalFormDocs.instance)
 			window.conversationalFormDocs = new ConversationalFormDocs();
+	}
+}
+
+class H1Writer{
+	private progress: number = 0;
+	private progressTarget: number = 0;
+	private str: string = "";
+	private strs: Array<string> = ["...", "Turning webforms into conversations."];
+
+	/**
+	* 
+	* @type HTMLElement
+	*/
+	private el: HTMLElement;
+	private rAF: number;
+	private step: number = 0;
+	constructor(options: any){
+		this.el = options.el
+		this.el.innerHTML = "";
+		this.el.classList.add("show");
+	}
+
+	public start(){
+		this.progress = 0;
+		this.progressTarget = 1;
+		this.str = this.strs[this.step];
+		this.render()
+	}
+
+	private nextStep(){
+		if(this.progressTarget == 0){
+			this.step++;
+		}
+
+		this.str = this.strs[this.step];
+		this.progressTarget = this.progressTarget == 0 ? 1 : 0;
+		this.render()
+	}
+
+	private render(){
+		this.progress += (this.progressTarget - this.progress) * (this.step == 0 ? 0.15 : 0.09);
+		const out: string = this.str.substr(0, Math.round(this.progress * this.str.length));
+
+		this.el.innerHTML = out;
+
+		if(Math.abs(this.progress - this.progressTarget) <= 0.01){
+			cancelAnimationFrame(this.rAF);
+			if(this.step < 1){
+				setTimeout(() => {
+					this.nextStep();
+				}, 250);
+			}
+		}
+		else
+			this.rAF = window.requestAnimationFrame(() => this.render());
 	}
 }
 

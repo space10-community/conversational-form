@@ -10,7 +10,6 @@
 		z-index $zIndex-low
 		height 100%
 		width 100%
-		transform translateX(0%)
 		padding 27px
 		padding-top $menu-height + 27px
 		display flex
@@ -23,12 +22,12 @@
 			z-index $zIndex-middle
 			right 0px
 			left auto
-			will-change transform
-			transition transform $anim-time-2 $anim-easeOut
-			transform translateX(100%)
+			will-change opacity
+			transition opacity $anim-time-2 $anim-easeOut
+			opacity 0
 
 			&.show
-				transform translateX(0%)
+				opacity 1
 
 		.close-btn
 			position absolute
