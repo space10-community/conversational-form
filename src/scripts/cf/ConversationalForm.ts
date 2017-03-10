@@ -34,10 +34,11 @@ namespace cf {
 
 	export class ConversationalForm{
 		public version: string = "0.9.1";
-		private cdnPath: string = "//conversational-form-091-0iznjsw.stackpathdns.com/";
 
 		public static animationsEnabled: boolean = true;
+		public static illustrateAppFlow: boolean = true;
 
+		private cdnPath: string = "//conversational-form-091-0iznjsw.stackpathdns.com/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
@@ -88,7 +89,9 @@ namespace cf {
 			if(options.flowStepCallback)
 				FlowManager.generalFlowStepCallback = options.flowStepCallback;
 			
-			if(document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false){
+			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
+			
+			if(this.isDevelopment || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
 			}
 
@@ -281,8 +284,7 @@ namespace cf {
 				if(tag.type == "radio" || tag.type == "checkbox"){
 					if(!groups[tag.name])
 						groups[tag.name] = [];
-					
-					console.log((<any>this.constructor).name, 'tag.name]:', tag.name);
+
 					groups[tag.name].push(tag);
 				}
 			}
@@ -309,7 +311,7 @@ namespace cf {
 		}
 
 		private setupUI(){
-			console.log('Conversational Form > start > mapped DOM tags:', this.tags);
+			// console.log('Conversational Form > start > mapped DOM tags:', this.tags);
 			console.log('----------------------------------------------');
 
 			// start the flow
@@ -454,13 +456,12 @@ namespace cf {
 		}
 
 		// to illustrate the event flow of the app
-		public static ILLUSTRATE_APP_FLOW: boolean = true;
 		public static illustrateFlow(classRef: any, type: string, eventType: string, detail: any = null){
 			// ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail);
 			// ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			if(ConversationalForm.ILLUSTRATE_APP_FLOW && navigator.appName != 'Netscape'){
-				const highlight: string = "font-weight: 900; background: pink; color: black; padding: 0px 5px;";
+			if(ConversationalForm.illustrateAppFlow){
+				const highlight: string = "font-weight: 900; background: "+(type == "receive" ? "#e6f3fe" : "pink")+"; color: black; padding: 0px 5px;";
 				console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c"+(<any> classRef.constructor).name, "font-weight: 900;",highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
 				if(detail)
 					console.log("** event flow detail:", detail);
