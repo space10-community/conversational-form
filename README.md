@@ -207,10 +207,10 @@ window.ConversationalForm.remove();
 ```
 
 ### getFormData
-get the FormData object of mapped form element
+get the FormData object of mapped form element, pass in true to get a serialized object back (JSON).
 
 ```javascript
-window.ConversationalForm.getFormData();
+window.ConversationalForm.getFormData(serialized: boolean);
 ```
 
 ### remapTagsAndStartFrom: 
