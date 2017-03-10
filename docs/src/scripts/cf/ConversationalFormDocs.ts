@@ -195,7 +195,7 @@ class H1Writer{
 			if(this.step < 1){
 				setTimeout(() => {
 					this.nextStep();
-				}, 250);
+				}, 500);
 			}
 		}
 		else
