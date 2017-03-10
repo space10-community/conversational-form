@@ -156,7 +156,7 @@ var H1Writer = (function () {
             if (this.step < 1) {
                 setTimeout(function () {
                     _this.nextStep();
-                }, 250);
+                }, 500);
             }
         }
         else

@@ -133,6 +133,7 @@
   font-weight: 900;
   font-size: calc(35px + ((50 - 35) * ((100vw - 320px) / (1600 - 320))));
   padding-right: 20px;
+  max-width: 800px;
 }
 #conversational-form-docs section[role="info"] article h2 {
   line-height: 1.2;
