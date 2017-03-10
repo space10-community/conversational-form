@@ -54,7 +54,7 @@
 #conversational-form-docs .conversational-form cf-input input,
 #conversational-form-docs .conversational-form cf-input textarea {
   border-radius: 40px;
-  min-height: 56px;
+  min-height: 57px;
   font-size: 14px;
   padding: 19px 60px 19px 40px;
   height: 56px;
@@ -69,7 +69,7 @@
 }
 #conversational-form-docs .conversational-form cf-input input:not(:focus),
 #conversational-form-docs .conversational-form cf-input textarea:not(:focus) {
-  box-shadow: 0 0 1px #c7c7c7;
+  box-shadow: 0 0 1px rgba(58,58,58,0.5);
 }
 #conversational-form-docs .conversational-form cf-input-button {
   background: #222;
