@@ -156,8 +156,8 @@ namespace cf {
 			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
 			// }
 
-			if(this.type != "group"){
-				console.log('Conversational Form > Tag registered:', this.type);
+			if(this.type != "group" && ConversationalForm.illustrateAppFlow){
+				console.log('Conversational Form > Tag registered:', this.type, this);
 			}
 
 			this.refresh();
