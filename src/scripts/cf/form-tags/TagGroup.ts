@@ -108,7 +108,8 @@ namespace cf {
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
-			console.log('TagGroup registered:', this.elements[0].type, this);
+			if(ConversationalForm.illustrateAppFlow)
+				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
 
 		public dealloc(){
