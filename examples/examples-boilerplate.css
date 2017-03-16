@@ -90,5 +90,43 @@ a img {
   border: none;
 }
 body {
-  background: #fff;
+  font-family: Helvetica Neue, Helvetica;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+  height: auto;
+  width: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  position: relative;
+  font-size: calc(12px + ((13 - 12) * ((100vw - 320px) / (1600 - 320))));
+  line-height: 1.2;
+}
+body *,
+body *:before,
+body *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+}
+#form {
+  padding: 20px;
+  border-bottom: 1px solid #e9e9e9;
+}
+.info {
+  color: #fff;
+  padding: 20px;
+  background: #222;
+}
+.info button {
+  padding: 5px;
+}
+div[cf-context],
+#context {
+  background: #e9e9e9;
 }
