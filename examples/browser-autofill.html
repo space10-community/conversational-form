@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body class="examples">
+
+		<style>
+			.form-outer{
+				width: 50vw;
+				height: 100vh;
+			}
+
+			#form{
+				height: 300px;
+			}
+
+			#context{
+				width: 100%;
+				height: calc(100vh - 300px);
+			}
+
+			.info{
+				width: 50vw;
+				height: 100vh;
+			}
+		</style>
+
+		<div class="info">
+			<h1>1. Fill out the form on the right</h1>
+			<h1>2. Submit it, and use browser back button to come back here</h1>
+			<h2>3. The form is now prefilled with your previous data (mimic autocomplete)</h2>
+			</br>
+			<button onclick="startTheConversation()">Now, start the Conversation to see the mapped values</button>
+			</br>
+			</br>
+			<a href="https://dl.dropboxusercontent.com/u/4512798/cf-auto-complete.mp4" target="_blank">Video of auto-complete features</a>
+
+		</div>
+
+		<div class="form-outer">
+			<!-- Conversational Form will NOT auto-run because of the absense of attribute "cf-form" -->
+			<!-- https://www.w3schools.com/tags/att_input_autocomplete.asp -->
+			<form id="form" method="POST" action="about:blank" autocomplete="on">
+				<fieldset>
+					<legend>Native form</legend>
+					<p>
+						<label for="facebook-social">Choose your favourite social channel</label>
+						<p>
+							<input required cf-label="Facebook" type="radio" id="facebook-social" name="social" tabindex="4" value="facebook" autocomplete="facebook-social">
+							<label for="facebook-social">Facebook</label>
+						</p>
+						<p>
+							<input required cf-label="Ello" type="radio" id="ello-social" name="social" tabindex="5" value="ello" autocomplete="ello-social">
+							<label for="ello-social">Ello</label>
+						</p>
+						<p>
+							<input required cf-label="Twitter" type="radio" id="twitter-social" name="social" tabindex="6" value="Twitter" autocomplete="twitter-social">
+							<label for="twitter-social">Twitter</label>
+						</p>
+					</p>
+
+					<p>
+						<input type="text" placeholder="#fname" name="fname" id="fname" value="" tabindex="1" autocomplete="on">
+						<label for="fname">Your FIRST name</label>
+					</p>
+					<p>
+						<input type="text" placeholder="#lname" name="lname" id="lname" value="" tabindex="2" autocomplete="on">
+						<label for="lname">Your LAST name</label>
+					</p>
+					<p>
+						<input type="email" placeholder="#email" name="email" id="email" value="" tabindex="3" autocomplete="on">
+						<label for="email">Your email</label>
+					</p>
+					</br>
+					</br>
+					<button type="submit">Submit</button>
+				</fieldset>
+			</form>
+
+			<div id="context">
+			</div>
+		</div>
+
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/promise-polyfill/promise.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+		></script>
+
+		<script
+			id="conversational-form-development" 
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.js"
+			development
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.plugin.js"
+			development
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/Helpers.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/EventDispatcher.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElements.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/ScrollController.js"
+		></script>
+
+		<script 
+			type="text/javascript"
+			src="../build/cf/data/Dictionary.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/Tag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/TagGroup.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/InputTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/SelectTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/ButtonTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/OptionTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionsList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/UploadFileUI.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/UserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatResponse.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/FlowManager.js"
+		></script>
+
+		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
+
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
+
+		<link type="text/css" rel="stylesheet" href="examples-boilerplate.css"/>
+
+		<script>
+			function startTheConversation(){
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("context")
+				});
+			}
+		</script>
+
+	</body>
+</html>
