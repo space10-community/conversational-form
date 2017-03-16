@@ -304,7 +304,8 @@ var cf;
             // set a general step validation callback
             if (options.flowStepCallback)
                 cf.FlowManager.generalFlowStepCallback = options.flowStepCallback;
-            if (document.getElementById("conversational-form-development") || options.loadExternalStyleSheet == false) {
+            this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
+            if (this.isDevelopment || options.loadExternalStyleSheet == false) {
                 this.loadExternalStyleSheet = false;
             }
             if (!isNaN(options.scrollAccerlation))
@@ -473,7 +474,6 @@ var cf;
                 if (tag.type == "radio" || tag.type == "checkbox") {
                     if (!groups[tag.name])
                         groups[tag.name] = [];
-                    console.log(this.constructor.name, 'tag.name]:', tag.name);
                     groups[tag.name].push(tag);
                 }
             }
@@ -497,7 +497,7 @@ var cf;
             }
         };
         ConversationalForm.prototype.setupUI = function () {
-            console.log('Conversational Form > start > mapped DOM tags:', this.tags);
+            // console.log('Conversational Form > start > mapped DOM tags:', this.tags);
             console.log('----------------------------------------------');
             // start the flow
             this.flowManager = new cf.FlowManager({
@@ -617,12 +617,13 @@ var cf;
             this.el = null;
             window.ConversationalForm[this.createId] = null;
         };
+        // to illustrate the event flow of the app
         ConversationalForm.illustrateFlow = function (classRef, type, eventType, detail) {
             // ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, event.detail);
             // ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             if (detail === void 0) { detail = null; }
-            if (ConversationalForm.ILLUSTRATE_APP_FLOW && navigator.appName != 'Netscape') {
-                var highlight = "font-weight: 900; background: pink; color: black; padding: 0px 5px;";
+            if (ConversationalForm.illustrateAppFlow) {
+                var highlight = "font-weight: 900; background: " + (type == "receive" ? "#e6f3fe" : "pink") + "; color: black; padding: 0px 5px;";
                 console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c" + classRef.constructor.name, "font-weight: 900;", highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
                 if (detail)
                     console.log("** event flow detail:", detail);
@@ -649,8 +650,7 @@ var cf;
         return ConversationalForm;
     }());
     ConversationalForm.animationsEnabled = true;
-    // to illustrate the event flow of the app
-    ConversationalForm.ILLUSTRATE_APP_FLOW = true;
+    ConversationalForm.illustrateAppFlow = true;
     ConversationalForm.hasAutoInstantiated = false;
     cf.ConversationalForm = ConversationalForm;
 })(cf || (cf = {}));
@@ -1388,16 +1388,27 @@ var cf;
                 this.resetTabList();
             }
         };
+        ControlElements.prototype.updateStateOnElementsFromTag = function (tag) {
+            for (var index = 0; index < this.elements.length; index++) {
+                var element = this.elements[index];
+                if (element.referenceTag == tag) {
+                    this.updateStateOnElements(element);
+                    break;
+                }
+            }
+        };
         ControlElements.prototype.updateStateOnElements = function (controlElement) {
-            this.disabled = true;
             this.currentControlElement = controlElement;
-            if (controlElement.type == "RadioButton") {
+            if (this.currentControlElement.type == "RadioButton") {
                 // uncheck other radio buttons...
                 var elements = this.getElements();
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
                     if (element != controlElement) {
                         element.checked = false;
+                    }
+                    else {
+                        element.checked = true;
                     }
                 }
             }
@@ -1951,6 +1962,7 @@ var cf;
 /// <reference path="SelectTag.ts"/>
 /// <reference path="OptionTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
+/// <reference path="../logic/EventDispatcher.ts"/>
 // basic tag from form logic
 // types:
 // radio
@@ -1965,10 +1977,15 @@ var cf;
 // namespace
 var cf;
 (function (cf) {
+    cf.TagEvents = {
+        ORIGINAL_ELEMENT_CHANGED: "cf-tag-dom-element-changed"
+    };
     // class
     var Tag = (function () {
         function Tag(options) {
             this.domElement = options.domElement;
+            this.changeCallback = this.onDomElementChange.bind(this);
+            this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
             this.domElement.tabIndex = -1;
             // questions array
@@ -1986,8 +2003,8 @@ var cf;
             // 	// set a standard e-mail pattern for email type input
             // 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
             // }
-            if (this.type != "group") {
-                console.log('Conversational Form > Tag registered:', this.type);
+            if (this.type != "group" && cf.ConversationalForm.illustrateAppFlow) {
+                console.log('Conversational Form > Tag registered:', this.type, this);
             }
             this.refresh();
         }
@@ -2062,6 +2079,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Tag.prototype, "eventTarget", {
+            set: function (value) {
+                this._eventTarget = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Tag.prototype, "errorMessage", {
             get: function () {
                 if (!this.errorMessages) {
@@ -2089,6 +2113,8 @@ var cf;
             configurable: true
         });
         Tag.prototype.dealloc = function () {
+            this.domElement.removeEventListener("change", this.changeCallback, false);
+            this.changeCallback = null;
             this.domElement = null;
             this.defaultValue = null;
             this.errorMessages = null;
@@ -2242,6 +2268,18 @@ var cf;
                 }
             }
         };
+        /**
+        * @name onDomElementChange
+        * on dom element value change event, ex. w. browser autocomplete mode
+        */
+        Tag.prototype.onDomElementChange = function () {
+            this._eventTarget.dispatchEvent(new CustomEvent(cf.TagEvents.ORIGINAL_ELEMENT_CHANGED, {
+                detail: {
+                    value: this.value,
+                    tag: this
+                }
+            }));
+        };
         return Tag;
     }());
     cf.Tag = Tag;
@@ -2261,7 +2299,8 @@ var cf;
     var TagGroup = (function () {
         function TagGroup(options) {
             this.elements = options.elements;
-            console.log('TagGroup registered:', this.elements[0].type, this);
+            if (cf.ConversationalForm.illustrateAppFlow)
+                console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
         }
         Object.defineProperty(TagGroup.prototype, "required", {
             get: function () {
@@ -2272,6 +2311,17 @@ var cf;
                     }
                 }
                 return false;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TagGroup.prototype, "eventTarget", {
+            set: function (value) {
+                this._eventTarget = value;
+                for (var i = 0; i < this.elements.length; i++) {
+                    var tag = this.elements[i];
+                    tag.eventTarget = value;
+                }
             },
             enumerable: true,
             configurable: true
@@ -2783,7 +2833,7 @@ var cf;
         };
         // override
         RadioButton.prototype.getTemplate = function () {
-            var isChecked = this.referenceTag.domElement.hasAttribute("checked");
+            var isChecked = this.referenceTag.domElement.checked || this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-radio-button class=\"cf-button\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-radio></cf-radio>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-radio-button>\n\t\t\t";
         };
         return RadioButton;
@@ -2838,7 +2888,7 @@ var cf;
         };
         // override
         CheckboxButton.prototype.getTemplate = function () {
-            var isChecked = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
+            var isChecked = this.referenceTag.domElement.checked || this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-button>\n\t\t\t";
         };
         return CheckboxButton;
@@ -3223,6 +3273,8 @@ var cf;
             document.addEventListener("keydown", _this.keyDownCallback, false);
             _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
             _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
+            _this.onOriginalTagChangedCallback = _this.onOriginalTagChanged.bind(_this);
+            _this.eventTarget.addEventListener(cf.TagEvents.ORIGINAL_ELEMENT_CHANGED, _this.onOriginalTagChangedCallback, false);
             _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
             _this.eventTarget.addEventListener(cf.FlowEvents.USER_INPUT_INVALID, _this.inputInvalidCallback, false);
             _this.onControlElementSubmitCallback = _this.onControlElementSubmit.bind(_this);
@@ -3307,6 +3359,19 @@ var cf;
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
             this.visible = false;
+        };
+        /**
+        * @name onOriginalTagChanged
+        * on domElement from a tag value changed..
+        */
+        UserInput.prototype.onOriginalTagChanged = function (event) {
+            if (this.currentTag == event.detail.tag) {
+                this.currentValue = this.inputElement.value = event.detail.tag.value.toString();
+                this.onInputChange();
+            }
+            if (this.controlElements && this.controlElements.active) {
+                this.controlElements.updateStateOnElementsFromTag(event.detail.tag);
+            }
         };
         UserInput.prototype.onInputChange = function () {
             if (!this.active && !this.controlElements.active)
@@ -4017,7 +4082,7 @@ var cf;
             this.stepTimer = 0;
             this.cfReference = options.cfReference;
             this.eventTarget = options.eventTarget;
-            this.tags = options.tags;
+            this.setTags(options.tags);
             this.maxSteps = this.tags.length;
             this.userInputSubmitCallback = this.userInputSubmit.bind(this);
             this.eventTarget.addEventListener(cf.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
@@ -4136,6 +4201,13 @@ var cf;
             this.savedStep = this.step - 1;
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
+        };
+        FlowManager.prototype.setTags = function (tags) {
+            this.tags = tags;
+            for (var i = 0; i < this.tags.length; i++) {
+                var tag = this.tags[i];
+                tag.eventTarget = this.eventTarget;
+            }
         };
         FlowManager.prototype.skipStep = function () {
             this.nextStep();
