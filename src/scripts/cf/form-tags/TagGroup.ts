@@ -35,7 +35,9 @@ namespace cf {
 		* Array checked/choosen ITag's
 		*/
 		private _activeElements: Array<ITag>;
+		private _eventTarget: EventDispatcher;
 
+		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
 		public elements: Array <ITag>;
 		
@@ -48,6 +50,14 @@ namespace cf {
 			}
 
 			return false;
+		}
+
+		public set eventTarget(value: EventDispatcher){
+			this._eventTarget = value;
+			for (let i = 0; i < this.elements.length; i++) {
+				let tag: ITag = <ITag>this.elements[i];
+				tag.eventTarget = value;
+			}
 		}
 
 		public get type (): string{
