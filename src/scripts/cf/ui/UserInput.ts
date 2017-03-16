@@ -45,6 +45,7 @@ namespace cf {
 		private onSubmitButtonClickCallback: () => void;
 		private onInputFocusCallback: () => void;
 		private onInputBlurCallback: () => void;
+		private onOriginalTagChangedCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
 		private shiftIsDown: boolean = false;
@@ -117,6 +118,9 @@ namespace cf {
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
+			this.onOriginalTagChangedCallback = this.onOriginalTagChanged.bind(this);
+			this.eventTarget.addEventListener(TagEvents.ORIGINAL_ELEMENT_CHANGED, this.onOriginalTagChangedCallback, false);
+
 			this.inputInvalidCallback = this.inputInvalid.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 
@@ -169,6 +173,21 @@ namespace cf {
 			
 			this.disabled = true;
 			this.visible = false;
+		}
+
+		/**
+		* @name onOriginalTagChanged
+		* on domElement from a tag value changed..
+		*/
+		private onOriginalTagChanged(event: CustomEvent): void {
+			if(this.currentTag == event.detail.tag){
+				this.currentValue = this.inputElement.value = (<ITag | ITagGroup> event.detail.tag).value.toString()
+				this.onInputChange();
+			}
+
+			if(this.controlElements && this.controlElements.active){
+				this.controlElements.updateStateOnElementsFromTag(event.detail.tag)
+			}
 		}
 
 		private onInputChange(){
