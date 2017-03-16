@@ -41,6 +41,7 @@ global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-ima
 	if(isDocs){
 		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus', 'styles-build']);
 	}else{
+		global.gulp.watch(srcFolder + '../examples/src/styles/**/*.styl', ['stylus-examples']);
 		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
 	}
 });
