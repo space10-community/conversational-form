@@ -126,6 +126,16 @@ body *:after {
 .info button {
   padding: 5px;
 }
+.info a,
+.info a:active,
+.info a:hover {
+  color: #fff;
+}
+.info video {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
 div[cf-context],
 #context {
   background: #e9e9e9;
