@@ -293,12 +293,13 @@ var cf;
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
             this.version = "0.9.2";
-            this.cdnPath = "//conversational-form-091-0iznjsw.stackpathdns.com/";
+            this.cdnPath = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
             this.preventAutoStart = false;
             window.ConversationalForm = this;
+            this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
             console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
             // set a general step validation callback
