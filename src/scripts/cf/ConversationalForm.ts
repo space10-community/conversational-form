@@ -38,7 +38,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 
-		private cdnPath: string = "//conversational-form-091-0iznjsw.stackpathdns.com/";
+		private cdnPath: string = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
@@ -80,6 +80,8 @@ namespace cf {
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
+
+			this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
 
 			console.log('Conversational Form > version:', this.version);
 
