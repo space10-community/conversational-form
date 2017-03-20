@@ -311,9 +311,6 @@ namespace cf {
 		}
 
 		private setupUI(){
-			// console.log('Conversational Form > start > mapped DOM tags:', this.tags);
-			console.log('----------------------------------------------');
-
 			// start the flow
 			this.flowManager = new FlowManager({
 				cfReference: this,

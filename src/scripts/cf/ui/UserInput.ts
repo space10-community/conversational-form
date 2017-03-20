@@ -311,16 +311,19 @@ namespace cf {
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 			
+			const key: string = String.fromCharCode(event.keyCode);
+			
 			// prevent textarea line breaks
-			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey)
+			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey){
 				event.preventDefault();
-			else{
+			}else{
 				// handle password input
 				if(this._currentTag && this._currentTag.type == "password"){
-					if(event.key.toLowerCase() == "backspace")
+					if(event.keyCode === Dictionary.keyCodes["backspace"]){
 						this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-					else
-						this.currentValue += event.key;
+					}else{
+						this.currentValue += key;
+					}
 				}
 			}
 		}
