@@ -1,7 +1,6 @@
 # Conversational Form
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/space10-community/conversational-form/blob/master/LICENSE.md)
-
-[![npm version](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/conversational-form)
+[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/space10-community/conversational-form/blob/master/LICENSE.md)
+[![npm version](https://img.shields.io/npm/v/conversational-form.svg)](https://www.npmjs.com/package/conversational-form)
 
 **Turning web forms into conversations.** Conversational Form is an open-source concept by <a href="https://www.space10.io">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
 
