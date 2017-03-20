@@ -215,9 +215,10 @@ window.ConversationalForm.getFormData(serialized: boolean);
 
 ### remapTagsAndStartFrom: 
 remap registered tags and start flow from {index}
+possible to ignore existing tags, to allow for the flow to just "happen"
 
 ```javascript
-window.ConversationalForm.remapTagsAndStartFrom(index);
+window.ConversationalForm.remapTagsAndStartFrom(index, setCurrentTagValue, ignoreExistingTags);
 ```
 
 # Overwrite styles

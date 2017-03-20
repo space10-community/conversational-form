@@ -58,15 +58,17 @@ namespace cf {
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
-			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail;
+			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail.tag;
 			if(this.currentResponse)
 				this.currentResponse.disabled = false;
+			
+			console.log("..onFlowUpdate..", event.detail.ignoreExistingTag);
 
-			if(this.containsTagResponse(currentTag)){
-				// because user maybe have scrolled up
+			if(this.containsTagResponse(currentTag) && !event.detail.ignoreExistingTag){
+				// because user maybe have scrolled up and wants to edit
 
 				// tag is already in list, so re-activate it
-				this.onUserWantToEditPreviousAnswer(currentTag);
+				this.onUserWantsToEditTag(currentTag);
 			}else{
 				// robot response
 				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
@@ -100,7 +102,7 @@ namespace cf {
 		* @name onUserAnswerClicked
 		* on user ChatReponse clicked
 		*/
-		private onUserWantToEditPreviousAnswer(tagToChange: ITag): void {
+		private onUserWantsToEditTag(tagToChange: ITag): void {
 			let oldReponse: ChatResponse;
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];

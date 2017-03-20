@@ -548,11 +548,13 @@ var cf;
         /**
         * @name remapTagsAndStartFrom
         * index: number, what index to start from
-        * setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the valie of the current tag before changing index.
+        * setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the value of the current tag before changing index.
+        * ignoreExistingTags: boolean, possible to ignore existing tags, to allow for the flow to just "happen"
         */
-        ConversationalForm.prototype.remapTagsAndStartFrom = function (index, setCurrentTagValue) {
+        ConversationalForm.prototype.remapTagsAndStartFrom = function (index, setCurrentTagValue, ignoreExistingTags) {
             if (index === void 0) { index = 0; }
             if (setCurrentTagValue === void 0) { setCurrentTagValue = false; }
+            if (ignoreExistingTags === void 0) { ignoreExistingTags = false; }
             if (setCurrentTagValue) {
                 this.chatList.setCurrentUserResponse(this.userInput.getFlowDTO());
             }
@@ -561,7 +563,7 @@ var cf;
                 var tag = this.tags[i];
                 tag.refresh();
             }
-            this.flowManager.startFrom(index);
+            this.flowManager.startFrom(index, ignoreExistingTags);
         };
         /**
         * @name focus
@@ -3474,7 +3476,7 @@ var cf;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             // animate input field in
             this.visible = true;
-            this._currentTag = event.detail;
+            this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
             // set input field to type password if the dom input field is that, covering up the input
             this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
@@ -3988,13 +3990,14 @@ var cf;
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
-            var currentTag = event.detail;
+            var currentTag = event.detail.tag;
             if (this.currentResponse)
                 this.currentResponse.disabled = false;
-            if (this.containsTagResponse(currentTag)) {
-                // because user maybe have scrolled up
+            console.log("..onFlowUpdate..", event.detail.ignoreExistingTag);
+            if (this.containsTagResponse(currentTag) && !event.detail.ignoreExistingTag) {
+                // because user maybe have scrolled up and wants to edit
                 // tag is already in list, so re-activate it
-                this.onUserWantToEditPreviousAnswer(currentTag);
+                this.onUserWantsToEditTag(currentTag);
             }
             else {
                 // robot response
@@ -4026,7 +4029,7 @@ var cf;
         * @name onUserAnswerClicked
         * on user ChatReponse clicked
         */
-        ChatList.prototype.onUserWantToEditPreviousAnswer = function (tagToChange) {
+        ChatList.prototype.onUserWantsToEditTag = function (tagToChange) {
             var oldReponse;
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
@@ -4152,6 +4155,12 @@ var cf;
             this.step = 0;
             this.savedStep = -1;
             this.stepTimer = 0;
+            /**
+            * ignoreExistingTags
+            * @type boolean
+            * ignore existing tags, usually this is set to true when using startFrom, where you don't want it to check for exisintg tags in the list
+            */
+            this.ignoreExistingTags = false;
             this.cfReference = options.cfReference;
             this.eventTarget = options.eventTarget;
             this.setTags(options.tags);
@@ -4230,14 +4239,22 @@ var cf;
             // TODO, make into promises when IE is rolling with it..
             onValidationCallback();
         };
-        FlowManager.prototype.startFrom = function (indexOrTag) {
+        FlowManager.prototype.startFrom = function (indexOrTag, ignoreExistingTags) {
+            if (ignoreExistingTags === void 0) { ignoreExistingTags = false; }
             if (typeof indexOrTag == "number")
                 this.step = indexOrTag;
             else {
                 // find the index..
                 this.step = this.tags.indexOf(indexOrTag);
             }
-            this.validateStepAndUpdate();
+            this.ignoreExistingTags = ignoreExistingTags;
+            if (!this.ignoreExistingTags) {
+                this.editTag(this.tags[this.step]);
+            }
+            else {
+                //validate step, and ask for skipping of current step
+                this.showStep();
+            }
         };
         FlowManager.prototype.start = function () {
             this.stopped = false;
@@ -4270,6 +4287,7 @@ var cf;
         * go back in time and edit a tag.
         */
         FlowManager.prototype.editTag = function (tag) {
+            this.ignoreExistingTags = false;
             this.savedStep = this.step - 1;
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
@@ -4302,13 +4320,17 @@ var cf;
                 }
             }
         };
-        FlowManager.prototype.showStep = function () {
+        FlowManager.prototype.showStep = function (ignoreExistingTag) {
+            if (ignoreExistingTag === void 0) { ignoreExistingTag = false; }
             if (this.stopped)
                 return;
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.FlowEvents.FLOW_UPDATE, this.currentTag);
             this.currentTag.refresh();
             this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
-                detail: this.currentTag
+                detail: {
+                    tag: this.currentTag,
+                    ignoreExistingTag: this.ignoreExistingTags
+                }
             }));
         };
         return FlowManager;
