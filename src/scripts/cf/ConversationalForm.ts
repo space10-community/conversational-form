@@ -375,9 +375,10 @@ namespace cf {
 		/**
 		* @name remapTagsAndStartFrom
 		* index: number, what index to start from
-		* setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the valie of the current tag before changing index.
+		* setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the value of the current tag before changing index.
+		* ignoreExistingTags: boolean, possible to ignore existing tags, to allow for the flow to just "happen"
 		*/
-		public remapTagsAndStartFrom(index: number = 0, setCurrentTagValue: boolean = false){
+		public remapTagsAndStartFrom(index: number = 0, setCurrentTagValue: boolean = false, ignoreExistingTags: boolean = false){
 			if(setCurrentTagValue){
 				this.chatList.setCurrentUserResponse(this.userInput.getFlowDTO());
 			}
@@ -387,7 +388,7 @@ namespace cf {
 				tag.refresh();
 			}
 
-			this.flowManager.startFrom(index);
+			this.flowManager.startFrom(index, ignoreExistingTags);
 		}
 
 		/**
