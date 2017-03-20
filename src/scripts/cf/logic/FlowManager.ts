@@ -230,7 +230,7 @@ namespace cf {
 			}
 		}
 
-		private showStep(ignoreExistingTag: boolean = false){
+		private showStep(){
 			if(this.stopped)
 				return;
 

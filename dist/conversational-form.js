@@ -3993,7 +3993,6 @@ var cf;
             var currentTag = event.detail.tag;
             if (this.currentResponse)
                 this.currentResponse.disabled = false;
-            console.log("..onFlowUpdate..", event.detail.ignoreExistingTag);
             if (this.containsTagResponse(currentTag) && !event.detail.ignoreExistingTag) {
                 // because user maybe have scrolled up and wants to edit
                 // tag is already in list, so re-activate it
@@ -4003,7 +4002,7 @@ var cf;
                 // robot response
                 var robot = this.createResponse(true, currentTag, currentTag.question);
                 if (this.currentUserResponse) {
-                    // linked
+                    // linked, but only if we should not ignore existing tag
                     this.currentUserResponse.setLinkToOtherReponse(robot);
                     robot.setLinkToOtherReponse(this.currentUserResponse);
                 }
@@ -4320,8 +4319,7 @@ var cf;
                 }
             }
         };
-        FlowManager.prototype.showStep = function (ignoreExistingTag) {
-            if (ignoreExistingTag === void 0) { ignoreExistingTag = false; }
+        FlowManager.prototype.showStep = function () {
             if (this.stopped)
                 return;
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.FlowEvents.FLOW_UPDATE, this.currentTag);

@@ -61,8 +61,6 @@ namespace cf {
 			const currentTag: ITag | ITagGroup = <ITag | ITagGroup> event.detail.tag;
 			if(this.currentResponse)
 				this.currentResponse.disabled = false;
-			
-			console.log("..onFlowUpdate..", event.detail.ignoreExistingTag);
 
 			if(this.containsTagResponse(currentTag) && !event.detail.ignoreExistingTag){
 				// because user maybe have scrolled up and wants to edit
@@ -73,7 +71,7 @@ namespace cf {
 				// robot response
 				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
 				if(this.currentUserResponse){
-					// linked
+					// linked, but only if we should not ignore existing tag
 					this.currentUserResponse.setLinkToOtherReponse(robot);
 					robot.setLinkToOtherReponse(this.currentUserResponse);
 				}
