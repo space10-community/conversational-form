@@ -243,7 +243,7 @@ namespace cf {
 			// animate input field in
 			this.visible = true;
 
-			this._currentTag = <ITag | ITagGroup> event.detail;
+			this._currentTag = <ITag | ITagGroup> event.detail.tag;
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
 
