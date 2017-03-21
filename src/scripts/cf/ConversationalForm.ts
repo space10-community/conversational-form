@@ -474,7 +474,13 @@ namespace cf {
 				return;
 
 			// auto start the conversation
-			const formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+			let formElements: NodeListOf<Element> = document.querySelectorAll("form[cf-form]");
+
+			// no form elements found, look for the old init attribute
+			if(formElements.length === 0){
+				formElements = document.querySelectorAll("form[cf-form-element]");
+			}
+
 			const formContexts: NodeListOf<Element> = document.querySelectorAll("*[cf-context]");
 
 			if(formElements && formElements.length > 0){
@@ -496,7 +502,7 @@ namespace cf {
 
 if(document.readyState == "complete"){
 	// if document alread instantiated, usually this happens if Conversational Form is injected through JS
-	cf.ConversationalForm.autoStartTheConversation();
+	setTimeout(() => cf.ConversationalForm.autoStartTheConversation(), 0);
 }else{
 	// await for when document is ready
 	window.addEventListener("load", () =>{

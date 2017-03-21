@@ -634,7 +634,11 @@ var cf;
             if (ConversationalForm.hasAutoInstantiated)
                 return;
             // auto start the conversation
-            var formElements = document.querySelectorAll("form[cf-form]") || document.querySelectorAll("form[cf-form-element]");
+            var formElements = document.querySelectorAll("form[cf-form]");
+            // no form elements found, look for the old init attribute
+            if (formElements.length === 0) {
+                formElements = document.querySelectorAll("form[cf-form-element]");
+            }
             var formContexts = document.querySelectorAll("*[cf-context]");
             if (formElements && formElements.length > 0) {
                 for (var i = 0; i < formElements.length; i++) {
@@ -657,7 +661,7 @@ var cf;
 })(cf || (cf = {}));
 if (document.readyState == "complete") {
     // if document alread instantiated, usually this happens if Conversational Form is injected through JS
-    cf.ConversationalForm.autoStartTheConversation();
+    setTimeout(function () { return cf.ConversationalForm.autoStartTheConversation(); }, 0);
 }
 else {
     // await for when document is ready
