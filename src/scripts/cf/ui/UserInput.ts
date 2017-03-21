@@ -318,7 +318,7 @@ namespace cf {
 				event.preventDefault();
 			}else{
 				// handle password input
-				if(this._currentTag && this._currentTag.type == "password"){
+				if(key !== "" && this._currentTag && this._currentTag.type == "password" && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey){
 					if(event.keyCode === Dictionary.keyCodes["backspace"]){
 						this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
 					}else{
@@ -493,6 +493,7 @@ namespace cf {
 		}
 
 		private resetValue(){
+			this.currentValue = "";
 			this.inputElement.value = "";
 			this.onInputChange();
 		}
