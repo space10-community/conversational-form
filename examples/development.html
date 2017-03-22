@@ -52,7 +52,7 @@
 			<form id="form" cf-form>
 				<!--<input type="text" required cf-questions="text field multiline....." name="multiline" value="">-->
 
-				<input type="password" cf-questions="password 1 field.. (NOT required)" name="password1" value="">
+				<input type="password" pattern=".{5,10}" cf-questions="password 1 field.. (NOT required)" cf-error="Password needs to be between 5-10 chars" name="password1" value="">
 				<input type="input" cf-questions="none-password 2 field.. (NOT required)" name="input1" value="">
 
 				<!--<li class="fields">
