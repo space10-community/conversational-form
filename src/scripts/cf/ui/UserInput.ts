@@ -35,9 +35,8 @@ namespace cf {
 		public el: HTMLElement;
 
 		private cfReference: ConversationalForm;
-		private inputElement: HTMLTextAreaElement;
+		private inputElement: HTMLInputElement | HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
-		private currentValue: string = "";
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		private inputInvalidCallback: () => void;
@@ -177,11 +176,10 @@ namespace cf {
 
 		/**
 		* @name onOriginalTagChanged
-		* on domElement from a tag value changed..
+		* on domElement from a Tag value changed..
 		*/
 		private onOriginalTagChanged(event: CustomEvent): void {
 			if(this.currentTag == event.detail.tag){
-				this.currentValue = this.inputElement.value = (<ITag | ITagGroup> event.detail.tag).value.toString()
 				this.onInputChange();
 			}
 
@@ -237,6 +235,35 @@ namespace cf {
 			}
 		}
 
+		private checkForCorrectInputTag(){
+			// handle password natively
+			const currentType: String = this.inputElement.getAttribute("type");
+			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
+			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
+
+			if(isCurrentInputTypeTextAreaButNewTagPassword){
+				// change to input
+				const input = document.createElement("input");
+				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
+					input.setAttribute(item.name, item.value);
+				});
+				this.inputElement.parentNode.replaceChild(input, this.inputElement);
+				this.inputElement = input;
+				
+				this.onInputChange();
+			}else if(isCurrentInputTypeInputButNewTagNotPassword){
+				// change to textarea
+				const textarea = document.createElement("textarea");
+				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
+					textarea.setAttribute(item.name, item.value);
+				});
+				this.inputElement.parentNode.replaceChild(textarea, this.inputElement);
+				this.inputElement = textarea;
+
+				this.onInputChange();
+			}
+		}
+
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
@@ -246,6 +273,9 @@ namespace cf {
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
+
+			// replace textarea and visa versa
+			this.checkForCorrectInputTag()
 
 			// set input field to type password if the dom input field is that, covering up the input
 			this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
@@ -304,27 +334,26 @@ namespace cf {
 			this.onEnterOrSubmitButtonSubmit(event);
 		}
 
+		private isMetaKeyPressed(event: KeyboardEvent): boolean{
+			// if any meta keys, then ignore, getModifierState, but safari does not support..
+			if(event.metaKey || [91, 93].indexOf(event.keyCode) !== -1)
+				return;
+		}
+
 		private onKeyDown(event: KeyboardEvent){
 			if(!this.active && !this.controlElements.focus)
 				return;
 
+			if(this.isMetaKeyPressed(event))
+				return;
+
+			// if any meta keys, then ignore
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
-			
-			const key: string = String.fromCharCode(event.keyCode);
-			
+
 			// prevent textarea line breaks
 			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey){
 				event.preventDefault();
-			}else{
-				// handle password input
-				if(key !== "" && this._currentTag && this._currentTag.type == "password" && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey){
-					if(event.keyCode === Dictionary.keyCodes["backspace"]){
-						this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-					}else{
-						this.currentValue += key;
-					}
-				}
 			}
 		}
 
@@ -332,9 +361,8 @@ namespace cf {
 			if(!this.active && !this.controlElements.focus)
 				return;
 
-			// reset current value, happens when user selects all text and delete or cmd+backspace
-			if(this.inputElement.value == "" || this.inputElement.selectionStart != this.inputElement.selectionEnd)
-				this.currentValue = "";
+			if(this.isMetaKeyPressed(event))
+				return;
 
 			if(event.keyCode == Dictionary.keyCodes["shift"]){
 				this.shiftIsDown = false;
@@ -361,7 +389,7 @@ namespace cf {
 
 					node = node.parentNode;
 				}
-				
+
 				// prevent normal behaviour, we are not here to take part, we are here to take over!
 				if(!doesKeyTargetExistInCF){
 					event.preventDefault();
@@ -419,11 +447,6 @@ namespace cf {
 				}
 			}else if(event.keyCode != Dictionary.keyCodes["shift"] && event.keyCode != Dictionary.keyCodes["tab"]){
 				this.dispatchKeyChange(value, event.keyCode)
-			}
-
-			// handle password input
-			if(this._currentTag && this._currentTag.type == "password"){
-				this.inputElement.value = this.currentValue.replace(/./g, () => "*");
 			}
 
 			this.onInputChange();
@@ -493,7 +516,6 @@ namespace cf {
 		}
 
 		private resetValue(){
-			this.currentValue = "";
 			this.inputElement.value = "";
 			this.onInputChange();
 		}
