@@ -3307,7 +3307,6 @@ var cf;
         __extends(UserInput, _super);
         function UserInput(options) {
             var _this = _super.call(this, options) || this;
-            _this.currentValue = "";
             _this.errorTimer = 0;
             _this.shiftIsDown = false;
             _this._disabled = false;
@@ -3424,11 +3423,10 @@ var cf;
         };
         /**
         * @name onOriginalTagChanged
-        * on domElement from a tag value changed..
+        * on domElement from a Tag value changed..
         */
         UserInput.prototype.onOriginalTagChanged = function (event) {
             if (this.currentTag == event.detail.tag) {
-                this.currentValue = this.inputElement.value = event.detail.tag.value.toString();
                 this.onInputChange();
             }
             if (this.controlElements && this.controlElements.active) {
@@ -3476,6 +3474,32 @@ var cf;
                 this.inputElement.setAttribute("placeholder", cf.Dictionary.get("group-placeholder"));
             }
         };
+        UserInput.prototype.checkForCorrectInputTag = function () {
+            // handle password natively
+            var currentType = this.inputElement.getAttribute("type");
+            var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
+            var isCurrentInputTypeInputButNewTagNotPassword = this._currentTag.type != "password" && currentType == "password";
+            if (isCurrentInputTypeTextAreaButNewTagPassword) {
+                // change to input
+                var input_1 = document.createElement("input");
+                Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
+                    input_1.setAttribute(item.name, item.value);
+                });
+                this.inputElement.parentNode.replaceChild(input_1, this.inputElement);
+                this.inputElement = input_1;
+                this.onInputChange();
+            }
+            else if (isCurrentInputTypeInputButNewTagNotPassword) {
+                // change to textarea
+                var textarea_1 = document.createElement("textarea");
+                Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
+                    textarea_1.setAttribute(item.name, item.value);
+                });
+                this.inputElement.parentNode.replaceChild(textarea_1, this.inputElement);
+                this.inputElement = textarea_1;
+                this.onInputChange();
+            }
+        };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
@@ -3483,6 +3507,8 @@ var cf;
             this.visible = true;
             this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
+            // replace textarea and visa versa
+            this.checkForCorrectInputTag();
             // set input field to type password if the dom input field is that, covering up the input
             this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
             clearTimeout(this.errorTimer);
@@ -3525,34 +3551,29 @@ var cf;
         UserInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
+        UserInput.prototype.isMetaKeyPressed = function (event) {
+            // if any meta keys, then ignore, getModifierState, but safari does not support..
+            if (event.metaKey || [91, 93].indexOf(event.keyCode) !== -1)
+                return;
+        };
         UserInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
+            if (this.isMetaKeyPressed(event))
+                return;
+            // if any meta keys, then ignore
             if (event.keyCode == cf.Dictionary.keyCodes["shift"])
                 this.shiftIsDown = true;
-            var key = String.fromCharCode(event.keyCode);
             // prevent textarea line breaks
             if (event.keyCode == cf.Dictionary.keyCodes["enter"] && !event.shiftKey) {
                 event.preventDefault();
-            }
-            else {
-                // handle password input
-                if (key !== "" && this._currentTag && this._currentTag.type == "password" && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
-                    if (event.keyCode === cf.Dictionary.keyCodes["backspace"]) {
-                        this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-                    }
-                    else {
-                        this.currentValue += key;
-                    }
-                }
             }
         };
         UserInput.prototype.onKeyUp = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
-            // reset current value, happens when user selects all text and delete or cmd+backspace
-            if (this.inputElement.value == "" || this.inputElement.selectionStart != this.inputElement.selectionEnd)
-                this.currentValue = "";
+            if (this.isMetaKeyPressed(event))
+                return;
             if (event.keyCode == cf.Dictionary.keyCodes["shift"]) {
                 this.shiftIsDown = false;
             }
@@ -3635,10 +3656,6 @@ var cf;
             else if (event.keyCode != cf.Dictionary.keyCodes["shift"] && event.keyCode != cf.Dictionary.keyCodes["tab"]) {
                 this.dispatchKeyChange(value, event.keyCode);
             }
-            // handle password input
-            if (this._currentTag && this._currentTag.type == "password") {
-                this.inputElement.value = this.currentValue.replace(/./g, function () { return "*"; });
-            }
             this.onInputChange();
         };
         UserInput.prototype.dispatchKeyChange = function (dto, keyCode) {
@@ -3700,7 +3717,6 @@ var cf;
             }));
         };
         UserInput.prototype.resetValue = function () {
-            this.currentValue = "";
             this.inputElement.value = "";
             this.onInputChange();
         };
