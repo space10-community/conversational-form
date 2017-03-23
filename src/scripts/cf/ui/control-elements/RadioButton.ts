@@ -19,10 +19,8 @@ namespace cf {
 		public set checked(value: boolean){
 			if(!value){
 				this.el.removeAttribute("checked");
-				(<HTMLInputElement> this.referenceTag.domElement).removeAttribute("checked");
 			}else{
 				this.el.setAttribute("checked", "checked");
-				(<HTMLInputElement> this.referenceTag.domElement).setAttribute("checked", "checked");
 			}
 		}
 
