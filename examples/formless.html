@@ -12,25 +12,15 @@
 			}
 		</style>
 
+		<section id="info" role="info">
+			<h1>
+				Formless setup, create a Conversation Form from JSON
+			</h1>
+		</section>
+
 		<div class="form-outer">
 			<form id="empty-form"></form>
 		</div>
-
-
-
-
-
-
-		<!-- <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script> -->
-
-
-
-
-
-
 
 
 
@@ -207,40 +197,44 @@
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
 
-		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
 
-		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
 
 
 		<link type="text/css" rel="stylesheet" href="build/examples-boilerplate.css"/>
 
 		<script>
+			var testValidation = function(dto, success, error){
+				console.log("testValidation, dto:", dto);
+				if(dto.text.indexOf("holmes") != -1)
+					return success();
+				return error();
+			};
+
+			var onFormlessSubmited = function(a, b){
+				console.log("onFormlessSubmited", a, b)
+
+			}
+
 			window.addEventListener("load", function(){
 				var xhr = new XMLHttpRequest()
 				xhr.onload = function(event){
 					var str = xhr.response;
 					var json = JSON.parse(str);
-					// console.log(typeof json)
-					// console.log(typeof [])
-					// console.log(typeof test)
-					// console.log(typeof {})
-					
+
 					// string
 					window.cf.ConversationalForm.startTheConversation(str);
 					
 					// json
 					var test = window.cf.ConversationalForm.startTheConversation(json);
 					console.log(test);
-					document.body.appendChild(test.el);
+					document.getElementsByClassName("form-outer")[0].appendChild(test.el);
 
 					// in-document form
 					// window.cf.ConversationalForm.startTheConversation({
 					// 	formEl: document.getElementById("empty-form")
 					// });
 				}
-				xhr.open("GET", "formless.json");
+				xhr.open("GET", "files/formless.json");
 				xhr.send();
 			});
 		</script>
