@@ -34,7 +34,7 @@ namespace cf {
 		// override
 		public getTemplate () : string {
 			const isChecked: boolean = (<HTMLInputElement> this.referenceTag.domElement).checked && this.referenceTag.domElement.hasAttribute("checked");
-			return `<cf-button class="cf-button cf-checkbox-button `+(this.referenceTag.label.trim().length == 0 ? "no-text" : "")+`" checked=`+(isChecked ? "checked" : "")+`>
+			return `<cf-button class="cf-button cf-checkbox-button `+(this.referenceTag.label.trim().length == 0 ? "no-text" : "")+`" `+(isChecked ? "checked=checked" : "")+`>
 				<div>
 					<cf-checkbox></cf-checkbox>
 					` + this.referenceTag.label + `
