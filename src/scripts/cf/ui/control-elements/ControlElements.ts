@@ -449,6 +449,16 @@ namespace cf {
 						element.checked = true;
 					}
 				}
+			}else if(this.currentControlElement.type == "CheckboxButton"){
+				// change only the changed input
+				const elements: Array<IControlElement> = this.getElements();
+				for (let i = 0; i < elements.length; i++) {
+					let element: CheckboxButton = <CheckboxButton>elements[i];
+					if(element == controlElement){
+						const isChecked: boolean = (<HTMLInputElement> element.referenceTag.domElement).checked;
+						element.checked = isChecked;
+					}
+				}
 			}
 		}
 
