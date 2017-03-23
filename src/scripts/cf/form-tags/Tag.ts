@@ -5,6 +5,7 @@
 /// <reference path="OptionTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
 /// <reference path="../logic/EventDispatcher.ts"/>
+/// <reference path="../parsing/TagsParser.ts"/>
 
 // basic tag from form logic
 // types:
@@ -206,6 +207,7 @@ namespace cf {
 			if(element.getAttribute("type") == "button")
 				return false;
 
+
 			if(element.style.display === "none")
 				return false;
 			
@@ -219,7 +221,9 @@ namespace cf {
 		
 			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
-			else{
+			else if(TagsParser.isElementFormless(element)){
+				return true;
+			}else{
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 			}
 		}

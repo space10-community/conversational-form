@@ -10,6 +10,7 @@
 /// <reference path="form-tags/SelectTag.ts"/>
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
+/// <reference path="parsing/TagsParser.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -30,6 +31,12 @@ namespace cf {
 		preventAutoStart?: boolean;
 		scrollAccerlation?: number;
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
+	}
+
+	// CUI formless options
+	export interface ConversationalFormlessOptions{
+		options: any;
+		tags: any;
 	}
 
 	export class ConversationalForm{
@@ -109,6 +116,8 @@ namespace cf {
 			this.formEl = options.formEl;
 			this.formEl.setAttribute("cf-create-id", this.createId);
 
+			// TODO: can be a string when added as formless..
+			// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			this.submitCallback = options.submitCallback;
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
@@ -469,8 +478,37 @@ namespace cf {
 		}
 
 		private static hasAutoInstantiated: boolean = false;
+		public static startTheConversation(data: ConversationalFormOptions | ConversationalFormlessOptions) {
+			let isFormless: boolean = !!(<any> data).formEl === false;
+			let formlessTags: any;
+			let constructorOptions: ConversationalFormOptions;
+
+			if(isFormless){
+				if(typeof data === "string"){
+					// Formless init w. string
+					isFormless = true;
+					const json: any = JSON.parse(data)
+					constructorOptions = (<ConversationalFormlessOptions> json).options;
+					formlessTags = (<ConversationalFormlessOptions> json).tags;
+				}else{
+					// Formless init w. JSON object
+					constructorOptions = (<ConversationalFormlessOptions> data).options;
+					formlessTags = (<ConversationalFormlessOptions> data).tags;
+				}
+
+				// formless, so generate the pseudo tags
+				const formEl: HTMLFormElement = cf.TagsParser.parseJSONIntoElements(formlessTags)
+				constructorOptions.formEl = formEl;
+			}else{
+				// keep it standard
+				constructorOptions = <ConversationalFormOptions> data;
+			}
+
+			return new cf.ConversationalForm(constructorOptions);
+		}
+
 		public static autoStartTheConversation() {
-			if(ConversationalForm.hasAutoInstantiated)
+			if(cf.ConversationalForm.hasAutoInstantiated)
 				return;
 
 			// auto start the conversation
@@ -487,13 +525,13 @@ namespace cf {
 				for (let i = 0; i < formElements.length; i++) {
 					let form: HTMLFormElement = <HTMLFormElement>formElements[i];
 					let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
-					new cf.ConversationalForm({
+					cf.ConversationalForm.startTheConversation({
 						formEl: form,
 						context: context
 					});
 				}
 
-				ConversationalForm.hasAutoInstantiated = true;
+				cf.ConversationalForm.hasAutoInstantiated = true;
 			}
 		}
 	}
