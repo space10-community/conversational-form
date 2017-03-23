@@ -17,10 +17,10 @@ function swallowError(error) {
 	this.emit('end');
 }
 
-global.gulp.task('stylus', function() {
+global.gulp.task('stylus', ['stylus-examples'], function() {
 	var src = [
 		global.srcFolder + "/styles/**/*.styl",
-		global.srcFolder + "../examples/src/styles/**/*.styl",
+		"!" + global.srcFolder + "../examples/src/styles/**/*.styl",
 		"!" + global.srcFolder + "/styles/**/*-variables.styl"
 	]
 	var dst = global.buildFolder;
@@ -44,13 +44,12 @@ global.gulp.task('stylus', function() {
 
 global.gulp.task('stylus-examples', function(){
 	var src = [
-		global.srcFolder + "../examples/src/styles/examples-boilerplate.styl",
+		global.srcFolder + "../examples/src/**/examples-boilerplate.styl",
 	]
-	var dst = global.buildFolder + "../examples";
-	console.log(dst);
+	var dst = global.srcFolder + "../examples/build";
 
 	var stream = global.gulp.src(src)
-		// .pipe(flatten()) // flatten folder structure
+		.pipe(flatten()) // flatten folder structure
 		.pipe(changed(dst, {
 			extension: '.css'
 		}))
@@ -89,7 +88,7 @@ global.gulp.task('styles-build', ['stylus'], function(){
 			global.buildFolder + "cf/ui/chat/cf-chat-response.css",
 			global.buildFolder + "cf/ui/chat/cf-chat.css",
 			
-			"!" + global.buildFolder + "examples-boilerplate.css",
+			"!" + global.buildFolder + "/build/examples-boilerplate.css",
 			"!" + global.buildFolder + "conversational-form-docs.css",
 			"!" + global.buildFolder + "conversational-form-docs.min.css",
 			"!" + global.buildFolder + "conversational-form.css",
