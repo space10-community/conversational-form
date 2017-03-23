@@ -221,10 +221,10 @@
 					var str = xhr.response;
 					var json = JSON.parse(str);
 
-					// string
+					// start one w. string
 					window.cf.ConversationalForm.startTheConversation(str);
 					
-					// json
+					// start one w. json
 					var test = window.cf.ConversationalForm.startTheConversation(json);
 					console.log(test);
 					document.getElementsByClassName("form-outer")[0].appendChild(test.el);

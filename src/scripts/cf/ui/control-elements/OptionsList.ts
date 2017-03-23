@@ -55,8 +55,7 @@ namespace cf {
 		}
 
 		private onOptionButtonClick(event: CustomEvent){
-			// if mutiple... then don remove selection on other buttons
-			const isMutiple: boolean = false;
+			// if mutiple... then dont remove selection on other buttons
 			if(!this.multiChoice){
 				// only one is selectable at the time.
 

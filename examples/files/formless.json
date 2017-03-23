@@ -5,6 +5,26 @@
 	},
 	"tags": [
 		{
+			"tag": "select",
+			"cf-input-placeholder": "Choose one of the above",
+			"multiple": "multiple",
+			"cf-questions": "Choose multiple of the elements from the list",
+			"children":[
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-1",
+					"value": "-1"
+				},
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-2",
+					"value": "-2"
+				}
+			]
+		},
+		{
 			"tag": "fieldset",
 			"type": "Radio buttons",
 			"cf-input-placeholder": "Choose one of the above",
