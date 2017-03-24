@@ -265,22 +265,13 @@ Install local gulp from project root
 #### main task
 watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
-	# compiles (same as build) and watches files.
+	# compiles (same as build) and watches files
 	$ gulp
 
 #### sub tasks
 
-	# compiles build files, to run locally.
+	# compiles build files, to run locally, runs docs, examples and form scripts and styles
 	$ gulp build
-
-	# compiles distribution files
-	$ gulp dist
-
-	# run docs
-	$ gulp --docs
-
-	# build docs
-	$ gulp build --docs
 
 
 ### install new packages for dev
@@ -310,7 +301,6 @@ When you are up and running, you can find a few form tests and examples in the /
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.
 
 # Websites that use Conversational Form
-
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
 
 - ...
