@@ -1063,6 +1063,8 @@ var cf;
             this.infoElement = options.infoEl;
             this.onScrollCallback = this.onScroll.bind(this);
             this.el.addEventListener('scroll', this.onScrollCallback, false);
+            this.onResizeCallback = this.onResize.bind(this);
+            window.addEventListener('resize', this.onResizeCallback, false);
             this.onElementFocusCallback = this.onElementFocus.bind(this);
             this.eventTarget.addEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
             this.onElementLoadedCallback = this.onElementLoaded.bind(this);
@@ -1578,6 +1580,9 @@ var cf;
                 }));
             });
         };
+        ControlElements.prototype.onResize = function (event) {
+            this.resize();
+        };
         ControlElements.prototype.resize = function (resolve, reject) {
             var _this = this;
             // scrollbar things
@@ -1666,6 +1671,8 @@ var cf;
             this.tableableRows = null;
             cancelAnimationFrame(this.rAF);
             this.rAF = null;
+            window.removeEventListener('resize', this.onResizeCallback, false);
+            this.onResizeCallback = null;
             this.el.removeEventListener('scroll', this.onScrollCallback, false);
             this.onScrollCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
