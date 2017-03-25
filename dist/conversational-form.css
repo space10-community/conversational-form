@@ -1495,7 +1495,7 @@ cf-chat-response text {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: normal;
   -webkit-transform-origin: 0% 0%;
   -moz-transform-origin: 0% 0%;
   -o-transform-origin: 0% 0%;
