@@ -171,7 +171,6 @@ namespace cf {
 				this.controlElements.clearTagsAndReset();
 			
 			this.disabled = true;
-			this.visible = false;
 		}
 
 		/**
