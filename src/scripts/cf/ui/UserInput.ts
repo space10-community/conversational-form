@@ -18,13 +18,9 @@ namespace cf {
 
 	export const UserInputEvents = {
 		SUBMIT: "cf-input-user-input-submit",
-		//	detail: string
-
 		KEY_CHANGE: "cf-input-key-change",
-		//	detail: string
-
 		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
-		//	detail: string
+		HEIGHT_CHANGE: "cf-input-height-change",
 	}
 
 	// class
@@ -193,6 +189,11 @@ namespace cf {
 
 			this.inputElement.style.height = "0px";
 			this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+
+			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.HEIGHT_CHANGE);
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
+				detail: this.inputElement.scrollHeight
+			}));
 		}
 
 		private inputInvalid(event: CustomEvent){
