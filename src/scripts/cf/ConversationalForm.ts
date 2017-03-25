@@ -17,19 +17,47 @@ namespace cf {
 
 	// CUI options
 	export interface ConversationalFormOptions{
-		tags?: Array<ITag>,
-		formEl: HTMLFormElement,
-		context?: HTMLElement,
-		dictionaryData?: Object,
-		dictionaryRobot?: Object,
-		userImage?: string,
-		robotImage?: string,
-		submitCallback?: () => void | HTMLButtonElement,
+		// HTMLFormElement
+		formEl: HTMLFormElement;
+
+		// context (HTMLElement) of where to append the ConversationalForm (see also cf-context attribute)
+		context?: HTMLElement;
+
+		// pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
+		tags?: Array<ITag>;
+
+		// overwrite the default user Dictionary items
+		dictionaryData?: Object;
+
+		// overwrite the default robot Dictionary items
+		dictionaryRobot?: Object;
+
+		//base64 || image url // overwrite user image, without overwritting the user dictionary
+		userImage?: string;
+
+		// base64 || image url // overwrite robot image, without overwritting the robot dictionary
+		robotImage?: string;
+
+		// custom submit callback if button[type=submit] || form.submit() is not wanted..
+		submitCallback?: () => void | HTMLButtonElement;
+
+		// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
 		loadExternalStyleSheet?: boolean;
+
+		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 		preventAutoAppend?: boolean;
+
+		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 		preventAutoStart?: boolean;
+
+		// optional horizontal scroll accerlation value, 0-1
 		scrollAccerlation?: number;
-		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // a optional one catch all method, will be calles on each Tag.ts if set.
+
+		// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
+
+		// optional event dispatcher, has to be an instance of cf.EventDispatcher
+		eventDispatcher?: cf.EventDispatcher;
 	}
 
 	export class ConversationalForm{
@@ -86,6 +114,10 @@ namespace cf {
 			console.log('Conversational Form > version:', this.version);
 
 			window.ConversationalForm[this.createId] = this;
+
+			// possible to create your own event dispatcher, so you can tap into the events of the app
+			if(options.eventDispatcher)
+				this._eventTarget = options.eventDispatcher;
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
