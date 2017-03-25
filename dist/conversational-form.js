@@ -3435,7 +3435,6 @@ var cf;
             if (this.controlElements)
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
-            this.visible = false;
         };
         /**
         * @name onOriginalTagChanged
