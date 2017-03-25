@@ -199,11 +199,11 @@ cf-input.animate-in cf-input-button.cf-input-button {
   -o-transition-delay: 0s, 0s 0.75s;
   -ms-transition-delay: 0s, 0s 0.75s;
   transition-delay: 0s, 0s 0.75s;
-  -webkit-transform: scale(1, 1) translateY(50%);
-  -moz-transform: scale(1, 1) translateY(50%);
-  -o-transform: scale(1, 1) translateY(50%);
-  -ms-transform: scale(1, 1) translateY(50%);
-  transform: scale(1, 1) translateY(50%);
+  -webkit-transform: scale(1, 1);
+  -moz-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
 }
 cf-input input {
   padding: 5px 5px 5px 15px;
@@ -378,12 +378,7 @@ cf-input-button.cf-input-button {
   position: absolute;
   overflow: hidden;
   right: 8px;
-  bottom: 50%;
-  -webkit-transform: translateY(50%);
-  -moz-transform: translateY(50%);
-  -o-transform: translateY(50%);
-  -ms-transform: translateY(50%);
-  transform: translateY(50%);
+  bottom: 8px;
   z-index: 3;
   cursor: pointer;
   border-radius: 50%;

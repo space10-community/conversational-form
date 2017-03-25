@@ -1423,6 +1423,17 @@ var cf;
                     }
                 }
             }
+            else if (this.currentControlElement.type == "CheckboxButton") {
+                // change only the changed input
+                var elements = this.getElements();
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (element == controlElement) {
+                        var isChecked = element.referenceTag.domElement.checked;
+                        element.checked = isChecked;
+                    }
+                }
+            }
         };
         ControlElements.prototype.reset = function () {
             this.el.classList.remove("one-row");
@@ -2688,11 +2699,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2935,7 +2951,7 @@ var cf;
         };
         // override
         CheckboxButton.prototype.getTemplate = function () {
-            var isChecked = this.referenceTag.domElement.checked || this.referenceTag.domElement.hasAttribute("checked");
+            var isChecked = this.referenceTag.domElement.checked && this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-button>\n\t\t\t";
         };
         return CheckboxButton;
