@@ -40,6 +40,7 @@ namespace cf {
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
 		private onElementLoadedCallback: () => void;
+		private onResizeCallback: () => void;
 
 		private elementWidth: number = 0;
 		private filterListNumberOfVisible: number = 0;
@@ -102,6 +103,9 @@ namespace cf {
 
 			this.onScrollCallback = this.onScroll.bind(this);
 			this.el.addEventListener('scroll', this.onScrollCallback, false);
+
+			this.onResizeCallback = this.onResize.bind(this);
+			window.addEventListener('resize', this.onResizeCallback, false);
 
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
@@ -632,6 +636,10 @@ namespace cf {
 			});
 		}
 
+		private onResize(event: Event){
+			this.resize();
+		}
+
 		public resize(resolve?: any, reject?: any){
 			// scrollbar things
 			// Element.offsetWidth - Element.clientWidth
@@ -721,7 +729,6 @@ namespace cf {
 					}, 0);
 				}
 
-
 				if(resolve)
 					resolve();
 			}, 0);
@@ -733,6 +740,9 @@ namespace cf {
 
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
+
+			window.removeEventListener('resize', this.onResizeCallback, false);
+			this.onResizeCallback = null;
 
 			this.el.removeEventListener('scroll', this.onScrollCallback, false);
 			this.onScrollCallback = null;
