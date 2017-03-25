@@ -25,6 +25,29 @@ cf-chat
 		overflow-y auto
 		padding-bottom 20px // allow for bounce
 		padding-top 40px // allow for out of gradient scroll
+		&::-webkit-scrollbar
+			width 4px
+			height 4px
+			-webkit-appearance none
+			-webkit-border-radius 100px
+
+		&::-webkit-scrollbar-track
+			background white
+			-webkit-border-radius 100px
+
+		&::-webkit-scrollbar-thumb:vertical
+			background $color-chat-reponse-user-bg
+			-webkit-border-radius 100px
+
+		&::-webkit-scrollbar-thumb
+			background white
+			border none
+			-webkit-border-radius 100px
+
+		&::-webkit-scrollbar-thumb:vertical:active
+			background black
+			border none
+			-webkit-border-radius 100px
 
 
 

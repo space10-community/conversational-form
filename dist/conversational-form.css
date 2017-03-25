@@ -1938,6 +1938,30 @@ cf-chat scrollable {
   padding-bottom: 20px;
   padding-top: 40px;
 }
+cf-chat scrollable::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  -webkit-appearance: none;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-track {
+  background: #fff;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb:vertical {
+  background: #e6f3fe;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb {
+  background: #fff;
+  border: none;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb:vertical:active {
+  background: #000;
+  border: none;
+  -webkit-border-radius: 100px;
+}
 
 .cf-button {
   background: #fff;
