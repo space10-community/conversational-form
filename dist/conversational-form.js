@@ -302,6 +302,9 @@ var cf;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
             console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
+            // possible to create your own event dispatcher, so you can tap into the events of the app
+            if (options.eventDispatcher)
+                this._eventTarget = options.eventDispatcher;
             // set a general step validation callback
             if (options.flowStepCallback)
                 cf.FlowManager.generalFlowStepCallback = options.flowStepCallback;

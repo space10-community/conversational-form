@@ -41,7 +41,7 @@
 
 
 
-		<div class="form-outer" cf-context>
+		<div id="context" class="form-outer" cf-context>
 
 
 
@@ -49,8 +49,8 @@
 
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="form" cf-form>
-				<!--<input type="text" required cf-questions="text field multiline....." name="multiline" value="">-->
+			<form id="form">
+				<input type="text" required cf-questions="text field multiline....." name="multiline" value="Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......Multi line pre valuetest for height scroll......">
 
 				<input type="password" pattern=".{5,10}" cf-questions="password 1 field.. (NOT required)" cf-error="Password needs to be between 5-10 chars" name="password1" value="">
 				<!--<input type="input" cf-questions="none-password 2 field.. (NOT required)" name="input1" value="">-->
@@ -178,11 +178,11 @@
 				
 
 				<div class="field">
-										<label for="billing:telephone" class="required"><em>*</em>Telefonnummer</label>
-										<div class="input-box">
-											<input type="tel" placeholder="Question from placeholder attr" name="billing[telephone]" value="" pattern="^([0-9\(\)\/\+ \-]*)$" cf-error="This does not seem to be a phone number..|This is not a phone number!" title="Telefonnummer" class="input-text  required-entry" id="billing:telephone">
-										</div>
-									</div>
+					<label for="billing:telephone" class="required"><em>*</em>Telefonnummer</label>
+					<div class="input-box">
+						<input type="tel" placeholder="Question from placeholder attr" name="billing[telephone]" value="" pattern="^([0-9\(\)\/\+ \-]*)$" cf-error="This does not seem to be a phone number..|This is not a phone number!" title="Telefonnummer" class="input-text  required-entry" id="billing:telephone">
+					</div>
+				</div>
 
 				<div class="fieldset">
 					<p class="required">* Skal udfyldes</p>
@@ -594,18 +594,22 @@
 			};
 
 			(function(){
-				// var conversationalForm = new cf.ConversationalForm({
-				// 	formEl: document.getElementById("form"),
-				// 	flowStepCallback: function(dto, success, error){
-				// 		success();
-				// 	},
-				// 	submitCallback: function(){
-				// 		// remove Conversational Form
-				// 		conversationalForm.remove();
+				const dispatcher = new cf.EventDispatcher();
+				dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+					console.log("chat list updated...", event);
+				}, false);
 
-				// 		alert("Custom submit callback reached, see markup of this file:190")
-				// 	}
-				// });
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("context"),
+					eventDispatcher: dispatcher,
+					flowStepCallback: function(dto, success, error){
+						success();
+					},
+					submitCallback: function(){
+						// remove Conversational Form
+					}
+				});
 			})();
 		</script>
 
