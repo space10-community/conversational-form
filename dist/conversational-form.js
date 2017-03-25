@@ -4301,6 +4301,8 @@ var cf;
             this.stopped = true;
         };
         FlowManager.prototype.nextStep = function () {
+            if (this.stopped)
+                return;
             if (this.savedStep != -1)
                 this.step = this.savedStep;
             this.savedStep = -1; //reset saved step
