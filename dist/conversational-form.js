@@ -3313,10 +3313,9 @@ var cf;
     // interface
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
-        //	detail: string
         KEY_CHANGE: "cf-input-key-change",
-        //	detail: string
         CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
+        HEIGHT_CHANGE: "cf-input-height-change",
     };
     // class
     var UserInput = (function (_super) {
@@ -3453,6 +3452,10 @@ var cf;
                 return;
             this.inputElement.style.height = "0px";
             this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+            cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.UserInputEvents.HEIGHT_CHANGE);
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.HEIGHT_CHANGE, {
+                detail: this.inputElement.scrollHeight
+            }));
         };
         UserInput.prototype.inputInvalid = function (event) {
             var _this = this;
@@ -4008,8 +4011,16 @@ var cf;
             // user input key change
             _this.onInputKeyChangeCallback = _this.onInputKeyChange.bind(_this);
             _this.eventTarget.addEventListener(cf.UserInputEvents.KEY_CHANGE, _this.onInputKeyChangeCallback, false);
+            // user input height change
+            _this.onInputHeightChangeCallback = _this.onInputHeightChange.bind(_this);
+            _this.eventTarget.addEventListener(cf.UserInputEvents.HEIGHT_CHANGE, _this.onInputHeightChangeCallback, false);
             return _this;
         }
+        ChatList.prototype.onInputHeightChange = function (event) {
+            var dto = event.detail.dto;
+            cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+            this.scrollListTo();
+        };
         ChatList.prototype.onInputKeyChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
