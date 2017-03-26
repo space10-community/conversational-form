@@ -43,6 +43,7 @@ namespace cf {
 		private onOriginalTagChangedCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
+		private initialInputHeight: number = 0;
 		private shiftIsDown: boolean = false;
 		private _disabled: boolean = false;
 		private keyUpCallback: () => void;
@@ -187,8 +188,10 @@ namespace cf {
 			if(!this.active && !this.controlElements.active)
 				return;
 
+			// safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
+			const oldHeight: number = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10));
 			this.inputElement.style.height = "0px";
-			this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+			this.inputElement.style.height = (this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight) + "px";
 
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.HEIGHT_CHANGE);
 			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
@@ -247,10 +250,10 @@ namespace cf {
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
 					input.setAttribute(item.name, item.value);
 				});
+				input.setAttribute("autocomplete", "new-password");
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
-				
-				this.onInputChange();
+
 			}else if(isCurrentInputTypeInputButNewTagNotPassword){
 				// change to textarea
 				const textarea = document.createElement("textarea");
@@ -259,8 +262,11 @@ namespace cf {
 				});
 				this.inputElement.parentNode.replaceChild(textarea, this.inputElement);
 				this.inputElement = textarea;
+			}
 
-				this.onInputChange();
+			if(this.initialInputHeight == 0){
+				// initial height not set
+				this.initialInputHeight = this.inputElement.offsetHeight;
 			}
 		}
 
@@ -302,11 +308,11 @@ namespace cf {
 
 			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
 				this.inputElement.value = this._currentTag.defaultValue.toString();
-				this.onInputChange();
 			}
 
 			setTimeout(() => {
 				this.disabled = false;
+				this.onInputChange();
 			}, 150);
 		}
 
