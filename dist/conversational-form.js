@@ -2898,12 +2898,10 @@ var cf;
             set: function (value) {
                 if (!value) {
                     this.el.removeAttribute("checked");
-                    this.referenceTag.domElement.value = "0";
                     this.referenceTag.domElement.removeAttribute("checked");
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
-                    this.referenceTag.domElement.value = "1";
                     this.referenceTag.domElement.setAttribute("checked", "checked");
                 }
             },
