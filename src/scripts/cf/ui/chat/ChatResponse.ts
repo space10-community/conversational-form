@@ -163,7 +163,7 @@ namespace cf {
 		}
 
 		private checkForEditMode(){
-			if(!this.isRobotReponse){
+			if(!this.isRobotReponse && !this.textEl.hasAttribute("thinking")){
 				this.el.classList.add("can-edit");
 				this.disabled = false;
 			}
