@@ -13,12 +13,19 @@
 			}
 		</style>
 
+		<script>
+			function submitMethod(){
+				alert("submitted")
+				return false;
+			}
+		</script>
+
 
 		<div class="form-outer" cf-context>
 
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-			<form id="form" cf-form>
-				<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+			<form id="form" cf-form onsubmit="return submitMethod();">
+				<input type="text" cf-questions="Fill out field to get Alert from callback method." />
 			</form>
 
 		</div>
