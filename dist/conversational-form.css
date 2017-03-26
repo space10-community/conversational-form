@@ -1958,7 +1958,7 @@ cf-chat scrollable::-webkit-scrollbar-thumb {
   -webkit-border-radius: 100px;
 }
 cf-chat scrollable::-webkit-scrollbar-thumb:vertical:active {
-  background: #000;
+  background: #89c6fa;
   border: none;
   -webkit-border-radius: 100px;
 }
