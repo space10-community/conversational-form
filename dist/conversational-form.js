@@ -302,6 +302,9 @@ var cf;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
             console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
+            // possible to create your own event dispatcher, so you can tap into the events of the app
+            if (options.eventDispatcher)
+                this._eventTarget = options.eventDispatcher;
             // set a general step validation callback
             if (options.flowStepCallback)
                 cf.FlowManager.generalFlowStepCallback = options.flowStepCallback;
@@ -388,6 +391,7 @@ var cf;
                 }
             }
             else {
+                // tags are manually setup and passed as options.tags.
             }
             // remove invalid tags if they've sneaked in.. this could happen if tags are setup manually as we don't encurage to use static Tag.isTagValid
             var indexesToRemove = [];
@@ -844,11 +848,16 @@ var cf;
 /// <reference path="../../ConversationalForm.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../form-tags/Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -1054,6 +1063,8 @@ var cf;
             this.infoElement = options.infoEl;
             this.onScrollCallback = this.onScroll.bind(this);
             this.el.addEventListener('scroll', this.onScrollCallback, false);
+            this.onResizeCallback = this.onResize.bind(this);
+            window.addEventListener('resize', this.onResizeCallback, false);
             this.onElementFocusCallback = this.onElementFocus.bind(this);
             this.eventTarget.addEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
             this.onElementLoadedCallback = this.onElementLoaded.bind(this);
@@ -1417,6 +1428,17 @@ var cf;
                     }
                 }
             }
+            else if (this.currentControlElement.type == "CheckboxButton") {
+                // change only the changed input
+                var elements = this.getElements();
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (element == controlElement) {
+                        var isChecked = element.referenceTag.domElement.checked;
+                        element.checked = isChecked;
+                    }
+                }
+            }
         };
         ControlElements.prototype.reset = function () {
             this.el.classList.remove("one-row");
@@ -1558,6 +1580,9 @@ var cf;
                 }));
             });
         };
+        ControlElements.prototype.onResize = function (event) {
+            this.resize();
+        };
         ControlElements.prototype.resize = function (resolve, reject) {
             var _this = this;
             // scrollbar things
@@ -1646,6 +1671,8 @@ var cf;
             this.tableableRows = null;
             cancelAnimationFrame(this.rAF);
             this.rAF = null;
+            window.removeEventListener('resize', this.onResizeCallback, false);
+            this.onResizeCallback = null;
             this.el.removeEventListener('scroll', this.onScrollCallback, false);
             this.onScrollCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
@@ -2218,6 +2245,7 @@ var cf;
                     this.domElement.value = valueText;
             }
             else {
+                // throw new Error("cf-: value:string is not valid. Value: "+value);
             }
             return isValid;
         };
@@ -2490,11 +2518,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2517,6 +2550,7 @@ var cf;
             else if (_this.type == "password") {
             }
             else if (_this.type == "file") {
+                // check InputFileTag.ts
             }
             return _this;
         }
@@ -2527,6 +2561,7 @@ var cf;
         InputTag.prototype.findAndSetLabel = function () {
             _super.prototype.findAndSetLabel.call(this);
             if (!this._label) {
+                // special use cases for <input> tag add here...
             }
         };
         InputTag.prototype.setTagValueAndIsValid = function (value) {
@@ -2547,11 +2582,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2571,6 +2611,7 @@ var cf;
                     _this.optionTags.push(tag);
                 }
                 else {
+                    // console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
                 }
             }
             return _this;
@@ -2636,11 +2677,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2653,6 +2699,7 @@ var cf;
             if (_this.domElement.getAttribute("type") == "submit") {
             }
             else if (_this.domElement.getAttribute("type") == "button") {
+                // this.onClick = eval(this.domElement.onclick);
             }
             return _this;
         }
@@ -2662,11 +2709,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2716,11 +2768,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2795,11 +2852,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2848,11 +2910,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2894,7 +2961,7 @@ var cf;
         };
         // override
         CheckboxButton.prototype.getTemplate = function () {
-            var isChecked = this.referenceTag.domElement.checked || this.referenceTag.domElement.hasAttribute("checked");
+            var isChecked = this.referenceTag.domElement.checked && this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t\t" + this.referenceTag.label + "\n\t\t\t\t</div>\n\t\t\t</cf-button>\n\t\t\t";
         };
         return CheckboxButton;
@@ -2903,11 +2970,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3063,11 +3135,16 @@ var cf;
 
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3230,28 +3307,31 @@ var cf;
 /// <reference path="BasicElement.ts"/>
 /// <reference path="control-elements/ControlElements.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
     // interface
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
-        //	detail: string
         KEY_CHANGE: "cf-input-key-change",
-        //	detail: string
         CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
+        HEIGHT_CHANGE: "cf-input-height-change",
     };
     // class
     var UserInput = (function (_super) {
         __extends(UserInput, _super);
         function UserInput(options) {
             var _this = _super.call(this, options) || this;
-            _this.currentValue = "";
             _this.errorTimer = 0;
             _this.shiftIsDown = false;
             _this._disabled = false;
@@ -3364,15 +3444,13 @@ var cf;
             if (this.controlElements)
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
-            this.visible = false;
         };
         /**
         * @name onOriginalTagChanged
-        * on domElement from a tag value changed..
+        * on domElement from a Tag value changed..
         */
         UserInput.prototype.onOriginalTagChanged = function (event) {
             if (this.currentTag == event.detail.tag) {
-                this.currentValue = this.inputElement.value = event.detail.tag.value.toString();
                 this.onInputChange();
             }
             if (this.controlElements && this.controlElements.active) {
@@ -3384,6 +3462,10 @@ var cf;
                 return;
             this.inputElement.style.height = "0px";
             this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+            cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.UserInputEvents.HEIGHT_CHANGE);
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.HEIGHT_CHANGE, {
+                detail: this.inputElement.scrollHeight
+            }));
         };
         UserInput.prototype.inputInvalid = function (event) {
             var _this = this;
@@ -3420,6 +3502,32 @@ var cf;
                 this.inputElement.setAttribute("placeholder", cf.Dictionary.get("group-placeholder"));
             }
         };
+        UserInput.prototype.checkForCorrectInputTag = function () {
+            // handle password natively
+            var currentType = this.inputElement.getAttribute("type");
+            var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
+            var isCurrentInputTypeInputButNewTagNotPassword = this._currentTag.type != "password" && currentType == "password";
+            if (isCurrentInputTypeTextAreaButNewTagPassword) {
+                // change to input
+                var input_1 = document.createElement("input");
+                Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
+                    input_1.setAttribute(item.name, item.value);
+                });
+                this.inputElement.parentNode.replaceChild(input_1, this.inputElement);
+                this.inputElement = input_1;
+                this.onInputChange();
+            }
+            else if (isCurrentInputTypeInputButNewTagNotPassword) {
+                // change to textarea
+                var textarea_1 = document.createElement("textarea");
+                Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
+                    textarea_1.setAttribute(item.name, item.value);
+                });
+                this.inputElement.parentNode.replaceChild(textarea_1, this.inputElement);
+                this.inputElement = textarea_1;
+                this.onInputChange();
+            }
+        };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
@@ -3427,6 +3535,8 @@ var cf;
             this.visible = true;
             this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
+            // replace textarea and visa versa
+            this.checkForCorrectInputTag();
             // set input field to type password if the dom input field is that, covering up the input
             this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
             clearTimeout(this.errorTimer);
@@ -3469,34 +3579,29 @@ var cf;
         UserInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
+        UserInput.prototype.isMetaKeyPressed = function (event) {
+            // if any meta keys, then ignore, getModifierState, but safari does not support..
+            if (event.metaKey || [91, 93].indexOf(event.keyCode) !== -1)
+                return;
+        };
         UserInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
+            if (this.isMetaKeyPressed(event))
+                return;
+            // if any meta keys, then ignore
             if (event.keyCode == cf.Dictionary.keyCodes["shift"])
                 this.shiftIsDown = true;
-            var key = String.fromCharCode(event.keyCode);
             // prevent textarea line breaks
             if (event.keyCode == cf.Dictionary.keyCodes["enter"] && !event.shiftKey) {
                 event.preventDefault();
-            }
-            else {
-                // handle password input
-                if (this._currentTag && this._currentTag.type == "password") {
-                    if (event.keyCode === cf.Dictionary.keyCodes["backspace"]) {
-                        this.currentValue = this.currentValue.length > 0 ? this.currentValue.slice(0, this.currentValue.length - 1) : "";
-                    }
-                    else {
-                        this.currentValue += key;
-                    }
-                }
             }
         };
         UserInput.prototype.onKeyUp = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
-            // reset current value, happens when user selects all text and delete or cmd+backspace
-            if (this.inputElement.value == "" || this.inputElement.selectionStart != this.inputElement.selectionEnd)
-                this.currentValue = "";
+            if (this.isMetaKeyPressed(event))
+                return;
             if (event.keyCode == cf.Dictionary.keyCodes["shift"]) {
                 this.shiftIsDown = false;
             }
@@ -3578,10 +3683,6 @@ var cf;
             }
             else if (event.keyCode != cf.Dictionary.keyCodes["shift"] && event.keyCode != cf.Dictionary.keyCodes["tab"]) {
                 this.dispatchKeyChange(value, event.keyCode);
-            }
-            // handle password input
-            if (this._currentTag && this._currentTag.type == "password") {
-                this.inputElement.value = this.currentValue.replace(/./g, function () { return "*"; });
             }
             this.onInputChange();
         };
@@ -3683,11 +3784,16 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3802,6 +3908,8 @@ var cf;
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+                // add more..
+                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
@@ -3881,11 +3989,16 @@ var cf;
 /// <reference path="ChatResponse.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3908,8 +4021,16 @@ var cf;
             // user input key change
             _this.onInputKeyChangeCallback = _this.onInputKeyChange.bind(_this);
             _this.eventTarget.addEventListener(cf.UserInputEvents.KEY_CHANGE, _this.onInputKeyChangeCallback, false);
+            // user input height change
+            _this.onInputHeightChangeCallback = _this.onInputHeightChange.bind(_this);
+            _this.eventTarget.addEventListener(cf.UserInputEvents.HEIGHT_CHANGE, _this.onInputHeightChangeCallback, false);
             return _this;
         }
+        ChatList.prototype.onInputHeightChange = function (event) {
+            var dto = event.detail.dto;
+            cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+            this.scrollListTo();
+        };
         ChatList.prototype.onInputKeyChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
@@ -4052,6 +4173,7 @@ var cf;
                 setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
             }
             catch (e) {
+                // catch errors where CF have been removed
             }
         };
         ChatList.prototype.getTemplate = function () {
@@ -4199,6 +4321,8 @@ var cf;
             this.stopped = true;
         };
         FlowManager.prototype.nextStep = function () {
+            if (this.stopped)
+                return;
             if (this.savedStep != -1)
                 this.step = this.savedStep;
             this.savedStep = -1; //reset saved step

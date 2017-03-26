@@ -26,7 +26,7 @@ cf-input
 	input
 		padding 5px 5px 5px 15px
 
-	textarea
+	input, textarea
 		resize none
 		overflow hidden
 		padding 15px 40px 15px 15px
@@ -55,6 +55,7 @@ cf-input
 		-webkit-appearance none
 		position relative
 		z-index 2
+		display block
 
 		// styling
 		font-family 'Helvetica Neue', sans-serif
@@ -113,7 +114,7 @@ cf-input
 
 			svg polygon
 				fill $color-input-error-text
-	
+
 	&[tag-type="file"]
 		cf-input-button.cf-input-button
 			&:after
@@ -148,7 +149,7 @@ cf-input-button.cf-input-button
 	position: absolute
 	overflow hidden
 	right 8px
-	bottom 12px
+	bottom 8px
 	z-index 3
 	cursor pointer
 	border-radius 50%
