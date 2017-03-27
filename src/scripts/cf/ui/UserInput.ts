@@ -89,9 +89,10 @@ namespace cf {
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
+
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
-			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputBlurCallback = this.onInputBlur.bind(this);
+			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
@@ -244,6 +245,12 @@ namespace cf {
 			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
 			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
 
+			// remove focus and blur events, because we want to create a new element
+			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+				this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
+				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
+			}
+
 			if(isCurrentInputTypeTextAreaButNewTagPassword){
 				// change to input
 				const input = document.createElement("input");
@@ -253,7 +260,6 @@ namespace cf {
 				input.setAttribute("autocomplete", "new-password");
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
-
 			}else if(isCurrentInputTypeInputButNewTagNotPassword){
 				// change to textarea
 				const textarea = document.createElement("textarea");
@@ -262,6 +268,12 @@ namespace cf {
 				});
 				this.inputElement.parentNode.replaceChild(textarea, this.inputElement);
 				this.inputElement = textarea;
+			}
+
+			// add focus and blur events to newly created input element
+			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+				this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
+				this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 			}
 
 			if(this.initialInputHeight == 0){
