@@ -1341,7 +1341,7 @@ var cf;
             }
         };
         ControlElements.prototype.getElements = function () {
-            if (this.elements.length > 0 && this.elements[0].type == "OptionsList")
+            if (this.elements && this.elements.length > 0 && this.elements[0].type == "OptionsList")
                 return this.elements[0].elements;
             return this.elements;
         };

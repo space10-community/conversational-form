@@ -356,7 +356,7 @@ namespace cf {
 		}
 
 		private getElements(): Array <IControlElement> {
-			if(this.elements.length > 0 && this.elements[0].type == "OptionsList")
+			if(this.elements && this.elements.length > 0 && this.elements[0].type == "OptionsList")
 				return (<OptionsList> this.elements[0]).elements;
 			
 			return <Array<IControlElement>> this.elements;
