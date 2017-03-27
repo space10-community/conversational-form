@@ -1595,7 +1595,7 @@ var cf;
             setTimeout(function () {
                 _this.listWidth = 0;
                 var elements = _this.getElements();
-                if (elements.length > 0) {
+                if (elements && elements.length > 0) {
                     var listWidthValues = [];
                     var listWidthValues2 = [];
                     var containsElementWithImage = false;

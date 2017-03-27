@@ -653,7 +653,7 @@ namespace cf {
 				this.listWidth = 0;
 				const elements: Array <IControlElement> = this.getElements();
 
-				if(elements.length > 0){
+				if(elements && elements.length > 0){
 					const listWidthValues: Array<number> = [];
 					const listWidthValues2: Array<IControlElement> = [];
 					let containsElementWithImage: boolean = false;
