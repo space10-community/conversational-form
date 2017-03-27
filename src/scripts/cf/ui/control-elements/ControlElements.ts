@@ -141,7 +141,7 @@ namespace cf {
 		* when element is loaded, usally image loaded.
 		*/
 		private onElementLoaded(event: CustomEvent){
-			this.resize();
+			this.onResize(null);
 		}
 
 		private onElementFocus(event: CustomEvent){
@@ -726,11 +726,11 @@ namespace cf {
 						this.buildTabableRows();
 
 						this.el.classList.add("resized");
+
+						if(resolve)
+							resolve();
 					}, 0);
 				}
-
-				if(resolve)
-					resolve();
 			}, 0);
 		}
 

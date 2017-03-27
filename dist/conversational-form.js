@@ -1149,7 +1149,7 @@ var cf;
         * when element is loaded, usally image loaded.
         */
         ControlElements.prototype.onElementLoaded = function (event) {
-            this.resize();
+            this.onResize(null);
         };
         ControlElements.prototype.onElementFocus = function (event) {
             var vector = event.detail;
@@ -1660,10 +1660,10 @@ var cf;
                         _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
                         _this.buildTabableRows();
                         _this.el.classList.add("resized");
+                        if (resolve)
+                            resolve();
                     }, 0);
                 }
-                if (resolve)
-                    resolve();
             }, 0);
         };
         ControlElements.prototype.dealloc = function () {
