@@ -158,9 +158,9 @@ namespace cf {
 			this.flowDTOFromUserInputUpdate = dto;
 
 			if(!this.flowDTOFromUserInputUpdate.text){
-				if(dto.input.currentTag.type == "group"){
+				if(dto.tag.type == "group"){
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing-group");
-				}else if(dto.input.currentTag.type != "password")
+				}else if(dto.tag.type != "password")
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
 			}
 
