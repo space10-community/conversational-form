@@ -51,7 +51,8 @@ Add this to <form> tag to disable animations completly.
 
 For more control over the output exclude the attribute `cf-form` from the form element and instantiate either with vanilla JS or jQuery:
 
-### Self-instantiate with vanilla JS
+### Self-instantiate with vanilla JS w. full list of paramaters
+Only `formEl` is a mandatory paramter for the object you pass to the constructor
 
 ```javascript
 new cf.ConversationalForm(<ConversationalFormOptions> {
@@ -107,23 +108,6 @@ $("form").conversationalForm(<ConversationalFormOptions> {
 	...
 });
 ```
-
-
-## Parameters to pass the constructor of ConversationalForm: <<a name="ConversationalFormOptions"></a>ConversationalFormOptions>
-* **formEl**: HTMLFormElement | string
-* **context**?: HTMLElement | string
-	* Set the context of where the ConversationalForm will be appended to
-	* If not set then ConversationalForm will get appended to document.body
-* **tags**?: Array<ITag>
-	* [cf.Tag.createTag(element), ...]
-* **dictionaryData**?: object
-	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
-* **dictionaryAI**?: object
-	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
-* **submitCallback**?: () => void | HTMLButtonElement
-	* An alternative way to submit the form. Can be a Function or an HTMLButtonElement (click will be called). If not defined the component will search in the formEl after a button[type=”submit”] and call click() if not button is found final fallback will be to call submit() on formEl.
-* **userImage**?: string
-	* Set a different userImage. "..." //base64 || image url
 
 
 ## Map your own tags
