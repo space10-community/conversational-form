@@ -4139,10 +4139,10 @@ var cf;
         ChatList.prototype.setCurrentUserResponse = function (dto) {
             this.flowDTOFromUserInputUpdate = dto;
             if (!this.flowDTOFromUserInputUpdate.text) {
-                if (dto.input.currentTag.type == "group") {
+                if (dto.tag.type == "group") {
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing-group");
                 }
-                else if (dto.input.currentTag.type != "password")
+                else if (dto.tag.type != "password")
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
