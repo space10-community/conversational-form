@@ -151,6 +151,10 @@ namespace cf {
 			// TODO: can be a string when added as formless..
 			// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			this.submitCallback = options.submitCallback;
+			if(this.submitCallback && typeof this.submitCallback === "string"){
+				// a submit callback method added to json, so use eval to evaluate method
+				this.submitCallback = eval(this.submitCallback);
+			}
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
 				ConversationalForm.animationsEnabled = false;
