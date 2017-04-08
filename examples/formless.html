@@ -4,23 +4,24 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css">
+		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
 	</head>
 	<body>
-		<script src="../docs/build/cf/ConversationalFormDocs.js"></script>
+		<script src="build/cf/ConversationalFormExamples.js"></script>
 
-		<main id="conversational-form-docs" class="content">
+		<main class="content">
 			<menu id="small-screen-menu">
-				<h2>Conversational Form</h2>
+				<h2>Conversational Form examples</h2>
 
 				<div class="switch-btn">
 					<label class="switch">
-						<input type="checkbox" onclick="window.conversationalFormDocs.toggleConversation(event)">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
 						<div class="slider round"></div>
 					</label>
 				</div>
 
-				<div class="hamburger-btn" onclick="window.conversationalFormDocs.toggleMenuState(event)">
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
 					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
 							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
@@ -37,13 +38,13 @@
 
 			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
 				<label class="switch">
-					<input type="checkbox" onclick="window.conversationalFormDocs.toggleConversation(event)">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
 					<div class="slider round"></div>
 				</label>
 			</div>
 
 			<section id="info" role="info">
-				<div class="close-btn" onclick="window.conversationalFormDocs.toggleMenuState()">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
 					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
 							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
@@ -68,6 +69,7 @@
 
 			<section id="form" role="form">
 				<div class="form-outer">
+					<h2>No form, all JS</h2>
 					<form id="empty-form"></form>
 				</div>
 			</section>
@@ -90,10 +92,9 @@
 
 
 
-
-
-
-
+		<!-- when done -->
+		<!--<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
+		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin id="conversational-form-development"></script>-->
 
 		<script
 			type="text/javascript"
@@ -109,13 +110,11 @@
 			id="conversational-form-development" 
 			type="text/javascript"
 			src="../build/cf/ConversationalForm.js"
-			development
 		></script>
 
 		<script
 			type="text/javascript"
 			src="../build/cf/parsing/TagsParser.js"
-			development
 		></script>
 
 		<script
@@ -252,6 +251,8 @@
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
 		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
 
+
+		<!-- Examples specific code below -->
 		<script>
 			var testValidation = function(dto, success, error){
 				console.log("testValidation, dto:", dto);
@@ -276,7 +277,7 @@
 					
 					// start one w. json
 					var test = window.cf.ConversationalForm.startTheConversation(json);
-					document.getElementsByClassName("form-outer")[0].appendChild(test.el);
+					document.getElementById("cf-context").appendChild(test.el);
 
 					// in-document form
 					// window.cf.ConversationalForm.startTheConversation({

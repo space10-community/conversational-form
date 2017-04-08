@@ -1,7 +1,7 @@
-#conversational-form-docs.menu-toggle > menu {
+main.content.menu-toggle > menu {
   transform: translateY(-100%);
 }
-#conversational-form-docs > menu {
+main.content > menu {
   background: #222;
   position: fixed;
   z-index: 500;
@@ -16,11 +16,11 @@
   transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs > menu {
+  main.content > menu {
     display: none;
   }
 }
-#conversational-form-docs > menu h2 {
+main.content > menu h2 {
   font-weight: 900;
   transform: translateY(-50%);
   position: absolute;
@@ -28,19 +28,19 @@
   top: 50%;
   font-size: calc(14px + ((16 - 14) * ((100vw - 320px) / (1600 - 320))));
 }
-#conversational-form-docs > menu .switch-btn {
+main.content > menu .switch-btn {
   position: absolute;
   right: 63px;
   top: 16px;
 }
-#conversational-form-docs > menu .hamburger-btn {
+main.content > menu .hamburger-btn {
   position: absolute;
   height: 14px;
   width: 29px;
   right: 21px;
   top: 23px;
 }
-#conversational-form-docs > menu .hamburger-btn svg {
+main.content > menu .hamburger-btn svg {
   width: 100%;
   height: 100%;
 }

@@ -41,21 +41,29 @@ If you don't want to have the UserInput to auto focus.
 ```
 
 **cf-no-animation**  
-Add this to <form> tag to disable animations completly.
+Add this to `<form> tag to disable animations completly.
 
 ```html
 <form id="my-form-element" cf-form cf-no-animation>
 ```
 
 ## Customization
+For more control over the output __exclude__ the attribute `cf-form` from the `form` element and instantiate either with vanilla JS or jQuery:
 
-For more control over the output exclude the attribute `cf-form` from the form element and instantiate either with vanilla JS or jQuery:
+### Self-instantiate with vanilla Javascript
+Only parameter `formEl` is mandatory for the object you pass to the constructor.
 
-### Self-instantiate with vanilla JS w. full list of paramaters
-Only `formEl` is a mandatory paramter for the object you pass to the constructor
-
+###### Simplest way to manually instantiate:
 ```javascript
-new cf.ConversationalForm(<ConversationalFormOptions> {
+new cf.ConversationalForm({
+	// HTMLFormElement
+	formEl: HTMLFormElement;
+});
+```
+
+###### Full list of initialise parameters (ES6/Typescript syntax):
+```javascript
+new cf.ConversationalForm({
 	// HTMLFormElement
 	formEl: HTMLFormElement;
 
@@ -95,22 +103,23 @@ new cf.ConversationalForm(<ConversationalFormOptions> {
 	// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
 	flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
 
-	// optional event dispatcher, has to be an instance of cf.EventDispatcher
+	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
 	eventDispatcher?: cf.EventDispatcher;
 });
 ```
 
 
 ### Instantiate with jQuery
+Please see [ConversationalFormOptions](#full-list-of-initialise-parameters) for available options
 
 ```javascript
-$("form").conversationalForm(<ConversationalFormOptions> {
-	...
+$("form").conversationalForm({
+	
 });
 ```
 
 
-## Map your own tags
+### Map your own tags
 The Conversational Form automatically detects the accepted tags in the passed in form element.
 If this is not desired then you are able to define your own **tags**, and pass them into the constructor.:
 
@@ -122,7 +131,7 @@ for (var i = 0; i < fields.length; i++) {
 }
 ```
 
-Tags can then be set in the instantiation object, see [ConversationalFormOptions](#ConversationalFormOptions)
+Tags can then be set in the instantiation object, see [ConversationalFormOptions](#full-list-of-initialise-parameters)
 
 # DOM Element attributes
 
@@ -147,15 +156,17 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 ### {One way value-binding} with cf-questions:
 For cui-questions, add {previous-answer} to insert the value from the previous user-answer.
-```html
-<input type="text" cf-questions="Hello {previous-answer}" ..
-```
-previous input could be firstname.
 
+previous input could be firstname:
 ```html
-<input type="text" cf-questions="So you want to travel to {previous-answer}" ..
+<input type="text" cf-questions="What is your firstname?">
+<input type="text" cf-questions="Hello {previous-answer}, what is your lastname?">
 ```
+
 previous input could be a select:option list with countries.
+```html
+<input type="text" cf-questions="So you want to travel to {previous-answer}">
+```
 
 ### cf-label
 * set a label to the field, [type="radio"|"checkbox"]
@@ -244,10 +255,13 @@ We welcome contributions in the form of bug reports, pull requests, or thoughtfu
 
 ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
 
-## Get the source
-### Bower
+## Include Conversational Form in your project
 
+#### bower
 	$ bower install conversational-form --save
+
+#### npm
+	$ npm install conversational-form --save
 
 ## Build the source
 
@@ -274,31 +288,17 @@ Install local gulp from project root
 
 
 ### Gulp tasks
-#### main task
+#### build and development
 watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
-	# compiles (same as build) and watches files.
+	# compiles (same as build) and watches files
 	$ gulp
 
-#### sub tasks
+#### distribution
 
-	# compiles build files, to run locally.
-	$ gulp build
-
-	# compiles distribution files
+	# compiles build files, to run locally, runs docs, examples and form scripts and styles
 	$ gulp dist
 
-	# run docs
-	$ gulp --docs
-
-	# build docs
-	$ gulp build --docs
-
-
-### install new packages for dev
-
-	$ cd gulp-tasks
-	$ npm install --save-dev XX
 
 ### Version log
 User previous versions. These versions are also available through bower, npm and Github tags
@@ -322,7 +322,6 @@ When you are up and running, you can find a few form tests and examples in the /
 Tested in latest Chrome, Firefox, Safari and Internet Explorer.
 
 # Websites that use Conversational Form
-
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
 
 - ...
