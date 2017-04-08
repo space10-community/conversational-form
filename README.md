@@ -288,16 +288,16 @@ Install local gulp from project root
 
 
 ### Gulp tasks
-#### main task
+#### build and development
 watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 	# compiles (same as build) and watches files
 	$ gulp
 
-#### sub tasks
+#### distribution
 
 	# compiles build files, to run locally, runs docs, examples and form scripts and styles
-	$ gulp build
+	$ gulp dist
 
 
 ### Version log
