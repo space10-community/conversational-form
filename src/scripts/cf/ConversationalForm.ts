@@ -103,6 +103,7 @@ namespace cf {
 		private formEl: HTMLFormElement;
 		private submitCallback: () => void | HTMLButtonElement;
 		private onUserAnswerClickedCallback: () => void;
+		private flowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
@@ -128,7 +129,7 @@ namespace cf {
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
-				FlowManager.generalFlowStepCallback = options.flowStepCallback;
+				this.flowStepCallback = options.flowStepCallback;
 			
 			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
 			
@@ -361,6 +362,7 @@ namespace cf {
 			// start the flow
 			this.flowManager = new FlowManager({
 				cfReference: this,
+				flowStepCallback: this.flowStepCallback,
 				eventTarget: this.eventTarget,
 				tags: this.tags
 			});

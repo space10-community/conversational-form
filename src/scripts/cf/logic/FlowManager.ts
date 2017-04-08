@@ -16,6 +16,7 @@ namespace cf {
 		cfReference: ConversationalForm;
 		eventTarget: EventDispatcher;
 		tags: Array<ITag>;
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 	}
 
 	export const FlowEvents = {
@@ -29,8 +30,8 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 
+		private flowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 		private eventTarget: EventDispatcher;
 
 		private cfReference: ConversationalForm;
@@ -56,6 +57,7 @@ namespace cf {
 		constructor(options: FlowManagerOptions){
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
+			this.flowStepCallback = options.flowStepCallback;
 
 			this.setTags(options.tags);
 
@@ -93,11 +95,11 @@ namespace cf {
 				}
 
 				// check 2, this.currentTag.required <- required should be handled in the callback.
-				if(FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+				if(this.flowStepCallback && typeof this.flowStepCallback == "function"){
 					if(!hasCheckedForGlobalFlowValidation && isTagValid){
 						hasCheckedForGlobalFlowValidation = true;
 						// use global validationCallback method
-						FlowManager.generalFlowStepCallback(appDTO, () => {
+						this.flowStepCallback(appDTO, () => {
 							isTagValid = true;
 							onValidationCallback();
 						}, (optionalErrorMessage?: string) => {
