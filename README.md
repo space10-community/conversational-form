@@ -103,7 +103,7 @@ new cf.ConversationalForm({
 	// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
 	flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
 
-	// optional event dispatcher, has to be an instance of cf.EventDispatcher
+	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
 	eventDispatcher?: cf.EventDispatcher;
 });
 ```
