@@ -14,6 +14,7 @@ namespace cf {
 		private flowUpdateCallback: () => void;
 		private userInputUpdateCallback: () => void;
 		private onInputKeyChangeCallback: () => void;
+		private onInputHeightChangeCallback: () => void;
 		private currentResponse: ChatResponse;
 		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
@@ -35,6 +36,16 @@ namespace cf {
 			// user input key change
 			this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this);
 			this.eventTarget.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false);
+
+			// user input height change
+			this.onInputHeightChangeCallback = this.onInputHeightChange.bind(this);
+			this.eventTarget.addEventListener(UserInputEvents.HEIGHT_CHANGE, this.onInputHeightChangeCallback, false);
+		}
+
+		private onInputHeightChange(event: CustomEvent){
+			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
+			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+			this.scrollListTo();
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -146,11 +157,12 @@ namespace cf {
 		public setCurrentUserResponse(dto: FlowDTO){
 			this.flowDTOFromUserInputUpdate = dto;
 
-			if(!this.flowDTOFromUserInputUpdate.text){
-				if(dto.input.currentTag.type == "group"){
+			if(!this.flowDTOFromUserInputUpdate.text && dto.tag){
+				if(dto.tag.type == "group"){
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing-group");
-				}else if(dto.input.currentTag.type != "password")
+				}else if(dto.tag.type != "password"){
 					this.flowDTOFromUserInputUpdate.text = Dictionary.get("user-reponse-missing");
+				}
 			}
 
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);

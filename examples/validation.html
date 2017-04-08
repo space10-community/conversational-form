@@ -88,10 +88,12 @@
 					formEl: document.getElementById("form"),
 					flowStepCallback: function(dto, success, error){
 						console.log("flowStepCallback, dto:", dto);
-						if(dto.text.indexOf("holmes") != -1 || dto.input.currentTag.value[0].indexOf("sherlock") != -1)
+						if(dto.text.indexOf("holmes") != -1 || dto.input.currentTag.value[0].indexOf("sherlock") != -1){
+							conversationalForm.stop("Stopping form, but add value");
 							success();
-						else
+						}else{
 							error();
+						}
 					},
 					submitCallback: function(){
 						// remove Conversational Form
