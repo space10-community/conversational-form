@@ -1781,7 +1781,7 @@ cf-chat-response text {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: normal;
   -webkit-transform-origin: 0% 0%;
   -moz-transform-origin: 0% 0%;
   -o-transform-origin: 0% 0%;
@@ -2223,6 +2223,30 @@ cf-chat scrollable {
   overflow-y: auto;
   padding-bottom: 20px;
   padding-top: 40px;
+}
+cf-chat scrollable::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  -webkit-appearance: none;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-track {
+  background: #fff;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb:vertical {
+  background: #e6f3fe;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb {
+  background: #fff;
+  border: none;
+  -webkit-border-radius: 100px;
+}
+cf-chat scrollable::-webkit-scrollbar-thumb:vertical:active {
+  background: #89c6fa;
+  border: none;
+  -webkit-border-radius: 100px;
 }
 
 .cf-button {

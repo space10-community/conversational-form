@@ -18,13 +18,9 @@ namespace cf {
 
 	export const UserInputEvents = {
 		SUBMIT: "cf-input-user-input-submit",
-		//	detail: string
-
 		KEY_CHANGE: "cf-input-key-change",
-		//	detail: string
-
 		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
-		//	detail: string
+		HEIGHT_CHANGE: "cf-input-height-change",
 	}
 
 	// class
@@ -47,6 +43,7 @@ namespace cf {
 		private onOriginalTagChangedCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
 		private errorTimer: number = 0;
+		private initialInputHeight: number = 0;
 		private shiftIsDown: boolean = false;
 		private _disabled: boolean = false;
 		private keyUpCallback: () => void;
@@ -92,9 +89,10 @@ namespace cf {
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
+
 			this.onInputFocusCallback = this.onInputFocus.bind(this);
-			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputBlurCallback = this.onInputBlur.bind(this);
+			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
@@ -171,7 +169,6 @@ namespace cf {
 				this.controlElements.clearTagsAndReset();
 			
 			this.disabled = true;
-			this.visible = false;
 		}
 
 		/**
@@ -192,8 +189,15 @@ namespace cf {
 			if(!this.active && !this.controlElements.active)
 				return;
 
+			// safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
+			const oldHeight: number = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10));
 			this.inputElement.style.height = "0px";
-			this.inputElement.style.height = this.inputElement.scrollHeight + "px";
+			this.inputElement.style.height = (this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight) + "px";
+
+			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.HEIGHT_CHANGE);
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
+				detail: this.inputElement.scrollHeight
+			}));
 		}
 
 		private inputInvalid(event: CustomEvent){
@@ -241,16 +245,21 @@ namespace cf {
 			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
 			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
 
+			// remove focus and blur events, because we want to create a new element
+			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+				this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
+				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
+			}
+
 			if(isCurrentInputTypeTextAreaButNewTagPassword){
 				// change to input
 				const input = document.createElement("input");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
 					input.setAttribute(item.name, item.value);
 				});
+				input.setAttribute("autocomplete", "new-password");
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
-				
-				this.onInputChange();
 			}else if(isCurrentInputTypeInputButNewTagNotPassword){
 				// change to textarea
 				const textarea = document.createElement("textarea");
@@ -259,8 +268,17 @@ namespace cf {
 				});
 				this.inputElement.parentNode.replaceChild(textarea, this.inputElement);
 				this.inputElement = textarea;
+			}
 
-				this.onInputChange();
+			// add focus and blur events to newly created input element
+			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+				this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
+				this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
+			}
+
+			if(this.initialInputHeight == 0){
+				// initial height not set
+				this.initialInputHeight = this.inputElement.offsetHeight;
 			}
 		}
 
@@ -302,11 +320,11 @@ namespace cf {
 
 			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
 				this.inputElement.value = this._currentTag.defaultValue.toString();
-				this.onInputChange();
 			}
 
 			setTimeout(() => {
 				this.disabled = false;
+				this.onInputChange();
 			}, 150);
 		}
 

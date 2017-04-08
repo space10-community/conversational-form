@@ -112,10 +112,10 @@ class ConversationalFormDocs{
 						
 					},
 					flowStepCallback: (dto: any, success: () => void, error: () => void,) => {
-						if(dto.input.currentTag.domElement){
-							if(dto.input.currentTag.domElement.getAttribute("name") == "repeat"){
+						if(dto.tag.domElement){
+							if(dto.tag.domElement.getAttribute("name") == "repeat"){
 								location.reload();
-							}else if(dto.input.currentTag.domElement.getAttribute("name") == "submit-form"){
+							}else if(dto.tag.domElement.getAttribute("name") == "submit-form"){
 								const xhr: XMLHttpRequest = new XMLHttpRequest();
 								xhr.addEventListener("load", () =>{
 									this.cf.addRobotChatResponse("We received your submission 🙌");

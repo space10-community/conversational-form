@@ -40,6 +40,7 @@ namespace cf {
 		private onElementFocusCallback: () => void;
 		private onScrollCallback: () => void;
 		private onElementLoadedCallback: () => void;
+		private onResizeCallback: () => void;
 
 		private elementWidth: number = 0;
 		private filterListNumberOfVisible: number = 0;
@@ -103,6 +104,9 @@ namespace cf {
 			this.onScrollCallback = this.onScroll.bind(this);
 			this.el.addEventListener('scroll', this.onScrollCallback, false);
 
+			this.onResizeCallback = this.onResize.bind(this);
+			window.addEventListener('resize', this.onResizeCallback, false);
+
 			this.onElementFocusCallback = this.onElementFocus.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.ON_FOCUS, this.onElementFocusCallback, false);
 
@@ -137,7 +141,7 @@ namespace cf {
 		* when element is loaded, usally image loaded.
 		*/
 		private onElementLoaded(event: CustomEvent){
-			this.resize();
+			this.onResize(null);
 		}
 
 		private onElementFocus(event: CustomEvent){
@@ -352,7 +356,7 @@ namespace cf {
 		}
 
 		private getElements(): Array <IControlElement> {
-			if(this.elements.length > 0 && this.elements[0].type == "OptionsList")
+			if(this.elements && this.elements.length > 0 && this.elements[0].type == "OptionsList")
 				return (<OptionsList> this.elements[0]).elements;
 			
 			return <Array<IControlElement>> this.elements;
@@ -632,6 +636,10 @@ namespace cf {
 			});
 		}
 
+		private onResize(event: Event){
+			this.resize();
+		}
+
 		public resize(resolve?: any, reject?: any){
 			// scrollbar things
 			// Element.offsetWidth - Element.clientWidth
@@ -645,7 +653,7 @@ namespace cf {
 				this.listWidth = 0;
 				const elements: Array <IControlElement> = this.getElements();
 
-				if(elements.length > 0){
+				if(elements && elements.length > 0){
 					const listWidthValues: Array<number> = [];
 					const listWidthValues2: Array<IControlElement> = [];
 					let containsElementWithImage: boolean = false;
@@ -718,12 +726,11 @@ namespace cf {
 						this.buildTabableRows();
 
 						this.el.classList.add("resized");
+
+						if(resolve)
+							resolve();
 					}, 0);
 				}
-
-
-				if(resolve)
-					resolve();
 			}, 0);
 		}
 
@@ -733,6 +740,9 @@ namespace cf {
 
 			cancelAnimationFrame(this.rAF);
 			this.rAF = null;
+
+			window.removeEventListener('resize', this.onResizeCallback, false);
+			this.onResizeCallback = null;
 
 			this.el.removeEventListener('scroll', this.onScrollCallback, false);
 			this.onScrollCallback = null;
