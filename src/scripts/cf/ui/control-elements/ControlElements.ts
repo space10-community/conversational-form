@@ -141,7 +141,7 @@ namespace cf {
 		* when element is loaded, usally image loaded.
 		*/
 		private onElementLoaded(event: CustomEvent){
-			this.resize();
+			this.onResize(null);
 		}
 
 		private onElementFocus(event: CustomEvent){
@@ -356,7 +356,7 @@ namespace cf {
 		}
 
 		private getElements(): Array <IControlElement> {
-			if(this.elements.length > 0 && this.elements[0].type == "OptionsList")
+			if(this.elements && this.elements.length > 0 && this.elements[0].type == "OptionsList")
 				return (<OptionsList> this.elements[0]).elements;
 			
 			return <Array<IControlElement>> this.elements;
@@ -653,7 +653,7 @@ namespace cf {
 				this.listWidth = 0;
 				const elements: Array <IControlElement> = this.getElements();
 
-				if(elements.length > 0){
+				if(elements && elements.length > 0){
 					const listWidthValues: Array<number> = [];
 					const listWidthValues2: Array<IControlElement> = [];
 					let containsElementWithImage: boolean = false;
@@ -726,11 +726,11 @@ namespace cf {
 						this.buildTabableRows();
 
 						this.el.classList.add("resized");
+
+						if(resolve)
+							resolve();
 					}, 0);
 				}
-
-				if(resolve)
-					resolve();
 			}, 0);
 		}
 

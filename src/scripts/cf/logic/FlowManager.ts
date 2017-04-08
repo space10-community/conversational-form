@@ -5,6 +5,7 @@ namespace cf {
 	// interface
 
 	export interface FlowDTO{
+		tag?: ITag | ITagGroup,
 		text?: string;
 		errorText?: string;
 		input?: UserInput,
