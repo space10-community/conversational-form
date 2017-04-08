@@ -101,7 +101,7 @@ namespace cf {
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
-		private submitCallback: () => void | HTMLButtonElement;
+		private submitCallback: (cf: ConversationalForm) => void | HTMLButtonElement;
 		private onUserAnswerClickedCallback: () => void;
 		private flowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 		private tags: Array<ITag | ITagGroup>;
@@ -456,7 +456,7 @@ namespace cf {
 
 			if(this.submitCallback){
 				// remove should be called in the submitCallback
-				this.submitCallback();
+				this.submitCallback(this);
 			}else{
 				// this.formEl.submit();
 				// doing classic .submit wont trigger onsubmit if that is present on form element
