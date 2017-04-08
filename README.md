@@ -51,23 +51,52 @@ Add this to <form> tag to disable animations completly.
 
 For more control over the output exclude the attribute `cf-form` from the form element and instantiate either with vanilla JS or jQuery:
 
-### Self-instantiate with vanilla JS
+### Self-instantiate with vanilla JS w. full list of paramaters
+Only `formEl` is a mandatory paramter for the object you pass to the constructor
 
 ```javascript
 new cf.ConversationalForm(<ConversationalFormOptions> {
-	formEl: <HTMLFormElement>,
-	// dictionaryData?: {}, // overwrite the default user Dictionary items
-	// dictionaryRobot?: {}, // overwrite the default robot Dictionary items
-	// context?: // context of where to append the ConversationalForm (see also cf-context attribute)
-	// tags?: tags, // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
-	// submitCallback?: () => void | HTMLButtonElement // custom submit callback if button[type=submit] || form.submit() is not wanted..
-	// flowStepCallback? (dto: FlowDTO, success: () => void, error: () => void) => boolean // allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
-	// preventAutoStart? boolean // start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
-	// preventAutoAppend? boolean // prevent the form from auto appending, this means you have to do it yourself at some point x.appendChild({cf-instance}.el);
-	// userImage: "..." //base64 || image url // overwrite user image, without overwritting the user dictionary
-	// robotImage: "..." //base64 || image url // overwrite robot image, without overwritting the robot dictionary
-	// loadExternalStyleSheet?: boolean // can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
-	// scrollAccerlation?: number // optional horizontal scroll accerlation value
+	// HTMLFormElement
+	formEl: HTMLFormElement;
+
+	// context (HTMLElement) of where to append the ConversationalForm (see also cf-context attribute)
+	context?: HTMLElement;
+
+	// pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
+	tags?: Array<ITag>;
+
+	// overwrite the default user Dictionary items
+	dictionaryData?: Object;
+
+	// overwrite the default robot Dictionary items
+	dictionaryRobot?: Object;
+
+	//base64 || image url // overwrite user image, without overwritting the user dictionary
+	userImage?: string;
+
+	// base64 || image url // overwrite robot image, without overwritting the robot dictionary
+	robotImage?: string;
+
+	// custom submit callback if button[type=submit] || form.submit() is not wanted..
+	submitCallback?: () => void | HTMLButtonElement;
+
+	// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
+	loadExternalStyleSheet?: boolean;
+
+	// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
+	preventAutoAppend?: boolean;
+
+	// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
+	preventAutoStart?: boolean;
+
+	// optional horizontal scroll accerlation value, 0-1
+	scrollAccerlation?: number;
+
+	// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
+	flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
+
+	// optional event dispatcher, has to be an instance of cf.EventDispatcher
+	eventDispatcher?: cf.EventDispatcher;
 });
 ```
 
@@ -79,23 +108,6 @@ $("form").conversationalForm(<ConversationalFormOptions> {
 	...
 });
 ```
-
-
-## Parameters to pass the constructor of ConversationalForm: <<a name="ConversationalFormOptions"></a>ConversationalFormOptions>
-* **formEl**: HTMLFormElement | string
-* **context**?: HTMLElement | string
-	* Set the context of where the ConversationalForm will be appended to
-	* If not set then ConversationalForm will get appended to document.body
-* **tags**?: Array<ITag>
-	* [cf.Tag.createTag(element), ...]
-* **dictionaryData**?: object
-	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
-* **dictionaryAI**?: object
-	* Possibility to overwrite the default [dictionary](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts), empty will throw error, see [Dictionaty.ts](https://github.com/space10-community/conversational-form/blob/master/src/scripts/cf/data/Dictionary.ts) for values
-* **submitCallback**?: () => void | HTMLButtonElement
-	* An alternative way to submit the form. Can be a Function or an HTMLButtonElement (click will be called). If not defined the component will search in the formEl after a button[type=”submit”] and call click() if not button is found final fallback will be to call submit() on formEl.
-* **userImage**?: string
-	* Set a different userImage. "..." //base64 || image url
 
 
 ## Map your own tags

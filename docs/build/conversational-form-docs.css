@@ -97,13 +97,17 @@
 }
 #conversational-form-docs .conversational-form .cf-button.highlight,
 #conversational-form-docs .conversational-form .cf-button:focus,
-#conversational-form-docs .conversational-form .cf-button:hover {
+#conversational-form-docs .conversational-form .cf-button:hover,
+#conversational-form-docs .conversational-form .cf-button[checked="checked"],
+#conversational-form-docs .conversational-form .cf-button.selected {
   border-color: #6f6f6f;
   color: #595959;
 }
 #conversational-form-docs .conversational-form .cf-button.highlight cf-radio,
 #conversational-form-docs .conversational-form .cf-button:focus cf-radio,
-#conversational-form-docs .conversational-form .cf-button:hover cf-radio {
+#conversational-form-docs .conversational-form .cf-button:hover cf-radio,
+#conversational-form-docs .conversational-form .cf-button[checked="checked"] cf-radio,
+#conversational-form-docs .conversational-form .cf-button.selected cf-radio {
   background: #222;
 }
 #conversational-form-docs .conversational-form cf-list-button:after {

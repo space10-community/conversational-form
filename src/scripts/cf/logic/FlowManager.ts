@@ -5,6 +5,7 @@ namespace cf {
 	// interface
 
 	export interface FlowDTO{
+		tag?: ITag | ITagGroup,
 		text?: string;
 		errorText?: string;
 		input?: UserInput,
@@ -165,6 +166,9 @@ namespace cf {
 		}
 
 		public nextStep(){
+			if(this.stopped)
+				return;
+
 			if(this.savedStep != -1)
 				this.step = this.savedStep;
 			
