@@ -1,0 +1,79 @@
+new cf.EventDispatcher()
+// an EventTarget polyfill, EventTarget can also be used.
+
+export interface FlowDTO{
+	text?: string;
+	errorText?: string;
+	input?: UserInput,
+	controlElements?: Array <IControlElement>;
+}
+
+TagEvents.ORIGINAL_ELEMENT_CHANGED
+// original tag (dom element) has changed value
+value: String,
+tag: ITag
+
+FlowEvents.USER_INPUT_UPDATE
+// when ever the UserInput element changes value
+detail: FlowDTO //UserInput value
+
+FlowEvents.USER_INPUT_INVALID
+// when an error has been registered
+detail: FlowDTO
+
+FlowEvents.FLOW_UPDATE
+// when ever the flow of Conversational Form is updated
+delail:
+	tag: this.currentTag,
+	ignoreExistingTag: this.ignoreExistingTags
+
+ChatListEvents.CHATLIST_UPDATED
+// WHen the chatlist has been updated
+detail: ChatList
+
+
+ChatResponseEvents.USER_ANSWER_CLICKED
+// When user clicks a previous answer
+	detail: ITag
+
+ControlElementEvents.ON_LOADED
+// when an control element is loaded, like when an control ement contains an image.
+
+
+ControlElementEvents.ON_FOCUS
+// When focus on an control element
+	detail: ControlElementVector
+
+
+ControlElementEvents.SUBMIT_VALUE
+// when control value has changed, ex. clicking a check-box, radio-button etc.
+	detail: ControlElement || OptionButton
+
+
+UserInputEvents.CONTROL_ELEMENTS_ADDED
+// when a control element has been added
+	detail: ControlElementsDTO
+
+
+OptionButtonEvents.CLICK
+// option element click, normally you would use ControlElementEvents.SUBMIT_VALUE
+	detail: this
+
+
+ControlElementEvents.PROGRESS_CHANGE
+// opload a file, get progress event
+		detail: ControlElementProgressStates.BUSY || ControlElementProgressStates.READY || ControlElementProgressStates.READY
+
+UserInputEvents.HEIGHT_CHANGE
+// when height of input field change
+	detail: this.inputElement.scrollHeight
+
+UserInputEvents.KEY_CHANGE
+	detail: <InputKeyChangeDTO>
+		dto: FlowDTO
+		keyCode: Number
+		inputFieldActive: Boolean
+
+UserInputEvents.SUBMIT
+// on user submits value
+	detail: FlowDTO

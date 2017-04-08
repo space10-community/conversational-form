@@ -78,11 +78,11 @@ var ConversationalFormDocs = (function () {
                     submitCallback: function () {
                     },
                     flowStepCallback: function (dto, success, error) {
-                        if (dto.input.currentTag.domElement) {
-                            if (dto.input.currentTag.domElement.getAttribute("name") == "repeat") {
+                        if (dto.tag.domElement) {
+                            if (dto.tag.domElement.getAttribute("name") == "repeat") {
                                 location.reload();
                             }
-                            else if (dto.input.currentTag.domElement.getAttribute("name") == "submit-form") {
+                            else if (dto.tag.domElement.getAttribute("name") == "submit-form") {
                                 var xhr = new XMLHttpRequest();
                                 xhr.addEventListener("load", function () {
                                     _this.cf.addRobotChatResponse("We received your submission 🙌");
