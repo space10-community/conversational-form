@@ -57,7 +57,7 @@ namespace cf {
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
 
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
-		eventDispatcher?: cf.EventDispatcher;
+		eventDispatcher?: EventDispatcher;
 	}
 
 	export class ConversationalForm{
@@ -117,7 +117,7 @@ namespace cf {
 
 			// possible to create your own event dispatcher, so you can tap into the events of the app
 			if(options.eventDispatcher)
-				this._eventTarget = options.eventDispatcher;
+				this._eventTarget = <EventDispatcher> options.eventDispatcher;
 
 			// set a general step validation callback
 			if(options.flowStepCallback)

@@ -1149,7 +1149,7 @@ var cf;
         * when element is loaded, usally image loaded.
         */
         ControlElements.prototype.onElementLoaded = function (event) {
-            this.resize();
+            this.onResize(null);
         };
         ControlElements.prototype.onElementFocus = function (event) {
             var vector = event.detail;
@@ -1341,7 +1341,7 @@ var cf;
             }
         };
         ControlElements.prototype.getElements = function () {
-            if (this.elements.length > 0 && this.elements[0].type == "OptionsList")
+            if (this.elements && this.elements.length > 0 && this.elements[0].type == "OptionsList")
                 return this.elements[0].elements;
             return this.elements;
         };
@@ -1595,7 +1595,7 @@ var cf;
             setTimeout(function () {
                 _this.listWidth = 0;
                 var elements = _this.getElements();
-                if (elements.length > 0) {
+                if (elements && elements.length > 0) {
                     var listWidthValues = [];
                     var listWidthValues2 = [];
                     var containsElementWithImage = false;
@@ -1660,10 +1660,10 @@ var cf;
                         _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
                         _this.buildTabableRows();
                         _this.el.classList.add("resized");
+                        if (resolve)
+                            resolve();
                     }, 0);
                 }
-                if (resolve)
-                    resolve();
             }, 0);
         };
         ControlElements.prototype.dealloc = function () {
@@ -4138,12 +4138,13 @@ var cf;
         */
         ChatList.prototype.setCurrentUserResponse = function (dto) {
             this.flowDTOFromUserInputUpdate = dto;
-            if (!this.flowDTOFromUserInputUpdate.text) {
-                if (dto.input.currentTag.type == "group") {
+            if (!this.flowDTOFromUserInputUpdate.text && dto.tag) {
+                if (dto.tag.type == "group") {
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing-group");
                 }
-                else if (dto.input.currentTag.type != "password")
+                else if (dto.tag.type != "password") {
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
+                }
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
             this.scrollListTo();
