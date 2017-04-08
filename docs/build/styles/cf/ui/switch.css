@@ -1,24 +1,24 @@
-#conversational-form-docs.cf-toggle .switch-btn:after {
+main.content.cf-toggle .switch-btn:after {
   opacity: 0;
 }
-#conversational-form-docs.cf-toggle .switch-btn:before {
+main.content.cf-toggle .switch-btn:before {
   opacity: 1;
 }
-#conversational-form-docs.cf-toggle .switch-btn .switch .slider {
+main.content.cf-toggle .switch-btn .switch .slider {
   background-color: #1ed97b;
 }
-#conversational-form-docs.cf-toggle .switch-btn .switch .slider {
+main.content.cf-toggle .switch-btn .switch .slider {
   box-shadow: 0 0 1px #1ed97b;
 }
-#conversational-form-docs.cf-toggle .switch-btn .switch .slider:before {
+main.content.cf-toggle .switch-btn .switch .slider:before {
   transform: translateX(26px);
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs.cf-toggle .switch-btn .switch .slider:before {
+  main.content.cf-toggle .switch-btn .switch .slider:before {
     transform: translateX(39px);
   }
 }
-#conversational-form-docs .switch-btn {
+main.content .switch-btn {
   font-size: 13px;
   font-weight: 900;
   border: none;
@@ -26,16 +26,16 @@
   padding: 0;
   margin: 0;
 }
-#conversational-form-docs .switch-btn:after {
+main.content .switch-btn:after {
   content: attr(data-label);
   opacity: 1;
 }
-#conversational-form-docs .switch-btn:before {
+main.content .switch-btn:before {
   content: attr(data-label-toggled);
   opacity: 0;
 }
-#conversational-form-docs .switch-btn:after,
-#conversational-form-docs .switch-btn:before {
+main.content .switch-btn:after,
+main.content .switch-btn:before {
   display: block;
   position: absolute;
   left: -11px;
@@ -45,7 +45,7 @@
   will-change: opacity;
   transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-#conversational-form-docs .switch-btn .switch {
+main.content .switch-btn .switch {
   position: relative;
   display: inline-block;
   width: 56px;
@@ -57,15 +57,15 @@
   cursor: pointer;
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs .switch-btn .switch {
+  main.content .switch-btn .switch {
     width: 80px;
     height: 40px;
   }
 }
-#conversational-form-docs .switch-btn .switch input {
+main.content .switch-btn .switch input {
   display: none;
 }
-#conversational-form-docs .switch-btn .switch .slider {
+main.content .switch-btn .switch .slider {
   position: absolute;
   pointer-events: none;
   top: 0;
@@ -76,13 +76,13 @@
   will-change: transform, background-color;
   transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), background-color 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-#conversational-form-docs .switch-btn .switch .slider.round {
+main.content .switch-btn .switch .slider.round {
   border-radius: 34px;
 }
-#conversational-form-docs .switch-btn .switch .slider.round:before {
+main.content .switch-btn .switch .slider.round:before {
   border-radius: 50%;
 }
-#conversational-form-docs .switch-btn .switch .slider:before {
+main.content .switch-btn .switch .slider:before {
   position: absolute;
   content: "";
   height: 20px;
@@ -93,7 +93,7 @@
   transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs .switch-btn .switch .slider:before {
+  main.content .switch-btn .switch .slider:before {
     height: 30px;
     width: 30px;
     left: 5px;

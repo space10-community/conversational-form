@@ -103,7 +103,7 @@ html {
   padding: 0px;
   margin: 0px;
 }
-#conversational-form-docs {
+main.content {
   font-family: Helvetica Neue, Helvetica;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -114,7 +114,7 @@ html {
   overflow: hidden;
   display: block;
 }
-#conversational-form-docs * {
+main.content * {
   -webkit-tap-highlight-color: rgba(255,255,255,0);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -126,21 +126,21 @@ html {
   -ms-user-select: none;
   user-select: none;
 }
-#conversational-form-docs *,
-#conversational-form-docs *:before,
-#conversational-form-docs *:after {
+main.content *,
+main.content *:before,
+main.content *:after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   outline: none;
 }
-#conversational-form-docs a,
-#conversational-form-docs a:active,
-#conversational-form-docs a:focus {
+main.content a,
+main.content a:active,
+main.content a:focus {
   color: currentColor;
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs .switch-btn#cf-toggle-btn {
+  main.content .switch-btn#cf-toggle-btn {
     position: absolute;
     top: 40px;
     z-index: 500;
@@ -157,7 +157,7 @@ html {
     -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
     transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
-  #conversational-form-docs .switch-btn#cf-toggle-btn.show {
+  main.content .switch-btn#cf-toggle-btn.show {
     -webkit-transform: translateX(0px);
     -moz-transform: translateX(0px);
     -o-transform: translateX(0px);
@@ -166,7 +166,7 @@ html {
   }
 }
 @media only screen and (max-width: 769px) {
-  #conversational-form-docs .switch-btn#cf-toggle-btn {
+  main.content .switch-btn#cf-toggle-btn {
     display: none;
   }
 }

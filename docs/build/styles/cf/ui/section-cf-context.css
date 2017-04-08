@@ -1,8 +1,8 @@
-#conversational-form-docs.cf-toggle:not(.menu-toggle) section[role="cf-context"] {
+main.content.cf-toggle:not(.menu-toggle) section[role="cf-context"] {
   pointer-events: auto;
   opacity: 1;
 }
-#conversational-form-docs section[role="cf-context"] {
+main.content section[role="cf-context"] {
   position: absolute;
   z-index: 250;
   pointer-events: none;
@@ -16,14 +16,14 @@
   transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs section[role="cf-context"] {
+  main.content section[role="cf-context"] {
     width: 50%;
     z-index: 499;
     right: 0px;
     left: auto;
   }
 }
-#conversational-form-docs section[role="cf-context"] .close-btn {
+main.content section[role="cf-context"] .close-btn {
   position: absolute;
   z-index: 500;
   right: 24px;
@@ -31,7 +31,7 @@
   width: 24px;
   height: 24px;
 }
-#conversational-form-docs section[role="cf-context"] .close-btn svg {
+main.content section[role="cf-context"] .close-btn svg {
   width: 100%;
   height: 100%;
 }
