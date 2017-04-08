@@ -1,7 +1,7 @@
 {
 	"options": {
 		"preventAutoAppend": true,
-		"submitCallback:": "window.onFormlessSubmited"
+		"submitCallback": "window.onFormlessSubmited"
 	},
 	"tags": [
 		{
