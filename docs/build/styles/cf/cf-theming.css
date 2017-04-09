@@ -97,13 +97,17 @@ main.content .conversational-form .cf-button cf-radio {
 }
 main.content .conversational-form .cf-button.highlight,
 main.content .conversational-form .cf-button:focus,
-main.content .conversational-form .cf-button:hover {
+main.content .conversational-form .cf-button:hover,
+main.content .conversational-form .cf-button[checked="checked"],
+main.content .conversational-form .cf-button.selected {
   border-color: #6f6f6f;
   color: #595959;
 }
 main.content .conversational-form .cf-button.highlight cf-radio,
 main.content .conversational-form .cf-button:focus cf-radio,
-main.content .conversational-form .cf-button:hover cf-radio {
+main.content .conversational-form .cf-button:hover cf-radio,
+main.content .conversational-form .cf-button[checked="checked"] cf-radio,
+main.content .conversational-form .cf-button.selected cf-radio {
   background: #222;
 }
 main.content .conversational-form cf-list-button:after {

@@ -422,30 +422,36 @@ var cf;
     var TagsParser = (function () {
         function TagsParser() {
         }
-        TagsParser.parseJSONIntoElements = function (data) {
-            var parseTag = function (element) {
-                var tag = document.createElement(element.tag);
-                tag.setAttribute("cf-formless", "");
-                // TODO: ES6 mapping??
-                for (var k in element) {
-                    if (k !== "tag") {
-                        tag.setAttribute(k, element[k]);
-                    }
+        TagsParser.parseTag = function (element) {
+            var tag = document.createElement(element.tag);
+            tag.setAttribute("cf-formless", "");
+            // TODO: ES6 mapping??
+            for (var k in element) {
+                if (k !== "tag") {
+                    tag.setAttribute(k, element[k]);
                 }
-                // if(element.children && element.children.length > 0){
-                // 	for (let i = 0; i < element.children.length; i++) {
-                // 	}
-                // }
-                return tag;
-            };
+            }
+            return tag;
+        };
+        TagsParser.parseGroupTag = function (groupTag) {
+            var groupEl = TagsParser.parseTag(groupTag);
+            var groupChildren = groupTag.children;
+            for (var j = 0; j < groupChildren.length; j++) {
+                var fieldSetTagData = groupChildren[j];
+                var tag = TagsParser.parseTag(fieldSetTagData);
+                groupEl.appendChild(tag);
+            }
+            return groupEl;
+        };
+        TagsParser.parseJSONIntoElements = function (data) {
             var formEl = document.createElement("form");
             for (var i = 0; i < data.length; i++) {
                 var element = data[i];
-                var tag = parseTag(element);
+                var tag = TagsParser.parseTag(element);
                 // add sub children to tag, ex. option, checkbox, etc.
                 if (element.children && element.children.length > 0) {
                     for (var j = 0; j < element.children.length; j++) {
-                        var subElement = parseTag(element.children[j]);
+                        var subElement = TagsParser.parseTag(element.children[j]);
                         tag.appendChild(subElement);
                     }
                 }
@@ -3909,6 +3915,7 @@ var cf;
             this.ignoreExistingTags = false;
             this.cfReference = options.cfReference;
             this.eventTarget = options.eventTarget;
+            this.flowStepCallback = options.flowStepCallback;
             this.setTags(options.tags);
             this.maxSteps = this.tags.length;
             this.userInputSubmitCallback = this.userInputSubmit.bind(this);
@@ -3946,11 +3953,11 @@ var cf;
                     }
                 }
                 // check 2, this.currentTag.required <- required should be handled in the callback.
-                if (FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function") {
+                if (_this.flowStepCallback && typeof _this.flowStepCallback == "function") {
                     if (!hasCheckedForGlobalFlowValidation && isTagValid) {
                         hasCheckedForGlobalFlowValidation = true;
                         // use global validationCallback method
-                        FlowManager.generalFlowStepCallback(appDTO, function () {
+                        _this.flowStepCallback(appDTO, function () {
                             isTagValid = true;
                             onValidationCallback();
                         }, function (optionalErrorMessage) {
@@ -4022,9 +4029,22 @@ var cf;
             this.step--;
             this.validateStepAndUpdate();
         };
-        FlowManager.prototype.addStep = function () {
-            // this can be used for when a Tags value is updated and new tags are presented
-            // like dynamic tag insertion depending on an answer.. V2..
+        FlowManager.prototype.getStep = function () {
+            return this.step;
+        };
+        FlowManager.prototype.addTags = function (tags, atIndex) {
+            if (atIndex === void 0) { atIndex = -1; }
+            // used to append new tag
+            if (atIndex !== -1 && atIndex < this.tags.length) {
+                var pre = this.tags.slice(0, atIndex);
+                var post = this.tags.slice(atIndex, this.tags.length);
+                this.tags = this.tags.slice(0, atIndex).concat(tags).concat(post);
+            }
+            else {
+                this.tags.concat(tags);
+            }
+            this.setTags(this.tags);
+            return this.tags;
         };
         FlowManager.prototype.dealloc = function () {
             this.eventTarget.removeEventListener(cf.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
@@ -4099,10 +4119,10 @@ var cf;
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
 var cf;
-(function (cf) {
+(function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.2";
+            this.version = "0.9.3";
             this.cdnPath = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
@@ -4117,13 +4137,13 @@ var cf;
                 this._eventTarget = options.eventDispatcher;
             // set a general step validation callback
             if (options.flowStepCallback)
-                cf.FlowManager.generalFlowStepCallback = options.flowStepCallback;
+                this.flowStepCallback = options.flowStepCallback;
             this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
             if (this.isDevelopment || options.loadExternalStyleSheet == false) {
                 this.loadExternalStyleSheet = false;
             }
             if (!isNaN(options.scrollAccerlation))
-                cf.ScrollController.accerlation = options.scrollAccerlation;
+                cf_1.ScrollController.accerlation = options.scrollAccerlation;
             this.preventAutoStart = options.preventAutoStart;
             this.preventAutoAppend = options.preventAutoAppend;
             if (!options.formEl)
@@ -4133,11 +4153,15 @@ var cf;
             // TODO: can be a string when added as formless..
             // this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
             this.submitCallback = options.submitCallback;
+            if (this.submitCallback && typeof this.submitCallback === "string") {
+                // a submit callback method added to json, so use eval to evaluate method
+                this.submitCallback = eval(this.submitCallback);
+            }
             if (this.formEl.getAttribute("cf-no-animation") == "")
                 ConversationalForm.animationsEnabled = false;
             if (this.formEl.getAttribute("cf-prevent-autofocus") == "")
-                cf.UserInput.preventAutoFocus = true;
-            this.dictionary = new cf.Dictionary({
+                cf_1.UserInput.preventAutoFocus = true;
+            this.dictionary = new cf_1.Dictionary({
                 data: options.dictionaryData,
                 robotData: options.dictionaryRobot,
                 userImage: options.userImage,
@@ -4161,7 +4185,7 @@ var cf;
         Object.defineProperty(ConversationalForm.prototype, "eventTarget", {
             get: function () {
                 if (!this._eventTarget) {
-                    this._eventTarget = new cf.EventDispatcher(this);
+                    this._eventTarget = new cf_1.EventDispatcher(this);
                 }
                 return this._eventTarget;
             },
@@ -4169,7 +4193,7 @@ var cf;
             configurable: true
         });
         ConversationalForm.prototype.init = function () {
-            cf.Helpers.setEmojiLib();
+            cf_1.Helpers.setEmojiLib();
             if (this.loadExternalStyleSheet) {
                 // not in development/examples, so inject production css
                 var head = document.head || document.getElementsByTagName("head")[0];
@@ -4196,9 +4220,9 @@ var cf;
                 var fields = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea"), 0);
                 for (var i = 0; i < fields.length; i++) {
                     var element = fields[i];
-                    if (cf.Tag.isTagValid(element)) {
+                    if (cf_1.Tag.isTagValid(element)) {
                         // ignore hidden tags
-                        this.tags.push(cf.Tag.createTag(element));
+                        this.tags.push(cf_1.Tag.createTag(element));
                     }
                 }
             }
@@ -4209,7 +4233,7 @@ var cf;
             var indexesToRemove = [];
             for (var i = 0; i < this.tags.length; i++) {
                 var element = this.tags[i];
-                if (!element || !cf.Tag.isTagValid(element.domElement)) {
+                if (!element || !cf_1.Tag.isTagValid(element.domElement)) {
                     indexesToRemove.push(element);
                 }
             }
@@ -4221,7 +4245,7 @@ var cf;
                 console.warn("Conversational Form: No tags found or registered.");
             }
             //let's start the conversation
-            this.setupTagGroups();
+            this.tags = this.setupTagGroups(this.tags);
             this.setupUI();
             return this;
         };
@@ -4233,7 +4257,7 @@ var cf;
         *	value: string, value to be inserted
         */
         ConversationalForm.prototype.updateDictionaryValue = function (id, type, value) {
-            cf.Dictionary.set(id, type, value);
+            cf_1.Dictionary.set(id, type, value);
             if (["robot-image", "user-image"].indexOf(id) != -1) {
                 this.chatList.updateThumbnail(id == "robot-image", value);
             }
@@ -4244,8 +4268,8 @@ var cf;
                 var serialized_1 = {};
                 for (var i = 0; i < this.tags.length; i++) {
                     var element = this.tags[i];
-                    if (element.name && element.value)
-                        serialized_1[element.name] = element.value;
+                    if (element.value)
+                        serialized_1[element.name || "tag-" + i.toString()] = element.value;
                 }
                 return serialized_1;
             }
@@ -4282,12 +4306,12 @@ var cf;
                 return null;
             }
         };
-        ConversationalForm.prototype.setupTagGroups = function () {
+        ConversationalForm.prototype.setupTagGroups = function (tags) {
             // make groups, from input tag[type=radio | type=checkbox]
             // groups are used to bind logic like radio-button or checkbox dependencies
             var groups = [];
-            for (var i = 0; i < this.tags.length; i++) {
-                var tag = this.tags[i];
+            for (var i = 0; i < tags.length; i++) {
+                var tag = tags[i];
                 if (tag.type == "radio" || tag.type == "checkbox") {
                     if (!groups[tag.name])
                         groups[tag.name] = [];
@@ -4298,25 +4322,27 @@ var cf;
                 for (var group in groups) {
                     if (groups[group].length > 0) {
                         // always build groupd when radio or checkbox
-                        var tagGroup = new cf.TagGroup({
+                        var tagGroup = new cf_1.TagGroup({
                             elements: groups[group]
                         });
                         // remove the tags as they are now apart of a group
                         for (var i = 0; i < groups[group].length; i++) {
                             var tagToBeRemoved = groups[group][i];
                             if (i == 0)
-                                this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1, tagGroup);
+                                tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
                             else
-                                this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1);
+                                tags.splice(tags.indexOf(tagToBeRemoved), 1);
                         }
                     }
                 }
             }
+            return tags;
         };
         ConversationalForm.prototype.setupUI = function () {
             // start the flow
-            this.flowManager = new cf.FlowManager({
+            this.flowManager = new cf_1.FlowManager({
                 cfReference: this,
+                flowStepCallback: this.flowStepCallback,
                 eventTarget: this.eventTarget,
                 tags: this.tags
             });
@@ -4334,17 +4360,17 @@ var cf;
             innerWrap.className = "conversational-form-inner";
             this.el.appendChild(innerWrap);
             // Conversational Form UI
-            this.chatList = new cf.ChatList({
+            this.chatList = new cf_1.ChatList({
                 eventTarget: this.eventTarget
             });
             innerWrap.appendChild(this.chatList.el);
-            this.userInput = new cf.UserInput({
+            this.userInput = new cf_1.UserInput({
                 eventTarget: this.eventTarget,
                 cfReference: this
             });
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
-            this.eventTarget.addEventListener(cf.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+            this.eventTarget.addEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
             this.el.classList.add("conversational-form--show");
             if (!this.preventAutoStart)
                 this.flowManager.start();
@@ -4360,6 +4386,49 @@ var cf;
         ConversationalForm.prototype.onUserAnswerClicked = function (event) {
             var tag = event.detail;
             this.flowManager.editTag(tag);
+        };
+        /**
+        * @name addTag
+        * Add a tag to the conversation. This can be used to add tags at runtime
+        * see examples/formless.html
+        */
+        ConversationalForm.prototype.addTags = function (tagsData, addAfterCurrentStep, atIndex) {
+            if (addAfterCurrentStep === void 0) { addAfterCurrentStep = true; }
+            if (atIndex === void 0) { atIndex = -1; }
+            var tags = [];
+            for (var i = 0; i < tagsData.length; i++) {
+                var tagData = tagsData[i];
+                if (tagData.tag === "fieldset") {
+                    // group ..
+                    // const fieldSetChildren: Array<DataTag> = tagData.children;
+                    // parse group tag
+                    var groupTag = cf_1.TagsParser.parseGroupTag(tagData);
+                    for (var j = 0; j < groupTag.children.length; j++) {
+                        var tag = groupTag.children[j];
+                        if (cf_1.Tag.isTagValid(tag)) {
+                            var tagElement = cf_1.Tag.createTag(tag);
+                            // add ref for group creation
+                            if (!tagElement.name) {
+                                tagElement.name = "tag-ref-" + j.toString();
+                            }
+                            tags.push(tagElement);
+                        }
+                    }
+                }
+                else {
+                    var tag = cf_1.TagsParser.parseTag(tagData);
+                    if (cf_1.Tag.isTagValid(tag)) {
+                        var tagElement = cf_1.Tag.createTag(tag);
+                        tags.push(tagElement);
+                    }
+                }
+            }
+            // map free roaming checkbox and radio tags into groups
+            tags = this.setupTagGroups(tags);
+            // add new tags to the flow
+            this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
+            console.log(this.tags);
+            //this.flowManager.startFrom ?
         };
         /**
         * @name remapTagsAndStartFrom
@@ -4394,7 +4463,7 @@ var cf;
             this.userInput.reset();
             if (this.submitCallback) {
                 // remove should be called in the submitCallback
-                this.submitCallback();
+                this.submitCallback(this);
             }
             else {
                 // this.formEl.submit();
@@ -4413,7 +4482,7 @@ var cf;
         };
         ConversationalForm.prototype.remove = function () {
             if (this.onUserAnswerClickedCallback) {
-                this.eventTarget.removeEventListener(cf.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
+                this.eventTarget.removeEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
                 this.onUserAnswerClickedCallback = null;
             }
             if (this.flowManager)
@@ -4500,7 +4569,7 @@ var cf;
     ConversationalForm.animationsEnabled = true;
     ConversationalForm.illustrateAppFlow = true;
     ConversationalForm.hasAutoInstantiated = false;
-    cf.ConversationalForm = ConversationalForm;
+    cf_1.ConversationalForm = ConversationalForm;
 })(cf || (cf = {}));
 if (document.readyState == "complete") {
     // if document alread instantiated, usually this happens if Conversational Form is injected through JS
