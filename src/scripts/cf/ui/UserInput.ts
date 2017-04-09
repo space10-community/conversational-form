@@ -153,6 +153,10 @@ namespace cf {
 				};
 			}
 
+			// add current tag to DTO if not set
+			if(!value.tag)
+				value.tag = this.currentTag;
+
 			value.input = this;
 
 			return value;
