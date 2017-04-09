@@ -253,7 +253,7 @@ namespace cf {
 			}
 
 			//let's start the conversation
-			this.setupTagGroups();
+			this.tags = this.setupTagGroups(this.tags);
 			this.setupUI();
 
 			return this;
@@ -279,8 +279,8 @@ namespace cf {
 				const serialized: any = {}
 				for(var i = 0; i < this.tags.length; i++){
 					const element = this.tags[i];
-					if(element.name && element.value)
-						serialized[element.name] = element.value
+					if(element.value)
+						serialized[element.name || "tag-" + i.toString()] = element.value
 				}
 
 				return serialized
@@ -323,12 +323,12 @@ namespace cf {
 			}
 		}
 
-		private setupTagGroups(){
+		private setupTagGroups(tags: Array<ITag>) : Array<ITag | ITagGroup>{
 			// make groups, from input tag[type=radio | type=checkbox]
 			// groups are used to bind logic like radio-button or checkbox dependencies
 			var groups: any = [];
-			for(var i = 0; i < this.tags.length; i++){
-				const tag = this.tags[i];
+			for(var i = 0; i < tags.length; i++){
+				const tag: ITag = tags[i];
 				if(tag.type == "radio" || tag.type == "checkbox"){
 					if(!groups[tag.name])
 						groups[tag.name] = [];
@@ -349,13 +349,15 @@ namespace cf {
 						for(var i = 0; i < groups[group].length; i++){
 							let tagToBeRemoved: InputTag = groups[group][i];
 							if(i == 0)// add the group at same index as the the first tag to be removed
-								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1, tagGroup);
+								tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
 							else
-								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1);
+								tags.splice(tags.indexOf(tagToBeRemoved), 1);
 						}
 					}
 				}
 			}
+
+			return tags;
 		}
 
 		private setupUI(){
@@ -419,6 +421,52 @@ namespace cf {
 		private onUserAnswerClicked(event: CustomEvent): void {
 			const tag: ITag | ITagGroup = event.detail;
 			this.flowManager.editTag(tag);
+		}
+
+		/**
+		* @name addTag
+		* Add a tag to the conversation. This can be used to add tags at runtime
+		* see examples/formless.html
+		*/
+		public addTags(tagsData: Array<DataTag>, addAfterCurrentStep: boolean = true, atIndex: number = -1): void {
+			let tags: Array<ITag | ITagGroup> = [];
+
+			for (let i = 0; i < tagsData.length; i++) {
+				let tagData: DataTag = tagsData[i];
+				if(tagData.tag === "fieldset"){
+					// group ..
+					// const fieldSetChildren: Array<DataTag> = tagData.children;
+					// parse group tag
+					const groupTag: HTMLElement = TagsParser.parseGroupTag(tagData);
+					
+					for (let j = 0; j < groupTag.children.length; j++) {
+						let tag: HTMLElement = <HTMLElement> groupTag.children[j];
+						if(Tag.isTagValid(tag)){
+							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+							// add ref for group creation
+							if(!tagElement.name){
+								tagElement.name = "tag-ref-"+j.toString();
+							}
+
+							tags.push(tagElement);
+						}
+					}
+				}else{
+					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = TagsParser.parseTag(tagData);
+					if(Tag.isTagValid(tag)){
+						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+						tags.push(tagElement);
+					}
+				}
+			}
+
+			// map free roaming checkbox and radio tags into groups
+			tags = this.setupTagGroups(tags);
+
+			// add new tags to the flow
+			this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
+			console.log(this.tags);
+			//this.flowManager.startFrom ?
 		}
 
 		/**

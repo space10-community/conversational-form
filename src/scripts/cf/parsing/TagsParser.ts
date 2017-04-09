@@ -10,33 +10,43 @@ namespace cf {
 		// TODO: extend native tag interface?
 	}
 	export class TagsParser {
-		public static parseJSONIntoElements(data: any) : HTMLFormElement{
-			const parseTag = (element: DataTag) : HTMLElement => {
-				const tag: HTMLElement = document.createElement(element.tag)
-				tag.setAttribute("cf-formless", "");
-				
-				// TODO: ES6 mapping??
-				for(var k in element){
-					if(k !== "tag"){
-						tag.setAttribute(k, (<any> element)[k])
-					}
+		public static parseTag(element: DataTag) : HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement{
+			const tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = <HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> document.createElement(element.tag)
+			tag.setAttribute("cf-formless", "");
+			
+			// TODO: ES6 mapping??
+			for(var k in element){
+				if(k !== "tag"){
+					tag.setAttribute(k, (<any> element)[k])
 				}
-
-				// if(element.children && element.children.length > 0){
-				// 	for (let i = 0; i < element.children.length; i++) {
-				// 	}
-				// }
-				return tag;
 			}
+
+			
+			return tag;
+
+		}
+
+		public static parseGroupTag(groupTag: DataTag) : HTMLElement {
+			const groupEl: HTMLElement = TagsParser.parseTag(groupTag);
+			const groupChildren: Array<DataTag> = groupTag.children;
+			for (let j = 0; j < groupChildren.length; j++) {
+				let fieldSetTagData: DataTag = groupChildren[j];
+				let tag: HTMLElement = TagsParser.parseTag(fieldSetTagData);
+				groupEl.appendChild(tag);
+			}
+			return groupEl;
+		}
+
+		public static parseJSONIntoElements(data: any) : HTMLFormElement{
 			const formEl: HTMLFormElement = document.createElement("form");
 			for (let i = 0; i < data.length; i++) {
 				let element: DataTag = <DataTag>data[i];
-				const tag: HTMLElement = parseTag(element);
+				const tag: HTMLElement = TagsParser.parseTag(element);
 
 				// add sub children to tag, ex. option, checkbox, etc.
 				if(element.children && element.children.length > 0){
 					for (let j = 0; j < element.children.length; j++) {
-						let subElement = parseTag(element.children[j]);
+						let subElement = TagsParser.parseTag(element.children[j]);
 						tag.appendChild(subElement);
 					}
 				}

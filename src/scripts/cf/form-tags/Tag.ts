@@ -194,7 +194,7 @@ namespace cf {
 			this.questions = null;
 		}
 
-		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
+		public static isTagValid(element: HTMLElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
 			

@@ -5,6 +5,12 @@
 	},
 	"tags": [
 		{
+			"tag": "input",
+			"type": "text",
+			"value": "Prefilled value here",
+			"cf-questions": "Input w. prefilled value"
+		},
+		{
 			"tag": "select",
 			"cf-input-placeholder": "Choose one of the above",
 			"multiple": "multiple",
@@ -79,12 +85,6 @@
 			"cf-input-placeholder": "Input w. pattern attribute",
 			"cf-error": "No less than 5 and no more than 10 characters",
 			"cf-questions": "Keep between 5-10 characters"
-		},
-		{
-			"tag": "input",
-			"type": "text",
-			"value": "Prefilled value here",
-			"cf-questions": "Input w. prefilled value"
 		},
 		{
 			"tag": "input",
