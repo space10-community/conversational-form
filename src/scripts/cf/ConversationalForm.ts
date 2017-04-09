@@ -191,7 +191,6 @@ namespace cf {
 				style.setAttribute("rel", "stylesheet");
 				style.setAttribute("href", githubMasterUrl);
 				head.appendChild(style);
-
 			}else{
 				// expect styles to be in the document
 				this.isDevelopment = true;
