@@ -63,7 +63,7 @@ class ConversationalFormExamples{
 
 			this.introTimer = setTimeout(() => {
 
-				document.getElementById("form").classList.add('show');
+				document.querySelector("section[role='form']").classList.add('show');
 				document.getElementById("cf-toggle-btn").classList.add('show');
 
 				this.introTimer = setTimeout(() => {

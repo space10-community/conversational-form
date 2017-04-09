@@ -292,8 +292,17 @@ try {
 	}(function ($) {
 		$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
 			options = options || {};
-			if(!options.formEl)
+			if(!options.formEl){
 				options.formEl = this[0];
+			}
+
+			if(!options.context){
+				var formContexts = document.querySelectorAll("*[cf-context]");
+				if(formContexts[0]){
+					options.context = formContexts[0];
+				}
+			}
+
 			return new cf.ConversationalForm(options);
 		};
 	}
@@ -348,6 +357,8 @@ var cf;
             var head = document.head || document.getElementsByTagName("head")[0];
             var script = document.createElement("script");
             script.type = "text/javascript";
+            script.async = true;
+            script.defer = true;
             script.onload = function () {
                 // we use https://github.com/Ranks/emojify.js as a standard
                 Helpers.emojilib = window[lib];
@@ -1713,6 +1724,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Tag.prototype, "id", {
+            get: function () {
+                return this.domElement.getAttribute("id");
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Tag.prototype, "inputPlaceholder", {
             get: function () {
                 return this._inputPlaceholder;
@@ -1969,8 +1987,19 @@ var cf;
                         if (innerText && innerText.length > 0)
                             labelTags = [parentDomNode];
                     }
-                    if (labelTags.length > 0 && labelTags[0])
-                        this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
+                    else if (labelTags.length > 0) {
+                        // check for "for" attribute
+                        for (var i = 0; i < labelTags.length; i++) {
+                            var label = labelTags[i];
+                            if (label.getAttribute("for") == this.id) {
+                                this._label = cf.Helpers.getInnerTextOfElement(label);
+                            }
+                        }
+                        // no for attribute but label found
+                        if (!this._label && labelTags[0]) {
+                            this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
+                        }
+                    }
                 }
             }
         };
@@ -2039,6 +2068,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "label", {
+            get: function () {
+                return "";
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TagGroup.prototype, "name", {
             get: function () {
                 return this.elements[0].name;
@@ -2046,9 +2082,9 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TagGroup.prototype, "label", {
+        Object.defineProperty(TagGroup.prototype, "id", {
             get: function () {
-                return this.elements[0].label;
+                return "tag-group";
             },
             enumerable: true,
             configurable: true
@@ -3111,6 +3147,9 @@ var cf;
                     text: this.getInputValue()
                 };
             }
+            // add current tag to DTO if not set
+            if (!value.tag)
+                value.tag = this.currentTag;
             value.input = this;
             return value;
         };

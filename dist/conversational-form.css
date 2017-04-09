@@ -142,6 +142,7 @@ div[cf-context],
 }
 
 
+
 .conversational-form {
   visibility: visible !important;
   font-family: 'Helvetica Neue', sans-serif;
@@ -271,7 +272,6 @@ div[cf-context],
   -ms-filter: none;
   filter: none;
 }
-
 
 cf-info {
   position: absolute;

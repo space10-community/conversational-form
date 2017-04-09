@@ -55,7 +55,7 @@ var ConversationalFormDocs = (function () {
         this.introTimer = setTimeout(function () {
             document.getElementById("info").classList.add('show');
             _this.introTimer = setTimeout(function () {
-                document.getElementById("form").classList.add('show');
+                document.querySelector("section[role='form']").classList.add('show');
                 document.getElementById("cf-toggle-btn").classList.add('show');
                 _this.introTimer = setTimeout(function () {
                     _this.toggleConversation();

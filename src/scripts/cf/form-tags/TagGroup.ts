@@ -64,12 +64,16 @@ namespace cf {
 			return "group";
 		}
 
+		public get label (): string{
+			return "";
+		}
+
 		public get name (): string{
 			return this.elements[0].name;
 		}
 
-		public get label (): string{
-			return this.elements[0].label;
+		public get id (): string{
+			return "tag-group";
 		}
 
 		public get question():string{
