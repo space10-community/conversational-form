@@ -68,6 +68,8 @@ namespace cf {
 			
 			const script: HTMLScriptElement = document.createElement("script");
 			script.type = "text/javascript";
+			script.async = true;
+			script.defer = true;
 			script.onload = function() {
 				// we use https://github.com/Ranks/emojify.js as a standard
 				Helpers.emojilib = (<any> window)[lib];
