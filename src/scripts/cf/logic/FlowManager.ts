@@ -185,9 +185,23 @@ namespace cf {
 			this.validateStepAndUpdate();
 		}
 
-		public addStep(){
-			// this can be used for when a Tags value is updated and new tags are presented
-			// like dynamic tag insertion depending on an answer.. V2..
+		public getStep(): number{
+			return this.step;
+		}
+
+		public addTags(tags: Array<ITag | ITagGroup>, atIndex: number = -1) : Array<ITag | ITagGroup>{
+			// used to append new tag
+			if(atIndex !== -1 && atIndex < this.tags.length){
+				const pre: Array<ITag | ITagGroup> = this.tags.slice(0, atIndex)
+				const post: Array<ITag | ITagGroup> = this.tags.slice(atIndex, this.tags.length)
+				this.tags = this.tags.slice(0, atIndex).concat(tags).concat(post);
+			}else{
+				this.tags.concat(tags);
+			}
+
+			this.setTags(this.tags);
+
+			return this.tags;
 		}
 
 		public dealloc(){

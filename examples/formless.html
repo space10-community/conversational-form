@@ -59,10 +59,10 @@
 
 				<article>
 					<h1 id="writer">
-						Formless
+						Formless form
 					</h1>
 					<h2>
-						A Conversational Form generate from JSON, see file <a href="files/formless.json" target="_blank">formless.json</a>
+						A Conversational Form generated from JSON, see file <a href="files/formless.json" target="_blank">formless.json</a>
 					</h2>
 				</article>
 			</section>
@@ -262,9 +262,67 @@
 				return error();
 			};
 
+			var cf;
+
 			// check formless.json
-			var onFormlessSubmited = function(a, b){
-				console.log("onFormlessSubmited", a, b)
+			var onFormlessSubmitted = function(cf){
+				var formData = cf.getFormData();
+				var formDataSerialized = cf.getFormData(true);
+				console.log("Formdata:", formData);
+				console.log("Formdata, obj:", formDataSerialized);
+			}
+
+			var step = 0;
+
+			var onStepCallback = function(dto, success, error){
+				// fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
+				var xhr = new XMLHttpRequest()
+				xhr.onload = function(event){
+					if(step++ == 0){
+						// add tags that are received from pseudo webservice ..
+						var testTag = {
+							"tag": "input",
+							"type": "text",
+							"cf-questions": "Tag is injected",
+							"cf-error": "Inject some text"
+						};
+
+						var testGroup = {
+							"tag": "fieldset",
+							"type": "Checkboxes",
+							"cf-input-placeholder": "Tag group is injected",
+							"cf-questions": "Choose an injected tag",
+							"children":[
+								{
+									"tag": "input",
+									"type": "checkbox",
+									"name": "checkboxes-buttons-1",
+									"cf-label": "checkbox-x1",
+									"checked": "checked"
+								},
+								{
+									"tag": "input",
+									"type": "checkbox",
+									"name": "checkboxes-buttons-1",
+									"cf-label": "checkbox-x2"
+								}
+							]
+						};
+
+						// add tag
+						// add tag at index
+						cf.addTags([testTag, testGroup], true);
+					}
+
+					success()
+					
+				}
+				xhr.onerror = function(){
+					error("Webservice failed??")
+				}
+
+				xhr.open("GET", window.location.href);
+				xhr.send();
 			}
 
 			window.addEventListener("load", function(){
@@ -275,10 +333,15 @@
 
 					// start one w. string
 					// window.cf.ConversationalForm.startTheConversation(str);
+
+					// add callback hooks..
+					json.options.submitCallback = onFormlessSubmitted.bind(window);
+					json.options.flowStepCallback = onStepCallback.bind(window);
 					
 					// start one w. json
-					var test = window.cf.ConversationalForm.startTheConversation(json);
-					document.getElementById("cf-context").appendChild(test.el);
+					cf = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("cf-context").appendChild(cf.el);
+
 
 					// in-document form
 					// window.cf.ConversationalForm.startTheConversation({
