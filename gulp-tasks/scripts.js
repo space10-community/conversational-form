@@ -137,7 +137,7 @@ global.gulp.task('typescript-docs', function() {
 global.gulp.task('scripts-docs-build', ['typescript-docs'], function(){
 	// build order is important in a inheritance world
 	var src = [
-		global.buildFolder + "../docs/build/**/*.js"
+		global.buildFolder + "../docs/build/cf/**/*.js"
 	];
 	var dst = global.srcFolder + "../docs/build";
 
@@ -185,7 +185,7 @@ global.gulp.task('typescript-examples', function() {
 global.gulp.task('scripts-examples-build', ['typescript-examples'], function(){
 	// build order is important in a inheritance world
 	var src = [
-		global.buildFolder + "../examples/build/**/*.js"
+		global.buildFolder + "../examples/build/cf/**/*.js"
 	];
 	var dst = global.srcFolder + "../examples/build";
 
