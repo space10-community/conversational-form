@@ -35,7 +35,7 @@ namespace cf {
 				if(tag){
 					this.optionTags.push(tag);
 				}else{
-					// console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
+					console.warn((<any>this.constructor).name, 'option tag invalid:', tag);
 				}
 			}
 		}

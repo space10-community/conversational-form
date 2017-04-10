@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+	</head>
+	<body>
+		<script src="build/cf/ConversationalFormExamples.js"></script>
+
+		<main class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form examples</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<article>
+					<h1 id="writer">
+						Formless form
+					</h1>
+					<h2>
+						A Conversational Form generated from JSON, see file <a href="files/formless.json" target="_blank">formless.json</a>
+					</h2>
+				</article>
+			</section>
+
+			<section id="form" role="form">
+				<div class="form-outer">
+					<h2>No form, all JS</h2>
+					<form id="empty-form"></form>
+				</div>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+		</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- when done -->
+		<!--<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
+		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin id="conversational-form-development"></script>-->
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/promise-polyfill/promise.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+		></script>
+
+		<script
+			id="conversational-form-development" 
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/parsing/TagsParser.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.plugin.js"
+			development
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/Helpers.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/EventDispatcher.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElements.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/ScrollController.js"
+		></script>
+
+		<script 
+			type="text/javascript"
+			src="../build/cf/data/Dictionary.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/Tag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/TagGroup.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/InputTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/SelectTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/ButtonTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/OptionTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionsList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/UploadFileUI.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/UserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatResponse.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/FlowManager.js"
+		></script>
+
+		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
+
+
+		<!-- Examples specific code below -->
+		<script>
+			// check formless.json
+			var testValidation = function(dto, success, error){
+				console.log("testValidation setup from formless.json, dto:", dto);
+				if(dto.text.indexOf("holmes") != -1)
+					return success();
+				return error();
+			};
+
+			var cf;
+
+			// check formless.json
+			var onFormlessSubmitted = function(cf){
+				var formData = cf.getFormData();
+				var formDataSerialized = cf.getFormData(true);
+				console.log("Formdata:", formData);
+				console.log("Formdata, obj:", formDataSerialized);
+			}
+
+			var step = 0;
+
+			var onStepCallback = function(dto, success, error){
+				// fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
+				var xhr = new XMLHttpRequest()
+				xhr.onload = function(event){
+					if(step++ == 0){
+						// add tags that are received from pseudo webservice ..
+						var testTag = {
+							"tag": "input",
+							"type": "text",
+							"cf-questions": "Tag is injected",
+							"cf-error": "Inject some text"
+						};
+
+						var testGroup = {
+							"tag": "fieldset",
+							"type": "Checkboxes",
+							"cf-input-placeholder": "Tag group is injected",
+							"cf-questions": "Choose an injected tag",
+							"children":[
+								{
+									"tag": "input",
+									"type": "checkbox",
+									"name": "checkboxes-buttons-1",
+									"cf-label": "checkbox-x1",
+									"checked": "checked"
+								},
+								{
+									"tag": "input",
+									"type": "checkbox",
+									"name": "checkboxes-buttons-1",
+									"cf-label": "checkbox-x2"
+								}
+							]
+						};
+
+						// add tag
+						// add tag at index
+						cf.addTags([testTag, testGroup], true);
+					}
+
+					success()
+					
+				}
+				xhr.onerror = function(){
+					error("Webservice failed??")
+				}
+
+				xhr.open("GET", window.location.href);
+				xhr.send();
+			}
+
+			window.addEventListener("load", function(){
+				var xhr = new XMLHttpRequest()
+				xhr.onload = function(event){
+					var str = xhr.response;
+					var json = JSON.parse(str);
+
+					// start one w. string
+					// window.cf.ConversationalForm.startTheConversation(str);
+
+					// add callback hooks..
+					json.options.submitCallback = onFormlessSubmitted.bind(window);
+					json.options.flowStepCallback = onStepCallback.bind(window);
+					
+					// start one w. json
+					cf = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("cf-context").appendChild(cf.el);
+
+
+					// in-document form
+					// window.cf.ConversationalForm.startTheConversation({
+					// 	formEl: document.getElementById("empty-form")
+					// });
+				}
+				xhr.open("GET", "files/formless.json");
+				xhr.send();
+			});
+		</script>
+
+	</body>
+</html>

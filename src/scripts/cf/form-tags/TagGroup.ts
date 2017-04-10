@@ -169,6 +169,8 @@ namespace cf {
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
+							}else{
+								(<HTMLInputElement> tag.domElement).checked = false;
 							}
 						}
 					}

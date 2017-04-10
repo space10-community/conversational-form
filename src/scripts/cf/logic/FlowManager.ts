@@ -16,6 +16,7 @@ namespace cf {
 		cfReference: ConversationalForm;
 		eventTarget: EventDispatcher;
 		tags: Array<ITag>;
+		flowStepCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 	}
 
 	export const FlowEvents = {
@@ -29,8 +30,8 @@ namespace cf {
 	// class
 	export class FlowManager {
 		private static STEP_TIME: number = 1000;
-		public static generalFlowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 
+		private flowStepCallback: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void;
 		private eventTarget: EventDispatcher;
 
 		private cfReference: ConversationalForm;
@@ -56,6 +57,7 @@ namespace cf {
 		constructor(options: FlowManagerOptions){
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
+			this.flowStepCallback = options.flowStepCallback;
 
 			this.setTags(options.tags);
 
@@ -93,11 +95,11 @@ namespace cf {
 				}
 
 				// check 2, this.currentTag.required <- required should be handled in the callback.
-				if(FlowManager.generalFlowStepCallback && typeof FlowManager.generalFlowStepCallback == "function"){
+				if(this.flowStepCallback && typeof this.flowStepCallback == "function"){
 					if(!hasCheckedForGlobalFlowValidation && isTagValid){
 						hasCheckedForGlobalFlowValidation = true;
 						// use global validationCallback method
-						FlowManager.generalFlowStepCallback(appDTO, () => {
+						this.flowStepCallback(appDTO, () => {
 							isTagValid = true;
 							onValidationCallback();
 						}, (optionalErrorMessage?: string) => {
@@ -183,9 +185,23 @@ namespace cf {
 			this.validateStepAndUpdate();
 		}
 
-		public addStep(){
-			// this can be used for when a Tags value is updated and new tags are presented
-			// like dynamic tag insertion depending on an answer.. V2..
+		public getStep(): number{
+			return this.step;
+		}
+
+		public addTags(tags: Array<ITag | ITagGroup>, atIndex: number = -1) : Array<ITag | ITagGroup>{
+			// used to append new tag
+			if(atIndex !== -1 && atIndex < this.tags.length){
+				const pre: Array<ITag | ITagGroup> = this.tags.slice(0, atIndex)
+				const post: Array<ITag | ITagGroup> = this.tags.slice(atIndex, this.tags.length)
+				this.tags = this.tags.slice(0, atIndex).concat(tags).concat(post);
+			}else{
+				this.tags.concat(tags);
+			}
+
+			this.setTags(this.tags);
+
+			return this.tags;
 		}
 
 		public dealloc(){

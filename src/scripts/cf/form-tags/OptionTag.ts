@@ -1,4 +1,5 @@
 /// <reference path="Tag.ts"/>
+/// <reference path="../parsing/TagsParser.ts"/>
 
 // namespace
 namespace cf {
@@ -12,7 +13,11 @@ namespace cf {
 		}
 
 		public get label (): string{
-			return Helpers.getInnerTextOfElement(this.domElement);
+			if(this.formless){
+				return super.getLabel();
+			}else{
+				return Helpers.getInnerTextOfElement(this.domElement);
+			}
 		}
 		
 		public get selected (): boolean{

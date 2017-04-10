@@ -1,49 +1,15 @@
 @import "nib"
 @import "rupture"
 
-@import "../../../docs/src/styles/cf/cf-docs-variables"
+@import "../../../docs/src/styles/cf/_cf-docs-variables"
 @import "../../../src/styles/mixins/_cf-mixins.styl"
 
 // boilerplate
-global-reset()
+// we use docs as a foundation
 
 // TBD
-body
-	font-family Helvetica Neue, Helvetica
-	font-style normal
-	-webkit-font-smoothing antialiased
-	min-height 100%
-	height auto
-	width 100%
-	display flex
-	position relative
-	font-size responsivePXValue(12, 13)
-	line-height 1.2
-
-	*, *:before, *:after
-		box-sizing border-box
-		outline none
-
-#form
-	padding 20px
-	border-bottom 1px solid lighten(lightgrey, 50%) 
-
-.info
-	color $color-white
-	padding 20px
-	background $color-black
-
-	button
-		padding 5px
-	
-	a, a:active, a:hover
-		color white
-	
-	video
-		width 100%
-		height auto
-		margin-top 10px
-
-div[cf-context], #context
-	background lighten(lightgrey, 50%)
-
+.form-outer > h2{
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+}

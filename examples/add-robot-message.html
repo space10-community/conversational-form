@@ -4,15 +4,6 @@
 	</head>
 	<body>
 
-		<style>
-			.form-outer{
-				position: relative;
-				background: lightgrey;
-				width: 600px;
-				height: 80vh;
-			}
-		</style>
-
 		<div id="random-interface">
 			<style>
 				#random-interface{
@@ -74,211 +65,16 @@
 			<button onclick="addRandomClick()">Add random text</button>
 		</div>
 
-
-
 		<div class="form-outer" cf-context>
-
 			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form" cf-form>
-
 			</form>
-
 		</div>
 
 
 
-
-
-
-		<!-- <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		<script
-			type="text/javascript"
-			src="../build/bower_components/promise-polyfill/promise.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
-		></script>
-
-		<script
-			id="conversational-form-development" 
-			type="text/javascript"
-			src="../build/cf/ConversationalForm.js"
-			development
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ConversationalForm.plugin.js"
-			development
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/Helpers.js"
-		></script>
-		
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/EventDispatcher.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/BasicElement.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/ControlElement.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/ControlElements.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/ScrollController.js"
-		></script>
-
-		<script 
-			type="text/javascript"
-			src="../build/cf/data/Dictionary.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/Tag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/TagGroup.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/InputTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/SelectTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/ButtonTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/OptionTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/Button.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/RadioButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/CheckboxButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/OptionButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/OptionsList.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/UploadFileUI.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/UserInput.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/chat/ChatResponse.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/chat/ChatList.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/FlowManager.js"
-		></script>
-
-		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
-
-		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
-
-		<!-- OR -->
-		<!--<script type="text/javascript" id="conversational-form-development" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>-->
-
-
-		<script>
-		</script>
-
+		<link type="text/css" rel="stylesheet" href="build/examples-boilerplate.css"/>
+		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
+		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin id="conversational-form-development"></script>
 	</body>
 </html>

@@ -16,7 +16,10 @@ var ConversationalForm = (function () {
 var ConversationalFormDocs = (function () {
     function ConversationalFormDocs() {
         this.introTimer = 0;
-        this.el = document.getElementById("conversational-form-docs");
+        this.el = document.querySelector("main.content");
+        var isDevelopment = document.getElementById("conversational-form-development") !== null;
+        if (isDevelopment)
+            this.el.classList.add("development");
         this.h1writer = new H1Writer({
             el: document.getElementById("writer")
         });
@@ -32,13 +35,14 @@ var ConversationalFormDocs = (function () {
     */
     ConversationalFormDocs.prototype.introFlow1 = function () {
         var _this = this;
+        var isDevelopment = document.getElementById("conversational-form-development") !== null;
         this.introTimer = setTimeout(function () {
             _this.toggleMenuState();
             _this.h1writer.start();
             _this.introTimer = setTimeout(function () {
                 _this.toggleConversation();
-            }, 2500);
-        }, 500);
+            }, isDevelopment ? 0 : 2500);
+        }, isDevelopment ? 0 : 500);
     };
     /**
     * @name introFlow2
@@ -46,6 +50,7 @@ var ConversationalFormDocs = (function () {
     */
     ConversationalFormDocs.prototype.introFlow2 = function () {
         var _this = this;
+        var isDevelopment = document.getElementById("conversational-form-development") !== null;
         this.h1writer.start();
         this.introTimer = setTimeout(function () {
             document.getElementById("info").classList.add('show');
@@ -54,9 +59,9 @@ var ConversationalFormDocs = (function () {
                 document.getElementById("cf-toggle-btn").classList.add('show');
                 _this.introTimer = setTimeout(function () {
                     _this.toggleConversation();
-                }, 1500);
-            }, 3000);
-        }, 1500);
+                }, isDevelopment ? 0 : 1500);
+            }, isDevelopment ? 0 : 3000);
+        }, isDevelopment ? 0 : 1500);
     };
     ConversationalFormDocs.prototype.toggleMenuState = function () {
         var open = this.el.classList.toggle('menu-toggle', !this.el.classList.contains('menu-toggle'));
@@ -78,11 +83,11 @@ var ConversationalFormDocs = (function () {
                     submitCallback: function () {
                     },
                     flowStepCallback: function (dto, success, error) {
-                        if (dto.input.currentTag.domElement) {
-                            if (dto.input.currentTag.domElement.getAttribute("name") == "repeat") {
+                        if (dto.tag.domElement) {
+                            if (dto.tag.domElement.getAttribute("name") == "repeat") {
                                 location.reload();
                             }
-                            else if (dto.input.currentTag.domElement.getAttribute("name") == "submit-form") {
+                            else if (dto.tag.domElement.getAttribute("name") == "submit-form") {
                                 var xhr = new XMLHttpRequest();
                                 xhr.addEventListener("load", function () {
                                     _this.cf.addRobotChatResponse("We received your submission 🙌");
@@ -126,9 +131,10 @@ var H1Writer = (function () {
         this.progress = 0;
         this.progressTarget = 0;
         this.str = "";
-        this.strs = ["...", "Turning webforms into conversations."];
+        this.strs = ["...", "TBD"];
         this.step = 0;
         this.el = options.el;
+        this.strs[1] = this.el.innerHTML;
         this.el.innerHTML = "";
         this.el.classList.add("show");
     }

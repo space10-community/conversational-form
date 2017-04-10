@@ -12,10 +12,7 @@ require("./gulp-tasks/images");
 require("./gulp-tasks/bower");
 
 //options
-var isDocs = process.argv.indexOf("--docs") != -1;
-global.isDocs = isDocs;
-
-var rootPath = isDocs ? "./docs/" : "./";
+var rootPath = "./";
 
 var srcFolder = rootPath + 'src/';
 global.srcFolder = srcFolder;
@@ -23,30 +20,29 @@ global.srcFolder = srcFolder;
 var buildFolder = rootPath + 'build/';
 global.buildFolder = buildFolder;
 
-var distFolder = isDocs ? rootPath + 'build/' : rootPath + 'dist/';
+var distFolder = rootPath + 'dist/';
 global.distFolder = distFolder;
 
+var tasks = ['bower', 'scripts-docs-build', 'scripts-examples-build', 'scripts-form-build', 'styles-docs-build', 'styles-examples-build', 'styles-form-build', 'copy-images'];
+
 // Watch Files For Changes
-global.gulp.task('watch', ['bower', 'typescript', 'scripts', 'stylus', 'copy-images'], function() {
+global.gulp.task('watch', tasks, function() {
 	livereload.listen();
 
-	console.log("Watch task started");
-
-	global.gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript']);
-	
-	global.gulp.watch(srcFolder + '/scripts/**/*.js', ['scripts']);
+	console.log("Watch task started — development");
 
 	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
 
-	if(isDocs){
-		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus', 'styles-build']);
-	}else{
-		global.gulp.watch(srcFolder + '../examples/src/styles/**/*.styl', ['stylus-examples']);
-		global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus']);
-	}
+	global.gulp.watch(srcFolder + '../docs/src/scripts/**/*.ts', ['typescript-docs']);
+	global.gulp.watch(srcFolder + '../examples/src/scripts/**/*.ts', ['typescript-examples']);
+	global.gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript-form']);
+
+	global.gulp.watch(srcFolder + '../docs/src/styles/**/*.styl', ['stylus-docs']);
+	global.gulp.watch(srcFolder + '../examples/src/styles/**/*.styl', ['stylus-examples']);
+	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus-form']);
 });
 
 // Default tasks
 global.gulp.task('default', ['watch']);
-global.gulp.task('build', gulpsync.sync(['bower', 'scripts-build', 'styles-build', 'copy-images']));
-global.gulp.task('dist', gulpsync.sync(['bower', 'scripts-build', 'styles-build', 'copy-images']));
+global.gulp.task('build', gulpsync.sync(tasks));
+global.gulp.task('dist', gulpsync.sync(tasks));
