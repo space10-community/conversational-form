@@ -10,6 +10,7 @@
 /// <reference path="form-tags/SelectTag.ts"/>
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
+/// <reference path="parsing/TagsParser.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -60,8 +61,14 @@ namespace cf {
 		eventDispatcher?: EventDispatcher;
 	}
 
+	// CUI formless options
+	export interface ConversationalFormlessOptions{
+		options: any;
+		tags: any;
+	}
+
 	export class ConversationalForm{
-		public version: string = "0.9.2";
+		public version: string = "0.9.3";
 
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
@@ -94,8 +101,9 @@ namespace cf {
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
-		private submitCallback: () => void | HTMLButtonElement;
+		private submitCallback: (cf: ConversationalForm) => void | HTMLButtonElement;
 		private onUserAnswerClickedCallback: () => void;
+		private flowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
@@ -121,7 +129,7 @@ namespace cf {
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
-				FlowManager.generalFlowStepCallback = options.flowStepCallback;
+				this.flowStepCallback = options.flowStepCallback;
 			
 			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
 			
@@ -141,7 +149,13 @@ namespace cf {
 			this.formEl = options.formEl;
 			this.formEl.setAttribute("cf-create-id", this.createId);
 
+			// TODO: can be a string when added as formless..
+			// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			this.submitCallback = options.submitCallback;
+			if(this.submitCallback && typeof this.submitCallback === "string"){
+				// a submit callback method added to json, so use eval to evaluate method
+				this.submitCallback = eval(this.submitCallback);
+			}
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
 				ConversationalForm.animationsEnabled = false;
@@ -239,7 +253,7 @@ namespace cf {
 			}
 
 			//let's start the conversation
-			this.setupTagGroups();
+			this.tags = this.setupTagGroups(this.tags);
 			this.setupUI();
 
 			return this;
@@ -265,8 +279,8 @@ namespace cf {
 				const serialized: any = {}
 				for(var i = 0; i < this.tags.length; i++){
 					const element = this.tags[i];
-					if(element.name && element.value)
-						serialized[element.name] = element.value
+					if(element.value)
+						serialized[element.name || "tag-" + i.toString()] = element.value
 				}
 
 				return serialized
@@ -309,12 +323,12 @@ namespace cf {
 			}
 		}
 
-		private setupTagGroups(){
+		private setupTagGroups(tags: Array<ITag>) : Array<ITag | ITagGroup>{
 			// make groups, from input tag[type=radio | type=checkbox]
 			// groups are used to bind logic like radio-button or checkbox dependencies
 			var groups: any = [];
-			for(var i = 0; i < this.tags.length; i++){
-				const tag = this.tags[i];
+			for(var i = 0; i < tags.length; i++){
+				const tag: ITag = tags[i];
 				if(tag.type == "radio" || tag.type == "checkbox"){
 					if(!groups[tag.name])
 						groups[tag.name] = [];
@@ -335,19 +349,22 @@ namespace cf {
 						for(var i = 0; i < groups[group].length; i++){
 							let tagToBeRemoved: InputTag = groups[group][i];
 							if(i == 0)// add the group at same index as the the first tag to be removed
-								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1, tagGroup);
+								tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
 							else
-								this.tags.splice(this.tags.indexOf(tagToBeRemoved), 1);
+								tags.splice(tags.indexOf(tagToBeRemoved), 1);
 						}
 					}
 				}
 			}
+
+			return tags;
 		}
 
 		private setupUI(){
 			// start the flow
 			this.flowManager = new FlowManager({
 				cfReference: this,
+				flowStepCallback: this.flowStepCallback,
 				eventTarget: this.eventTarget,
 				tags: this.tags
 			});
@@ -407,6 +424,52 @@ namespace cf {
 		}
 
 		/**
+		* @name addTag
+		* Add a tag to the conversation. This can be used to add tags at runtime
+		* see examples/formless.html
+		*/
+		public addTags(tagsData: Array<DataTag>, addAfterCurrentStep: boolean = true, atIndex: number = -1): void {
+			let tags: Array<ITag | ITagGroup> = [];
+
+			for (let i = 0; i < tagsData.length; i++) {
+				let tagData: DataTag = tagsData[i];
+				if(tagData.tag === "fieldset"){
+					// group ..
+					// const fieldSetChildren: Array<DataTag> = tagData.children;
+					// parse group tag
+					const groupTag: HTMLElement = TagsParser.parseGroupTag(tagData);
+					
+					for (let j = 0; j < groupTag.children.length; j++) {
+						let tag: HTMLElement = <HTMLElement> groupTag.children[j];
+						if(Tag.isTagValid(tag)){
+							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+							// add ref for group creation
+							if(!tagElement.name){
+								tagElement.name = "tag-ref-"+j.toString();
+							}
+
+							tags.push(tagElement);
+						}
+					}
+				}else{
+					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = TagsParser.parseTag(tagData);
+					if(Tag.isTagValid(tag)){
+						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+						tags.push(tagElement);
+					}
+				}
+			}
+
+			// map free roaming checkbox and radio tags into groups
+			tags = this.setupTagGroups(tags);
+
+			// add new tags to the flow
+			this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
+			console.log(this.tags);
+			//this.flowManager.startFrom ?
+		}
+
+		/**
 		* @name remapTagsAndStartFrom
 		* index: number, what index to start from
 		* setCurrentTagValue: boolean, usually this method is called when wanting to loop or skip over questions, therefore it might be usefull to set the value of the current tag before changing index.
@@ -441,7 +504,7 @@ namespace cf {
 
 			if(this.submitCallback){
 				// remove should be called in the submitCallback
-				this.submitCallback();
+				this.submitCallback(this);
 			}else{
 				// this.formEl.submit();
 				// doing classic .submit wont trigger onsubmit if that is present on form element
@@ -501,8 +564,37 @@ namespace cf {
 		}
 
 		private static hasAutoInstantiated: boolean = false;
+		public static startTheConversation(data: ConversationalFormOptions | ConversationalFormlessOptions) {
+			let isFormless: boolean = !!(<any> data).formEl === false;
+			let formlessTags: any;
+			let constructorOptions: ConversationalFormOptions;
+
+			if(isFormless){
+				if(typeof data === "string"){
+					// Formless init w. string
+					isFormless = true;
+					const json: any = JSON.parse(data)
+					constructorOptions = (<ConversationalFormlessOptions> json).options;
+					formlessTags = (<ConversationalFormlessOptions> json).tags;
+				}else{
+					// Formless init w. JSON object
+					constructorOptions = (<ConversationalFormlessOptions> data).options;
+					formlessTags = (<ConversationalFormlessOptions> data).tags;
+				}
+
+				// formless, so generate the pseudo tags
+				const formEl: HTMLFormElement = cf.TagsParser.parseJSONIntoElements(formlessTags)
+				constructorOptions.formEl = formEl;
+			}else{
+				// keep it standard
+				constructorOptions = <ConversationalFormOptions> data;
+			}
+
+			return new cf.ConversationalForm(constructorOptions);
+		}
+
 		public static autoStartTheConversation() {
-			if(ConversationalForm.hasAutoInstantiated)
+			if(cf.ConversationalForm.hasAutoInstantiated)
 				return;
 
 			// auto start the conversation
@@ -519,13 +611,13 @@ namespace cf {
 				for (let i = 0; i < formElements.length; i++) {
 					let form: HTMLFormElement = <HTMLFormElement>formElements[i];
 					let context: HTMLFormElement = <HTMLFormElement>formContexts[i];
-					new cf.ConversationalForm({
+					cf.ConversationalForm.startTheConversation({
 						formEl: form,
 						context: context
 					});
 				}
 
-				ConversationalForm.hasAutoInstantiated = true;
+				cf.ConversationalForm.hasAutoInstantiated = true;
 			}
 		}
 	}

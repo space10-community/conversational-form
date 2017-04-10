@@ -15,7 +15,11 @@ function swallowError(error) {
 	this.emit('end');
 }
 
-global.gulp.task('typescript', function() {
+
+/**
+ * form script tasks
+ */
+global.gulp.task('typescript-form', function() {
 	var src = [
 		global.srcFolder + "/scripts/**/*.ts",
 		"!" + global.srcFolder + "/scripts/typings/**/*.d.ts"
@@ -23,7 +27,6 @@ global.gulp.task('typescript', function() {
 	var dst = global.buildFolder;
 
 	var stream = global.gulp.src(src)
-		// .pipe(flatten()) // flatten folder structure
 		.pipe(changed(dst,{
 			extension: '.js'
 		}))
@@ -40,15 +43,13 @@ global.gulp.task('typescript', function() {
 	return stream
 });
 
-global.gulp.task('scripts', function() {
+global.gulp.task('scripts-form', ['typescript-form'], function() {
 	var src = [
-		global.srcFolder + "/scripts/**/*.js",
-		"!" + global.srcFolder + "/scripts/typings/**/*.ts"
+		global.srcFolder + "/scripts/**/*.js"
 	];
 	var dst = global.buildFolder;
 
 	var stream = global.gulp.src(src)
-		// .pipe(flatten()) // flatten folder structure
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
@@ -57,15 +58,17 @@ global.gulp.task('scripts', function() {
 	return stream
 });
 
-global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
+global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 	// build order is important in a inheritance world
 	var src = [
 		global.buildFolder + "bower_components/promise-polyfill/promise.js",
 		global.buildFolder + "bower_components/custom-event-polyfill/custom-event-polyfill.js",
-		global.buildFolder + "cf/ConversationalForm.js",
+
 		global.buildFolder + "cf/ConversationalForm.plugin.js",
 		global.buildFolder + "cf/logic/Helpers.js",
 		global.buildFolder + "cf/logic/EventDispatcher.js",
+		global.buildFolder + "cf/parsing/TagsParser.js",
+
 		global.buildFolder + "cf/ui/BasicElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElements.js",
@@ -86,7 +89,9 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 		global.buildFolder + "cf/ui/UserInput.js",
 		global.buildFolder + "cf/ui/chat/ChatResponse.js",
 		global.buildFolder + "cf/ui/chat/ChatList.js",
-		global.buildFolder + "cf/logic/FlowManager.js"
+		global.buildFolder + "cf/logic/FlowManager.js",
+
+		global.buildFolder + "cf/ConversationalForm.js"
 	];
 
 	var stream = global.gulp.src(src)
@@ -101,3 +106,95 @@ global.gulp.task('scripts-build', ['typescript', 'scripts'], function(){
 });
 
 
+/**
+ * docs script tasks
+ */
+
+global.gulp.task('typescript-docs', function() {
+	var src = [
+		global.srcFolder + "../docs/src/scripts/**/*.ts",
+		"!" + global.srcFolder + "../docs/src/scripts/typings/**/*.d.ts"
+		];
+	var dst = global.buildFolder + "../docs/build";
+
+	var stream = global.gulp.src(src)
+		.pipe(changed(dst,{
+			extension: '.js'
+		}))
+		.pipe(typescript({
+			noImplicitAny: true,
+			target: "ES5",
+			module: "none"//AMD... etc.
+		}))
+		.on('error', swallowError)
+		.pipe(global.gulp.dest(dst))
+		.pipe(livereload())
+		.pipe(notify("Typescript compiled."));
+
+	return stream
+});
+
+global.gulp.task('scripts-docs-build', ['typescript-docs'], function(){
+	// build order is important in a inheritance world
+	var src = [
+		global.buildFolder + "../docs/build/**/*.js"
+	];
+	var dst = global.srcFolder + "../docs/build";
+
+	var stream = global.gulp.src(src)
+		.pipe(concat('conversational-form-docs.js'))
+		.pipe(global.gulp.dest(dst))
+		.pipe(uglify())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(global.gulp.dest(dst));
+
+	return stream;
+});
+
+
+
+
+/**
+ * examples script tasks
+ */
+
+global.gulp.task('typescript-examples', function() {
+	var src = [
+		global.srcFolder + "../examples/src/scripts/**/*.ts",
+		"!" + global.srcFolder + "../examples/src/scripts/typings/**/*.d.ts"
+		];
+	var dst = global.buildFolder + "../examples/build";
+
+	var stream = global.gulp.src(src)
+		.pipe(changed(dst,{
+			extension: '.js'
+		}))
+		.pipe(typescript({
+			noImplicitAny: true,
+			target: "ES5",
+			module: "none"//AMD... etc.
+		}))
+		.on('error', swallowError)
+		.pipe(global.gulp.dest(dst))
+		.pipe(livereload())
+		.pipe(notify("Typescript compiled."));
+
+	return stream
+});
+
+global.gulp.task('scripts-examples-build', ['typescript-examples'], function(){
+	// build order is important in a inheritance world
+	var src = [
+		global.buildFolder + "../examples/build/**/*.js"
+	];
+	var dst = global.srcFolder + "../examples/build";
+
+	var stream = global.gulp.src(src)
+		.pipe(concat('conversational-form-examples.js'))
+		.pipe(global.gulp.dest(dst))
+		.pipe(uglify())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(global.gulp.dest(dst));
+
+	return stream;
+});

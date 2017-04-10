@@ -1,9 +1,10 @@
-@import "cf-docs-variables"
+@import "_cf-docs-variables"
+
 $color-cf-black = #222222
 $color-cf-grey = #EBEBEB
 $color-cf-white = white
 
-#conversational-form-docs
+main.content
 	.conversational-form
 		font-family Helvetica Neue, Helvetica
 		font-style normal
@@ -92,7 +93,7 @@ $color-cf-white = white
 			cf-radio
 				background rgba($color-cf-black, 0.2)
 
-			&.highlight, &:focus, &:hover
+			&.highlight, &:focus, &:hover, &[checked="checked"], &.selected
 				border-color darken(#DDDDDD, 50%)
 				color lighten($color-cf-black, 25%)
 

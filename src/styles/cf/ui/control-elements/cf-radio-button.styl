@@ -1,6 +1,6 @@
 @import "nib"
 @import "rupture"
-@import "../../cf-variables"
+@import "../../_cf-variables"
 
 cf-radio-button.cf-button
 	&:hover, &.highlight, &:focus
@@ -26,6 +26,8 @@ cf-radio-button.cf-button
 			transition background $anim-time * 0.5 $anim-easeOut
 
 	&[checked="checked"]
+		pointer-events none
+
 		cf-radio
 			background $color-chat-reponse-user-text
 			pointer-events none

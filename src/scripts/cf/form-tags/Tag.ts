@@ -5,6 +5,7 @@
 /// <reference path="OptionTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
 /// <reference path="../logic/EventDispatcher.ts"/>
+/// <reference path="../parsing/TagsParser.ts"/>
 
 // basic tag from form logic
 // types:
@@ -89,14 +90,12 @@ namespace cf {
 			return this._inputPlaceholder;
 		}
 
-		public get label (): string{
-			if(!this._label)
-				this.findAndSetLabel();
+		public get formless (): boolean{
+			return TagsParser.isElementFormless(this.domElement)
+		}
 
-			if(this._label)
-				return this._label;
-			
-			return Dictionary.getRobotResponse(this.type);
+		public get label (): string{
+			return this.getLabel();
 		}
 
 		public get value (): string | Array<string> {
@@ -195,7 +194,7 @@ namespace cf {
 			this.questions = null;
 		}
 
-		public static isTagValid(element: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement):boolean{
+		public static isTagValid(element: HTMLElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
 			
@@ -206,20 +205,25 @@ namespace cf {
 			if(element.getAttribute("type") == "button")
 				return false;
 
+
 			if(element.style.display === "none")
 				return false;
 			
 			if(element.style.visibility === "hidden")
 				return false;
+			
+			const isTagFormless: boolean = TagsParser.isElementFormless(element);
 
 			const innerText: string = Helpers.getInnerTextOfElement(element);
-			if(element.tagName.toLowerCase() == "option" && (innerText == "" || innerText == " ")){
+			if(element.tagName.toLowerCase() == "option" && (!isTagFormless && innerText == "" || innerText == " ")){
 				return false;
 			}
 		
 			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
-			else{
+			else if(isTagFormless){
+				return true;
+			}else{
 				return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 			}
 		}
@@ -299,6 +303,16 @@ namespace cf {
 			}
 
 			return isValid;
+		}
+
+		protected getLabel(): string{
+			if(!this._label)
+				this.findAndSetLabel();
+
+			if(this._label)
+				return this._label;
+
+			return Dictionary.getRobotResponse(this.type);
 		}
 
 		protected findAndSetQuestions(){

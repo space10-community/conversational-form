@@ -29,7 +29,11 @@ class ConversationalFormDocs{
 	private introTimer: any = 0;
 	private h1writer: H1Writer;
 	constructor(){
-		this.el = document.getElementById("conversational-form-docs");
+		this.el = <HTMLElement> document.querySelector("main.content");
+
+		const isDevelopment: boolean = document.getElementById("conversational-form-development") !== null;
+		if(isDevelopment)
+			this.el.classList.add("development");
 
 		this.h1writer = new H1Writer({
 			el: document.getElementById("writer")
@@ -47,14 +51,16 @@ class ConversationalFormDocs{
 	* flow for small screens
 	*/
 	private introFlow1(): void {
+		const isDevelopment: boolean = document.getElementById("conversational-form-development") !== null;
+
 		this.introTimer = setTimeout(() => {
 			this.toggleMenuState();
 			this.h1writer.start();
 
 			this.introTimer = setTimeout(() => {
 				this.toggleConversation()
-			}, 2500);
-		}, 500);
+			}, isDevelopment ? 0 : 2500);
+		}, isDevelopment ? 0 : 500);
 	}
 
 	/**
@@ -62,6 +68,8 @@ class ConversationalFormDocs{
 	* flow for larger screens
 	*/
 	private introFlow2(): void {
+		const isDevelopment: boolean = document.getElementById("conversational-form-development") !== null;
+
 		this.h1writer.start();
 
 		this.introTimer = setTimeout(() => {
@@ -74,9 +82,9 @@ class ConversationalFormDocs{
 
 				this.introTimer = setTimeout(() => {
 					this.toggleConversation()
-				}, 1500);
-			}, 3000);
-		}, 1500);
+				}, isDevelopment ? 0 : 1500);
+			}, isDevelopment ? 0 : 3000);
+		}, isDevelopment ? 0 : 1500);
 	}
 
 	public toggleMenuState(){
@@ -152,7 +160,7 @@ class H1Writer{
 	private progress: number = 0;
 	private progressTarget: number = 0;
 	private str: string = "";
-	private strs: Array<string> = ["...", "Turning webforms into conversations."];
+	private strs: Array<string> = ["...", "TBD"];
 
 	/**
 	* 
@@ -163,6 +171,7 @@ class H1Writer{
 	private step: number = 0;
 	constructor(options: any){
 		this.el = options.el
+		this.strs[1] = this.el.innerHTML;
 		this.el.innerHTML = "";
 		this.el.classList.add("show");
 	}

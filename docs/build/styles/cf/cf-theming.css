@@ -1,58 +1,58 @@
-#conversational-form-docs .conversational-form {
+main.content .conversational-form {
   font-family: Helvetica Neue, Helvetica;
   font-style: normal;
 }
-#conversational-form-docs .conversational-form cf-chat-response {
+main.content .conversational-form cf-chat-response {
   padding-top: 0px;
   min-width: 200px;
 }
 @media only screen and (max-width: 769px) {
-  #conversational-form-docs .conversational-form cf-chat-response {
+  main.content .conversational-form cf-chat-response {
     max-width: 83%;
   }
 }
-#conversational-form-docs .conversational-form cf-chat-response text {
+main.content .conversational-form cf-chat-response text {
   font-weight: 900;
   min-height: 42px;
   font-size: 13px;
 }
-#conversational-form-docs .conversational-form cf-chat-response thumb {
+main.content .conversational-form cf-chat-response thumb {
   background-color: #ebebeb;
   height: 42px;
   width: 42px;
 }
-#conversational-form-docs .conversational-form cf-chat-response:not(:last-of-type) {
+main.content .conversational-form cf-chat-response:not(:last-of-type) {
   margin-bottom: 10px;
 }
-#conversational-form-docs .conversational-form cf-chat-response.robot {
+main.content .conversational-form cf-chat-response.robot {
   padding-left: 48px;
 }
-#conversational-form-docs .conversational-form cf-chat-response.robot text {
+main.content .conversational-form cf-chat-response.robot text {
   background: #ebebeb;
   color: #222;
   border-radius: 4px 20px 20px 20px;
 }
-#conversational-form-docs .conversational-form cf-chat-response.robot thumb {
+main.content .conversational-form cf-chat-response.robot thumb {
   background-color: #ebebeb;
   background-size: 20px 20px;
   background-repeat: no-repeat;
 }
-#conversational-form-docs .conversational-form cf-chat-response.user {
+main.content .conversational-form cf-chat-response.user {
   padding-right: 48px;
 }
-#conversational-form-docs .conversational-form cf-chat-response.user text {
+main.content .conversational-form cf-chat-response.user text {
   background: #222;
   color: #fff;
   border-radius: 20px 4px 20px 20px;
 }
-#conversational-form-docs .conversational-form cf-chat-response.user thumb {
+main.content .conversational-form cf-chat-response.user thumb {
   background-color: #222;
   background-size: 20px 16px;
   background-repeat: no-repeat;
   background-position: 11px 12px;
 }
-#conversational-form-docs .conversational-form cf-input input,
-#conversational-form-docs .conversational-form cf-input textarea {
+main.content .conversational-form cf-input input,
+main.content .conversational-form cf-input textarea {
   border-radius: 40px;
   min-height: 57px;
   font-size: 14px;
@@ -62,26 +62,26 @@
   font-weight: 900;
 }
 @media only screen and (min-width: 769px) {
-  #conversational-form-docs .conversational-form cf-input input,
-  #conversational-form-docs .conversational-form cf-input textarea {
+  main.content .conversational-form cf-input input,
+  main.content .conversational-form cf-input textarea {
     font-size: 16px;
   }
 }
-#conversational-form-docs .conversational-form cf-input input:not(:focus),
-#conversational-form-docs .conversational-form cf-input textarea:not(:focus) {
+main.content .conversational-form cf-input input:not(:focus),
+main.content .conversational-form cf-input textarea:not(:focus) {
   box-shadow: 0 0 1px rgba(58,58,58,0.5);
 }
-#conversational-form-docs .conversational-form cf-input-button {
+main.content .conversational-form cf-input-button {
   background: #222;
   height: 42px;
   width: 42px;
   border: none;
 }
-#conversational-form-docs .conversational-form cf-input-button .cf-icon-progress {
+main.content .conversational-form cf-input-button .cf-icon-progress {
   background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMThweCIgaGVpZ2h0PSIxOXB4IiB2aWV3Qm94PSIwIDAgMTggMTkiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTM3Mi4wMDAwMDAsIC05NDUuMDAwMDAwKSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NTEuMDAwMDAwLCA5MjcuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MjIuMDAwMDAwLCAxOS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNOC4xNDAzNTA4OCwyLjEwOTE4MTE0IEw4LjE0MDM1MDg4LDE2LjA4MDkzODUiIGlkPSJMaW5lIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJSZWN0YW5nbGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcuOTkzODAzLCA4LjA2ODc0NSkgcm90YXRlKC0zMTUuMDAwMDAwKSB0cmFuc2xhdGUoLTcuOTkzODAzLCAtOC4wNjg3NDUpICIgcG9pbnRzPSIyLjYyNTkxMzI4IDEzLjQ4Njk1OCAyLjYyNTkxMzI4IDIuNjUwNTMxMjEgMi42MjU5MTMyOCAyLjY1MDUzMTIxIDEzLjM2MTY5MjEgMi42NTA1MzEyMSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
   background-size: 18px 19px;
 }
-#conversational-form-docs .conversational-form .cf-button {
+main.content .conversational-form .cf-button {
   color: #222;
   border-color: #ddd;
   transition: border-color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -89,24 +89,28 @@
   font-weight: 900;
   line-height: 1.2;
 }
-#conversational-form-docs .conversational-form .cf-button > div {
+main.content .conversational-form .cf-button > div {
   padding: 14px 24px;
 }
-#conversational-form-docs .conversational-form .cf-button cf-radio {
+main.content .conversational-form .cf-button cf-radio {
   background: rgba(34,34,34,0.2);
 }
-#conversational-form-docs .conversational-form .cf-button.highlight,
-#conversational-form-docs .conversational-form .cf-button:focus,
-#conversational-form-docs .conversational-form .cf-button:hover {
+main.content .conversational-form .cf-button.highlight,
+main.content .conversational-form .cf-button:focus,
+main.content .conversational-form .cf-button:hover,
+main.content .conversational-form .cf-button[checked="checked"],
+main.content .conversational-form .cf-button.selected {
   border-color: #6f6f6f;
   color: #595959;
 }
-#conversational-form-docs .conversational-form .cf-button.highlight cf-radio,
-#conversational-form-docs .conversational-form .cf-button:focus cf-radio,
-#conversational-form-docs .conversational-form .cf-button:hover cf-radio {
+main.content .conversational-form .cf-button.highlight cf-radio,
+main.content .conversational-form .cf-button:focus cf-radio,
+main.content .conversational-form .cf-button:hover cf-radio,
+main.content .conversational-form .cf-button[checked="checked"] cf-radio,
+main.content .conversational-form .cf-button.selected cf-radio {
   background: #222;
 }
-#conversational-form-docs .conversational-form cf-list-button:after {
+main.content .conversational-form cf-list-button:after {
   background-image: none;
   background: #000;
   width: 5px;
