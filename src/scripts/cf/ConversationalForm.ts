@@ -464,7 +464,6 @@ namespace cf {
 
 			// add new tags to the flow
 			this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
-			console.log(this.tags);
 			//this.flowManager.startFrom ?
 		}
 
