@@ -69,7 +69,7 @@
 
 			<section role="form">
 				<div class="form-outer">
-					<h2>No form, all JS</h2>
+					<h2>No form, it's all JS</h2>
 					<form id="empty-form"></form>
 				</div>
 			</section>
@@ -280,38 +280,44 @@
 				xhr.onload = function(event){
 					if(step++ == 0){
 						// add tags that are received from pseudo webservice ..
-						var testTag = {
-							"tag": "input",
-							"type": "text",
-							"cf-questions": "Tag is injected",
-							"cf-error": "Inject some text"
-						};
+						var tags = [
+							{
+								// basic tag
+								"tag": "input",
+								"type": "text",
+								"cf-questions": "Tag is injected at runtime, data from 'webservice', check source of <a href='formless.html' style='text-decoration:underline'>examples/formless.html</a>",
+								"cf-error": "Inject some text"
+							},
+							{
+								// tag group
+								"tag": "fieldset",
+								"type": "Checkboxes",
+								"cf-input-placeholder": "Tag group is injected",
+								"cf-questions": "Choose an injected tag",
+								"children":[
+									{
+										"tag": "input",
+										"type": "checkbox",
+										"name": "checkboxes-buttons-1",
+										"cf-label": "checkbox-x1",
+										"checked": "checked"
+									},
+									{
+										"tag": "input",
+										"type": "checkbox",
+										"name": "checkboxes-buttons-1",
+										"cf-label": "checkbox-x2"
+									}
+								]
+							}
+						];
 
-						var testGroup = {
-							"tag": "fieldset",
-							"type": "Checkboxes",
-							"cf-input-placeholder": "Tag group is injected",
-							"cf-questions": "Choose an injected tag",
-							"children":[
-								{
-									"tag": "input",
-									"type": "checkbox",
-									"name": "checkboxes-buttons-1",
-									"cf-label": "checkbox-x1",
-									"checked": "checked"
-								},
-								{
-									"tag": "input",
-									"type": "checkbox",
-									"name": "checkboxes-buttons-1",
-									"cf-label": "checkbox-x2"
-								}
-							]
-						};
+
+						console.log("Tags to parse and add at runtime to formless:", tags)
 
 						// add tag
 						// add tag at index
-						cf.addTags([testTag, testGroup], true);
+						cf.addTags(tags, true);
 					}
 
 					success()
@@ -325,11 +331,14 @@
 				xhr.send();
 			}
 
+			// load json file with formless data (files/formless.json)
 			window.addEventListener("load", function(){
 				var xhr = new XMLHttpRequest()
 				xhr.onload = function(event){
 					var str = xhr.response;
 					var json = JSON.parse(str);
+
+					console.log("JSON to parse as form:", json)
 
 					// start one w. string
 					// window.cf.ConversationalForm.startTheConversation(str);
@@ -341,7 +350,6 @@
 					// start one w. json
 					cf = window.cf.ConversationalForm.startTheConversation(json);
 					document.getElementById("cf-context").appendChild(cf.el);
-
 
 					// in-document form
 					// window.cf.ConversationalForm.startTheConversation({
