@@ -40,6 +40,8 @@ namespace cf {
 		disabled: boolean;
 		eventTarget: EventDispatcher;
 		flowManager: FlowManager;
+		hasConditions():boolean;
+		hasConditionsFor(tagName: string):boolean;
 		checkConditionalAndIsValid():boolean;
 
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
@@ -281,6 +283,26 @@ namespace cf {
 			this.findConditionalAttributes();
 		}
 
+		public hasConditionsFor(tagName: string):boolean{
+			if(!this.hasConditions()){
+				return false;
+			}
+
+			for (var i = 0; i < this.conditionalTags.length; i++) {
+				var condition: ConditionalValue = this.conditionalTags[i];
+				if("cf-conditional-"+tagName === condition.key){
+					return true;
+				}
+				
+			}
+
+			return false;
+		}
+
+		public hasConditions():boolean{
+			return this.conditionalTags && this.conditionalTags.length > 0;
+		}
+
 		/**
 		* @name checkConditionalAndIsValid
 		* checks for conditional logic, see documentaiton (wiki)
@@ -289,7 +311,7 @@ namespace cf {
 		public checkConditionalAndIsValid(): boolean {
 			// can we tap into disabled
 			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
-			if(this.conditionalTags && this.conditionalTags.length > 0){
+			if(this.hasConditions()){
 				return this.flowManager.areConditionsInFlowFullfilled(this, this.conditionalTags);
 			}
 

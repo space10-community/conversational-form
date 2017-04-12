@@ -82,11 +82,20 @@
 
 				<!--Path B-->
 
+				<!-- standard flow, no confitionals -->
 				<input
 					id="nope"
 					type="text"
 					cf-questions="You decided not to continue on the conditional adventure, Zelda is sad."
 					cf-conditional-cfc-intro="no" />
+
+				<fieldset cf-questions="I am standard">
+					<input required type="radio" name="standard-radios" id="standard-yes" value="a">
+					<label for="standard-yes">Standard radio 1</label>
+
+					<input required type="radio" name="standard-radios" id="standard-no" value="b">
+					<label for="standard-no">Standard radio 2</label>
+				</fieldset>
 
 				
 				<input
@@ -317,6 +326,7 @@
 					},
 					submitCallback: function(){
 						// remove Conversational Form
+						console.log("Form submitted...");
 					}
 				});
 			})();

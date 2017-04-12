@@ -151,6 +151,28 @@ namespace cf {
 			return this.elements[0].type;
 		}
 
+		public hasConditionsFor(tagName: string):boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditionsFor(tagName)){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public hasConditions():boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditions()){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/**
 		* @name checkConditionalAndIsValid
 		* checks for conditional logic, see documentaiton (wiki)
