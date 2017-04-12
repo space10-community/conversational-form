@@ -400,12 +400,7 @@ namespace cf {
 		}
 
 		public resetAfterErrorMessage(){
-			if(this.currentControlElement){
-				//reverse value of currentControlElement.
-				(<RadioButton | CheckboxButton>this.currentControlElement).checked = !(<RadioButton | CheckboxButton>this.currentControlElement).checked;
-				this.currentControlElement = null;
-			}
-
+			this.currentControlElement = null;
 			this.disabled = false;
 		}
 		
@@ -605,7 +600,6 @@ namespace cf {
 							}));
 						}
 						// nothing to add.
-						// console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
 						break;
 				}
 

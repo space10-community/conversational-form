@@ -208,8 +208,6 @@ namespace cf {
 							numberRadioButtonsVisible.push(element);
 
 							if(tag == element.referenceTag){
-								(<HTMLInputElement> tag.domElement).checked = element.checked;
-								
 								if(element.checked){
 									this._values.push(<string> tag.value);
 									this._activeElements.push(tag);
@@ -217,8 +215,6 @@ namespace cf {
 								// a radio button was checked
 								if(!wasRadioButtonChecked && element.checked)
 									wasRadioButtonChecked = true;
-							}else{
-								(<HTMLInputElement> tag.domElement).checked = false;
 							}
 						}
 					}

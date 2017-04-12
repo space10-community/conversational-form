@@ -19,13 +19,17 @@ namespace cf {
 		public set checked(value: boolean){
 			if(!value){
 				this.el.removeAttribute("checked");
+				this.referenceTag.domElement.removeAttribute("checked");
+				(<HTMLInputElement> this.referenceTag.domElement).checked = false;
 			}else{
 				this.el.setAttribute("checked", "checked");
+				this.referenceTag.domElement.setAttribute("checked", "checked");
+				(<HTMLInputElement> this.referenceTag.domElement).checked = true;
 			}
 		}
 
 		protected onClick(event: MouseEvent){
-			this.checked = true;//!this.checked;
+			this.checked = true;// checked always true like native radio buttons
 			super.onClick(event);
 		}
 
