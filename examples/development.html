@@ -65,7 +65,7 @@
 					id="step-1"
 					type="text"
 					name="cfc-step1"
-					cf-questions="Conditional flow started, please write, <strong>gr8</strong> to continue"
+					cf-questions="Conditional flow started, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> then it will skip."
 					cf-conditional-cfc-intro="yes" />
 
 				<fieldset cf-questions="Please choose a path">
@@ -78,9 +78,18 @@
 
 
 				<!--Path A-->
-
+				<input
+					id="path-a-1"
+					type="text"
+					cf-questions="Path A question 1/1"
+					cf-conditional-cfc-path="a" />
 
 				<!--Path B-->
+				<input
+					id="path-b-1"
+					type="text"
+					cf-questions="Path B question 1/1"
+					cf-conditional-cfc-path="b" />
 
 				<!-- standard flow, no confitionals -->
 				<input
