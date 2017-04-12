@@ -58,8 +58,7 @@ namespace cf {
 
 	export interface ConditionalValue{
 		key: string,
-		value: string | string[],
-		regEx?: RegExp //can be a regex, but will be converted lower down
+		conditionals: Array<string | RegExp>
 	}
 
 	export interface ITagOptions{
@@ -210,12 +209,35 @@ namespace cf {
 		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
 			if(typeof tagValue === "string"){
 				const value: string = <string> tagValue;
-				return <string>tagValue === condition.value || (condition.regEx && condition.regEx.test(value));
+				let isValid: boolean = false;
+				for (var i = 0; i < condition.conditionals.length; i++) {
+					var conditional: string | RegExp = condition.conditionals[i];
+					if(typeof conditional === "object"){
+						// regex
+						isValid = (<RegExp> conditional).test(value);
+					}else{
+						// string comparisson
+						isValid = <string>tagValue === conditional;
+					}
+
+					if(isValid) break;
+				}
+				return isValid;
 			}else{
 				if(!tagValue){
 					return false;
 				}else{
-					return (<string[]>tagValue).toString() == (<string[]>condition.value).toString();
+					// check arrays..
+					let isValid: boolean = false;
+					for (var i = 0; i < condition.conditionals.length; i++) {
+						var conditional: string | RegExp = condition.conditionals[i];
+						isValid = (<string[]>tagValue).toString() == conditional.toString();
+						console.log("=?", isValid);
+
+						if(isValid) break;
+					}
+
+					return isValid;
 				}
 				// arrays need to be the same
 			}
@@ -393,15 +415,22 @@ namespace cf {
 						let attr: any = keys[key];
 						if(attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
-							let regex;
-							try {
-								regex = new RegExp(attr.value);
-							} catch(e) {}
+							let _conditionals: Array<string | RegExp> = [];
+							let condictionalsFromAttribute: Array<string> = attr.value.split("||");
+
+							for (var i = 0; i < condictionalsFromAttribute.length; i++) {
+								var _conditional: string = condictionalsFromAttribute[i];
+								try {
+									_conditionals.push(new RegExp(_conditional));
+								} catch(e) {
+								}
+
+								_conditionals.push(_conditional);
+							}
 
 							this.conditionalTags.push(<ConditionalValue>{
 								key: attr.name,
-								value: attr.value,
-								regEx: regex
+								conditionals: _conditionals
 							});
 						}
 					}

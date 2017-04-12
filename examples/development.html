@@ -40,14 +40,14 @@
 					cf-questions="Conditional flow pre, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
 					cf-conditional-cfc-intro="yes" />
 
-				<fieldset cf-questions="<strong>Great!</strong> Please choose a path.">
-					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$">
+				<fieldset cf-questions="<strong>{previous-answer}!</strong> Please choose a path.">
+					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$||great">
 					<label for="path-a">Path A</label>
 
-					<input required type="radio" name="cfc-path" id="path-b" value="b" cf-conditional-cfc-step1="^gr8$">
+					<input required type="radio" name="cfc-path" id="path-b" value="b" cf-conditional-cfc-step1="^gr8$||great">
 					<label for="path-b">Path B (checkboxes and radiobuttons)</label>
 
-					<input required type="radio" name="cfc-path" id="path-d" value="d" cf-conditional-cfc-step1="^gr8$">
+					<input required type="radio" name="cfc-path" id="path-d" value="d" cf-conditional-cfc-step1="^gr8$||great">
 					<label for="path-d">Path D (C is ignored)</label>
 				</fieldset>
 
@@ -84,6 +84,17 @@
 					>
 					<label for="path-b-checkbox-2">Path B, checkbox 2</label>
 				</fieldset>
+
+
+				<!--if both checkboxes are checked-->
+				<!--two different conditions-->
+				<input
+					id="path-b-alternative"
+					type="text"
+					cf-questions="Check them checkboxes"
+					cf-conditional-cfc-path="b"
+					cf-conditional-cfc-path-b-checkbox="test1,test2"
+				/>
 
 				<fieldset
 					cf-questions="Path B question 2/2, radio buttons, <strong>hint:</strong> choose one to continue"
