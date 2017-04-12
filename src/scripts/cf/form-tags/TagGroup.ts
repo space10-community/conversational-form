@@ -204,37 +204,20 @@ namespace cf {
 					for (let i = 0; i < value.controlElements.length; i++) {
 						let element: RadioButton = <RadioButton> value.controlElements[i];
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						if(element.visible){
-							numberRadioButtonsVisible.push(element);
+						numberRadioButtonsVisible.push(element);
 
-							if(tag == element.referenceTag){
-								if(element.checked){
-									this._values.push(<string> tag.value);
-									this._activeElements.push(tag);
-								}
-								// a radio button was checked
-								if(!wasRadioButtonChecked && element.checked)
-									wasRadioButtonChecked = true;
+						if(tag == element.referenceTag){
+							if(element.checked){
+								this._values.push(<string> tag.value);
+								this._activeElements.push(tag);
 							}
+							// a radio button was checked
+							if(!wasRadioButtonChecked && element.checked)
+								wasRadioButtonChecked = true;
 						}
 					}
 
-					// special case 1, only one radio button visible from a filter
-					if(!isValid && numberRadioButtonsVisible.length == 1){
-						let element: RadioButton = numberRadioButtonsVisible[0];
-						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						element.checked = true;
-						(<HTMLInputElement> tag.domElement).checked = true;
-						isValid = true;
-
-						if(element.checked){
-							this._values.push(<string> tag.value);
-							this._activeElements.push(tag);
-						}
-					}else if(!isValid && wasRadioButtonChecked){
-						// a radio button needs to be checked of
-						isValid = wasRadioButtonChecked;
-					}
+					isValid = wasRadioButtonChecked;
 
 					break;
 
