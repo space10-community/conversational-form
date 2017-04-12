@@ -39,6 +39,7 @@ namespace cf {
 		defaultValue: string | number;
 		disabled: boolean;
 		eventTarget: EventDispatcher;
+		flowManager: FlowManager;
 		checkConditionalAndIsValid():boolean;
 
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
@@ -55,7 +56,8 @@ namespace cf {
 
 	export interface ConditionalValue{
 		key: string,
-		value: string //can be a regex, but will be converted lower down
+		value: string,
+		regEx?: RegExp //can be a regex, but will be converted lower down
 	}
 
 	export interface ITagOptions{
@@ -78,6 +80,7 @@ namespace cf {
 		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
+		public flowManager: FlowManager
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		public defaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
@@ -286,12 +289,11 @@ namespace cf {
 		public checkConditionalAndIsValid(): boolean {
 			// can we tap into disabled
 			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
-			// console.log("checkConditionalAndIsValid: attributes..:", this.domElement.attributes);
 			if(this.conditionalTags && this.conditionalTags.length > 0){
-				console.log('this.conditionalTags', this.conditionalTags)
+				return this.flowManager.areConditionsInFlowFullfilled(this, this.conditionalTags);
 			}
 
-			// else return true, as no conditional means happy tag
+			// else return true, as no conditional means uncomplicated and happy tag
 			return true;
 		}
 
@@ -357,16 +359,18 @@ namespace cf {
 							// conditional found
 							this.conditionalTags.push(<ConditionalValue>{
 								key: attr.name,
-								value: attr.value
+								value: attr.value,
+								// TODO: Check if valid regex
+								regEx: new RegExp(attr.value)
 							});
 						}
 					}
 				}
 			}
 
-			if(this.conditionalTags && this.conditionalTags.length > 0){
-				console.log("...", this.domElement, this.conditionalTags);
-			}
+			// if(this.conditionalTags && this.conditionalTags.length > 0){
+			// 	console.log("...", this.domElement, this.conditionalTags);
+			// }
 		}
 
 		protected findAndSetQuestions(){

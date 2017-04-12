@@ -158,6 +158,30 @@ namespace cf {
 			}
 		}
 
+		public areConditionsInFlowFullfilled(tagWithConditions: ITag, tagConditions: Array<ConditionalValue> ): boolean{
+			console.log('*********** areConditionsInFlowFullfilled');
+			for(var i = 0; i < this.tags.length; i++){
+				const tag: ITag | ITagGroup = this.tags[i];
+				if(tag !== tagWithConditions){
+					for (var j = 0; j < tagConditions.length; j++) {
+						let condition: ConditionalValue = tagConditions[j];
+						if("cf-conditional-"+tag.name === condition.key){
+							const flowTagValue: string = typeof tag.value === "string" ? <string> (<ITag> tag).value : (<ITagGroup> tag).value[0];
+							let areConditionsMeet: boolean = flowTagValue === condition.value;
+							// TODO: check with regex
+							
+							if(areConditionsMeet){
+								// conditions are meet
+								return true;
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public start(){
 			this.stopped = false;
 			this.validateStepAndUpdate();
@@ -226,6 +250,7 @@ namespace cf {
 			for(var i = 0; i < this.tags.length; i++){
 				const tag: ITag | ITagGroup = this.tags[i];
 				tag.eventTarget = this.eventTarget;
+				tag.flowManager = this;
 			}
 		}
 

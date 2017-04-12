@@ -23,6 +23,7 @@ namespace cf {
 		dealloc():void;
 		required: boolean;
 		disabled: boolean;
+		flowManager: FlowManager;
 	}
 
 	// class
@@ -60,6 +61,13 @@ namespace cf {
 			}
 		}
 
+		public set flowManager(value: FlowManager){
+			for (let i = 0; i < this.elements.length; i++) {
+				let tag: ITag = <ITag>this.elements[i];
+				tag.flowManager = value;
+			}
+		}
+
 		public get type (): string{
 			return "group";
 		}
@@ -91,7 +99,7 @@ namespace cf {
 
 		public get value (): Array<string>{
 			// TODO: fix value???
-			return this._values;
+			return this._values ? this._values : [""];
 		}
 
 		public get disabled (): boolean{
