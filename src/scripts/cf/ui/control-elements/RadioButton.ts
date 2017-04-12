@@ -25,7 +25,7 @@ namespace cf {
 		}
 
 		protected onClick(event: MouseEvent){
-			this.checked = !this.checked;
+			this.checked = true;//!this.checked;
 			super.onClick(event);
 		}
 
