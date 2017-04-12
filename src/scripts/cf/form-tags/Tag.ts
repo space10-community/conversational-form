@@ -455,7 +455,7 @@ namespace cf {
 				
 				if(parentDomNode){
 					// step backwards and check for label tag.
-					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
+					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).tagName.toLowerCase() == "label" ? [(<HTMLElement> parentDomNode)] : (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
 					if(labelTags.length == 0){
 						// check for innerText
@@ -471,11 +471,12 @@ namespace cf {
 							}
 						}
 
-						// no for attribute but label found
+						// no "for"" attribute present but label tag found
 						if(!this._label && labelTags[0]){
 							this._label = Helpers.getInnerTextOfElement(labelTags[0]);
 						}
 					}
+
 				}
 			}
 		}
