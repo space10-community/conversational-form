@@ -51,6 +51,10 @@
 	&:hover, &:focus
 		background alpha($color-dark-blue, 10%)
 	
+	&[disabled="disabled"]
+		pointer-events none
+		opacity 0.5
+	
 	// &.highlight
 	// 	cf-radio
 	// 		...
