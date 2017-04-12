@@ -17,38 +17,10 @@
 			}
 		</style>
 
-		<!--<div id="random-interface">
-			<style>
-				#random-interface{
-					position: absolute;
-					z-index: 1000;
-					top: 0px;
-					left: 0px;
-				}
-				#random-interface button{
-					color: red;
-				}
-			</style>
-			<script>
-				function addRandomClick(){
-					var ran = ["Random message 1", "Random message 2"];
-					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
-				}
-			</script>
-			<h2>Add random robot response</h2>
-			<button onclick="addRandomClick()">Add random text</button>
-		</div>-->
-
-
-
 		<div id="context" class="form-outer" cf-context>
 
 
 
-
-
-
-			<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 			<form id="form">
 				<fieldset cf-questions="Ready to try a conditional flow?">
 					<input required type="radio" name="cfc-intro" id="cf-intro-yes" value="yes">
@@ -68,11 +40,11 @@
 					cf-questions="Conditional flow started, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> then it will skip."
 					cf-conditional-cfc-intro="yes" />
 
-				<fieldset cf-questions="Please choose a path">
-					<input required type="radio" name="cfc-path" id="cf-intro-yes" value="a" cf-conditional-cfc-step1="gr8">
+				<fieldset cf-questions="<strong>Great!</strong> Please choose a path.">
+					<input required type="radio" name="cfc-path" id="cf-intro-yes" value="a" cf-conditional-cfc-step1="^gr8$">
 					<label for="cf-intro-yes">Path A</label>
 
-					<input required type="radio" name="cfc-path" id="cf-intro-no" value="b" cf-conditional-cfc-step1="gr8">
+					<input required type="radio" name="cfc-path" id="cf-intro-no" value="b" cf-conditional-cfc-step1="^gr8$">
 					<label for="cf-intro-no">Path B</label>
 				</fieldset>
 
@@ -81,15 +53,34 @@
 				<input
 					id="path-a-1"
 					type="text"
-					cf-questions="Path A question 1/1"
-					cf-conditional-cfc-path="a" />
+					cf-questions="Path A question 1/1, try and change your previous choice to B"
+					cf-conditional-cfc-path="a"
+				/>
 
 				<!--Path B-->
 				<input
-					id="path-b-1"
 					type="text"
-					cf-questions="Path B question 1/1"
-					cf-conditional-cfc-path="b" />
+					cf-questions="Path B question 1/2, just write anything"
+					cf-conditional-cfc-path="b"
+				/>
+
+				<fieldset
+					cf-questions="Path B question 2/2, multi choice"
+					cf-conditional-cfc-path="b">
+
+					<input required type="checkbox" name="path-b-check" id="path-b-check-1">
+					<label for="path-b-1">Path check 1</label>
+
+					<input required type="checkbox" name="path-b-check" id="path-b-check-2" checked="checked">
+					<label for="path-b-2">Path check 2</label>
+				</fieldset>
+
+				<!--Path C-->
+				<input
+					type="text"
+					cf-questions="Path C question 1/1, I will be completly ignored as there are no C Path."
+					cf-conditional-cfc-path="c"
+				/>
 
 				<!-- standard flow, no confitionals -->
 				<input
@@ -98,7 +89,7 @@
 					cf-questions="You decided not to continue on the conditional adventure, Zelda is sad."
 					cf-conditional-cfc-intro="no" />
 
-				<fieldset cf-questions="I am standard">
+				<fieldset cf-questions="I am apart of standard flow, a natural part of the flow. No conditionals involved here.">
 					<input required type="radio" name="standard-radios" id="standard-yes" value="a">
 					<label for="standard-yes">Standard radio 1</label>
 
@@ -106,15 +97,12 @@
 					<label for="standard-no">Standard radio 2</label>
 				</fieldset>
 
-				
 				<input
 					id="outsider"
 					type="text"
 					cf-questions="I am not apart of the conditional flow."
 					/>
-
 			</form>
-
 		</div>
 
 

@@ -167,7 +167,7 @@ namespace cf {
 						let condition: ConditionalValue = tagConditions[j];
 						if("cf-conditional-"+tag.name === condition.key){
 							const flowTagValue: string = typeof tag.value === "string" ? <string> (<ITag> tag).value : (<ITagGroup> tag).value[0];
-							let areConditionsMeet: boolean = flowTagValue === condition.value;
+							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, condition);
 							// TODO: check with regex
 							
 							if(areConditionsMeet){
