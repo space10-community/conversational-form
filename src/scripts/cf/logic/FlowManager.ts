@@ -158,6 +158,29 @@ namespace cf {
 			}
 		}
 
+		public areConditionsInFlowFullfilled(tagWithConditions: ITag, tagConditions: Array<ConditionalValue> ): boolean{
+			for(var i = 0; i < this.tags.length; i++){
+				// loop through tags to look for conditions
+				const tag: ITag | ITagGroup = this.tags[i];
+				if(tag !== tagWithConditions){
+					for (var j = 0; j < tagConditions.length; j++) {
+						//
+						let condition: ConditionalValue = tagConditions[j];
+						if("cf-conditional-"+tag.name === condition.key){
+							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
+							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, condition);
+							if(areConditionsMeet){
+								// conditions are meet
+								return true;
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public start(){
 			this.stopped = false;
 			this.validateStepAndUpdate();
@@ -171,12 +194,33 @@ namespace cf {
 			if(this.stopped)
 				return;
 
-			if(this.savedStep != -1)
-				this.step = this.savedStep;
+			if(this.savedStep != -1){
+				let foundConditionsToCurrentTag: boolean = false;
+				// this happens when editing a tag..
+
+				// check if any tags has a conditional check for this.currentTag.name
+				for (var i = 0; i < this.tags.length; i++) {
+					var tag: ITag | ITagGroup = this.tags[i];
+					if(tag !== this.currentTag && tag.hasConditions()){
+						// tag has conditions so check if it also has the right conditions
+						if(tag.hasConditionsFor(this.currentTag.name)){
+							foundConditionsToCurrentTag = true;
+							this.step = this.tags.indexOf(this.currentTag);
+							break;
+						}
+					}
+				}
+
+				// no conditional linking found, so resume flow
+				if(!foundConditionsToCurrentTag){
+					this.step = this.savedStep;
+				}
+			}
 			
 			this.savedStep = -1;//reset saved step
 
 			this.step++;
+
 			this.validateStepAndUpdate();
 		}
 
@@ -226,6 +270,7 @@ namespace cf {
 			for(var i = 0; i < this.tags.length; i++){
 				const tag: ITag | ITagGroup = this.tags[i];
 				tag.eventTarget = this.eventTarget;
+				tag.flowManager = this;
 			}
 		}
 

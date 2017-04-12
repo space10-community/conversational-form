@@ -23,6 +23,7 @@ namespace cf {
 		dealloc():void;
 		required: boolean;
 		disabled: boolean;
+		flowManager: FlowManager;
 	}
 
 	// class
@@ -60,6 +61,13 @@ namespace cf {
 			}
 		}
 
+		public set flowManager(value: FlowManager){
+			for (let i = 0; i < this.elements.length; i++) {
+				let tag: ITag = <ITag>this.elements[i];
+				tag.flowManager = value;
+			}
+		}
+
 		public get type (): string{
 			return "group";
 		}
@@ -91,18 +99,19 @@ namespace cf {
 
 		public get value (): Array<string>{
 			// TODO: fix value???
-			return this._values;
+			return this._values ? this._values : [""];
 		}
 
 		public get disabled (): boolean{
 			let disabled: boolean = false;
+			let allShouldBedisabled: number = 0;
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ITag = <ITag>this.elements[i];
 				if(element.disabled)
-					disabled = true;
+					allShouldBedisabled++;
 			}
 
-			return disabled;
+			return allShouldBedisabled === this.elements.length;
 		}
 		
 		public get errorMessage():string{
@@ -142,6 +151,45 @@ namespace cf {
 			return this.elements[0].type;
 		}
 
+		public hasConditionsFor(tagName: string):boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditionsFor(tagName)){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public hasConditions():boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditions()){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		* @name checkConditionalAndIsValid
+		* checks for conditional logic, see documentaiton (wiki)
+		* here we check after cf-conditional{-name} on group tags
+		*/
+		public checkConditionalAndIsValid(): boolean {
+			// can we tap into disabled
+			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.checkConditionalAndIsValid();
+			}
+
+			// else return true, as no conditional means happy tag
+			return true;
+		}
+
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
 			let isValid: boolean = false;
 
@@ -156,41 +204,20 @@ namespace cf {
 					for (let i = 0; i < value.controlElements.length; i++) {
 						let element: RadioButton = <RadioButton> value.controlElements[i];
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						if(element.visible){
-							numberRadioButtonsVisible.push(element);
+						numberRadioButtonsVisible.push(element);
 
-							if(tag == element.referenceTag){
-								(<HTMLInputElement> tag.domElement).checked = element.checked;
-								
-								if(element.checked){
-									this._values.push(<string> tag.value);
-									this._activeElements.push(tag);
-								}
-								// a radio button was checked
-								if(!wasRadioButtonChecked && element.checked)
-									wasRadioButtonChecked = true;
-							}else{
-								(<HTMLInputElement> tag.domElement).checked = false;
+						if(tag == element.referenceTag){
+							if(element.checked){
+								this._values.push(<string> tag.value);
+								this._activeElements.push(tag);
 							}
+							// a radio button was checked
+							if(!wasRadioButtonChecked && element.checked)
+								wasRadioButtonChecked = true;
 						}
 					}
 
-					// special case 1, only one radio button visible from a filter
-					if(!isValid && numberRadioButtonsVisible.length == 1){
-						let element: RadioButton = numberRadioButtonsVisible[0];
-						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						element.checked = true;
-						(<HTMLInputElement> tag.domElement).checked = true;
-						isValid = true;
-
-						if(element.checked){
-							this._values.push(<string> tag.value);
-							this._activeElements.push(tag);
-						}
-					}else if(!isValid && wasRadioButtonChecked){
-						// a radio button needs to be checked of
-						isValid = wasRadioButtonChecked;
-					}
+					isValid = wasRadioButtonChecked;
 
 					break;
 

@@ -100,7 +100,7 @@ namespace cf {
 		private containsTagResponse(tagToChange: ITag): boolean {
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];
-				if(!element.isRobotReponse && element.tag == tagToChange){
+				if(!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()){
 					return true;
 				}
 			}

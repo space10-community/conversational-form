@@ -154,6 +154,7 @@ namespace cf {
 			}
 
 			value.input = this;
+			value.tag = this.currentTag;
 
 			return value;
 		}
