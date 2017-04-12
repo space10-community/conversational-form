@@ -207,6 +207,11 @@ namespace cf {
 			this.questions = null;
 		}
 
+		public static testConditions(tagValue: string, condition: ConditionalValue):boolean{
+			console.log("testConditions:", condition.regEx.test(tagValue))
+			return tagValue === condition.value || (condition.regEx && condition.regEx.test(tagValue));
+		}
+
 		public static isTagValid(element: HTMLElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
@@ -379,11 +384,15 @@ namespace cf {
 						let attr: any = keys[key];
 						if(attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
+							let regex;
+							try {
+								regex = new RegExp(attr.value);
+							} catch(e) {}
+
 							this.conditionalTags.push(<ConditionalValue>{
 								key: attr.name,
 								value: attr.value,
-								// TODO: Check if valid regex
-								regEx: new RegExp(attr.value)
+								regEx: regex
 							});
 						}
 					}
