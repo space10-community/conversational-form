@@ -2195,8 +2195,16 @@ cf-chat scrollable::-webkit-scrollbar-thumb:vertical:active {
   margin-right: 10px;
 }
 .cf-button:hover,
-.cf-button:focus {
+.cf-button:focus,
+.cf-button[selected="selected"],
+.cf-button[checked="checked"] {
   background: rgba(13,131,255,0.1);
+}
+.cf-button[disabled="disabled"] {
+  pointer-events: none;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
 }
 .cf-button:active {
   background: rgba(13,131,255,0.2);
@@ -2400,9 +2408,6 @@ cf-radio-button.cf-button cf-radio {
   -o-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   -ms-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-cf-radio-button.cf-button[checked="checked"] {
-  pointer-events: none;
 }
 cf-radio-button.cf-button[checked="checked"] cf-radio {
   background: #1b9bfc;
