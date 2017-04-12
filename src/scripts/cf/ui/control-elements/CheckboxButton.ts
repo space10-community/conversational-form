@@ -19,9 +19,11 @@ namespace cf {
 			if(!value){
 				this.el.removeAttribute("checked");
 				(<HTMLInputElement> this.referenceTag.domElement).removeAttribute("checked");
+				(<HTMLInputElement> this.referenceTag.domElement).checked = false;
 			}else{
 				this.el.setAttribute("checked", "checked");
 				(<HTMLInputElement> this.referenceTag.domElement).setAttribute("checked", "checked");
+				(<HTMLInputElement> this.referenceTag.domElement).checked = true;
 			}
 		}
 
