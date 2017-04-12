@@ -90,6 +90,10 @@ namespace cf {
 			return this.domElement.getAttribute("name");
 		}
 
+		public get id (): string{
+			return this.domElement.getAttribute("id");
+		}
+
 		public get inputPlaceholder (): string{
 			return this._inputPlaceholder;
 		}
@@ -408,6 +412,7 @@ namespace cf {
 				this._label = this.domElement.getAttribute("cf-label");
 			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
+				
 				if(parentDomNode){
 					// step backwards and check for label tag.
 					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
@@ -417,10 +422,20 @@ namespace cf {
 						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
 							labelTags = [(<HTMLLabelElement>parentDomNode)];
-					}
+					}else if(labelTags.length > 0){
+						// check for "for" attribute
+						for (let i = 0; i < labelTags.length; i++) {
+							let label = labelTags[i];
+							if(label.getAttribute("for") == this.id){
+								this._label = Helpers.getInnerTextOfElement(label);
+							}
+						}
 
-					if(labelTags.length > 0 && labelTags[0])
-						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
+						// no for attribute but label found
+						if(!this._label && labelTags[0]){
+							this._label = Helpers.getInnerTextOfElement(labelTags[0]);
+						}
+					}
 				}
 			}
 		}
