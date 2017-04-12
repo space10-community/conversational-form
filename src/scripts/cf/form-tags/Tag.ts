@@ -39,6 +39,7 @@ namespace cf {
 		defaultValue: string | number;
 		disabled: boolean;
 		eventTarget: EventDispatcher;
+		checkConditionalAndIsValid():boolean;
 
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
@@ -49,7 +50,12 @@ namespace cf {
 
 	export interface TagChangeDTO{
 		tag: ITag,
-		value: String
+		value: string
+	}
+
+	export interface ConditionalValue{
+		key: string,
+		value: string //can be a regex, but will be converted lower down
 	}
 
 	export interface ITagOptions{
@@ -61,21 +67,19 @@ namespace cf {
 
 	// class
 	export class Tag implements ITag {
-		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
-		
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
 		private changeCallback: () => void;
-		protected _eventTarget: EventDispatcher;
+		private conditionalTags: Array<ConditionalValue>;
 
 		// input placeholder text, this is for the UserInput and not the tag it self.
 		protected _inputPlaceholder: string;
-
-		// 
-		public defaultValue: string | number;
+		protected _eventTarget: EventDispatcher;
 		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
+		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
+		public defaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
@@ -107,7 +111,7 @@ namespace cf {
 		}
 
 		public get disabled (): boolean{
-			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
+			return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
 		}
 
 		public get required(): boolean{
@@ -267,6 +271,24 @@ namespace cf {
 
 			this.questions = null;
 			this.findAndSetQuestions();
+			this.findConditionalAttributes();
+		}
+
+		/**
+		* @name checkConditionalAndIsValid
+		* checks for conditional logic, see documentaiton (wiki)
+		* here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
+		*/
+		public checkConditionalAndIsValid(): boolean {
+			// can we tap into disabled
+			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
+			// console.log("checkConditionalAndIsValid: attributes..:", this.domElement.attributes);
+			if(this.conditionalTags && this.conditionalTags.length > 0){
+				console.log('this.conditionalTags', this.conditionalTags)
+			}
+
+			// else return true, as no conditional means happy tag
+			return true;
 		}
 
 		public setTagValueAndIsValid(dto: FlowDTO):boolean{
@@ -313,6 +335,34 @@ namespace cf {
 				return this._label;
 
 			return Dictionary.getRobotResponse(this.type);
+		}
+
+		/**
+		* @name findConditionalAttributes
+		* look for conditional attributes and map them
+		*/
+		protected findConditionalAttributes(){
+			const keys: any = this.domElement.attributes;
+			if(keys.length > 0){
+				this.conditionalTags = [];
+				
+				for (var key in keys) {
+					if (keys.hasOwnProperty(key)) {	
+						let attr: any = keys[key];
+						if(attr.name.indexOf("cf-conditional") !== -1){
+							// conditional found
+							this.conditionalTags.push(<ConditionalValue>{
+								key: attr.name,
+								value: attr.value
+							});
+						}
+					}
+				}
+			}
+
+			if(this.conditionalTags && this.conditionalTags.length > 0){
+				console.log("...", this.domElement, this.conditionalTags);
+			}
 		}
 
 		protected findAndSetQuestions(){

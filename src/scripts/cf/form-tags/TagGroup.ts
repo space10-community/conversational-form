@@ -96,13 +96,14 @@ namespace cf {
 
 		public get disabled (): boolean{
 			let disabled: boolean = false;
+			let allShouldBedisabled: number = 0;
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ITag = <ITag>this.elements[i];
 				if(element.disabled)
-					disabled = true;
+					allShouldBedisabled++;
 			}
 
-			return disabled;
+			return allShouldBedisabled == this.elements.length;
 		}
 		
 		public get errorMessage():string{
@@ -140,6 +141,23 @@ namespace cf {
 
 		public getGroupTagType():string{
 			return this.elements[0].type;
+		}
+
+		/**
+		* @name checkConditionalAndIsValid
+		* checks for conditional logic, see documentaiton (wiki)
+		* here we check after cf-conditional{-name} on group tags
+		*/
+		public checkConditionalAndIsValid(): boolean {
+			// can we tap into disabled
+			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.checkConditionalAndIsValid();
+			}
+
+			// else return true, as no conditional means happy tag
+			return true;
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
