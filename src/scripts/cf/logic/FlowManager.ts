@@ -195,12 +195,33 @@ namespace cf {
 			if(this.stopped)
 				return;
 
-			if(this.savedStep != -1)
-				this.step = this.savedStep;
+			if(this.savedStep != -1){
+				let foundConditionsToCurrentTag: boolean = false;
+				// this happens when editing a tag..
+
+				// check if any tags has a conditional check for this.currentTag.name
+				for (var i = 0; i < this.tags.length; i++) {
+					var tag: ITag | ITagGroup = this.tags[i];
+					if(tag !== this.currentTag && tag.hasConditions()){
+						// tag has conditions so check if it also has the right conditions
+						if(tag.hasConditionsFor(this.currentTag.name)){
+							foundConditionsToCurrentTag = true;
+							this.step = this.tags.indexOf(this.currentTag);
+							break;
+						}
+					}
+				}
+
+				// no conditional linking found, so resume flow
+				if(!foundConditionsToCurrentTag){
+					this.step = this.savedStep;
+				}
+			}
 			
 			this.savedStep = -1;//reset saved step
 
 			this.step++;
+
 			this.validateStepAndUpdate();
 		}
 
