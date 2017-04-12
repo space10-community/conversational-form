@@ -58,7 +58,7 @@ namespace cf {
 
 	export interface ConditionalValue{
 		key: string,
-		value: string,
+		value: string | string[],
 		regEx?: RegExp //can be a regex, but will be converted lower down
 	}
 
@@ -207,9 +207,18 @@ namespace cf {
 			this.questions = null;
 		}
 
-		public static testConditions(tagValue: string, condition: ConditionalValue):boolean{
-			console.log("testConditions:", condition.regEx.test(tagValue))
-			return tagValue === condition.value || (condition.regEx && condition.regEx.test(tagValue));
+		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
+			if(typeof tagValue === "string"){
+				const value: string = <string> tagValue;
+				return <string>tagValue === condition.value || (condition.regEx && condition.regEx.test(value));
+			}else{
+				if(!tagValue){
+					return false;
+				}else{
+					return (<string[]>tagValue).toString() == (<string[]>condition.value).toString();
+				}
+				// arrays need to be the same
+			}
 		}
 
 		public static isTagValid(element: HTMLElement):boolean{
@@ -398,10 +407,6 @@ namespace cf {
 					}
 				}
 			}
-
-			// if(this.conditionalTags && this.conditionalTags.length > 0){
-			// 	console.log("...", this.domElement, this.conditionalTags);
-			// }
 		}
 
 		protected findAndSetQuestions(){

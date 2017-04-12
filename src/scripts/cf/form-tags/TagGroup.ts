@@ -111,7 +111,7 @@ namespace cf {
 					allShouldBedisabled++;
 			}
 
-			return allShouldBedisabled == this.elements.length;
+			return allShouldBedisabled === this.elements.length;
 		}
 		
 		public get errorMessage():string{

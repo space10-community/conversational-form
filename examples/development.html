@@ -23,31 +23,32 @@
 
 			<form id="form">
 				<fieldset cf-questions="Ready to try a conditional flow?">
-					<input required type="radio" name="cfc-intro" id="cf-intro-yes" value="yes">
-					<label for="cf-intro-yes">Yes</label>
+					<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+					<label for="intro-yes">Yes</label>
 
-					<input required type="radio" name="cfc-intro" id="cf-intro-no" value="no">
-					<label for="cf-intro-no">No thanks</label>
+					<input type="radio" name="cfc-intro" id="intro-no" value="no">
+					<label for="intro-no">No thanks</label>
 
-					<input type="radio" disabled name="cfc-intro" id="cf-intro-disabled" value="ignore">
-					<label for="cf-intro-disabled">Disabled..</label>
+					<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
+					<label for="intro-disabled">Disabled..</label>
 				</fieldset>
 
 				<input
-					id="step-1"
 					type="text"
 					name="cfc-step1"
-					cf-questions="Conditional flow started, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> then it will skip."
+					cf-questions="Conditional flow pre, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
 					cf-conditional-cfc-intro="yes" />
 
 				<fieldset cf-questions="<strong>Great!</strong> Please choose a path.">
-					<input required type="radio" name="cfc-path" id="cf-intro-yes" value="a" cf-conditional-cfc-step1="^gr8$">
-					<label for="cf-intro-yes">Path A</label>
+					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$">
+					<label for="path-a">Path A</label>
 
-					<input required type="radio" name="cfc-path" id="cf-intro-no" value="b" cf-conditional-cfc-step1="^gr8$">
-					<label for="cf-intro-no">Path B</label>
+					<input required type="radio" name="cfc-path" id="path-b" value="b" cf-conditional-cfc-step1="^gr8$">
+					<label for="path-b">Path B (checkboxes and radiobuttons)</label>
+
+					<input required type="radio" name="cfc-path" id="path-d" value="d" cf-conditional-cfc-step1="^gr8$">
+					<label for="path-d">Path D (C is ignored)</label>
 				</fieldset>
-
 
 				<!--Path A-->
 				<input
@@ -58,28 +59,83 @@
 				/>
 
 				<!--Path B-->
-				<input
-					type="text"
-					cf-questions="Path B question 1/2, just write anything"
-					cf-conditional-cfc-path="b"
-				/>
+				<fieldset
+					cf-questions="Path B question 1/2, multi choice, <strong>hint:</strong> check all to go to step 2/2 of b"
+				>
+					<input 
+						required
+						type="checkbox"
+						cf-conditional-cfc-path="b"
+						name="cfc-path-b-checkbox"
+						id="path-b-checkbox-1"
+						value="test1"
+					>
+					<label for="path-b-checkbox-1">Path B, checkbox 1</label>
+
+					<input 
+						required
+						type="checkbox"
+						cf-conditional-cfc-path="b"
+						name="cfc-path-b-checkbox"
+						id="path-b-checkbox-2"
+						value="test2"
+						checked="checked"
+					>
+					<label for="path-b-checkbox-2">Path B, checkbox 2</label>
+				</fieldset>
 
 				<fieldset
-					cf-questions="Path B question 2/2, multi choice"
-					cf-conditional-cfc-path="b">
+					cf-questions="Path B question 2/2, radio buttons, <strong>hint:</strong> choose one to continue"
+				>
+					<input 
+						required
+						type="radio"
+						cf-conditional-cfc-path="b"
+						name="cfc-path-b-radio"
+						id="path-b-radio-1"
+						value="test1"
+					>
+					<label for="path-b-radio-1">Path radio 1</label>
 
-					<input required type="checkbox" name="path-b-check" id="path-b-check-1">
-					<label for="path-b-1">Path check 1</label>
-
-					<input required type="checkbox" name="path-b-check" id="path-b-check-2" checked="checked">
-					<label for="path-b-2">Path check 2</label>
+					<input 
+						required
+						type="radio"
+						cf-conditional-cfc-path="b"
+						name="cfc-path-b-radio"
+						id="path-b-radio-2"
+						value="test2"
+						checked="checked"
+					>
+					<label for="path-b-radio-2">Path radio 2</label>
 				</fieldset>
 
 				<!--Path C-->
 				<input
 					type="text"
-					cf-questions="Path C question 1/1, I will be completly ignored as there are no C Path."
+					cf-questions="Path C question 1/1, I will be completly ignored as there is no C Path."
 					cf-conditional-cfc-path="c"
+				/>
+
+				<!--Path D, section > option-->
+				<select
+					cf-questions="Path D question 1/1, Pick an option."
+					cf-conditional-cfc-path="d"
+					name="path-d-option"
+				>
+					<option value="option-a" selected>Path D 2/2 #1</option>
+					<option value="option-b">Path D 2/2 #2</option>
+				</select>
+
+				<input
+					type="text"
+					cf-questions="Path D question 2/2/1"
+					cf-conditional-path-d-option="option-a"
+				/>
+
+				<input
+					type="text"
+					cf-questions="Path D question 2/2/22"
+					cf-conditional-path-d-option="option-b"
 				/>
 
 				<!-- standard flow, no confitionals -->
@@ -89,7 +145,9 @@
 					cf-questions="You decided not to continue on the conditional adventure, Zelda is sad."
 					cf-conditional-cfc-intro="no" />
 
-				<fieldset cf-questions="I am apart of standard flow, a natural part of the flow. No conditionals involved here.">
+				<fieldset 
+					cf-questions="I am apart of standard flow, a natural part of the flow. No conditionals involved here."
+				>
 					<input required type="radio" name="standard-radios" id="standard-yes" value="a">
 					<label for="standard-yes">Standard radio 1</label>
 
@@ -100,7 +158,7 @@
 				<input
 					id="outsider"
 					type="text"
-					cf-questions="I am not apart of the conditional flow."
+					cf-questions="Lst step of the flow (not a conditional step)"
 					/>
 			</form>
 		</div>
@@ -323,6 +381,7 @@
 					},
 					submitCallback: function(){
 						// remove Conversational Form
+						alert("You made it!")
 						console.log("Form submitted...");
 					}
 				});

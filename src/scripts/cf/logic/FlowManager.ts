@@ -159,17 +159,16 @@ namespace cf {
 		}
 
 		public areConditionsInFlowFullfilled(tagWithConditions: ITag, tagConditions: Array<ConditionalValue> ): boolean{
-			console.log('*********** areConditionsInFlowFullfilled');
 			for(var i = 0; i < this.tags.length; i++){
+				// loop through tags to look for conditions
 				const tag: ITag | ITagGroup = this.tags[i];
 				if(tag !== tagWithConditions){
 					for (var j = 0; j < tagConditions.length; j++) {
+						//
 						let condition: ConditionalValue = tagConditions[j];
 						if("cf-conditional-"+tag.name === condition.key){
-							const flowTagValue: string = typeof tag.value === "string" ? <string> (<ITag> tag).value : (<ITagGroup> tag).value[0];
+							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
 							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, condition);
-							// TODO: check with regex
-							
 							if(areConditionsMeet){
 								// conditions are meet
 								return true;
