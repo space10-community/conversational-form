@@ -48,12 +48,13 @@
 	&:not(:last-child)
 		margin-right 10px
 
-	&:hover, &:focus
+	&:hover, &:focus, &[selected="selected"], &[checked="checked"]
 		background alpha($color-dark-blue, 10%)
 	
 	&[disabled="disabled"]
 		pointer-events none
 		opacity 0.5
+	
 	
 	// &.highlight
 	// 	cf-radio
