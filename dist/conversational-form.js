@@ -1825,14 +1825,37 @@ var cf;
         Tag.testConditions = function (tagValue, condition) {
             if (typeof tagValue === "string") {
                 var value = tagValue;
-                return tagValue === condition.value || (condition.regEx && condition.regEx.test(value));
+                var isValid = false;
+                for (var i = 0; i < condition.conditionals.length; i++) {
+                    var conditional = condition.conditionals[i];
+                    if (typeof conditional === "object") {
+                        // regex
+                        isValid = conditional.test(value);
+                    }
+                    else {
+                        // string comparisson
+                        isValid = tagValue === conditional;
+                    }
+                    if (isValid)
+                        break;
+                }
+                return isValid;
             }
             else {
                 if (!tagValue) {
                     return false;
                 }
                 else {
-                    return tagValue.toString() == condition.value.toString();
+                    // check arrays..
+                    var isValid = false;
+                    for (var i = 0; i < condition.conditionals.length; i++) {
+                        var conditional = condition.conditionals[i];
+                        isValid = tagValue.toString() == conditional.toString();
+                        console.log("=?", isValid);
+                        if (isValid)
+                            break;
+                    }
+                    return isValid;
                 }
                 // arrays need to be the same
             }
@@ -1984,15 +2007,20 @@ var cf;
                         var attr = keys[key];
                         if (attr.name.indexOf("cf-conditional") !== -1) {
                             // conditional found
-                            var regex = void 0;
-                            try {
-                                regex = new RegExp(attr.value);
+                            var _conditionals = [];
+                            var condictionalsFromAttribute = attr.value.split("||");
+                            for (var i = 0; i < condictionalsFromAttribute.length; i++) {
+                                var _conditional = condictionalsFromAttribute[i];
+                                try {
+                                    _conditionals.push(new RegExp(_conditional));
+                                }
+                                catch (e) {
+                                }
+                                _conditionals.push(_conditional);
                             }
-                            catch (e) { }
                             this.conditionalTags.push({
                                 key: attr.name,
-                                value: attr.value,
-                                regEx: regex
+                                conditionals: _conditionals
                             });
                         }
                     }
