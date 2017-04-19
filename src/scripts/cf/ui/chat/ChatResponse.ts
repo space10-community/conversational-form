@@ -8,6 +8,7 @@ namespace cf {
 	export interface IChatResponseOptions extends IBasicElementOptions{
 		response: string;
 		image: string;
+		list: ChatList;
 		isRobotReponse: boolean;
 		tag: ITag;
 	}
@@ -26,7 +27,8 @@ namespace cf {
 		public parsedResponse: string;
 		private textEl: Element;
 		private image: string;
-		private _tag: ITag
+		private _list: ChatList;
+		private _tag: ITag;
 		private responseLink: ChatResponse; // robot reference from use
 
 		private onClickCallback: () => void;
@@ -53,6 +55,7 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			this._list = options.list;
 			this._tag = options.tag;
 			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
 		}
@@ -137,6 +140,18 @@ namespace cf {
 				
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+				
+				// look through IDs
+				const reponses: Array<ChatResponse> = this._list.getResponses();
+				for (var i = 0; i < reponses.length; i++) {
+					var response: ChatResponse = reponses[i];
+					if(response !== this){
+						if(response.tag.id){
+							innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
+						}
+					}
+				}
+
 				// add more..
 				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}

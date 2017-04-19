@@ -13,6 +13,7 @@ namespace cf {
 	// interface
 	export interface ITagGroupOptions{
 		elements: Array <ITag>;
+		fieldset?: HTMLFieldSetElement;
 	}
 
 	export interface ITagGroup extends ITag{
@@ -37,6 +38,7 @@ namespace cf {
 		*/
 		private _activeElements: Array<ITag>;
 		private _eventTarget: EventDispatcher;
+		private _fieldset: HTMLFieldSetElement;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -73,7 +75,11 @@ namespace cf {
 		}
 
 		public get name (): string{
-			return this.elements[0].name;
+			return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
+		}
+
+		public get id (): string{
+			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
 		}
 
 		public get label (): string{
@@ -127,6 +133,10 @@ namespace cf {
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
+			
+			// set wrapping element
+			this._fieldset = options.fieldset;
+
 			if(ConversationalForm.illustrateAppFlow)
 				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
