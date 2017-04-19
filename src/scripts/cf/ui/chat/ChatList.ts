@@ -169,6 +169,14 @@ namespace cf {
 			this.scrollListTo();
 		}
 
+		/**
+		* @name getResponses
+		* returns the submitted responses.
+		*/
+		public getResponses(): Array<ChatResponse> {
+			return this.responses;
+		}
+
 		public updateThumbnail(robot: boolean, img: string){
 			Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
 
@@ -186,6 +194,7 @@ namespace cf {
 		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
+				list: this,
 				tag: currentTag,
 				eventTarget: this.eventTarget,
 				isRobotReponse: isRobotReponse,
