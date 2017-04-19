@@ -2122,6 +2122,8 @@ var cf;
     var TagGroup = (function () {
         function TagGroup(options) {
             this.elements = options.elements;
+            // set wrapping element
+            this._fieldset = options.fieldset;
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
         }
@@ -2168,7 +2170,14 @@ var cf;
         });
         Object.defineProperty(TagGroup.prototype, "name", {
             get: function () {
-                return this.elements[0].name;
+                return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TagGroup.prototype, "id", {
+            get: function () {
+                return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
             },
             enumerable: true,
             configurable: true
@@ -3650,6 +3659,7 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
+            _this._list = options.list;
             _this._tag = options.tag;
             _this.textEl = _this.el.getElementsByTagName("text")[0];
             return _this;
@@ -3741,7 +3751,7 @@ var cf;
             var innerResponse = this.response;
             if (this._tag && this._tag.type == "password" && !this.isRobotReponse) {
                 var newStr = "";
-                for (var i = 0; i < innerResponse.length; i++) {
+                for (var i_1 = 0; i_1 < innerResponse.length; i_1++) {
                     newStr += "*";
                 }
                 innerResponse = newStr;
@@ -3753,6 +3763,18 @@ var cf;
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+                // if(this.responseLink.tag.id){
+                // 	innerResponse = innerResponse.split("{" + this.responseLink.tag.id+"}").join(this.responseLink.parsedResponse);
+                // }
+                var reponses = this._list.getResponses();
+                for (var i = 0; i < reponses.length; i++) {
+                    var response = reponses[i];
+                    if (response !== this) {
+                        if (response.tag.id) {
+                            innerResponse = innerResponse.split("{" + response.tag.id + "}").join(this.responseLink.parsedResponse);
+                        }
+                    }
+                }
                 // add more..
                 // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
             }
@@ -3980,6 +4002,13 @@ var cf;
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
             this.scrollListTo();
         };
+        /**
+        * @name getResponses
+        * returns the submitted responses.
+        */
+        ChatList.prototype.getResponses = function () {
+            return this.responses;
+        };
         ChatList.prototype.updateThumbnail = function (robot, img) {
             cf.Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
             var newImage = robot ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image");
@@ -3997,6 +4026,7 @@ var cf;
             if (value === void 0) { value = null; }
             var response = new cf.ChatResponse({
                 // image: null,
+                list: this,
                 tag: currentTag,
                 eventTarget: this.eventTarget,
                 isRobotReponse: isRobotReponse,
@@ -4513,6 +4543,17 @@ var cf;
                 for (var group in groups) {
                     if (groups[group].length > 0) {
                         // always build groupd when radio or checkbox
+                        // find the fieldset
+                        // TODO: look for cf attributes and ignore fieldset tag check
+                        var fieldset = groups[group][0].domElement.parentNode;
+                        if (fieldset) {
+                            if (fieldset.tagName.toLowerCase() !== "fieldset") {
+                                fieldset = groups[group][0].parentNode.parentNode;
+                                if (fieldset && fieldset.tagName.toLowerCase() !== "fieldset") {
+                                    fieldset = null;
+                                }
+                            }
+                        }
                         var tagGroup = new cf_1.TagGroup({
                             elements: groups[group]
                         });

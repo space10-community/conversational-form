@@ -27,6 +27,7 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		type: string,
 		name: string,
+		id: string,
 		label: string,
 		question: string,
 		errorMessage: string,
