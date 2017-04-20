@@ -3004,6 +3004,8 @@ var cf;
         KEY_CHANGE: "cf-input-key-change",
         CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
         HEIGHT_CHANGE: "cf-input-height-change",
+        FOCUS: "cf-input-focus",
+        BLUR: "cf-input-blur",
     };
     // class
     var UserInput = (function (_super) {
@@ -3396,10 +3398,12 @@ var cf;
         };
         UserInput.prototype.onInputBlur = function (event) {
             this._active = false;
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.BLUR));
         };
         UserInput.prototype.onInputFocus = function (event) {
             this._active = true;
             this.onInputChange();
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserInput.prototype.setFocusOnInput = function () {
             this.inputElement.focus();
