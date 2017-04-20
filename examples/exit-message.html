@@ -23,7 +23,6 @@
 				font-size: 120%;
 			}
 
-
 		</style>
 
 
@@ -111,6 +110,7 @@
 			(function(){
 				var conversationalForm = new cf.ConversationalForm({
 					formEl: document.getElementById("form"),
+					context: document.getElementById("cf-context"),
 					submitCallback: function(){
 						// window.ConversationalForm
 						conversationalForm.addRobotChatResponse("Congratulations, you have reached the end of the form!");
