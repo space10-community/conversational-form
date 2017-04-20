@@ -21,6 +21,8 @@ namespace cf {
 		KEY_CHANGE: "cf-input-key-change",
 		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
 		HEIGHT_CHANGE: "cf-input-height-change",
+		FOCUS: "cf-input-focus",
+		BLUR: "cf-input-blur",
 	}
 
 	// class
@@ -492,11 +494,13 @@ namespace cf {
 
 		private onInputBlur(event: FocusEvent){
 			this._active = false;
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.BLUR));
 		}
 
 		private onInputFocus(event: FocusEvent){
 			this._active = true;
 			this.onInputChange();
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.FOCUS));
 		}
 
 		public setFocusOnInput(){
