@@ -3207,6 +3207,7 @@ var cf;
                 // initial height not set
                 this.initialInputHeight = this.inputElement.offsetHeight;
             }
+            this.setFocusOnInput();
         };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;

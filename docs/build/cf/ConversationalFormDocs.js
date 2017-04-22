@@ -108,6 +108,7 @@ var ConversationalFormDocs = (function () {
                     }
                 });
             }
+            this.cf.focus();
             setTimeout(function () {
                 _this.el.classList.remove('menu-toggle');
                 _this.el.classList.add('cf-toggle');
