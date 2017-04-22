@@ -322,7 +322,10 @@
 						cf.addTags(tags, true);
 					}
 
-					success()
+					setTimeout(function(){
+						// fake loading...
+						success();
+					}, 1000);
 					
 				}
 				xhr.onerror = function(){

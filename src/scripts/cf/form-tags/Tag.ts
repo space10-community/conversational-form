@@ -373,6 +373,7 @@ namespace cf {
 						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
 							labelTags = [(<HTMLLabelElement>parentDomNode)];
+						
 					}else if(labelTags.length > 0){
 						// check for "for" attribute
 						for (let i = 0; i < labelTags.length; i++) {
@@ -381,11 +382,10 @@ namespace cf {
 								this._label = Helpers.getInnerTextOfElement(label);
 							}
 						}
+					}
 
-						// no for attribute but label found
-						if(!this._label && labelTags[0]){
-							this._label = Helpers.getInnerTextOfElement(labelTags[0]);
-						}
+					if(!this._label && labelTags[0]){
+						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
 					}
 				}
 			}
