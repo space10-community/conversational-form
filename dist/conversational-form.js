@@ -1995,10 +1995,9 @@ var cf;
                                 this._label = cf.Helpers.getInnerTextOfElement(label);
                             }
                         }
-                        // no for attribute but label found
-                        if (!this._label && labelTags[0]) {
-                            this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
-                        }
+                    }
+                    if (!this._label && labelTags[0]) {
+                        this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
                     }
                 }
             }
@@ -3278,10 +3277,10 @@ var cf;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
             this.inputElement.value = "";
+            this.submitButton.classList.remove("loading");
             this.setPlaceholder();
             this.resetValue();
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
             this.controlElements.reset();
             if (this._currentTag.type == "group") {
                 this.buildControlElements(this._currentTag.elements);
@@ -3432,8 +3431,7 @@ var cf;
             }));
         };
         UserInput.prototype.windowFocus = function (event) {
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
         };
         UserInput.prototype.onInputBlur = function (event) {
             this._active = false;
@@ -3445,7 +3443,9 @@ var cf;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserInput.prototype.setFocusOnInput = function () {
-            this.inputElement.focus();
+            if (!UserInput.preventAutoFocus) {
+                this.inputElement.focus();
+            }
         };
         UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
@@ -3473,6 +3473,7 @@ var cf;
         };
         UserInput.prototype.doSubmit = function () {
             var dto = this.getFlowDTO();
+            this.submitButton.classList.add("loading");
             this.disabled = true;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
