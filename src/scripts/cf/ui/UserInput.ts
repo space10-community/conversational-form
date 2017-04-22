@@ -313,8 +313,7 @@ namespace cf {
 
 			this.resetValue();
 
-			if(!UserInput.preventAutoFocus)
-				this.setFocusOnInput();
+			this.setFocusOnInput();
 
 			this.controlElements.reset();
 
@@ -488,8 +487,7 @@ namespace cf {
 		}
 
 		private windowFocus(event: Event){
-			if(!UserInput.preventAutoFocus)
-				this.setFocusOnInput();
+			this.setFocusOnInput();
 		}
 
 		private onInputBlur(event: FocusEvent){
@@ -504,7 +502,9 @@ namespace cf {
 		}
 
 		public setFocusOnInput(){
-			this.inputElement.focus();
+			if(!UserInput.preventAutoFocus){
+				this.inputElement.focus();
+			}
 		}
 
 		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
