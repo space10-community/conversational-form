@@ -21,6 +21,8 @@ namespace cf {
 		KEY_CHANGE: "cf-input-key-change",
 		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
 		HEIGHT_CHANGE: "cf-input-height-change",
+		FOCUS: "cf-input-focus",
+		BLUR: "cf-input-blur",
 	}
 
 	// class
@@ -152,6 +154,10 @@ namespace cf {
 					text: this.getInputValue()
 				};
 			}
+
+			// add current tag to DTO if not set
+			if(!value.tag)
+				value.tag = this.currentTag;
 
 			value.input = this;
 
@@ -303,12 +309,13 @@ namespace cf {
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
 
+			this.submitButton.classList.remove("loading");
+
 			this.setPlaceholder();
 
 			this.resetValue();
 
-			if(!UserInput.preventAutoFocus)
-				this.setFocusOnInput();
+			this.setFocusOnInput();
 
 			this.controlElements.reset();
 
@@ -482,21 +489,24 @@ namespace cf {
 		}
 
 		private windowFocus(event: Event){
-			if(!UserInput.preventAutoFocus)
-				this.setFocusOnInput();
+			this.setFocusOnInput();
 		}
 
 		private onInputBlur(event: FocusEvent){
 			this._active = false;
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.BLUR));
 		}
 
 		private onInputFocus(event: FocusEvent){
 			this._active = true;
 			this.onInputChange();
+			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.FOCUS));
 		}
 
 		public setFocusOnInput(){
-			this.inputElement.focus();
+			if(!UserInput.preventAutoFocus){
+				this.inputElement.focus();
+			}
 		}
 
 		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
@@ -522,6 +532,7 @@ namespace cf {
 
 		private doSubmit(){
 			const dto: FlowDTO = this.getFlowDTO();
+			this.submitButton.classList.add("loading");
 
 			this.disabled = true;
 			this.el.removeAttribute("error");

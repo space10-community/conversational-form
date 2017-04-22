@@ -471,7 +471,8 @@ cf-input[error] .cf-input-button {
 cf-input[error] .cf-input-button svg polygon {
   fill: #fe8d84;
 }
-cf-input[tag-type="file"] cf-input-button.cf-input-button:after {
+cf-input[tag-type="file"] cf-input-button.cf-input-button:after,
+cf-input cf-input-button.cf-input-button.loading:after {
   content: "";
   display: block;
   width: 100%;
@@ -487,7 +488,8 @@ cf-input[tag-type="file"] cf-input-button.cf-input-button:after {
   animation: cf-spin 1s linear infinite;
   will-change: opacity;
 }
-.conversational-form--enable-animation cf-input[tag-type="file"] cf-input-button.cf-input-button:after {
+.conversational-form--enable-animation cf-input[tag-type="file"] cf-input-button.cf-input-button:after,
+.conversational-form--enable-animation cf-input cf-input-button.cf-input-button.loading:after {
   -webkit-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   -moz-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   -o-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
