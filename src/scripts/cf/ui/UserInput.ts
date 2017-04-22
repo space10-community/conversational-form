@@ -309,6 +309,8 @@ namespace cf {
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
 
+			this.submitButton.classList.remove("loading");
+
 			this.setPlaceholder();
 
 			this.resetValue();
@@ -530,6 +532,7 @@ namespace cf {
 
 		private doSubmit(){
 			const dto: FlowDTO = this.getFlowDTO();
+			this.submitButton.classList.add("loading");
 
 			this.disabled = true;
 			this.el.removeAttribute("error");
