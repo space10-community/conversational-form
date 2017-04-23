@@ -286,6 +286,8 @@ namespace cf {
 				// initial height not set
 				this.initialInputHeight = this.inputElement.offsetHeight;
 			}
+
+			this.setFocusOnInput();
 		}
 
 		private onFlowUpdate(event: CustomEvent){
