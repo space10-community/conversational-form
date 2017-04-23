@@ -4,19 +4,6 @@ interface Window {
 	conversationalFormExamples: any;
 }
 
-// declare module cf{
-// 	
-// }
-
-// interface cf{
-// 	ConversationalForm: any;
-// }
-
-// export type ConversationalForm = any;
-// interface ConversationalForm = any;
-// declare var ConversationalForm: any;
-class ConversationalForm {}
-
 class ConversationalFormExamples{
 	private static instance: ConversationalFormExamples
 	/**
@@ -56,7 +43,8 @@ class ConversationalFormExamples{
 			this.h1writer.start();
 
 			this.introTimer = setTimeout(() => {
-				this.toggleConversation()
+				if(!document.getElementById("examples-script").getAttribute("manual-init"))
+					this.toggleConversation()
 			}, isDevelopment ? 0 : 2500);
 		}, isDevelopment ? 0 : 500);
 	}
@@ -75,11 +63,12 @@ class ConversationalFormExamples{
 
 			this.introTimer = setTimeout(() => {
 
-				document.getElementById("form").classList.add('show');
+				document.querySelector("section[role='form']").classList.add('show');
 				document.getElementById("cf-toggle-btn").classList.add('show');
 
 				this.introTimer = setTimeout(() => {
-					this.toggleConversation()
+					if(!document.getElementById("examples-script").getAttribute("manual-init"))
+						this.toggleConversation()
 				}, isDevelopment ? 0 : 1500);
 			}, isDevelopment ? 0 : 3000);
 		}, isDevelopment ? 0 : 1500);

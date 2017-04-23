@@ -55,7 +55,7 @@ var ConversationalFormDocs = (function () {
         this.introTimer = setTimeout(function () {
             document.getElementById("info").classList.add('show');
             _this.introTimer = setTimeout(function () {
-                document.getElementById("form").classList.add('show');
+                document.querySelector("section[role='form']").classList.add('show');
                 document.getElementById("cf-toggle-btn").classList.add('show');
                 _this.introTimer = setTimeout(function () {
                     _this.toggleConversation();
@@ -108,8 +108,7 @@ var ConversationalFormDocs = (function () {
                     }
                 });
             }
-            if (this.cf.focus)
-                this.cf.focus();
+            this.cf.focus();
             setTimeout(function () {
                 _this.el.classList.remove('menu-toggle');
                 _this.el.classList.add('cf-toggle');

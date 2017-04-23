@@ -292,8 +292,17 @@ try {
 	}(function ($) {
 		$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
 			options = options || {};
-			if(!options.formEl)
+			if(!options.formEl){
 				options.formEl = this[0];
+			}
+
+			if(!options.context){
+				var formContexts = document.querySelectorAll("*[cf-context]");
+				if(formContexts[0]){
+					options.context = formContexts[0];
+				}
+			}
+
 			return new cf.ConversationalForm(options);
 		};
 	}
@@ -348,6 +357,8 @@ var cf;
             var head = document.head || document.getElementsByTagName("head")[0];
             var script = document.createElement("script");
             script.type = "text/javascript";
+            script.async = true;
+            script.defer = true;
             script.onload = function () {
                 // we use https://github.com/Ranks/emojify.js as a standard
                 Helpers.emojilib = window[lib];
@@ -505,16 +516,11 @@ var cf;
 /// <reference path="../../ConversationalForm.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../form-tags/Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -540,9 +546,6 @@ var cf;
             _this.el.addEventListener('focus', _this.onFocusCallback, false);
             _this.onBlurCallback = _this.onBlur.bind(_this);
             _this.el.addEventListener('blur', _this.onBlurCallback, false);
-            if (_this.referenceTag.disabled) {
-                _this.el.setAttribute("disabled", "disabled");
-            }
             return _this;
         }
         Object.defineProperty(ControlElement.prototype, "type", {
@@ -1039,7 +1042,11 @@ var cf;
             }
         };
         ControlElements.prototype.resetAfterErrorMessage = function () {
-            this.currentControlElement = null;
+            if (this.currentControlElement) {
+                //reverse value of currentControlElement.
+                this.currentControlElement.checked = !this.currentControlElement.checked;
+                this.currentControlElement = null;
+            }
             this.disabled = false;
         };
         ControlElements.prototype.focusFrom = function (angle) {
@@ -1210,6 +1217,7 @@ var cf;
                             }));
                         }
                         // nothing to add.
+                        // console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
                         break;
                 }
                 if (tag.type != "select" && this.elements.length > 0) {
@@ -1755,7 +1763,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "disabled", {
             get: function () {
-                return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
+                return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
             },
             enumerable: true,
             configurable: true
@@ -1821,44 +1829,6 @@ var cf;
             this._label = null;
             this.validationCallback = null;
             this.questions = null;
-        };
-        Tag.testConditions = function (tagValue, condition) {
-            if (typeof tagValue === "string") {
-                var value = tagValue;
-                var isValid = false;
-                for (var i = 0; i < condition.conditionals.length; i++) {
-                    var conditional = condition.conditionals[i];
-                    if (typeof conditional === "object") {
-                        // regex
-                        isValid = conditional.test(value);
-                    }
-                    else {
-                        // string comparisson
-                        isValid = tagValue === conditional;
-                    }
-                    if (isValid)
-                        break;
-                }
-                return isValid;
-            }
-            else {
-                if (!tagValue) {
-                    return false;
-                }
-                else {
-                    // check arrays..
-                    var isValid = false;
-                    for (var i = 0; i < condition.conditionals.length; i++) {
-                        var conditional = condition.conditionals[i];
-                        isValid = tagValue.toString() == conditional.toString();
-                        console.log("=?", isValid);
-                        if (isValid)
-                            break;
-                    }
-                    return isValid;
-                }
-                // arrays need to be the same
-            }
         };
         Tag.isTagValid = function (element) {
             if (element.getAttribute("type") === "hidden")
@@ -1927,36 +1897,6 @@ var cf;
             this.defaultValue = this.domElement.value;
             this.questions = null;
             this.findAndSetQuestions();
-            this.findConditionalAttributes();
-        };
-        Tag.prototype.hasConditionsFor = function (tagName) {
-            if (!this.hasConditions()) {
-                return false;
-            }
-            for (var i = 0; i < this.conditionalTags.length; i++) {
-                var condition = this.conditionalTags[i];
-                if ("cf-conditional-" + tagName === condition.key) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        Tag.prototype.hasConditions = function () {
-            return this.conditionalTags && this.conditionalTags.length > 0;
-        };
-        /**
-        * @name checkConditionalAndIsValid
-        * checks for conditional logic, see documentaiton (wiki)
-        * here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
-        */
-        Tag.prototype.checkConditionalAndIsValid = function () {
-            // can we tap into disabled
-            // if contains attribute, cf-conditional{-name} then check for conditional value across tags
-            if (this.hasConditions()) {
-                return this.flowManager.areConditionsInFlowFullfilled(this, this.conditionalTags);
-            }
-            // else return true, as no conditional means uncomplicated and happy tag
-            return true;
         };
         Tag.prototype.setTagValueAndIsValid = function (dto) {
             // this sets the value of the tag in the DOM
@@ -1983,7 +1923,6 @@ var cf;
                     this.domElement.value = valueText;
             }
             else {
-                // throw new Error("cf-: value:string is not valid. Value: "+value);
             }
             return isValid;
         };
@@ -1993,39 +1932,6 @@ var cf;
             if (this._label)
                 return this._label;
             return cf.Dictionary.getRobotResponse(this.type);
-        };
-        /**
-        * @name findConditionalAttributes
-        * look for conditional attributes and map them
-        */
-        Tag.prototype.findConditionalAttributes = function () {
-            var keys = this.domElement.attributes;
-            if (keys.length > 0) {
-                this.conditionalTags = [];
-                for (var key in keys) {
-                    if (keys.hasOwnProperty(key)) {
-                        var attr = keys[key];
-                        if (attr.name.indexOf("cf-conditional") !== -1) {
-                            // conditional found
-                            var _conditionals = [];
-                            var condictionalsFromAttribute = attr.value.split("||");
-                            for (var i = 0; i < condictionalsFromAttribute.length; i++) {
-                                var _conditional = condictionalsFromAttribute[i];
-                                try {
-                                    _conditionals.push(new RegExp(_conditional));
-                                }
-                                catch (e) {
-                                }
-                                _conditionals.push(_conditional);
-                            }
-                            this.conditionalTags.push({
-                                key: attr.name,
-                                conditionals: _conditionals
-                            });
-                        }
-                    }
-                }
-            }
         };
         Tag.prototype.findAndSetQuestions = function () {
             if (this.questions)
@@ -2068,7 +1974,7 @@ var cf;
                 var parentDomNode = this.domElement.parentNode;
                 if (parentDomNode) {
                     // step backwards and check for label tag.
-                    var labelTags = parentDomNode.tagName.toLowerCase() == "label" ? [parentDomNode] : parentDomNode.getElementsByTagName("label");
+                    var labelTags = parentDomNode.getElementsByTagName("label");
                     if (labelTags.length == 0) {
                         // check for innerText
                         var innerText = cf.Helpers.getInnerTextOfElement(parentDomNode);
@@ -2083,10 +1989,9 @@ var cf;
                                 this._label = cf.Helpers.getInnerTextOfElement(label);
                             }
                         }
-                        // no "for"" attribute present but label tag found
-                        if (!this._label && labelTags[0]) {
-                            this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
-                        }
+                    }
+                    if (!this._label && labelTags[0]) {
+                        this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
                     }
                 }
             }
@@ -2149,19 +2054,16 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TagGroup.prototype, "flowManager", {
-            set: function (value) {
-                for (var i = 0; i < this.elements.length; i++) {
-                    var tag = this.elements[i];
-                    tag.flowManager = value;
-                }
+        Object.defineProperty(TagGroup.prototype, "type", {
+            get: function () {
+                return "group";
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TagGroup.prototype, "type", {
+        Object.defineProperty(TagGroup.prototype, "label", {
             get: function () {
-                return "group";
+                return "";
             },
             enumerable: true,
             configurable: true
@@ -2173,9 +2075,9 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TagGroup.prototype, "label", {
+        Object.defineProperty(TagGroup.prototype, "id", {
             get: function () {
-                return this.elements[0].label;
+                return "tag-group";
             },
             enumerable: true,
             configurable: true
@@ -2206,7 +2108,7 @@ var cf;
         Object.defineProperty(TagGroup.prototype, "value", {
             get: function () {
                 // TODO: fix value???
-                return this._values ? this._values : [""];
+                return this._values;
             },
             enumerable: true,
             configurable: true
@@ -2214,13 +2116,12 @@ var cf;
         Object.defineProperty(TagGroup.prototype, "disabled", {
             get: function () {
                 var disabled = false;
-                var allShouldBedisabled = 0;
                 for (var i = 0; i < this.elements.length; i++) {
                     var element = this.elements[i];
                     if (element.disabled)
-                        allShouldBedisabled++;
+                        disabled = true;
                 }
-                return allShouldBedisabled === this.elements.length;
+                return disabled;
             },
             enumerable: true,
             configurable: true
@@ -2253,39 +2154,6 @@ var cf;
         TagGroup.prototype.getGroupTagType = function () {
             return this.elements[0].type;
         };
-        TagGroup.prototype.hasConditionsFor = function (tagName) {
-            for (var i = 0; i < this.elements.length; i++) {
-                var element = this.elements[i];
-                if (element.hasConditionsFor(tagName)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        TagGroup.prototype.hasConditions = function () {
-            for (var i = 0; i < this.elements.length; i++) {
-                var element = this.elements[i];
-                if (element.hasConditions()) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        /**
-        * @name checkConditionalAndIsValid
-        * checks for conditional logic, see documentaiton (wiki)
-        * here we check after cf-conditional{-name} on group tags
-        */
-        TagGroup.prototype.checkConditionalAndIsValid = function () {
-            // can we tap into disabled
-            // if contains attribute, cf-conditional{-name} then check for conditional value across tags
-            for (var i = 0; i < this.elements.length; i++) {
-                var element = this.elements[i];
-                element.checkConditionalAndIsValid();
-            }
-            // else return true, as no conditional means happy tag
-            return true;
-        };
         TagGroup.prototype.setTagValueAndIsValid = function (value) {
             var isValid = false;
             var groupType = this.elements[0].type;
@@ -2298,18 +2166,39 @@ var cf;
                     for (var i = 0; i < value.controlElements.length; i++) {
                         var element = value.controlElements[i];
                         var tag = this.elements[this.elements.indexOf(element.referenceTag)];
-                        numberRadioButtonsVisible.push(element);
-                        if (tag == element.referenceTag) {
-                            if (element.checked) {
-                                this._values.push(tag.value);
-                                this._activeElements.push(tag);
+                        if (element.visible) {
+                            numberRadioButtonsVisible.push(element);
+                            if (tag == element.referenceTag) {
+                                tag.domElement.checked = element.checked;
+                                if (element.checked) {
+                                    this._values.push(tag.value);
+                                    this._activeElements.push(tag);
+                                }
+                                // a radio button was checked
+                                if (!wasRadioButtonChecked && element.checked)
+                                    wasRadioButtonChecked = true;
                             }
-                            // a radio button was checked
-                            if (!wasRadioButtonChecked && element.checked)
-                                wasRadioButtonChecked = true;
+                            else {
+                                tag.domElement.checked = false;
+                            }
                         }
                     }
-                    isValid = wasRadioButtonChecked;
+                    // special case 1, only one radio button visible from a filter
+                    if (!isValid && numberRadioButtonsVisible.length == 1) {
+                        var element = numberRadioButtonsVisible[0];
+                        var tag = this.elements[this.elements.indexOf(element.referenceTag)];
+                        element.checked = true;
+                        tag.domElement.checked = true;
+                        isValid = true;
+                        if (element.checked) {
+                            this._values.push(tag.value);
+                            this._activeElements.push(tag);
+                        }
+                    }
+                    else if (!isValid && wasRadioButtonChecked) {
+                        // a radio button needs to be checked of
+                        isValid = wasRadioButtonChecked;
+                    }
                     break;
                 case "checkbox":
                     // checkbox is always valid
@@ -2333,16 +2222,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2365,7 +2249,6 @@ var cf;
             else if (_this.type == "password") {
             }
             else if (_this.type == "file") {
-                // check InputFileTag.ts
             }
             return _this;
         }
@@ -2376,7 +2259,6 @@ var cf;
         InputTag.prototype.findAndSetLabel = function () {
             _super.prototype.findAndSetLabel.call(this);
             if (!this._label) {
-                // special use cases for <input> tag add here...
             }
         };
         InputTag.prototype.setTagValueAndIsValid = function (value) {
@@ -2397,16 +2279,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2492,16 +2369,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2514,7 +2386,6 @@ var cf;
             if (_this.domElement.getAttribute("type") == "submit") {
             }
             else if (_this.domElement.getAttribute("type") == "button") {
-                // this.onClick = eval(this.domElement.onclick);
             }
             return _this;
         }
@@ -2525,16 +2396,11 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 /// <reference path="../parsing/TagsParser.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2566,17 +2432,13 @@ var cf;
         });
         Object.defineProperty(OptionTag.prototype, "selected", {
             get: function () {
-                return this.domElement.hasAttribute("selected");
-                // return (<HTMLOptionElement> this.domElement).selected;
+                return this.domElement.selected;
             },
             set: function (value) {
-                this.domElement.selected = value;
-                if (value) {
+                if (value)
                     this.domElement.setAttribute("selected", "selected");
-                }
-                else {
+                else
                     this.domElement.removeAttribute("selected");
-                }
             },
             enumerable: true,
             configurable: true
@@ -2593,16 +2455,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2677,16 +2534,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2712,20 +2564,16 @@ var cf;
             set: function (value) {
                 if (!value) {
                     this.el.removeAttribute("checked");
-                    this.referenceTag.domElement.removeAttribute("checked");
-                    this.referenceTag.domElement.checked = false;
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
-                    this.referenceTag.domElement.setAttribute("checked", "checked");
-                    this.referenceTag.domElement.checked = true;
                 }
             },
             enumerable: true,
             configurable: true
         });
         RadioButton.prototype.onClick = function (event) {
-            this.checked = true; // checked always true like native radio buttons
+            this.checked = !this.checked;
             _super.prototype.onClick.call(this, event);
         };
         // override
@@ -2739,16 +2587,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2774,12 +2617,10 @@ var cf;
                 if (!value) {
                     this.el.removeAttribute("checked");
                     this.referenceTag.domElement.removeAttribute("checked");
-                    this.referenceTag.domElement.checked = false;
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
                     this.referenceTag.domElement.setAttribute("checked", "checked");
-                    this.referenceTag.domElement.checked = true;
                 }
             },
             enumerable: true,
@@ -2799,16 +2640,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2963,16 +2799,11 @@ var cf;
 
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -3154,6 +2985,8 @@ var cf;
         KEY_CHANGE: "cf-input-key-change",
         CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
         HEIGHT_CHANGE: "cf-input-height-change",
+        FOCUS: "cf-input-focus",
+        BLUR: "cf-input-blur",
     };
     // class
     var UserInput = (function (_super) {
@@ -3261,8 +3094,10 @@ var cf;
                     text: this.getInputValue()
                 };
             }
+            // add current tag to DTO if not set
+            if (!value.tag)
+                value.tag = this.currentTag;
             value.input = this;
-            value.tag = this.currentTag;
             return value;
         };
         UserInput.prototype.reset = function () {
@@ -3372,6 +3207,7 @@ var cf;
                 // initial height not set
                 this.initialInputHeight = this.inputElement.offsetHeight;
             }
+            this.setFocusOnInput();
         };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -3388,10 +3224,10 @@ var cf;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
             this.inputElement.value = "";
+            this.submitButton.classList.remove("loading");
             this.setPlaceholder();
             this.resetValue();
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
             this.controlElements.reset();
             if (this._currentTag.type == "group") {
                 this.buildControlElements(this._currentTag.elements);
@@ -3542,18 +3378,21 @@ var cf;
             }));
         };
         UserInput.prototype.windowFocus = function (event) {
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
         };
         UserInput.prototype.onInputBlur = function (event) {
             this._active = false;
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.BLUR));
         };
         UserInput.prototype.onInputFocus = function (event) {
             this._active = true;
             this.onInputChange();
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserInput.prototype.setFocusOnInput = function () {
-            this.inputElement.focus();
+            if (!UserInput.preventAutoFocus) {
+                this.inputElement.focus();
+            }
         };
         UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
@@ -3581,6 +3420,7 @@ var cf;
         };
         UserInput.prototype.doSubmit = function () {
             var dto = this.getFlowDTO();
+            this.submitButton.classList.add("loading");
             this.disabled = true;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
@@ -3629,16 +3469,11 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -3753,8 +3588,6 @@ var cf;
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-                // add more..
-                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
@@ -3834,16 +3667,11 @@ var cf;
 /// <reference path="ChatResponse.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -3921,7 +3749,7 @@ var cf;
         ChatList.prototype.containsTagResponse = function (tagToChange) {
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
-                if (!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()) {
+                if (!element.isRobotReponse && element.tag == tagToChange) {
                     return true;
                 }
             }
@@ -4019,7 +3847,6 @@ var cf;
                 setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
             }
             catch (e) {
-                // catch errors where CF have been removed
             }
         };
         ChatList.prototype.getTemplate = function () {
@@ -4160,27 +3987,6 @@ var cf;
                 this.showStep();
             }
         };
-        FlowManager.prototype.areConditionsInFlowFullfilled = function (tagWithConditions, tagConditions) {
-            for (var i = 0; i < this.tags.length; i++) {
-                // loop through tags to look for conditions
-                var tag = this.tags[i];
-                if (tag !== tagWithConditions) {
-                    for (var j = 0; j < tagConditions.length; j++) {
-                        //
-                        var condition = tagConditions[j];
-                        if ("cf-conditional-" + tag.name === condition.key) {
-                            var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
-                            var areConditionsMeet = cf.Tag.testConditions(flowTagValue, condition);
-                            if (areConditionsMeet) {
-                                // conditions are meet
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        };
         FlowManager.prototype.start = function () {
             this.stopped = false;
             this.validateStepAndUpdate();
@@ -4191,26 +3997,8 @@ var cf;
         FlowManager.prototype.nextStep = function () {
             if (this.stopped)
                 return;
-            if (this.savedStep != -1) {
-                var foundConditionsToCurrentTag = false;
-                // this happens when editing a tag..
-                // check if any tags has a conditional check for this.currentTag.name
-                for (var i = 0; i < this.tags.length; i++) {
-                    var tag = this.tags[i];
-                    if (tag !== this.currentTag && tag.hasConditions()) {
-                        // tag has conditions so check if it also has the right conditions
-                        if (tag.hasConditionsFor(this.currentTag.name)) {
-                            foundConditionsToCurrentTag = true;
-                            this.step = this.tags.indexOf(this.currentTag);
-                            break;
-                        }
-                    }
-                }
-                // no conditional linking found, so resume flow
-                if (!foundConditionsToCurrentTag) {
-                    this.step = this.savedStep;
-                }
-            }
+            if (this.savedStep != -1)
+                this.step = this.savedStep;
             this.savedStep = -1; //reset saved step
             this.step++;
             this.validateStepAndUpdate();
@@ -4255,7 +4043,6 @@ var cf;
             for (var i = 0; i < this.tags.length; i++) {
                 var tag = this.tags[i];
                 tag.eventTarget = this.eventTarget;
-                tag.flowManager = this;
             }
         };
         FlowManager.prototype.skipStep = function () {
@@ -4418,7 +4205,6 @@ var cf;
                 }
             }
             else {
-                // tags are manually setup and passed as options.tags.
             }
             // remove invalid tags if they've sneaked in.. this could happen if tags are setup manually as we don't encurage to use static Tag.isTagValid
             var indexesToRemove = [];
@@ -4618,7 +4404,6 @@ var cf;
             tags = this.setupTagGroups(tags);
             // add new tags to the flow
             this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
-            console.log(this.tags);
             //this.flowManager.startFrom ?
         };
         /**

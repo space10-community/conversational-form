@@ -13,8 +13,17 @@
 	}(function ($) {
 		$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
 			options = options || {};
-			if(!options.formEl)
+			if(!options.formEl){
 				options.formEl = this[0];
+			}
+
+			if(!options.context){
+				var formContexts = document.querySelectorAll("*[cf-context]");
+				if(formContexts[0]){
+					options.context = formContexts[0];
+				}
+			}
+
 			return new cf.ConversationalForm(options);
 		};
 	}

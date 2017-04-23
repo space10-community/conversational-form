@@ -115,31 +115,31 @@ cf-input
 			svg polygon
 				fill $color-input-error-text
 
-	&[tag-type="file"]
-		cf-input-button.cf-input-button
-			&:after
-				content ""
-				display block
-				width 100%
-				height 100%
+	&[tag-type="file"] cf-input-button.cf-input-button, cf-input-button.cf-input-button.loading
+		&:after
+			content ""
+			display block
+			width 100%
+			height 100%
+		
+			border 1px solid alpha(#b9bcbe, 50%)
+			border-radius 50%
+			border-left 0
+			border-top 0
+			animation cf-spin 1s linear infinite
+			will-change opacity
+			.conversational-form--enable-animation &
+				transition opacity $anim-time * 0.5 $anim-easeOut
+
+	&[tag-type="file"] cf-input-button.cf-input-button
+		div.cf-icon-attachment
+			transform rotateX(0deg)
+			opacity 1
 			
-				border 1px solid alpha(#b9bcbe, 50%)
-				border-radius 50%
-				border-left 0
-				border-top 0
-				animation cf-spin 1s linear infinite
-				will-change opacity
-				.conversational-form--enable-animation &
-					transition opacity $anim-time * 0.5 $anim-easeOut
 
-			div.cf-icon-attachment
-				transform rotateX(0deg)
-				opacity 1
-				
-
-			div.cf-icon-progress
-				transform rotateX(-90deg)
-				opacity 0
+		div.cf-icon-progress
+			transform rotateX(-90deg)
+			opacity 0
 
 cf-input-button.cf-input-button
 	width 29px
