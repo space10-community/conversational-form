@@ -209,6 +209,7 @@ namespace cf {
 
 		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
 			if(typeof tagValue === "string"){
+				// tag value is a string
 				const value: string = <string> tagValue;
 				let isValid: boolean = false;
 				for (var i = 0; i < condition.conditionals.length; i++) {
@@ -228,12 +229,11 @@ namespace cf {
 				if(!tagValue){
 					return false;
 				}else{
-					// check arrays..
+					// tag value is an array
 					let isValid: boolean = false;
 					for (var i = 0; i < condition.conditionals.length; i++) {
 						var conditional: string | RegExp = condition.conditionals[i];
 						isValid = (<string[]>tagValue).toString() == conditional.toString();
-						console.log("=?", isValid);
 
 						if(isValid) break;
 					}
@@ -447,7 +447,6 @@ namespace cf {
 			// check for label tag, we only go 2 steps backwards..
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
-
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
