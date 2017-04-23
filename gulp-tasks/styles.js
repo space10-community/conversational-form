@@ -27,8 +27,6 @@ function swallowError(error) {
 global.gulp.task('stylus-form', function() {
 	var src = [
 		global.srcFolder + "/styles/**/*.styl",
-		global.srcFolder + "../examples/styles/**/*.styl",
-		global.srcFolder + "../docs/styles/**/*.styl",
 		"!" + global.srcFolder + "styles/mixins/_cf-mixins.styl",
 		"!" + global.srcFolder + "/styles/**/_*-variables.styl"
 	]
@@ -53,7 +51,6 @@ global.gulp.task('stylus-form', function() {
 
 global.gulp.task('styles-form-build', ['stylus-form'], function(){
 	var src = [
-		global.buildFolder + "**/*.css",
 		global.buildFolder + "cf/cf.css",
 		global.buildFolder + "cf/ui/control-elements/cf-control-elements.css",
 		global.buildFolder + "cf/ui/control-elements/cf-button.css",
