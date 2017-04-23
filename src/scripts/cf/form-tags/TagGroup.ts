@@ -86,10 +86,6 @@ namespace cf {
 			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
 		}
 
-		public get id (): string{
-			return "tag-group";
-		}
-
 		public get question():string{
 			// check if elements have the questions, else fallback
 			let tagQuestion: string = this.elements[0].question;
