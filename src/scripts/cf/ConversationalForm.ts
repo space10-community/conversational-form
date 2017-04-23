@@ -191,7 +191,6 @@ namespace cf {
 				style.setAttribute("rel", "stylesheet");
 				style.setAttribute("href", githubMasterUrl);
 				head.appendChild(style);
-
 			}else{
 				// expect styles to be in the document
 				this.isDevelopment = true;
@@ -478,7 +477,6 @@ namespace cf {
 
 			// add new tags to the flow
 			this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
-			console.log(this.tags);
 			//this.flowManager.startFrom ?
 		}
 

@@ -74,6 +74,10 @@ namespace cf {
 			return "group";
 		}
 
+		public get label (): string{
+			return "";
+		}
+
 		public get name (): string{
 			return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
 		}
@@ -82,8 +86,8 @@ namespace cf {
 			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
 		}
 
-		public get label (): string{
-			return this.elements[0].label;
+		public get id (): string{
+			return "tag-group";
 		}
 
 		public get question():string{
