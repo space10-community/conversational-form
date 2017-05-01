@@ -3624,7 +3624,7 @@ var cf;
         ChatResponse.prototype.updateThumbnail = function (src) {
             this.image = src;
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
-            thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+            thumbEl.style.backgroundImage = "url('" + this.image + "')";
         };
         ChatResponse.prototype.setLinkToOtherReponse = function (response) {
             // link reponse to another one, keeping the update circle complete.
@@ -3717,7 +3717,10 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb style=\"background-image: url(\"" + this.image + "\")\"></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"' + (this.isRobotReponse ? \"robot\" : \"user\") + '\">" +
+                "<thumb style=\"background-image: url(' + this.image + ')\"></thumb>" +
+                "<text>' + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + '</text>" +
+                "</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
