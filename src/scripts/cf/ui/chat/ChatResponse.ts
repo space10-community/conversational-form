@@ -197,6 +197,8 @@ namespace cf {
 			setTimeout(() => {
 				this.setValue();
 
+				this.updateThumbnail(this.image);
+
 				if(this.isRobotReponse || options.response != null){
 					// Robot is pseudo thinking, can also be user -->
 					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
@@ -220,10 +222,10 @@ namespace cf {
 
 		// template, can be overwritten ...
 		public getTemplate () : string {
-			return `<cf-chat-response class="' + (this.isRobotReponse ? "robot" : "user") + '">` +
-				`<thumb style="background-image: url(' + this.image + ')"></thumb>` +
-				`<text>' + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + '</text>`+
-			`</cf-chat-response>`;
+			return '<cf-chat-response class="' + (this.isRobotReponse ? "robot" : "user") + '">' +
+				'<thumb></thumb>' +
+				'<text>' + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + '</text>'+
+			'</cf-chat-response>';
 		}
 	}
 }
