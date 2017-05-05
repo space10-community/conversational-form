@@ -80,15 +80,20 @@ namespace cf {
 				this.onUserWantsToEditTag(currentTag);
 			}else{
 				// robot response
-				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
-				if(this.currentUserResponse){
-					// linked, but only if we should not ignore existing tag
-					this.currentUserResponse.setLinkToOtherReponse(robot);
-					robot.setLinkToOtherReponse(this.currentUserResponse);
-				}
+				setTimeout(() => {
+					const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
+					if(this.currentUserResponse){
+						// linked, but only if we should not ignore existing tag
+						this.currentUserResponse.setLinkToOtherReponse(robot);
+						robot.setLinkToOtherReponse(this.currentUserResponse);
+					}
 
-				// user response, create the waiting response
-				this.currentUserResponse = this.createResponse(false, currentTag);
+					// user response, create the waiting response
+					setTimeout(() => {
+						this.currentUserResponse = this.createResponse(false, currentTag);
+
+					}, 200);
+				}, this.responses.length === 0 ? 500 : 0);
 			}
 		}
 
