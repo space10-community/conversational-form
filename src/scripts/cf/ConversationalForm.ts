@@ -421,7 +421,7 @@ namespace cf {
 				this.flowManager.start();
 
 			if(!this.tags || this.tags.length == 0){
-				// no tags, so just so the input
+				// no tags, so just show the input
 				this.userInput.visible = true;
 			}
 		}

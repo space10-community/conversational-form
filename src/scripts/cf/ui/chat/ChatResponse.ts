@@ -47,6 +47,7 @@ namespace cf {
 
 		public set visible(value: boolean){
 			if(value){
+				this.el.offsetWidth;
 				this.el.classList.add("show");
 			}else{
 				this.el.classList.remove("show");
