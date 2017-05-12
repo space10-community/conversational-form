@@ -22,25 +22,26 @@
 
 
 			<form id="form">
-
-				<fieldset cf-questions="Ready to try a conditional flow?">
-					<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
-					<label for="intro-yes">Yes</label>
+				<div id="test-value" cf-questions="Ready to try a conditional flow?">
+					<label for="intro-yes">Yes
+						<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+					</label>
 
 					<input type="radio" name="cfc-intro" id="intro-no" value="no">
 					<label for="intro-no">No thanks</label>
 
 					<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
 					<label for="intro-disabled">Disabled..</label>
-				</fieldset>
+				</div>
 
 				<input
 					type="text"
+					id="gr8"
 					name="cfc-step1"
-					cf-questions="Conditional flow pre, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
+					cf-questions="Conditional >{nope1}< >{test-value}< flow pre, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
 					cf-conditional-cfc-intro="yes" />
 
-				<fieldset cf-questions="<strong>{previous-answer}!</strong> Please choose a path.">
+				<fieldset cf-questions="<strong>{gr8}!</strong> Please choose a path.">
 					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$||great">
 					<label for="path-a">Path A</label>
 

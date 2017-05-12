@@ -107,7 +107,7 @@ namespace cf {
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
-		private chatList: ChatList;
+		public chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;

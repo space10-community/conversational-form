@@ -163,6 +163,7 @@ namespace cf {
 		}
 
 		public reset(){
+			this._values = [];
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ITag = <ITag>this.elements[i];
 				element.reset();

@@ -155,6 +155,18 @@ namespace cf {
 		}
 
 		/**
+		* @name clearFrom
+		* remove responses, this usually happens if a user jumps back to a conditional element
+		*/
+		public clearFrom(index: number): void {
+			index += index % 2; // round up so we dont remove the user response element
+			while(this.responses.length > index){
+				let element: ChatResponse = this.responses.pop();
+				element.dealloc();
+			}
+		}
+
+		/**
 		* @name setCurrentUserResponse
 		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
 		* reponse: FlowDTO
