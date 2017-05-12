@@ -62,6 +62,8 @@ namespace cf {
 			this._list = options.list;
 			this._tag = options.tag;
 			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
+
+			this.updateThumbnail(this.image);
 		}
 
 		public setValue(dto: FlowDTO = null){
@@ -117,7 +119,7 @@ namespace cf {
 		public updateThumbnail(src: string){
 			this.image = src;
 			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
-			thumbEl.style.backgroundImage = "url(" + this.image + ")";
+			thumbEl.style.backgroundImage = 'url("' + this.image + '")';
 		}
 
 		public setLinkToOtherReponse(response: ChatResponse){
@@ -240,7 +242,7 @@ namespace cf {
 		// template, can be overwritten ...
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotReponse ? "robot" : "user") + `">
-				<thumb style="background-image: url('` + this.image + `')"></thumb>
+				<thumb></thumb>
 				<text>` + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + `</text>
 			</cf-chat-response>`;
 		}
