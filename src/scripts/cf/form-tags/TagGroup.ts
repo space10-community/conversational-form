@@ -13,6 +13,7 @@ namespace cf {
 	// interface
 	export interface ITagGroupOptions{
 		elements: Array <ITag>;
+		fieldset?: HTMLFieldSetElement;
 	}
 
 	export interface ITagGroup extends ITag{
@@ -31,12 +32,14 @@ namespace cf {
 
 		private onInputKeyChangeCallback: () => void;
 		private _values: Array<string>;
+		private questions: Array<string>; // can also be set through `fieldset` cf-questions="..."` attribute.
 		
 		/**
 		* Array checked/choosen ITag's
 		*/
 		private _activeElements: Array<ITag>;
 		private _eventTarget: EventDispatcher;
+		private _fieldset: HTMLFieldSetElement;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -72,19 +75,24 @@ namespace cf {
 			return "group";
 		}
 
-		public get name (): string{
-			return this.elements[0].name;
+		public get label (): string{
+			return "";
 		}
 
-		public get label (): string{
-			return this.elements[0].label;
+		public get name (): string{
+			return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
+		}
+
+		public get id (): string{
+			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
 		}
 
 		public get question():string{
 			// check if elements have the questions, else fallback
-			let tagQuestion: string = this.elements[0].question;
-
-			if(tagQuestion){
+			if(this.questions && this.questions.length > 0){
+				return this.questions[Math.floor(Math.random() * this.questions.length)];
+			}else if(this.elements[0] && this.elements[0].question){
+				let tagQuestion: string = this.elements[0].question;
 				return tagQuestion;
 			}else{
 				// fallback to robot response from dictionary
@@ -127,6 +135,13 @@ namespace cf {
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
+			
+			// set wrapping element
+			this._fieldset = options.fieldset;
+			if(this._fieldset && this._fieldset.getAttribute("cf-questions")){
+				this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+			}
+
 			if(ConversationalForm.illustrateAppFlow)
 				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
@@ -144,6 +159,14 @@ namespace cf {
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ITag = <ITag>this.elements[i];
 				element.refresh();
+			}
+		}
+
+		public reset(){
+			this._values = [];
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.reset();
 			}
 		}
 

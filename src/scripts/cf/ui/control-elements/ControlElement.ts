@@ -101,7 +101,10 @@ namespace cf {
 		}
 
 		public set highlight(value: boolean){
-			this.el.classList.toggle("highlight", value);
+			if(value)
+				this.el.classList.add("highlight");
+			else
+				this.el.classList.remove("highlight");
 		}
 	
 		public get focus(): boolean{

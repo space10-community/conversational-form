@@ -6,14 +6,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
-
-
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-		
 	</head>
+
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
+
+		<script>
+			
+		</script>
+
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -64,24 +66,47 @@
 
 				<article>
 					<h1 id="writer">
-						Init Conversational Form with jQuery
+						Value piping
 					</h1>
 					<h2>
-						jQuery plugin
+						Use {id} to pipe values across cf-questions
 					</h2>
 				</article>
 			</section>
 
 			<section role="form">
 				<div class="form-outer">
+					<form id="form" cf-form>
+						<input
+							id="nope1"
+							type="text"
+							cf-questions="You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad."
+							/>
 
-					<form id="form">
-						<label>
-							Text label..
-							<input type="text" cf-questions="I was started via jQuery API" />
-						</label>
+						<fieldset id="test-value" cf-questions="Ready >{nope1}< to try a conditional flow?">
+							<label for="intro-yes">Yes
+								<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+							</label>
+
+							<input type="radio" name="cfc-intro" id="intro-no" value="no">
+							<label for="intro-no">No thanks</label>
+
+							<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
+							<label for="intro-disabled">Disabled..</label>
+						</fieldset>
+
+						<input
+							id="nope2"
+							type="text"
+							cf-questions="value: {nope1}, value: {test-value}"
+							/>
+
+						<input
+							id="nope3"
+							type="text"
+							cf-questions="You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad."
+							/>
 					</form>
-
 				</div>
 			</section>
 
@@ -90,23 +115,7 @@
 			</section>
 		</main>
 
-
-
 		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
 		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
-		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method from jQuery init.");
-					}
-				});
-			})();
-		</script>
-
 	</body>
 </html>

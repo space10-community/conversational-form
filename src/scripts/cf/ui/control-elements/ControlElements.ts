@@ -29,6 +29,7 @@ namespace cf {
 		private infoElement: HTMLElement;
 		private currentControlElement: IControlElement;
 
+		private animateInFromReponseTimer: number = 0;
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
 		private columnIndex: number = 0;
@@ -170,7 +171,10 @@ namespace cf {
 		}
 
 		private onChatReponsesUpdated(event:CustomEvent){
-			this.animateElementsIn();
+			clearTimeout(this.animateInFromReponseTimer);
+			this.animateInFromReponseTimer = setTimeout(() => {
+				this.animateElementsIn();
+			}, 500);
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){

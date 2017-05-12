@@ -77,7 +77,7 @@ class ConversationalFormDocs{
 
 			this.introTimer = setTimeout(() => {
 
-				document.getElementById("form").classList.add('show');
+				document.querySelector("section[role='form']").classList.add('show');
 				document.getElementById("cf-toggle-btn").classList.add('show');
 
 				this.introTimer = setTimeout(() => {
@@ -135,8 +135,7 @@ class ConversationalFormDocs{
 				});
 			}
 
-			if(this.cf.focus)
-				this.cf.focus()
+			this.cf.focus();
 
 			setTimeout(() =>{
 				this.el.classList.remove('menu-toggle');

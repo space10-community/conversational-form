@@ -158,20 +158,38 @@ namespace cf {
 			}
 		}
 
+		/**
+		* @name editTag
+		* @param tagWithConditions, the tag containing conditions (can contain multiple)
+		* @param tagConditions, the conditions of the tag to be checked
+		*/
+
+		private activeConditions: any;
 		public areConditionsInFlowFullfilled(tagWithConditions: ITag, tagConditions: Array<ConditionalValue> ): boolean{
+			if(!this.activeConditions){
+				// we don't use this (yet), it's only to keep track of active conditions
+				this.activeConditions = [];
+			}
+
+			let numConditionsFound: number = 0;
+			// find out if tagWithConditions fullfills conditions
 			for(var i = 0; i < this.tags.length; i++){
-				// loop through tags to look for conditions
 				const tag: ITag | ITagGroup = this.tags[i];
 				if(tag !== tagWithConditions){
+					// check if tags are fullfilled
 					for (var j = 0; j < tagConditions.length; j++) {
-						//
-						let condition: ConditionalValue = tagConditions[j];
-						if("cf-conditional-"+tag.name === condition.key){
+						let tagCondition: ConditionalValue = tagConditions[j];
+						if("cf-conditional-"+tag.name === tagCondition.key){
+							// key found, so check condition
 							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
-							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, condition);
+							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, tagCondition);
 							if(areConditionsMeet){
+								this.activeConditions[tag.id || tag.name] = tagConditions;
 								// conditions are meet
-								return true;
+								if(++numConditionsFound == tagConditions.length){
+									console.log("conditions (active) >>", this.activeConditions);
+									return true;
+								}
 							}
 						}
 					}
@@ -216,7 +234,7 @@ namespace cf {
 					this.step = this.savedStep;
 				}
 			}
-			
+
 			this.savedStep = -1;//reset saved step
 
 			this.step++;
@@ -259,9 +277,23 @@ namespace cf {
 		*/
 		public editTag(tag: ITag): void {
 			this.ignoreExistingTags = false;
-			this.savedStep = this.step - 1;
+			this.savedStep = this.step - 1;//save step
 			this.step = this.tags.indexOf(tag); // === this.currentTag
 			this.validateStepAndUpdate();
+
+			if(Object.keys(this.activeConditions).length > 0){
+				this.savedStep = -1;//don't save step, as we wont return
+
+				// clear chatlist.
+				this.cfReference.chatList.clearFrom(this.step + 1);
+
+				//reset from active tag, brute force
+				const editTagIndex: number = this.tags.indexOf(tag);
+				for(var i = editTagIndex + 1; i < this.tags.length; i++){
+					const tag: ITag | ITagGroup = this.tags[i];
+					tag.reset();
+				}
+			}
 		}
 
 		private setTags(tags: Array<ITag | ITagGroup>){

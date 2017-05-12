@@ -27,12 +27,14 @@ namespace cf {
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		type: string,
 		name: string,
+		id: string,
 		label: string,
 		question: string,
 		errorMessage: string,
 		setTagValueAndIsValid(dto: FlowDTO): boolean;
 		dealloc(): void;
 		refresh(): void;
+		reset(): void;
 		value:string | Array <string>;
 		inputPlaceholder?: string;
 		required: boolean;
@@ -84,6 +86,7 @@ namespace cf {
 		public flowManager: FlowManager
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		public defaultValue: string | number;
+		public initialDefaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
@@ -161,6 +164,7 @@ namespace cf {
 
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
+			this.initialDefaultValue = this.domElement.value;
 
 			this.changeCallback = this.onDomElementChange.bind(this);
 			this.domElement.addEventListener("change", this.changeCallback, false);
@@ -208,6 +212,7 @@ namespace cf {
 
 		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
 			if(typeof tagValue === "string"){
+				// tag value is a string
 				const value: string = <string> tagValue;
 				let isValid: boolean = false;
 				for (var i = 0; i < condition.conditionals.length; i++) {
@@ -227,12 +232,11 @@ namespace cf {
 				if(!tagValue){
 					return false;
 				}else{
-					// check arrays..
+					// tag value is an array
 					let isValid: boolean = false;
 					for (var i = 0; i < condition.conditionals.length; i++) {
 						var conditional: string | RegExp = condition.conditionals[i];
 						isValid = (<string[]>tagValue).toString() == conditional.toString();
-						console.log("=?", isValid);
 
 						if(isValid) break;
 					}
@@ -308,6 +312,15 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
+		}
+
+		public reset(){
+			this.refresh();
+
+			// this.disabled = false;
+			
+			// reset to initial value.
+			this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
 		}
 
 		public refresh(){
@@ -447,7 +460,6 @@ namespace cf {
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
-
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
 				if(this.domElement.getAttribute("cf-input-placeholder"))
@@ -491,6 +503,7 @@ namespace cf {
 						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
 							labelTags = [(<HTMLLabelElement>parentDomNode)];
+						
 					}else if(labelTags.length > 0){
 						// check for "for" attribute
 						for (let i = 0; i < labelTags.length; i++) {
@@ -499,13 +512,11 @@ namespace cf {
 								this._label = Helpers.getInnerTextOfElement(label);
 							}
 						}
-
-						// no "for"" attribute present but label tag found
-						if(!this._label && labelTags[0]){
-							this._label = Helpers.getInnerTextOfElement(labelTags[0]);
-						}
 					}
 
+					if(!this._label && labelTags[0]){
+						this._label = Helpers.getInnerTextOfElement(labelTags[0]);
+					}
 				}
 			}
 		}

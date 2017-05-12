@@ -16,7 +16,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://conversational-form-092-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
@@ -57,7 +57,7 @@ Only parameter `formEl` is mandatory for the object you pass to the constructor.
 ```javascript
 new cf.ConversationalForm({
 	// HTMLFormElement
-	formEl: HTMLFormElement;
+	formEl/*: HTMLFormElement;*/
 });
 ```
 
@@ -65,46 +65,46 @@ new cf.ConversationalForm({
 ```javascript
 new cf.ConversationalForm({
 	// HTMLFormElement
-	formEl: HTMLFormElement;
+	formEl,/*: HTMLFormElement;*/
 
 	// context (HTMLElement) of where to append the ConversationalForm (see also cf-context attribute)
-	context?: HTMLElement;
+	context,/*?: HTMLElement;*/
 
 	// pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
-	tags?: Array<ITag>;
+	tags,/*?: Array<ITag>;*/
 
 	// overwrite the default user Dictionary items
-	dictionaryData?: Object;
+	dictionaryData,/*?: Object;*/
 
 	// overwrite the default robot Dictionary items
-	dictionaryRobot?: Object;
+	dictionaryRobot,/*?: Object;*/
 
 	//base64 || image url // overwrite user image, without overwritting the user dictionary
-	userImage?: string;
+	userImage,/*?: string;*/
 
 	// base64 || image url // overwrite robot image, without overwritting the robot dictionary
-	robotImage?: string;
+	robotImage,/*?: string;*/
 
 	// custom submit callback if button[type=submit] || form.submit() is not wanted..
-	submitCallback?: () => void | HTMLButtonElement;
+	submitCallback,/*?: () => void | HTMLButtonElement;*/
 
 	// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
-	loadExternalStyleSheet?: boolean;
+	loadExternalStyleSheet,/*?: boolean;*/
 
 	// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
-	preventAutoAppend?: boolean;
+	preventAutoAppend,/*?: boolean;*/
 
 	// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
-	preventAutoStart?: boolean;
+	preventAutoStart,/*?: boolean;*/
 
 	// optional horizontal scroll accerlation value, 0-1
-	scrollAccerlation?: number;
+	scrollAccerlation,/*?: number;*/
 
 	// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
-	flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
+	flowStepCallback,/*?: (dto: FlowDTO, success: () => void, error: () => void) => void;*/
 
 	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
-	eventDispatcher?: cf.EventDispatcher;
+	eventDispatcher,/*?: cf.EventDispatcher;*/
 });
 ```
 
@@ -155,12 +155,19 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 ```
 
 ### {One way value-binding} with cf-questions:
-For cui-questions, add {previous-answer} to insert the value from the previous user-answer.
+For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.
 
-previous input could be firstname:
+using the {previous-answer} mapping:
 ```html
 <input type="text" cf-questions="What is your firstname?">
 <input type="text" cf-questions="Hello {previous-answer}, what is your lastname?">
+```
+
+Using the ID attribute, this will loop through all submitted tags and map:
+```html
+<input type="text" cf-questions="What is your first name?" id="firstname">
+<input type="text" cf-questions="What is your last name?" id="lastname">
+<input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?">
 ```
 
 previous input could be a select:option list with countries.
@@ -201,6 +208,15 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
+Be aware that if you create mutiple Conversational Forms within one page then the reference will be overwritten with latest created.
+Use `windo`.ConversationalForm[form["cf-create-id"]]?` or just manually instantiate the form and user the returned instance.
+
+### addTags
+Add tags to the form, see examples/formless.html for how this can be achived.
+````javascript
+window.ConversationalForm.addTags(tagsData/*: Array<DataTag>*/, addAfterCurrentStep/*: boolean = true*/, atIndex/*: number = -1*/);
+````
+
 ### focus
 Sets focus on Conversational Form'
 ````javascript
@@ -234,7 +250,7 @@ window.ConversationalForm.remove();
 get the FormData object of mapped form element, pass in true to get a serialized object back (JSON).
 
 ```javascript
-window.ConversationalForm.getFormData(serialized: boolean);
+window.ConversationalForm.getFormData(serialized);
 ```
 
 ### remapTagsAndStartFrom: 

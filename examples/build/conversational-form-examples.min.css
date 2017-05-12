@@ -1,1 +1,1 @@
-.form-outer>h2{position:absolute;bottom:20px;left:20px}
+.form-outer{display:-webkit-box;display:-moz-box;display:-webkit-flex;display:-ms-flexbox;display:box;display:flex}.form-outer>#form{-webkit-align-self:flex-end;align-self:flex-end;-ms-flex-item-align:end}.form-outer>h2{position:absolute;bottom:20px;left:20px}

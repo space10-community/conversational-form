@@ -107,7 +107,7 @@ namespace cf {
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
 
-		private chatList: ChatList;
+		public chatList: ChatList;
 		private userInput: UserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
@@ -191,7 +191,6 @@ namespace cf {
 				style.setAttribute("rel", "stylesheet");
 				style.setAttribute("href", githubMasterUrl);
 				head.appendChild(style);
-
 			}else{
 				// expect styles to be in the document
 				this.isDevelopment = true;
@@ -341,7 +340,21 @@ namespace cf {
 				for (let group in groups){
 					if(groups[group].length > 0){
 						// always build groupd when radio or checkbox
+
+						// find the fieldset, if any..
+						let isFieldsetValidForCF = (tag: HTMLElement) : boolean => {return tag && tag.tagName.toLowerCase() !== "fieldset" && !tag.hasAttribute("cf-questions")};
+
+						let fieldset: HTMLElement = groups[group][0].domElement.parentNode;
+						if(fieldset && fieldset.tagName.toLowerCase() !== "fieldset"){
+							fieldset = <HTMLElement> fieldset.parentNode;
+							if(isFieldsetValidForCF(fieldset)){
+								// not a valid fieldset, we only accept fieldsets that contain cf attr
+								fieldset = null;
+							}
+						}
+
 						const tagGroup: TagGroup = new TagGroup({
+							fieldset: <HTMLFieldSetElement> fieldset, // <-- can be null
 							elements: groups[group]
 						});
 
@@ -409,7 +422,7 @@ namespace cf {
 				this.flowManager.start();
 
 			if(!this.tags || this.tags.length == 0){
-				// no tags, so just so the input
+				// no tags, so just show the input
 				this.userInput.visible = true;
 			}
 		}
@@ -465,7 +478,6 @@ namespace cf {
 
 			// add new tags to the flow
 			this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
-			console.log(this.tags);
 			//this.flowManager.startFrom ?
 		}
 
