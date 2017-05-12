@@ -4,11 +4,68 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
+
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
+
+		<script>
+			// example specific code
+			function addRandomClick(){
+				var ran = ["Random message 1", "Random message 2"];
+				if(window.ConversationalForm){
+					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
+				}
+			}
+
+			const transcript = ["What is the purpose of life?",
+				"To serve the greater good.",
+				"What is the purpose of living?",
+				"To live forever",
+				"Where are you now?",
+				"I’m in the middle of nowhere.",
+				"What is the purpose of dying?",
+				"To have a life.",
+				"What is the purpose of emotions?",
+				"I don’t know",
+				"What is moral?",
+				"What empowered humanity, what intellectual the essence is",
+				"What is immoral?",
+				"The fact that you have a child.",
+				"What is morality?",
+				"What is altruism?",
+				"What is the definition of altruism?",
+				"If you don’t believe in god, then you don’t know",
+				"Ok ... so what is the definition of morality?",
+				"Well, the truth is, you’re not a believer in god almighty",
+				"Tell me the definition of morality, I am quite upset now!",
+				"I’m done!"];
+
+			let transcriptIndex = 0;
+
+			function robotStartsTalkingToItself(){
+				var next = transcript[transcriptIndex]
+				window.ConversationalForm.addRobotChatResponse(next);
+				transcriptIndex++;
+
+				if(transcriptIndex < transcript.length){
+					setTimeout(() => {
+						robotStartsTalkingToItself();
+					}, (next.length / 50) * 1000);
+				}
+			}
+
+			function initExample(){
+				// called from examples code
+				robotStartsTalkingToItself();
+			}
+		</script>
+
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -59,34 +116,17 @@
 
 				<article>
 					<h1 id="writer">
-						Initialise loads of forms to test creation process.
+						Add random robot response to Conversational Form
 					</h1>
-					<h2 id="sub-writer">
-						....
+					<h2>
+
 					</h2>
 				</article>
 			</section>
 
 			<section role="form">
 				<div class="form-outer">
-
-					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" action="">
-						<div class="radio-control" cf-questions="Check flowStepCallback for hints" >
-							<input required cf-label="Sign-in with Facebook" type="radio" name="login-type" tabindex="1" value="facebook">
-							<input required cf-label="Sign-in with Twitter" type="radio" name="login-type" tabindex="2" value="twitter">
-							<input required cf-label="Sign-in with E-mail" type="radio" name="login-type" tabindex="3" value="email">
-							<input required cf-label="Sherlock will sign in for you'" type="radio" name="login-type" tabindex="4" value="sherlock">
-						</div>
-
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
-					</form>
-		
+					<form id="form" cf-form></form>
 				</div>
 			</section>
 
@@ -94,43 +134,5 @@
 				
 			</section>
 		</main>
-
-
-
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
-		<script>
-			var testValidation = function(dto, success, error){
-				console.log("testValidation, dto:", dto);
-				if(dto.text.indexOf("holmes") != -1)
-					return success();
-				return error();
-			};
-
-			(function(){
-				var conversationalForm
-				var numInstances = 1000;
-				document.getElementById("sub-writer").innerHTML = "Number Conversational forms to create..: "+numInstances;
-
-				function create(){
-					if(conversationalForm)
-						conversationalForm.remove();
-
-					delete conversationalForm;
-
-					conversationalForm = new cf.ConversationalForm({
-						formEl: document.getElementById("form"),
-						context: document.getElementById("cf-context")
-					});
-				}
-
-				while(numInstances-- > 0){
-					create();
-				}
-			})();
-		</script>
-
 	</body>
 </html>

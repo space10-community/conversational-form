@@ -4,8 +4,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
@@ -59,10 +61,10 @@
 
 				<article>
 					<h1 id="writer">
-						Auto form detection
+						Initialise and remove 100 Conversational Form instances to test creation process.
 					</h1>
-					<h2>
-						....
+					<h2 id="sub-writer">
+						Check dev tools and output for performance marker.
 					</h2>
 				</article>
 			</section>
@@ -71,10 +73,22 @@
 				<div class="form-outer">
 
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form>
-						<input type="text" name="hello" value="" cf-questions="Hello, I was auto-instantiated" id="password">
+					<form id="form" action="">
+						<div class="radio-control" cf-questions="Just some radio buttons" >
+							<input required cf-label=".." disabled type="radio" name="login-type" tabindex="1" value="facebook">
+							<input required cf-label="..." disabled type="radio" name="login-type" tabindex="2" value="twitter">
+							<input required cf-label="...." disabled type="radio" name="login-type" tabindex="3" value="email">
+							<input required cf-label=".....'" disabled type="radio" name="login-type" tabindex="4" value="sherlock">
+						</div>
+
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
+						<input type="text" cf-error="need to be between 5-10 chars" min="5" max="10" name="maxmin" value="">
 					</form>
-						
+		
 				</div>
 			</section>
 
@@ -83,10 +97,34 @@
 			</section>
 		</main>
 
+		<script>
+			function initExample(){
+				var t0 = performance.now();
+				var conversationalForm;
+				var numInstances = 100;
 
+				function create(){
+					if(conversationalForm)
+						conversationalForm.remove();
 
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
+					delete conversationalForm;
 
+					conversationalForm = window.cf.ConversationalForm.startTheConversation({
+						formEl: document.getElementById("form"),
+						context: document.getElementById("cf-context")
+					});
+				}
+
+				while(numInstances-- > 0){
+					create();
+				}
+
+				var t1 = performance.now();
+				var performanceString = "Creation of 100 Conversational Form instances , took " + Math.round(t1 - t0) + " milliseconds.";
+				console.log(performanceString);
+				window.ConversationalForm.addRobotChatResponse(performanceString);
+				window.ConversationalForm.addRobotChatResponse("Why would you create 100 instances...?");
+			};
+		</script>
 	</body>
 </html>

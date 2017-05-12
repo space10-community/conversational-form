@@ -4,22 +4,13 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
-
-		<script>
-			function submitMethod(){
-				console.log("formdata:", window.ConversationalForm.getFormData())
-				console.log("formdata serialized:", window.ConversationalForm.getFormData(true))
-				alert("Check dev console")
-
-				return false;
-			}
-		</script>
-
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -70,7 +61,7 @@
 
 				<article>
 					<h1 id="writer">
-						Distribution files
+						Auto form detection
 					</h1>
 					<h2>
 						....
@@ -82,10 +73,10 @@
 				<div class="form-outer">
 
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form onsubmit="return submitMethod();">
-						<input type="text" name="field-name" cf-questions="Fill out field to get Alert from callback method." />
+					<form id="form" cf-form>
+						<input type="text" name="hello" value="" cf-questions="Hello, I was auto-instantiated" id="password">
 					</form>
-
+						
 				</div>
 			</section>
 
@@ -93,10 +84,5 @@
 				
 			</section>
 		</main>
-
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
 	</body>
 </html>
