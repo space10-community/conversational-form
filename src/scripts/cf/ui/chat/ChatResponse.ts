@@ -113,7 +113,6 @@ namespace cf {
 			}else{
 				this.checkForEditMode();
 			}
-			
 		}
 
 		public updateThumbnail(src: string){
@@ -147,7 +146,7 @@ namespace cf {
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
 				
-				// look through IDs
+				// Piping, look through IDs, and map values to dynamics
 				const reponses: Array<ChatResponse> = this._list.getResponses();
 				for (var i = 0; i < reponses.length; i++) {
 					var response: ChatResponse = reponses[i];
