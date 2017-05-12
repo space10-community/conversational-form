@@ -341,19 +341,20 @@ namespace cf {
 					if(groups[group].length > 0){
 						// always build groupd when radio or checkbox
 
-						// find the fieldset
-						// TODO: look for cf attributes and ignore fieldset tag check
-						let fieldset: HTMLFieldSetElement = groups[group][0].domElement.parentNode;
-						if(fieldset){
-							if(fieldset.tagName.toLowerCase() !== "fieldset"){
-								fieldset = groups[group][0].parentNode;
-								if(fieldset && fieldset.tagName.toLowerCase() !== "fieldset"){
-									fieldset = null;
-								}
+						// find the fieldset, if any..
+						let isFieldsetValidForCF = (tag: HTMLElement) : boolean => {return tag && tag.tagName.toLowerCase() !== "fieldset" && !tag.hasAttribute("cf-questions")};
+
+						let fieldset: HTMLElement = groups[group][0].domElement.parentNode;
+						if(fieldset && fieldset.tagName.toLowerCase() !== "fieldset"){
+							fieldset = <HTMLElement> fieldset.parentNode;
+							if(isFieldsetValidForCF(fieldset)){
+								// not a valid fieldset, we only accept fieldsets that contain cf attr
+								fieldset = null;
 							}
 						}
 
 						const tagGroup: TagGroup = new TagGroup({
+							fieldset: <HTMLFieldSetElement> fieldset, // <-- can be null
 							elements: groups[group]
 						});
 
