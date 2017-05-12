@@ -357,6 +357,8 @@ var cf;
             var head = document.head || document.getElementsByTagName("head")[0];
             var script = document.createElement("script");
             script.type = "text/javascript";
+            script.async = true;
+            script.defer = true;
             script.onload = function () {
                 // we use https://github.com/Ranks/emojify.js as a standard
                 Helpers.emojilib = window[lib];
@@ -610,7 +612,10 @@ var cf;
                 return this.el.classList.contains("highlight");
             },
             set: function (value) {
-                this.el.classList.toggle("highlight", value);
+                if (value)
+                    this.el.classList.add("highlight");
+                else
+                    this.el.classList.remove("highlight");
             },
             enumerable: true,
             configurable: true
@@ -720,6 +725,7 @@ var cf;
 (function (cf) {
     var ControlElements = (function () {
         function ControlElements(options) {
+            this.animateInFromReponseTimer = 0;
             this.ignoreKeyboardInput = false;
             this.rowIndex = -1;
             this.columnIndex = 0;
@@ -841,7 +847,11 @@ var cf;
             }
         };
         ControlElements.prototype.onChatReponsesUpdated = function (event) {
-            this.animateElementsIn();
+            var _this = this;
+            clearTimeout(this.animateInFromReponseTimer);
+            this.animateInFromReponseTimer = setTimeout(function () {
+                _this.animateElementsIn();
+            }, 500);
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -1536,7 +1546,7 @@ var cf;
         function Dictionary(options) {
             // can be overwritten
             this.data = {
-                "user-image": "//conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
+                "user-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
                 "entry-not-found": "Dictionary item not found.",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
@@ -1553,7 +1563,7 @@ var cf;
             };
             // can be overwriten
             this.robotData = {
-                "robot-image": "//conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
+                "robot-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
                 "input": "Please write some text.",
                 "text": "Please write some text.",
                 "checkbox": "Select as many as you want.",
@@ -1682,6 +1692,7 @@ var cf;
     var Tag = (function () {
         function Tag(options) {
             this.domElement = options.domElement;
+            this.initialDefaultValue = this.domElement.value;
             this.changeCallback = this.onDomElementChange.bind(this);
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
@@ -1833,6 +1844,7 @@ var cf;
         };
         Tag.testConditions = function (tagValue, condition) {
             if (typeof tagValue === "string") {
+                // tag value is a string
                 var value = tagValue;
                 var isValid = false;
                 for (var i = 0; i < condition.conditionals.length; i++) {
@@ -1855,12 +1867,11 @@ var cf;
                     return false;
                 }
                 else {
-                    // check arrays..
+                    // tag value is an array
                     var isValid = false;
                     for (var i = 0; i < condition.conditionals.length; i++) {
                         var conditional = condition.conditionals[i];
                         isValid = tagValue.toString() == conditional.toString();
-                        console.log("=?", isValid);
                         if (isValid)
                             break;
                     }
@@ -1930,6 +1941,12 @@ var cf;
                 // console.warn("Tag is not valid!: "+ element);
                 return null;
             }
+        };
+        Tag.prototype.reset = function () {
+            this.refresh();
+            // this.disabled = false;
+            // reset to initial value.
+            this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
         };
         Tag.prototype.refresh = function () {
             // default value of Tag, check every refresh
@@ -2092,10 +2109,9 @@ var cf;
                                 this._label = cf.Helpers.getInnerTextOfElement(label);
                             }
                         }
-                        // no "for"" attribute present but label tag found
-                        if (!this._label && labelTags[0]) {
-                            this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
-                        }
+                    }
+                    if (!this._label && labelTags[0]) {
+                        this._label = cf.Helpers.getInnerTextOfElement(labelTags[0]);
                     }
                 }
             }
@@ -2133,6 +2149,9 @@ var cf;
             this.elements = options.elements;
             // set wrapping element
             this._fieldset = options.fieldset;
+            if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
+                this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+            }
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
         }
@@ -2177,6 +2196,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "label", {
+            get: function () {
+                return "";
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TagGroup.prototype, "name", {
             get: function () {
                 return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
@@ -2191,18 +2217,14 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TagGroup.prototype, "label", {
-            get: function () {
-                return this.elements[0].label;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(TagGroup.prototype, "question", {
             get: function () {
                 // check if elements have the questions, else fallback
-                var tagQuestion = this.elements[0].question;
-                if (tagQuestion) {
+                if (this.questions && this.questions.length > 0) {
+                    return this.questions[Math.floor(Math.random() * this.questions.length)];
+                }
+                else if (this.elements[0] && this.elements[0].question) {
+                    var tagQuestion = this.elements[0].question;
                     return tagQuestion;
                 }
                 else {
@@ -2266,6 +2288,13 @@ var cf;
             for (var i = 0; i < this.elements.length; i++) {
                 var element = this.elements[i];
                 element.refresh();
+            }
+        };
+        TagGroup.prototype.reset = function () {
+            this._values = [];
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                element.reset();
             }
         };
         TagGroup.prototype.getGroupTagType = function () {
@@ -3172,6 +3201,8 @@ var cf;
         KEY_CHANGE: "cf-input-key-change",
         CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
         HEIGHT_CHANGE: "cf-input-height-change",
+        FOCUS: "cf-input-focus",
+        BLUR: "cf-input-blur",
     };
     // class
     var UserInput = (function (_super) {
@@ -3228,10 +3259,15 @@ var cf;
         });
         Object.defineProperty(UserInput.prototype, "visible", {
             set: function (value) {
-                if (!this.el.classList.contains("animate-in") && value)
-                    this.el.classList.add("animate-in");
-                else if (this.el.classList.contains("animate-in") && !value)
+                var _this = this;
+                if (!this.el.classList.contains("animate-in") && value) {
+                    setTimeout(function () {
+                        _this.el.classList.add("animate-in");
+                    }, 0);
+                }
+                else if (this.el.classList.contains("animate-in") && !value) {
                     this.el.classList.remove("animate-in");
+                }
             },
             enumerable: true,
             configurable: true
@@ -3279,6 +3315,9 @@ var cf;
                     text: this.getInputValue()
                 };
             }
+            // add current tag to DTO if not set
+            if (!value.tag)
+                value.tag = this.currentTag;
             value.input = this;
             value.tag = this.currentTag;
             return value;
@@ -3390,12 +3429,12 @@ var cf;
                 // initial height not set
                 this.initialInputHeight = this.inputElement.offsetHeight;
             }
+            this.setFocusOnInput();
         };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             // animate input field in
-            this.visible = true;
             this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
             // replace textarea and visa versa
@@ -3406,10 +3445,10 @@ var cf;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
             this.inputElement.value = "";
+            this.submitButton.classList.remove("loading");
             this.setPlaceholder();
             this.resetValue();
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
             this.controlElements.reset();
             if (this._currentTag.type == "group") {
                 this.buildControlElements(this._currentTag.elements);
@@ -3421,6 +3460,7 @@ var cf;
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
             setTimeout(function () {
+                _this.visible = true;
                 _this.disabled = false;
                 _this.onInputChange();
             }, 150);
@@ -3560,18 +3600,21 @@ var cf;
             }));
         };
         UserInput.prototype.windowFocus = function (event) {
-            if (!UserInput.preventAutoFocus)
-                this.setFocusOnInput();
+            this.setFocusOnInput();
         };
         UserInput.prototype.onInputBlur = function (event) {
             this._active = false;
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.BLUR));
         };
         UserInput.prototype.onInputFocus = function (event) {
             this._active = true;
             this.onInputChange();
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserInput.prototype.setFocusOnInput = function () {
-            this.inputElement.focus();
+            if (!UserInput.preventAutoFocus) {
+                this.inputElement.focus();
+            }
         };
         UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
@@ -3599,6 +3642,7 @@ var cf;
         };
         UserInput.prototype.doSubmit = function () {
             var dto = this.getFlowDTO();
+            this.submitButton.classList.add("loading");
             this.disabled = true;
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");
@@ -3671,6 +3715,7 @@ var cf;
             _this._list = options.list;
             _this._tag = options.tag;
             _this.textEl = _this.el.getElementsByTagName("text")[0];
+            _this.updateThumbnail(_this.image);
             return _this;
         }
         Object.defineProperty(ChatResponse.prototype, "tag", {
@@ -3685,7 +3730,10 @@ var cf;
                 return this.el.classList.contains("disabled");
             },
             set: function (value) {
-                this.el.classList.toggle("disabled", value);
+                if (value)
+                    this.el.classList.add("disabled");
+                else
+                    this.el.classList.remove("disabled");
             },
             enumerable: true,
             configurable: true
@@ -3693,6 +3741,7 @@ var cf;
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
                 if (value) {
+                    this.el.offsetWidth;
                     this.el.classList.add("show");
                 }
                 else {
@@ -3749,7 +3798,7 @@ var cf;
         ChatResponse.prototype.updateThumbnail = function (src) {
             this.image = src;
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
-            thumbEl.style.backgroundImage = "url(" + this.image + ")";
+            thumbEl.style.backgroundImage = 'url("' + this.image + '")';
         };
         ChatResponse.prototype.setLinkToOtherReponse = function (response) {
             // link reponse to another one, keeping the update circle complete.
@@ -3772,7 +3821,7 @@ var cf;
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-                // look through IDs
+                // Piping, look through IDs, and map values to dynamics
                 var reponses = this._list.getResponses();
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
@@ -3852,7 +3901,7 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb style=\"background-image: url(" + this.image + ")\"></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
@@ -3921,6 +3970,7 @@ var cf;
             }
         };
         ChatList.prototype.onFlowUpdate = function (event) {
+            var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var currentTag = event.detail.tag;
             if (this.currentResponse)
@@ -3932,14 +3982,18 @@ var cf;
             }
             else {
                 // robot response
-                var robot = this.createResponse(true, currentTag, currentTag.question);
-                if (this.currentUserResponse) {
-                    // linked, but only if we should not ignore existing tag
-                    this.currentUserResponse.setLinkToOtherReponse(robot);
-                    robot.setLinkToOtherReponse(this.currentUserResponse);
-                }
-                // user response, create the waiting response
-                this.currentUserResponse = this.createResponse(false, currentTag);
+                setTimeout(function () {
+                    var robot = _this.createResponse(true, currentTag, currentTag.question);
+                    if (_this.currentUserResponse) {
+                        // linked, but only if we should not ignore existing tag
+                        _this.currentUserResponse.setLinkToOtherReponse(robot);
+                        robot.setLinkToOtherReponse(_this.currentUserResponse);
+                    }
+                    // user response, create the waiting response
+                    setTimeout(function () {
+                        _this.currentUserResponse = _this.createResponse(false, currentTag);
+                    }, 200);
+                }, this.responses.length === 0 ? 500 : 0);
             }
         };
         /**
@@ -3990,6 +4044,17 @@ var cf;
                 chatResponse.show();
                 _this.scrollListTo(chatResponse);
             }, 0);
+        };
+        /**
+        * @name clearFrom
+        * remove responses, this usually happens if a user jumps back to a conditional element
+        */
+        ChatList.prototype.clearFrom = function (index) {
+            index += index % 2; // round up so we dont remove the user response element
+            while (this.responses.length > index) {
+                var element = this.responses.pop();
+                element.dealloc();
+            }
         };
         /**
         * @name setCurrentUserResponse
@@ -4198,19 +4263,29 @@ var cf;
             }
         };
         FlowManager.prototype.areConditionsInFlowFullfilled = function (tagWithConditions, tagConditions) {
+            if (!this.activeConditions) {
+                // we don't use this (yet), it's only to keep track of active conditions
+                this.activeConditions = [];
+            }
+            var numConditionsFound = 0;
+            // find out if tagWithConditions fullfills conditions
             for (var i = 0; i < this.tags.length; i++) {
-                // loop through tags to look for conditions
                 var tag = this.tags[i];
                 if (tag !== tagWithConditions) {
+                    // check if tags are fullfilled
                     for (var j = 0; j < tagConditions.length; j++) {
-                        //
-                        var condition = tagConditions[j];
-                        if ("cf-conditional-" + tag.name === condition.key) {
+                        var tagCondition = tagConditions[j];
+                        if ("cf-conditional-" + tag.name === tagCondition.key) {
+                            // key found, so check condition
                             var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
-                            var areConditionsMeet = cf.Tag.testConditions(flowTagValue, condition);
+                            var areConditionsMeet = cf.Tag.testConditions(flowTagValue, tagCondition);
                             if (areConditionsMeet) {
+                                this.activeConditions[tag.id || tag.name] = tagConditions;
                                 // conditions are meet
-                                return true;
+                                if (++numConditionsFound == tagConditions.length) {
+                                    console.log("conditions (active) >>", this.activeConditions);
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -4283,9 +4358,20 @@ var cf;
         */
         FlowManager.prototype.editTag = function (tag) {
             this.ignoreExistingTags = false;
-            this.savedStep = this.step - 1;
+            this.savedStep = this.step - 1; //save step
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
+            if (Object.keys(this.activeConditions).length > 0) {
+                this.savedStep = -1; //don't save step, as we wont return
+                // clear chatlist.
+                this.cfReference.chatList.clearFrom(this.step + 1);
+                //reset from active tag, brute force
+                var editTagIndex = this.tags.indexOf(tag);
+                for (var i = editTagIndex + 1; i < this.tags.length; i++) {
+                    var tag_1 = this.tags[i];
+                    tag_1.reset();
+                }
+            }
         };
         FlowManager.prototype.setTags = function (tags) {
             this.tags = tags;
@@ -4550,18 +4636,18 @@ var cf;
                 for (var group in groups) {
                     if (groups[group].length > 0) {
                         // always build groupd when radio or checkbox
-                        // find the fieldset
-                        // TODO: look for cf attributes and ignore fieldset tag check
+                        // find the fieldset, if any..
+                        var isFieldsetValidForCF = function (tag) { return tag && tag.tagName.toLowerCase() !== "fieldset" && !tag.hasAttribute("cf-questions"); };
                         var fieldset = groups[group][0].domElement.parentNode;
-                        if (fieldset) {
-                            if (fieldset.tagName.toLowerCase() !== "fieldset") {
-                                fieldset = groups[group][0].parentNode.parentNode;
-                                if (fieldset && fieldset.tagName.toLowerCase() !== "fieldset") {
-                                    fieldset = null;
-                                }
+                        if (fieldset && fieldset.tagName.toLowerCase() !== "fieldset") {
+                            fieldset = fieldset.parentNode;
+                            if (isFieldsetValidForCF(fieldset)) {
+                                // not a valid fieldset, we only accept fieldsets that contain cf attr
+                                fieldset = null;
                             }
                         }
                         var tagGroup = new cf_1.TagGroup({
+                            fieldset: fieldset,
                             elements: groups[group]
                         });
                         // remove the tags as they are now apart of a group
@@ -4614,7 +4700,7 @@ var cf;
             if (!this.preventAutoStart)
                 this.flowManager.start();
             if (!this.tags || this.tags.length == 0) {
-                // no tags, so just so the input
+                // no tags, so just show the input
                 this.userInput.visible = true;
             }
         };
@@ -4666,7 +4752,6 @@ var cf;
             tags = this.setupTagGroups(tags);
             // add new tags to the flow
             this.tags = this.flowManager.addTags(tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex);
-            console.log(this.tags);
             //this.flowManager.startFrom ?
         };
         /**

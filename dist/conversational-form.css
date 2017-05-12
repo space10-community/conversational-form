@@ -12,16 +12,12 @@
   margin: auto;
   background: #fff;
   opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
   will-change: opacity;
   padding: 20px 0px;
 }
 .conversational-form *,
 .conversational-form *:before,
 .conversational-form *:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   outline: none;
 }
@@ -30,10 +26,6 @@
   width: 100%;
   height: 50px;
   pointer-events: none;
-  background: -webkit-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
-  background: -moz-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
-  background: -o-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
-  background: -ms-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
   background: linear-gradient(to bottom, #fff 0%, rgba(255,255,255,0) 100%);
   position: absolute;
   top: 0px;
@@ -82,39 +74,12 @@
   height: auto;
   overflow: hidden;
   margin-bottom: auto;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
   display: flex;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  -o-box-orient: vertical;
-  -webkit-box-lines: single;
-  -moz-box-lines: single;
-  -o-box-lines: single;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
   flex-flow: column nowrap;
-  -webkit-box-pack: end;
-  -moz-box-pack: end;
-  -o-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: flex-end;
   justify-content: flex-end;
-  -webkit-box-align: baseline;
-  -moz-box-align: baseline;
-  -o-box-align: baseline;
-  -ms-flex-align: baseline;
-  -webkit-align-items: baseline;
   align-items: baseline;
 }
 .conversational-form--enable-animation .conversational-form {
-  -webkit-transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .conversational-form * {
@@ -123,8 +88,6 @@
 }
 .conversational-form--show {
   opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 
 cf-input-control-elements {
@@ -284,6 +247,8 @@ cf-list.disabled {
 }
 .cf-button[disabled="disabled"] {
   pointer-events: none;
+}
+.cf-button[disabled="disabled"].animate-in {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
@@ -1930,13 +1895,6 @@ cf-chat-response text {
   backface-visibility: hidden;
   height: auto;
 }
-.conversational-form--enable-animation cf-chat-response text {
-  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
 cf-chat-response text > div {
   display: inline-block;
 }
@@ -2055,6 +2013,13 @@ cf-chat-response.show text {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.show text {
+  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.conversational-form--enable-animation cf-chat-response.show text {
   -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
   -moz-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
   -o-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -2068,13 +2033,6 @@ cf-chat-response.show text {
 }
 cf-chat-response.show text[value-added] {
   will-change: auto;
-}
-.conversational-form--enable-animation cf-chat-response.show text[value-added] {
-  -webkit-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -moz-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -o-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  -ms-animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  animation: bounce 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 }
 cf-chat-response.show thumb {
   -webkit-transform: scale(1, 1) translateY(0px);

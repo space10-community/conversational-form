@@ -34,6 +34,7 @@ namespace cf {
 		setTagValueAndIsValid(dto: FlowDTO): boolean;
 		dealloc(): void;
 		refresh(): void;
+		reset(): void;
 		value:string | Array <string>;
 		inputPlaceholder?: string;
 		required: boolean;
@@ -85,6 +86,7 @@ namespace cf {
 		public flowManager: FlowManager
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		public defaultValue: string | number;
+		public initialDefaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
@@ -162,6 +164,7 @@ namespace cf {
 
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
+			this.initialDefaultValue = this.domElement.value;
 
 			this.changeCallback = this.onDomElementChange.bind(this);
 			this.domElement.addEventListener("change", this.changeCallback, false);
@@ -309,6 +312,15 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
+		}
+
+		public reset(){
+			this.refresh();
+
+			// this.disabled = false;
+			
+			// reset to initial value.
+			this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
 		}
 
 		public refresh(){
