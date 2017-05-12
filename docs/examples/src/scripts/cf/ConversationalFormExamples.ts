@@ -13,6 +13,7 @@ class ConversationalFormExamples{
 	private el: HTMLElement;
 	private introTimer: any = 0;
 	private h1writer: H1Writer;
+	private hasCalledExamplesInit: boolean = false;
 	constructor(){
 		this.el = <HTMLElement> document.querySelector("main.content");
 
@@ -85,6 +86,10 @@ class ConversationalFormExamples{
 	}
 
 	public toggleConversation(){
+		if(!this.hasCalledExamplesInit && (<any> window).initExample){
+			(<any> window).initExample();
+			this.hasCalledExamplesInit = true;
+		}
 		clearTimeout(this.introTimer);
 
 		if(!this.el.classList.contains('cf-toggle')){

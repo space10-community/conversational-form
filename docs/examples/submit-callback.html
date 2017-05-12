@@ -4,11 +4,14 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -59,10 +62,10 @@
 
 				<article>
 					<h1 id="writer">
-						Custom placeholder text
+						How to catch the submit event
 					</h1>
 					<h2>
-						cf-input-placeholder="Place holder text.."
+						....
 					</h2>
 				</article>
 			</section>
@@ -70,11 +73,10 @@
 			<section role="form">
 				<div class="form-outer">
 
-					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form>
-						<input type="text" cf-input-placeholder="This is a custom placeholder text" cf-questions="Check out the placeholder text below:" />
+					<form id="form">
+						<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
 					</form>
-					
+
 				</div>
 			</section>
 
@@ -83,10 +85,21 @@
 			</section>
 		</main>
 
-
-
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
+		<script>
+			window.onload = function(){
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("cf-context"),
+					submitCallback: function(){
+						// be aware that this prevents default form submit.
+						var formData = conversationalForm.getFormData();
+						var formDataSerialized = conversationalForm.getFormData(true);
+						console.log("Formdata:", formData);
+						console.log("Formdata, serialized:", formDataSerialized);
+						conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.");
+					}
+				});
+			};
+		</script>
 	</body>
 </html>

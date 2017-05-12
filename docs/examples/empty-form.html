@@ -4,16 +4,15 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
 
-
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-		
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
+
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -64,10 +63,10 @@
 
 				<article>
 					<h1 id="writer">
-						Init Conversational Form with jQuery
+						Test empty form element
 					</h1>
 					<h2>
-						jQuery plugin
+						Check dev console.
 					</h2>
 				</article>
 			</section>
@@ -75,11 +74,8 @@
 			<section role="form">
 				<div class="form-outer">
 
-					<form id="form">
-						<label>
-							Text label..
-							<input type="text" cf-questions="I was started via jQuery API" />
-						</label>
+					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+					<form id="form" cf-form>
 					</form>
 
 				</div>
@@ -89,24 +85,5 @@
 				
 			</section>
 		</main>
-
-
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
-		<script>
-			(function(){
-				$(document.getElementById("form")).conversationalForm({
-					submitCallback: function(){
-						// remove Conversational Form
-						window.ConversationalForm.remove();
-
-						alert("Reached custom submit callback method from jQuery init.");
-					}
-				});
-			})();
-		</script>
-
 	</body>
 </html>

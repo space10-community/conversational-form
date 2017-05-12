@@ -4,66 +4,22 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
 
 		<style>
-			body{
-				display: flex;
-				justify-content: center;
-				flex-flow: row;
-			}
 
-			.form-outer{
-				background: lightgrey;
-				width: 100%;
-				height: 50vh;
-			}
-
-			.form1{
-				background: red !important;
-				height: 33vh;
-			}
-
-			.form2{
-				background: green !important;
-				height: 33vh;
-			}
-
-			.form3{
-				background: blue !important;
-				height: 33vh;
+			cf-chat-response:first-of-type text{
+				background: #0facf3 !important;
+				color: white;
+				font-size: 120%;
 			}
 		</style>
-
-
-		<script>
-			window.addEventListener("load", () =>{
-				document.getElementById("form-1").addEventListener("submit", function(event){
-					event.preventDefault();
-					console.log("form 1 submitted");
-				});
-
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form-3"),
-					context: document.getElementById("form-3-context"),
-					submitCallback: function(){
-						// remove Conversational Form
-						conversationalForm.remove();
-						console.log("form 3 submitted");
-					}
-				});
-			});
-
-			function form2submitted(event){
-				event.preventDefault();
-				console.log("form 2 submitted");
-			}
-
-		</script>
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -114,10 +70,10 @@
 
 				<article>
 					<h1 id="writer">
-						Multiple forms
+						Add a welcome message
 					</h1>
 					<h2>
-						How to have multiple forms running on the same page
+						And style it like a champ
 					</h2>
 				</article>
 			</section>
@@ -125,43 +81,21 @@
 			<section role="form">
 				<div class="form-outer">
 
-					<form id="form-1" cf-form>
-						<input type="text" cf-questions="Form 1 question 1/1.." />
-					</form>
+					<form id="form" cf-form>
+						<label for="radio">
+							<input cf-questions="Hi friend, this is a welcome message example, let's begin?" cf-label="Yes, let's begin!" type="radio" value="0">
+							Newsletter
+						</label>
 
-					<form id="form-2" cf-form onsubmit="return form2submitted(event)">
-						<input type="text" cf-questions="Form 2 question 1/2 .." />
-						<input type="text" cf-questions="Form 2 question 2/2.." />
-					</form>
-
-					<form id="form-3">
-						<input type="text" cf-questions="Form 3 question 1/1 .." />
+						<input type="text" cf-questions="..." />
 					</form>
 
 				</div>
 			</section>
 
-			<section id="cf-context" role="cf-context">
-				<div class="form-outer form1" cf-context>
-					
-				</div>
-
-				<!-- Conversational Form will inject into "cf-context" -->
-				<div class="form-outer form2" cf-context>
-					
-				</div>
-
-
-				<!-- Conversational Form will inject into "cf-context" -->
-				<div class="form-outer form3" id="form-3-context">
-					
-				</div>
+			<section id="cf-context" role="cf-context" cf-context>
+				
 			</section>
 		</main>
-
-
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
 	</body>
 </html>
