@@ -42,7 +42,10 @@ namespace cf {
 		}
 
 		public set disabled(value : boolean) {
-			this.el.classList.toggle("disabled", value);
+			if(value)
+				this.el.classList.add("disabled");
+			else
+				this.el.classList.remove("disabled");
 		}
 
 		public set visible(value: boolean){
