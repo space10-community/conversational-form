@@ -4,8 +4,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script" manual-init="manual-init"></script>
@@ -127,13 +129,11 @@
 			</section>
 		</main>
 
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
 
 		<script>
 			function startTheConversation(){
 
-				var conversationalForm = new cf.ConversationalForm({
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 					formEl: document.getElementById("form"),
 					context: document.getElementById("cf-context")
 				});
@@ -141,6 +141,5 @@
 				window.conversationalFormExamples.toggleConversation();
 			}
 		</script>
-
 	</body>
 </html>

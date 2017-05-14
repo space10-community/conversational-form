@@ -10,6 +10,15 @@
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
 
+		<script>
+			function submitMethod(){
+				console.log("formdata:", window.ConversationalForm.getFormData())
+				console.log("formdata serialized:", window.ConversationalForm.getFormData(true))
+				alert("Check dev console")
+
+				return false;
+			}
+		</script>
 
 
 		<main class="content">
@@ -61,10 +70,10 @@
 
 				<article>
 					<h1 id="writer">
-						Edit previous submitted user answers
+						Distribution files
 					</h1>
 					<h2>
-						Click on a user response to edit it.
+						....
 					</h2>
 				</article>
 			</section>
@@ -72,28 +81,10 @@
 			<section role="form">
 				<div class="form-outer">
 
-
-
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form>
-						<input type="text" cf-questions="Input field, once you submitted your answer, you can click your input to <strong>change</strong> it" name="text" value="">
-						
-						<li class="control">
-							<label>
-								<input cf-questions="Checkboxes, once you submitted your answer, you can click your input to select different elements" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
-							</label>
-							<label>
-								<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
-							</label>
-							<label>
-								<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
-							</label>
-						</li>
-
-						<input type="text" cf-questions="Prevent form submit :)" name="text" value="">
+					<form id="form" cf-form onsubmit="return submitMethod();">
+						<input type="text" name="field-name" cf-questions="Fill out field to get Alert from callback method." />
 					</form>
-
-
 
 				</div>
 			</section>
@@ -104,17 +95,8 @@
 		</main>
 
 
-
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
-		<script>
-			var testValidation = function(dto, success, error){
-				if(dto.text.indexOf("world") != -1)
-					return success();
-				return error();
-			};
-		</script>
+		<link type="text/css" rel="stylesheet" href="../..dist/conversational-form.min.css"/>
+		<script type="text/javascript" id="conversational-form-development" src="../..dist/conversational-form.min.js" crossorigin></script>
 
 	</body>
 </html>

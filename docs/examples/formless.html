@@ -4,8 +4,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
@@ -63,6 +65,9 @@
 					</h1>
 					<h2>
 						A Conversational Form generated from JSON, see file <a href="files/formless.json" target="_blank">formless.json</a>
+						</br>Options and tag attributes are 1:1 with a form tag.
+						</br>Example here also mimics calls to a server and injecting of server created tags.
+						</br>This can be used to validate and create custom flows Server Side.
 					</h2>
 				</article>
 			</section>
@@ -81,177 +86,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-		<!-- when done -->
-		<!--<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin id="conversational-form-development"></script>-->
-
-		<script
-			type="text/javascript"
-			src="../build/bower_components/promise-polyfill/promise.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
-		></script>
-
-		<script
-			id="conversational-form-development" 
-			type="text/javascript"
-			src="../build/cf/ConversationalForm.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/parsing/TagsParser.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ConversationalForm.plugin.js"
-			development
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/Helpers.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/EventDispatcher.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/BasicElement.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/ControlElement.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/ControlElements.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/ScrollController.js"
-		></script>
-
-		<script 
-			type="text/javascript"
-			src="../build/cf/data/Dictionary.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/Tag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/TagGroup.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/InputTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/SelectTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/ButtonTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/form-tags/OptionTag.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/Button.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/RadioButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/CheckboxButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/OptionButton.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/OptionsList.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/control-elements/UploadFileUI.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/UserInput.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/chat/ChatResponse.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/ui/chat/ChatList.js"
-		></script>
-
-		<script
-			type="text/javascript"
-			src="../build/cf/logic/FlowManager.js"
-		></script>
-
-		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
-		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
-
-
 		<!-- Examples specific code below -->
 		<script>
 			// check formless.json
@@ -262,15 +96,15 @@
 				return error();
 			};
 
-			var cf;
+			var conversationalForm;
 
 			// check formless.json
 			var onFormlessSubmitted = function(cf){
-				var formData = cf.getFormData();
-				var formDataSerialized = cf.getFormData(true);
+				var formData = conversationalForm.getFormData();
+				var formDataSerialized = conversationalForm.getFormData(true);
 				console.log("Formdata:", formData);
 				console.log("Formdata, obj:", formDataSerialized);
-				cf.addRobotChatResponse("Check the dev console for FormatData output.")
+				conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.")
 
 			}
 
@@ -287,7 +121,7 @@
 								// basic tag
 								"tag": "input",
 								"type": "text",
-								"cf-questions": "Tag is injected at runtime, data from 'webservice', check source of <a href='formless.html' style='text-decoration:underline'>examples/formless.html</a>",
+								"cf-questions": "Tag is injected at runtime, data from 'webservice', check source of <a href='formless.html' style='text-decoration:underline'>formless.html</a>",
 								"cf-error": "Inject some text"
 							},
 							{
@@ -319,7 +153,7 @@
 
 						// add tag
 						// add tag at index
-						cf.addTags(tags, true);
+						conversationalForm.addTags(tags, true);
 					}
 
 					setTimeout(function(){
@@ -337,7 +171,7 @@
 			}
 
 			// load json file with formless data (files/formless.json)
-			window.addEventListener("load", function(){
+			window.onload = function(){
 				var xhr = new XMLHttpRequest()
 				xhr.onload = function(event){
 					var str = xhr.response;
@@ -353,8 +187,8 @@
 					json.options.flowStepCallback = onStepCallback.bind(window);
 					
 					// start one w. json
-					cf = window.cf.ConversationalForm.startTheConversation(json);
-					document.getElementById("cf-context").appendChild(cf.el);
+					conversationalForm = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("cf-context").appendChild(conversationalForm.el);
 
 					// in-document form
 					// window.cf.ConversationalForm.startTheConversation({
@@ -363,8 +197,7 @@
 				}
 				xhr.open("GET", "files/formless.json");
 				xhr.send();
-			});
+			};
 		</script>
-
 	</body>
 </html>
