@@ -4438,13 +4438,13 @@ var cf;
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
             this.version = "0.9.4";
-            this.cdnPath = "//cdn.space10.io/conversational-form/{version}/";
+            this.cdnPath = "//cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
             this.preventAutoStart = false;
             window.ConversationalForm = this;
-            this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
+            this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
             // possible to create your own event dispatcher, so you can tap into the events of the app
