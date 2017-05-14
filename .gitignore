@@ -4,4 +4,3 @@ bower_components
 .vscode
 /build
 src/scripts/typings
-examples/iam
