@@ -4361,7 +4361,7 @@ var cf;
             this.savedStep = this.step - 1; //save step
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
-            if (Object.keys(this.activeConditions).length > 0) {
+            if (this.activeConditions && Object.keys(this.activeConditions).length > 0) {
                 this.savedStep = -1; //don't save step, as we wont return
                 // clear chatlist.
                 this.cfReference.chatList.clearFrom(this.step + 1);
