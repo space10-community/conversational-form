@@ -2380,16 +2380,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2412,7 +2407,6 @@ var cf;
             else if (_this.type == "password") {
             }
             else if (_this.type == "file") {
-                // check InputFileTag.ts
             }
             return _this;
         }
@@ -2423,7 +2417,6 @@ var cf;
         InputTag.prototype.findAndSetLabel = function () {
             _super.prototype.findAndSetLabel.call(this);
             if (!this._label) {
-                // special use cases for <input> tag add here...
             }
         };
         InputTag.prototype.setTagValueAndIsValid = function (value) {
@@ -2444,16 +2437,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2539,16 +2527,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2561,7 +2544,6 @@ var cf;
             if (_this.domElement.getAttribute("type") == "submit") {
             }
             else if (_this.domElement.getAttribute("type") == "button") {
-                // this.onClick = eval(this.domElement.onclick);
             }
             return _this;
         }
@@ -2640,16 +2622,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -2846,16 +2823,11 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -3010,16 +2982,11 @@ var cf;
 
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 // namespace
 var cf;
 (function (cf) {
@@ -4437,7 +4404,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.3";
+            this.version = "0.9.4";
             this.cdnPath = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
