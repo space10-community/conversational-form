@@ -7,8 +7,14 @@
 		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
 	</head>
+
 	<body>
-		<script src="build/cf/ConversationalFormExamples.js" id="examples-script" manual-init="manual-init"></script>
+		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
+
+		<script>
+			
+		</script>
 
 
 		<main class="content">
@@ -60,66 +66,48 @@
 
 				<article>
 					<h1 id="writer">
-						Utilise browser auto-complete
+						Value piping
 					</h1>
 					<h2>
-						1. Fill out the form on the right</br>
-						2. Submit it, and use browser back button to come back here</br>
-						3. The form is now prefilled with your previous data (mimic autocomplete)</br>
-						</br>
-						<button onclick="startTheConversation()">Now, start the Conversation to see the mapped values</button>
-						</br>
-						</br>
-						<a href="https://dl.dropboxusercontent.com/u/4512798/cf-auto-complete.mp4" target="_blank">Video of auto-complete features</a>
+						Use {id} to pipe values across cf-questions
 					</h2>
 				</article>
 			</section>
 
 			<section role="form">
 				<div class="form-outer">
+					<form id="form" cf-form>
+						<input
+							id="nope1"
+							type="text"
+							cf-questions="You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad."
+							/>
 
+						<fieldset id="test-value" cf-questions="Ready >{nope1}< to try a conditional flow?">
+							<label for="intro-yes">Yes
+								<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+							</label>
 
+							<input type="radio" name="cfc-intro" id="intro-no" value="no">
+							<label for="intro-no">No thanks</label>
 
-					<!-- Conversational Form will NOT auto-run because of the absense of attribute "cf-form" -->
-					<!-- https://www.w3schools.com/tags/att_input_autocomplete.asp -->
-					<form id="form" method="POST" action="about:blank" autocomplete="on">
-						<fieldset>
-							<legend>Native form</legend>
-							<p>
-								<label for="facebook-social">Choose your favourite social channel</label>
-								<p>
-									<input required cf-label="Facebook" type="radio" id="facebook-social" name="social" tabindex="4" value="facebook" autocomplete="facebook-social">
-									<label for="facebook-social">Facebook</label>
-								</p>
-								<p>
-									<input required cf-label="Ello" type="radio" id="ello-social" name="social" tabindex="5" value="ello" autocomplete="ello-social">
-									<label for="ello-social">Ello</label>
-								</p>
-								<p>
-									<input required cf-label="Twitter" type="radio" id="twitter-social" name="social" tabindex="6" value="Twitter" autocomplete="twitter-social">
-									<label for="twitter-social">Twitter</label>
-								</p>
-							</p>
-
-							<p>
-								<input type="text" placeholder="#fname" name="fname" id="fname" value="" tabindex="1" autocomplete="on">
-								<label for="fname">Your FIRST name</label>
-							</p>
-							<p>
-								<input type="text" placeholder="#lname" name="lname" id="lname" value="" tabindex="2" autocomplete="on">
-								<label for="lname">Your LAST name</label>
-							</p>
-							<p>
-								<input type="email" placeholder="#email" name="email" id="email" value="" tabindex="3" autocomplete="on">
-								<label for="email">Your email</label>
-							</p>
-							</br>
-							</br>
-							<button type="submit">Submit</button>
+							<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
+							<label for="intro-disabled">Disabled..</label>
 						</fieldset>
-					</form>
 
-					</div>
+						<input
+							id="nope2"
+							type="text"
+							cf-questions="value: {nope1}, value: {test-value}"
+							/>
+
+						<input
+							id="nope3"
+							type="text"
+							cf-questions="You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad.You decided not to continue on the conditional adventure, Zelda is sad."
+							/>
+					</form>
+				</div>
 			</section>
 
 			<section id="cf-context" role="cf-context" cf-context>
@@ -129,18 +117,5 @@
 
 		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
 		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
-
-		<script>
-			function startTheConversation(){
-
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form"),
-					context: document.getElementById("cf-context")
-				});
-
-				window.conversationalFormExamples.toggleConversation();
-			}
-		</script>
-
 	</body>
 </html>

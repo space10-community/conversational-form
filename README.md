@@ -155,12 +155,19 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 ```
 
 ### {One way value-binding} with cf-questions:
-For cui-questions, add {previous-answer} to insert the value from the previous user-answer.
+For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.
 
-previous input could be firstname:
+using the {previous-answer} mapping:
 ```html
 <input type="text" cf-questions="What is your firstname?">
 <input type="text" cf-questions="Hello {previous-answer}, what is your lastname?">
+```
+
+Using the ID attribute, this will loop through all submitted tags and map:
+```html
+<input type="text" cf-questions="What is your first name?" id="firstname">
+<input type="text" cf-questions="What is your last name?" id="lastname">
+<input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?">
 ```
 
 previous input could be a select:option list with countries.

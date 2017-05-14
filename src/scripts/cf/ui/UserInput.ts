@@ -61,10 +61,13 @@ namespace cf {
 		}
 
 		public set visible(value: boolean){
-			if(!this.el.classList.contains("animate-in") && value)
-				this.el.classList.add("animate-in");
-			else if(this.el.classList.contains("animate-in") && !value)
+			if(!this.el.classList.contains("animate-in") && value){
+				setTimeout(() => {
+					this.el.classList.add("animate-in");
+				}, 0);
+			}else if(this.el.classList.contains("animate-in") && !value){
 				this.el.classList.remove("animate-in");
+			}
 		}
 
 		public get currentTag(): ITag | ITagGroup{
@@ -160,6 +163,7 @@ namespace cf {
 				value.tag = this.currentTag;
 
 			value.input = this;
+			value.tag = this.currentTag;
 
 			return value;
 		}
@@ -286,13 +290,14 @@ namespace cf {
 				// initial height not set
 				this.initialInputHeight = this.inputElement.offsetHeight;
 			}
+
+			this.setFocusOnInput();
 		}
 
 		private onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			// animate input field in
-			this.visible = true;
 
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
 
@@ -330,6 +335,7 @@ namespace cf {
 			}
 
 			setTimeout(() => {
+				this.visible = true;
 				this.disabled = false;
 				this.onInputChange();
 			}, 150);

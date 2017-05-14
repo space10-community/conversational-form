@@ -2,6 +2,7 @@
 var ConversationalFormExamples = (function () {
     function ConversationalFormExamples() {
         this.introTimer = 0;
+        this.hasCalledExamplesInit = false;
         this.el = document.querySelector("main.content");
         var isDevelopment = document.getElementById("conversational-form-development") !== null;
         if (isDevelopment)
@@ -60,6 +61,10 @@ var ConversationalFormExamples = (function () {
     };
     ConversationalFormExamples.prototype.toggleConversation = function () {
         var _this = this;
+        if (!this.hasCalledExamplesInit && window.initExample) {
+            window.initExample();
+            this.hasCalledExamplesInit = true;
+        }
         clearTimeout(this.introTimer);
         if (!this.el.classList.contains('cf-toggle')) {
             setTimeout(function () {

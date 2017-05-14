@@ -81,12 +81,12 @@ cf-chat-response
 		will-change transform, opacity, background
 		backface-visibility hidden
 		height auto
-
-		.conversational-form--enable-animation &
-			transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
 		
 		> div
 			display inline-block
+
+		strong
+			font-weight 900
 
 		&:not(.contains-image)
 			padding 12px 24px 12px 24px
@@ -153,6 +153,9 @@ cf-chat-response
 
 	&.show
 		text
+			.conversational-form--enable-animation &
+				transition transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s, background $anim-time * 0.5 $anim-easeOut
+
 			transform translateY(0px) translateX(0px) scale(1, 1)
 			opacity 1
 			.conversational-form--enable-animation &
@@ -161,8 +164,8 @@ cf-chat-response
 
 			&[value-added]
 				will-change auto
-				.conversational-form--enable-animation &
-					animation bounce $anim-time * 0.25 $anim-easeOut forwards
+				// .conversational-form--enable-animation &
+				// 	animation bounce $anim-time * 0.5 $anim-easeOut forwards
 
 		thumb
 			transform scale(1, 1) translateY(0px)

@@ -29,6 +29,7 @@ namespace cf {
 		private infoElement: HTMLElement;
 		private currentControlElement: IControlElement;
 
+		private animateInFromReponseTimer: number = 0;
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
 		private columnIndex: number = 0;
@@ -170,7 +171,10 @@ namespace cf {
 		}
 
 		private onChatReponsesUpdated(event:CustomEvent){
-			this.animateElementsIn();
+			clearTimeout(this.animateInFromReponseTimer);
+			this.animateInFromReponseTimer = setTimeout(() => {
+				this.animateElementsIn();
+			}, 500);
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
@@ -400,12 +404,7 @@ namespace cf {
 		}
 
 		public resetAfterErrorMessage(){
-			if(this.currentControlElement){
-				//reverse value of currentControlElement.
-				(<RadioButton | CheckboxButton>this.currentControlElement).checked = !(<RadioButton | CheckboxButton>this.currentControlElement).checked;
-				this.currentControlElement = null;
-			}
-
+			this.currentControlElement = null;
 			this.disabled = false;
 		}
 		
@@ -605,7 +604,6 @@ namespace cf {
 							}));
 						}
 						// nothing to add.
-						// console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
 						break;
 				}
 

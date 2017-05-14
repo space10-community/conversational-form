@@ -21,14 +21,17 @@ namespace cf {
 		}
 		
 		public get selected (): boolean{
-			return (<HTMLOptionElement> this.domElement).selected;
+			return this.domElement.hasAttribute("selected");
+			// return (<HTMLOptionElement> this.domElement).selected;
 		}
 
 		public set selected (value: boolean){
-			if(value)
+			(<HTMLOptionElement> this.domElement).selected = value;
+			if(value){
 				this.domElement.setAttribute("selected", "selected");
-			else
+			}else{
 				this.domElement.removeAttribute("selected");
+			}
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
