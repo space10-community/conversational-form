@@ -73,7 +73,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 
-		private cdnPath: string = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
+		private cdnPath: string = "//cdn.space10.io/conversational-form/{version}/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
