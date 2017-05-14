@@ -1898,6 +1898,9 @@ cf-chat-response text {
 cf-chat-response text > div {
   display: inline-block;
 }
+cf-chat-response text strong {
+  font-weight: 900;
+}
 cf-chat-response text:not(.contains-image) {
   padding: 12px 24px 12px 24px;
 }
