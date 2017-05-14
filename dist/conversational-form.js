@@ -1546,7 +1546,7 @@ var cf;
         function Dictionary(options) {
             // can be overwritten
             this.data = {
-                "user-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
+                "user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
                 "entry-not-found": "Dictionary item not found.",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
@@ -1563,7 +1563,7 @@ var cf;
             };
             // can be overwriten
             this.robotData = {
-                "robot-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
+                "robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
                 "input": "Please write some text.",
                 "text": "Please write some text.",
                 "checkbox": "Select as many as you want.",
@@ -2380,11 +2380,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2407,6 +2412,7 @@ var cf;
             else if (_this.type == "password") {
             }
             else if (_this.type == "file") {
+                // check InputFileTag.ts
             }
             return _this;
         }
@@ -2417,6 +2423,7 @@ var cf;
         InputTag.prototype.findAndSetLabel = function () {
             _super.prototype.findAndSetLabel.call(this);
             if (!this._label) {
+                // special use cases for <input> tag add here...
             }
         };
         InputTag.prototype.setTagValueAndIsValid = function (value) {
@@ -2437,11 +2444,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2527,11 +2539,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2544,6 +2561,7 @@ var cf;
             if (_this.domElement.getAttribute("type") == "submit") {
             }
             else if (_this.domElement.getAttribute("type") == "button") {
+                // this.onClick = eval(this.domElement.onclick);
             }
             return _this;
         }
@@ -2622,11 +2640,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2823,11 +2846,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2982,11 +3010,16 @@ var cf;
 
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -4251,7 +4284,6 @@ var cf;
                                 this.activeConditions[tag.id || tag.name] = tagConditions;
                                 // conditions are meet
                                 if (++numConditionsFound == tagConditions.length) {
-                                    console.log("conditions (active) >>", this.activeConditions);
                                     return true;
                                 }
                             }
@@ -4405,13 +4437,13 @@ var cf;
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
             this.version = "0.9.4";
-            this.cdnPath = "//conversational-form-{version}-0iznjsw.stackpathdns.com/";
+            this.cdnPath = "//cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
             this.preventAutoStart = false;
             window.ConversationalForm = this;
-            this.cdnPath = this.cdnPath.split("{version}").join(this.version.split(".").join(""));
+            this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             console.log('Conversational Form > version:', this.version);
             window.ConversationalForm[this.createId] = this;
             // possible to create your own event dispatcher, so you can tap into the events of the app
