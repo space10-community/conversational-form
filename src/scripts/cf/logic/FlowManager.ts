@@ -158,6 +158,47 @@ namespace cf {
 			}
 		}
 
+		/**
+		* @name editTag
+		* @param tagWithConditions, the tag containing conditions (can contain multiple)
+		* @param tagConditions, the conditions of the tag to be checked
+		*/
+
+		private activeConditions: any;
+		public areConditionsInFlowFullfilled(tagWithConditions: ITag, tagConditions: Array<ConditionalValue> ): boolean{
+			if(!this.activeConditions){
+				// we don't use this (yet), it's only to keep track of active conditions
+				this.activeConditions = [];
+			}
+
+			let numConditionsFound: number = 0;
+			// find out if tagWithConditions fullfills conditions
+			for(var i = 0; i < this.tags.length; i++){
+				const tag: ITag | ITagGroup = this.tags[i];
+				if(tag !== tagWithConditions){
+					// check if tags are fullfilled
+					for (var j = 0; j < tagConditions.length; j++) {
+						let tagCondition: ConditionalValue = tagConditions[j];
+						if("cf-conditional-"+tag.name === tagCondition.key){
+							// key found, so check condition
+							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
+							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, tagCondition);
+							if(areConditionsMeet){
+								this.activeConditions[tag.id || tag.name] = tagConditions;
+								// conditions are meet
+								if(++numConditionsFound == tagConditions.length){
+									console.log("conditions (active) >>", this.activeConditions);
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public start(){
 			this.stopped = false;
 			this.validateStepAndUpdate();
@@ -171,12 +212,33 @@ namespace cf {
 			if(this.stopped)
 				return;
 
-			if(this.savedStep != -1)
-				this.step = this.savedStep;
-			
+			if(this.savedStep != -1){
+				let foundConditionsToCurrentTag: boolean = false;
+				// this happens when editing a tag..
+
+				// check if any tags has a conditional check for this.currentTag.name
+				for (var i = 0; i < this.tags.length; i++) {
+					var tag: ITag | ITagGroup = this.tags[i];
+					if(tag !== this.currentTag && tag.hasConditions()){
+						// tag has conditions so check if it also has the right conditions
+						if(tag.hasConditionsFor(this.currentTag.name)){
+							foundConditionsToCurrentTag = true;
+							this.step = this.tags.indexOf(this.currentTag);
+							break;
+						}
+					}
+				}
+
+				// no conditional linking found, so resume flow
+				if(!foundConditionsToCurrentTag){
+					this.step = this.savedStep;
+				}
+			}
+
 			this.savedStep = -1;//reset saved step
 
 			this.step++;
+
 			this.validateStepAndUpdate();
 		}
 
@@ -215,9 +277,23 @@ namespace cf {
 		*/
 		public editTag(tag: ITag): void {
 			this.ignoreExistingTags = false;
-			this.savedStep = this.step - 1;
+			this.savedStep = this.step - 1;//save step
 			this.step = this.tags.indexOf(tag); // === this.currentTag
 			this.validateStepAndUpdate();
+
+			if(Object.keys(this.activeConditions).length > 0){
+				this.savedStep = -1;//don't save step, as we wont return
+
+				// clear chatlist.
+				this.cfReference.chatList.clearFrom(this.step + 1);
+
+				//reset from active tag, brute force
+				const editTagIndex: number = this.tags.indexOf(tag);
+				for(var i = editTagIndex + 1; i < this.tags.length; i++){
+					const tag: ITag | ITagGroup = this.tags[i];
+					tag.reset();
+				}
+			}
 		}
 
 		private setTags(tags: Array<ITag | ITagGroup>){
@@ -226,6 +302,7 @@ namespace cf {
 			for(var i = 0; i < this.tags.length; i++){
 				const tag: ITag | ITagGroup = this.tags[i];
 				tag.eventTarget = this.eventTarget;
+				tag.flowManager = this;
 			}
 		}
 

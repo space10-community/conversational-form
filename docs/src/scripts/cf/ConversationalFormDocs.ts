@@ -135,8 +135,7 @@ class ConversationalFormDocs{
 				});
 			}
 
-			if(this.cf.focus)
-				this.cf.focus()
+			this.cf.focus();
 
 			setTimeout(() =>{
 				this.el.classList.remove('menu-toggle');

@@ -8,6 +8,7 @@ namespace cf {
 	export interface IChatResponseOptions extends IBasicElementOptions{
 		response: string;
 		image: string;
+		list: ChatList;
 		isRobotReponse: boolean;
 		tag: ITag;
 	}
@@ -26,7 +27,8 @@ namespace cf {
 		public parsedResponse: string;
 		private textEl: Element;
 		private image: string;
-		private _tag: ITag
+		private _list: ChatList;
+		private _tag: ITag;
 		private responseLink: ChatResponse; // robot reference from use
 
 		private onClickCallback: () => void;
@@ -40,11 +42,15 @@ namespace cf {
 		}
 
 		public set disabled(value : boolean) {
-			this.el.classList.toggle("disabled", value);
+			if(value)
+				this.el.classList.add("disabled");
+			else
+				this.el.classList.remove("disabled");
 		}
 
 		public set visible(value: boolean){
 			if(value){
+				this.el.offsetWidth;
 				this.el.classList.add("show");
 			}else{
 				this.el.classList.remove("show");
@@ -53,8 +59,11 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			this._list = options.list;
 			this._tag = options.tag;
 			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
+
+			this.updateThumbnail(this.image);
 		}
 
 		public setValue(dto: FlowDTO = null){
@@ -104,13 +113,12 @@ namespace cf {
 			}else{
 				this.checkForEditMode();
 			}
-			
 		}
 
 		public updateThumbnail(src: string){
 			this.image = src;
 			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
-			thumbEl.style.backgroundImage = "url(" + this.image + ")";
+			thumbEl.style.backgroundImage = 'url("' + this.image + '")';
 		}
 
 		public setLinkToOtherReponse(response: ChatResponse){
@@ -137,6 +145,18 @@ namespace cf {
 				
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+				
+				// Piping, look through IDs, and map values to dynamics
+				const reponses: Array<ChatResponse> = this._list.getResponses();
+				for (var i = 0; i < reponses.length; i++) {
+					var response: ChatResponse = reponses[i];
+					if(response !== this){
+						if(response.tag.id){
+							innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
+						}
+					}
+				}
+
 				// add more..
 				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}
@@ -197,6 +217,8 @@ namespace cf {
 			setTimeout(() => {
 				this.setValue();
 
+				this.updateThumbnail(this.image);
+
 				if(this.isRobotReponse || options.response != null){
 					// Robot is pseudo thinking, can also be user -->
 					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
@@ -221,7 +243,7 @@ namespace cf {
 		// template, can be overwritten ...
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotReponse ? "robot" : "user") + `">
-				<thumb style="background-image: url(` + this.image + `)"></thumb>
+				<thumb></thumb>
 				<text>` + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + `</text>
 			</cf-chat-response>`;
 		}

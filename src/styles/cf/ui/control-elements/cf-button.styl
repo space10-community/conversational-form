@@ -19,7 +19,7 @@
 		padding 12px 24px
 
 	&.has-image
-		max-width 250px
+		max-width 180px
 	
 	> div
 		position relative
@@ -48,8 +48,14 @@
 	&:not(:last-child)
 		margin-right 10px
 
-	&:hover, &:focus
+	&:hover, &:focus, &[selected="selected"], &[checked="checked"]
 		background alpha($color-dark-blue, 10%)
+	
+	&[disabled="disabled"]
+		pointer-events none
+		&.animate-in
+			opacity 0.5
+	
 	
 	// &.highlight
 	// 	cf-radio

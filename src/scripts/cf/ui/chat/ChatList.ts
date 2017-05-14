@@ -80,15 +80,20 @@ namespace cf {
 				this.onUserWantsToEditTag(currentTag);
 			}else{
 				// robot response
-				const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
-				if(this.currentUserResponse){
-					// linked, but only if we should not ignore existing tag
-					this.currentUserResponse.setLinkToOtherReponse(robot);
-					robot.setLinkToOtherReponse(this.currentUserResponse);
-				}
+				setTimeout(() => {
+					const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
+					if(this.currentUserResponse){
+						// linked, but only if we should not ignore existing tag
+						this.currentUserResponse.setLinkToOtherReponse(robot);
+						robot.setLinkToOtherReponse(this.currentUserResponse);
+					}
 
-				// user response, create the waiting response
-				this.currentUserResponse = this.createResponse(false, currentTag);
+					// user response, create the waiting response
+					setTimeout(() => {
+						this.currentUserResponse = this.createResponse(false, currentTag);
+
+					}, 200);
+				}, this.responses.length === 0 ? 500 : 0);
 			}
 		}
 
@@ -100,7 +105,7 @@ namespace cf {
 		private containsTagResponse(tagToChange: ITag): boolean {
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];
-				if(!element.isRobotReponse && element.tag == tagToChange){
+				if(!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()){
 					return true;
 				}
 			}
@@ -150,6 +155,18 @@ namespace cf {
 		}
 
 		/**
+		* @name clearFrom
+		* remove responses, this usually happens if a user jumps back to a conditional element
+		*/
+		public clearFrom(index: number): void {
+			index += index % 2; // round up so we dont remove the user response element
+			while(this.responses.length > index){
+				let element: ChatResponse = this.responses.pop();
+				element.dealloc();
+			}
+		}
+
+		/**
 		* @name setCurrentUserResponse
 		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
 		* reponse: FlowDTO
@@ -169,6 +186,14 @@ namespace cf {
 			this.scrollListTo();
 		}
 
+		/**
+		* @name getResponses
+		* returns the submitted responses.
+		*/
+		public getResponses(): Array<ChatResponse> {
+			return this.responses;
+		}
+
 		public updateThumbnail(robot: boolean, img: string){
 			Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
 
@@ -186,6 +211,7 @@ namespace cf {
 		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
+				list: this,
 				tag: currentTag,
 				eventTarget: this.eventTarget,
 				isRobotReponse: isRobotReponse,

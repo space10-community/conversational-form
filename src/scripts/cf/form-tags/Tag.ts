@@ -34,12 +34,17 @@ namespace cf {
 		setTagValueAndIsValid(dto: FlowDTO): boolean;
 		dealloc(): void;
 		refresh(): void;
+		reset(): void;
 		value:string | Array <string>;
 		inputPlaceholder?: string;
 		required: boolean;
 		defaultValue: string | number;
 		disabled: boolean;
 		eventTarget: EventDispatcher;
+		flowManager: FlowManager;
+		hasConditions():boolean;
+		hasConditionsFor(tagName: string):boolean;
+		checkConditionalAndIsValid():boolean;
 
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
@@ -50,7 +55,12 @@ namespace cf {
 
 	export interface TagChangeDTO{
 		tag: ITag,
-		value: String
+		value: string
+	}
+
+	export interface ConditionalValue{
+		key: string,
+		conditionals: Array<string | RegExp>
 	}
 
 	export interface ITagOptions{
@@ -62,21 +72,21 @@ namespace cf {
 
 	// class
 	export class Tag implements ITag {
-		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
-		
 		private errorMessages: Array<string>;
 		private pattern: RegExp;
 		private changeCallback: () => void;
-		protected _eventTarget: EventDispatcher;
+		private conditionalTags: Array<ConditionalValue>;
 
 		// input placeholder text, this is for the UserInput and not the tag it self.
 		protected _inputPlaceholder: string;
-
-		// 
-		public defaultValue: string | number;
+		protected _eventTarget: EventDispatcher;
 		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
 
+		public flowManager: FlowManager
+		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
+		public defaultValue: string | number;
+		public initialDefaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
 
 		public get type (): string{
@@ -112,7 +122,7 @@ namespace cf {
 		}
 
 		public get disabled (): boolean{
-			return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
+			return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
 		}
 
 		public get required(): boolean{
@@ -154,6 +164,7 @@ namespace cf {
 
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
+			this.initialDefaultValue = this.domElement.value;
 
 			this.changeCallback = this.onDomElementChange.bind(this);
 			this.domElement.addEventListener("change", this.changeCallback, false);
@@ -197,6 +208,43 @@ namespace cf {
 			this._label = null;
 			this.validationCallback = null;
 			this.questions = null;
+		}
+
+		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
+			if(typeof tagValue === "string"){
+				// tag value is a string
+				const value: string = <string> tagValue;
+				let isValid: boolean = false;
+				for (var i = 0; i < condition.conditionals.length; i++) {
+					var conditional: string | RegExp = condition.conditionals[i];
+					if(typeof conditional === "object"){
+						// regex
+						isValid = (<RegExp> conditional).test(value);
+					}else{
+						// string comparisson
+						isValid = <string>tagValue === conditional;
+					}
+
+					if(isValid) break;
+				}
+				return isValid;
+			}else{
+				if(!tagValue){
+					return false;
+				}else{
+					// tag value is an array
+					let isValid: boolean = false;
+					for (var i = 0; i < condition.conditionals.length; i++) {
+						var conditional: string | RegExp = condition.conditionals[i];
+						isValid = (<string[]>tagValue).toString() == conditional.toString();
+
+						if(isValid) break;
+					}
+
+					return isValid;
+				}
+				// arrays need to be the same
+			}
 		}
 
 		public static isTagValid(element: HTMLElement):boolean{
@@ -266,12 +314,58 @@ namespace cf {
 			}
 		}
 
+		public reset(){
+			this.refresh();
+
+			// this.disabled = false;
+			
+			// reset to initial value.
+			this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
+		}
+
 		public refresh(){
 			// default value of Tag, check every refresh
 			this.defaultValue = this.domElement.value;
 
 			this.questions = null;
 			this.findAndSetQuestions();
+			this.findConditionalAttributes();
+		}
+
+		public hasConditionsFor(tagName: string):boolean{
+			if(!this.hasConditions()){
+				return false;
+			}
+
+			for (var i = 0; i < this.conditionalTags.length; i++) {
+				var condition: ConditionalValue = this.conditionalTags[i];
+				if("cf-conditional-"+tagName === condition.key){
+					return true;
+				}
+				
+			}
+
+			return false;
+		}
+
+		public hasConditions():boolean{
+			return this.conditionalTags && this.conditionalTags.length > 0;
+		}
+
+		/**
+		* @name checkConditionalAndIsValid
+		* checks for conditional logic, see documentaiton (wiki)
+		* here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
+		*/
+		public checkConditionalAndIsValid(): boolean {
+			// can we tap into disabled
+			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
+			if(this.hasConditions()){
+				return this.flowManager.areConditionsInFlowFullfilled(this, this.conditionalTags);
+			}
+
+			// else return true, as no conditional means uncomplicated and happy tag
+			return true;
 		}
 
 		public setTagValueAndIsValid(dto: FlowDTO):boolean{
@@ -320,6 +414,43 @@ namespace cf {
 			return Dictionary.getRobotResponse(this.type);
 		}
 
+		/**
+		* @name findConditionalAttributes
+		* look for conditional attributes and map them
+		*/
+		protected findConditionalAttributes(){
+			const keys: any = this.domElement.attributes;
+			if(keys.length > 0){
+				this.conditionalTags = [];
+				
+				for (var key in keys) {
+					if (keys.hasOwnProperty(key)) {	
+						let attr: any = keys[key];
+						if(attr.name.indexOf("cf-conditional") !== -1){
+							// conditional found
+							let _conditionals: Array<string | RegExp> = [];
+							let condictionalsFromAttribute: Array<string> = attr.value.split("||");
+
+							for (var i = 0; i < condictionalsFromAttribute.length; i++) {
+								var _conditional: string = condictionalsFromAttribute[i];
+								try {
+									_conditionals.push(new RegExp(_conditional));
+								} catch(e) {
+								}
+
+								_conditionals.push(_conditional);
+							}
+
+							this.conditionalTags.push(<ConditionalValue>{
+								key: attr.name,
+								conditionals: _conditionals
+							});
+						}
+					}
+				}
+			}
+		}
+
 		protected findAndSetQuestions(){
 			if(this.questions)
 				return;
@@ -328,7 +459,6 @@ namespace cf {
 			// check for label tag, we only go 2 steps backwards..
 
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
-
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = this.domElement.getAttribute("cf-questions").split("|");
@@ -366,7 +496,7 @@ namespace cf {
 				
 				if(parentDomNode){
 					// step backwards and check for label tag.
-					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).getElementsByTagName("label");
+					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).tagName.toLowerCase() == "label" ? [(<HTMLElement> parentDomNode)] : (<HTMLElement> parentDomNode).getElementsByTagName("label");
 
 					if(labelTags.length == 0){
 						// check for innerText

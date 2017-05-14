@@ -516,11 +516,16 @@ var cf;
 /// <reference path="../../ConversationalForm.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../form-tags/Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -546,6 +551,9 @@ var cf;
             _this.el.addEventListener('focus', _this.onFocusCallback, false);
             _this.onBlurCallback = _this.onBlur.bind(_this);
             _this.el.addEventListener('blur', _this.onBlurCallback, false);
+            if (_this.referenceTag.disabled) {
+                _this.el.setAttribute("disabled", "disabled");
+            }
             return _this;
         }
         Object.defineProperty(ControlElement.prototype, "type", {
@@ -604,7 +612,10 @@ var cf;
                 return this.el.classList.contains("highlight");
             },
             set: function (value) {
-                this.el.classList.toggle("highlight", value);
+                if (value)
+                    this.el.classList.add("highlight");
+                else
+                    this.el.classList.remove("highlight");
             },
             enumerable: true,
             configurable: true
@@ -714,6 +725,7 @@ var cf;
 (function (cf) {
     var ControlElements = (function () {
         function ControlElements(options) {
+            this.animateInFromReponseTimer = 0;
             this.ignoreKeyboardInput = false;
             this.rowIndex = -1;
             this.columnIndex = 0;
@@ -835,7 +847,11 @@ var cf;
             }
         };
         ControlElements.prototype.onChatReponsesUpdated = function (event) {
-            this.animateElementsIn();
+            var _this = this;
+            clearTimeout(this.animateInFromReponseTimer);
+            this.animateInFromReponseTimer = setTimeout(function () {
+                _this.animateElementsIn();
+            }, 500);
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -1042,11 +1058,7 @@ var cf;
             }
         };
         ControlElements.prototype.resetAfterErrorMessage = function () {
-            if (this.currentControlElement) {
-                //reverse value of currentControlElement.
-                this.currentControlElement.checked = !this.currentControlElement.checked;
-                this.currentControlElement = null;
-            }
+            this.currentControlElement = null;
             this.disabled = false;
         };
         ControlElements.prototype.focusFrom = function (angle) {
@@ -1217,7 +1229,6 @@ var cf;
                             }));
                         }
                         // nothing to add.
-                        // console.log("UserInput buildControlElements:", "none Control UI type, only input field is needed.");
                         break;
                 }
                 if (tag.type != "select" && this.elements.length > 0) {
@@ -1535,7 +1546,7 @@ var cf;
         function Dictionary(options) {
             // can be overwritten
             this.data = {
-                "user-image": "//conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
+                "user-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
                 "entry-not-found": "Dictionary item not found.",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
@@ -1552,7 +1563,7 @@ var cf;
             };
             // can be overwriten
             this.robotData = {
-                "robot-image": "//conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
+                "robot-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
                 "input": "Please write some text.",
                 "text": "Please write some text.",
                 "checkbox": "Select as many as you want.",
@@ -1681,6 +1692,7 @@ var cf;
     var Tag = (function () {
         function Tag(options) {
             this.domElement = options.domElement;
+            this.initialDefaultValue = this.domElement.value;
             this.changeCallback = this.onDomElementChange.bind(this);
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
@@ -1763,7 +1775,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "disabled", {
             get: function () {
-                return this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null;
+                return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
             },
             enumerable: true,
             configurable: true
@@ -1830,6 +1842,44 @@ var cf;
             this.validationCallback = null;
             this.questions = null;
         };
+        Tag.testConditions = function (tagValue, condition) {
+            if (typeof tagValue === "string") {
+                // tag value is a string
+                var value = tagValue;
+                var isValid = false;
+                for (var i = 0; i < condition.conditionals.length; i++) {
+                    var conditional = condition.conditionals[i];
+                    if (typeof conditional === "object") {
+                        // regex
+                        isValid = conditional.test(value);
+                    }
+                    else {
+                        // string comparisson
+                        isValid = tagValue === conditional;
+                    }
+                    if (isValid)
+                        break;
+                }
+                return isValid;
+            }
+            else {
+                if (!tagValue) {
+                    return false;
+                }
+                else {
+                    // tag value is an array
+                    var isValid = false;
+                    for (var i = 0; i < condition.conditionals.length; i++) {
+                        var conditional = condition.conditionals[i];
+                        isValid = tagValue.toString() == conditional.toString();
+                        if (isValid)
+                            break;
+                    }
+                    return isValid;
+                }
+                // arrays need to be the same
+            }
+        };
         Tag.isTagValid = function (element) {
             if (element.getAttribute("type") === "hidden")
                 return false;
@@ -1892,11 +1942,47 @@ var cf;
                 return null;
             }
         };
+        Tag.prototype.reset = function () {
+            this.refresh();
+            // this.disabled = false;
+            // reset to initial value.
+            this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
+        };
         Tag.prototype.refresh = function () {
             // default value of Tag, check every refresh
             this.defaultValue = this.domElement.value;
             this.questions = null;
             this.findAndSetQuestions();
+            this.findConditionalAttributes();
+        };
+        Tag.prototype.hasConditionsFor = function (tagName) {
+            if (!this.hasConditions()) {
+                return false;
+            }
+            for (var i = 0; i < this.conditionalTags.length; i++) {
+                var condition = this.conditionalTags[i];
+                if ("cf-conditional-" + tagName === condition.key) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        Tag.prototype.hasConditions = function () {
+            return this.conditionalTags && this.conditionalTags.length > 0;
+        };
+        /**
+        * @name checkConditionalAndIsValid
+        * checks for conditional logic, see documentaiton (wiki)
+        * here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
+        */
+        Tag.prototype.checkConditionalAndIsValid = function () {
+            // can we tap into disabled
+            // if contains attribute, cf-conditional{-name} then check for conditional value across tags
+            if (this.hasConditions()) {
+                return this.flowManager.areConditionsInFlowFullfilled(this, this.conditionalTags);
+            }
+            // else return true, as no conditional means uncomplicated and happy tag
+            return true;
         };
         Tag.prototype.setTagValueAndIsValid = function (dto) {
             // this sets the value of the tag in the DOM
@@ -1923,6 +2009,7 @@ var cf;
                     this.domElement.value = valueText;
             }
             else {
+                // throw new Error("cf-: value:string is not valid. Value: "+value);
             }
             return isValid;
         };
@@ -1932,6 +2019,39 @@ var cf;
             if (this._label)
                 return this._label;
             return cf.Dictionary.getRobotResponse(this.type);
+        };
+        /**
+        * @name findConditionalAttributes
+        * look for conditional attributes and map them
+        */
+        Tag.prototype.findConditionalAttributes = function () {
+            var keys = this.domElement.attributes;
+            if (keys.length > 0) {
+                this.conditionalTags = [];
+                for (var key in keys) {
+                    if (keys.hasOwnProperty(key)) {
+                        var attr = keys[key];
+                        if (attr.name.indexOf("cf-conditional") !== -1) {
+                            // conditional found
+                            var _conditionals = [];
+                            var condictionalsFromAttribute = attr.value.split("||");
+                            for (var i = 0; i < condictionalsFromAttribute.length; i++) {
+                                var _conditional = condictionalsFromAttribute[i];
+                                try {
+                                    _conditionals.push(new RegExp(_conditional));
+                                }
+                                catch (e) {
+                                }
+                                _conditionals.push(_conditional);
+                            }
+                            this.conditionalTags.push({
+                                key: attr.name,
+                                conditionals: _conditionals
+                            });
+                        }
+                    }
+                }
+            }
         };
         Tag.prototype.findAndSetQuestions = function () {
             if (this.questions)
@@ -1974,7 +2094,7 @@ var cf;
                 var parentDomNode = this.domElement.parentNode;
                 if (parentDomNode) {
                     // step backwards and check for label tag.
-                    var labelTags = parentDomNode.getElementsByTagName("label");
+                    var labelTags = parentDomNode.tagName.toLowerCase() == "label" ? [parentDomNode] : parentDomNode.getElementsByTagName("label");
                     if (labelTags.length == 0) {
                         // check for innerText
                         var innerText = cf.Helpers.getInnerTextOfElement(parentDomNode);
@@ -2027,6 +2147,11 @@ var cf;
     var TagGroup = (function () {
         function TagGroup(options) {
             this.elements = options.elements;
+            // set wrapping element
+            this._fieldset = options.fieldset;
+            if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
+                this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+            }
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
         }
@@ -2054,6 +2179,16 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "flowManager", {
+            set: function (value) {
+                for (var i = 0; i < this.elements.length; i++) {
+                    var tag = this.elements[i];
+                    tag.flowManager = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TagGroup.prototype, "type", {
             get: function () {
                 return "group";
@@ -2070,14 +2205,14 @@ var cf;
         });
         Object.defineProperty(TagGroup.prototype, "name", {
             get: function () {
-                return this.elements[0].name;
+                return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TagGroup.prototype, "id", {
             get: function () {
-                return "tag-group";
+                return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
             },
             enumerable: true,
             configurable: true
@@ -2085,8 +2220,11 @@ var cf;
         Object.defineProperty(TagGroup.prototype, "question", {
             get: function () {
                 // check if elements have the questions, else fallback
-                var tagQuestion = this.elements[0].question;
-                if (tagQuestion) {
+                if (this.questions && this.questions.length > 0) {
+                    return this.questions[Math.floor(Math.random() * this.questions.length)];
+                }
+                else if (this.elements[0] && this.elements[0].question) {
+                    var tagQuestion = this.elements[0].question;
                     return tagQuestion;
                 }
                 else {
@@ -2108,7 +2246,7 @@ var cf;
         Object.defineProperty(TagGroup.prototype, "value", {
             get: function () {
                 // TODO: fix value???
-                return this._values;
+                return this._values ? this._values : [""];
             },
             enumerable: true,
             configurable: true
@@ -2116,12 +2254,13 @@ var cf;
         Object.defineProperty(TagGroup.prototype, "disabled", {
             get: function () {
                 var disabled = false;
+                var allShouldBedisabled = 0;
                 for (var i = 0; i < this.elements.length; i++) {
                     var element = this.elements[i];
                     if (element.disabled)
-                        disabled = true;
+                        allShouldBedisabled++;
                 }
-                return disabled;
+                return allShouldBedisabled === this.elements.length;
             },
             enumerable: true,
             configurable: true
@@ -2151,8 +2290,48 @@ var cf;
                 element.refresh();
             }
         };
+        TagGroup.prototype.reset = function () {
+            this._values = [];
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                element.reset();
+            }
+        };
         TagGroup.prototype.getGroupTagType = function () {
             return this.elements[0].type;
+        };
+        TagGroup.prototype.hasConditionsFor = function (tagName) {
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                if (element.hasConditionsFor(tagName)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        TagGroup.prototype.hasConditions = function () {
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                if (element.hasConditions()) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        /**
+        * @name checkConditionalAndIsValid
+        * checks for conditional logic, see documentaiton (wiki)
+        * here we check after cf-conditional{-name} on group tags
+        */
+        TagGroup.prototype.checkConditionalAndIsValid = function () {
+            // can we tap into disabled
+            // if contains attribute, cf-conditional{-name} then check for conditional value across tags
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                element.checkConditionalAndIsValid();
+            }
+            // else return true, as no conditional means happy tag
+            return true;
         };
         TagGroup.prototype.setTagValueAndIsValid = function (value) {
             var isValid = false;
@@ -2166,39 +2345,18 @@ var cf;
                     for (var i = 0; i < value.controlElements.length; i++) {
                         var element = value.controlElements[i];
                         var tag = this.elements[this.elements.indexOf(element.referenceTag)];
-                        if (element.visible) {
-                            numberRadioButtonsVisible.push(element);
-                            if (tag == element.referenceTag) {
-                                tag.domElement.checked = element.checked;
-                                if (element.checked) {
-                                    this._values.push(tag.value);
-                                    this._activeElements.push(tag);
-                                }
-                                // a radio button was checked
-                                if (!wasRadioButtonChecked && element.checked)
-                                    wasRadioButtonChecked = true;
+                        numberRadioButtonsVisible.push(element);
+                        if (tag == element.referenceTag) {
+                            if (element.checked) {
+                                this._values.push(tag.value);
+                                this._activeElements.push(tag);
                             }
-                            else {
-                                tag.domElement.checked = false;
-                            }
+                            // a radio button was checked
+                            if (!wasRadioButtonChecked && element.checked)
+                                wasRadioButtonChecked = true;
                         }
                     }
-                    // special case 1, only one radio button visible from a filter
-                    if (!isValid && numberRadioButtonsVisible.length == 1) {
-                        var element = numberRadioButtonsVisible[0];
-                        var tag = this.elements[this.elements.indexOf(element.referenceTag)];
-                        element.checked = true;
-                        tag.domElement.checked = true;
-                        isValid = true;
-                        if (element.checked) {
-                            this._values.push(tag.value);
-                            this._activeElements.push(tag);
-                        }
-                    }
-                    else if (!isValid && wasRadioButtonChecked) {
-                        // a radio button needs to be checked of
-                        isValid = wasRadioButtonChecked;
-                    }
+                    isValid = wasRadioButtonChecked;
                     break;
                 case "checkbox":
                     // checkbox is always valid
@@ -2222,11 +2380,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2249,6 +2412,7 @@ var cf;
             else if (_this.type == "password") {
             }
             else if (_this.type == "file") {
+                // check InputFileTag.ts
             }
             return _this;
         }
@@ -2259,6 +2423,7 @@ var cf;
         InputTag.prototype.findAndSetLabel = function () {
             _super.prototype.findAndSetLabel.call(this);
             if (!this._label) {
+                // special use cases for <input> tag add here...
             }
         };
         InputTag.prototype.setTagValueAndIsValid = function (value) {
@@ -2279,11 +2444,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2369,11 +2539,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Tag.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2386,6 +2561,7 @@ var cf;
             if (_this.domElement.getAttribute("type") == "submit") {
             }
             else if (_this.domElement.getAttribute("type") == "button") {
+                // this.onClick = eval(this.domElement.onclick);
             }
             return _this;
         }
@@ -2396,11 +2572,16 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 /// <reference path="../parsing/TagsParser.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2432,13 +2613,17 @@ var cf;
         });
         Object.defineProperty(OptionTag.prototype, "selected", {
             get: function () {
-                return this.domElement.selected;
+                return this.domElement.hasAttribute("selected");
+                // return (<HTMLOptionElement> this.domElement).selected;
             },
             set: function (value) {
-                if (value)
+                this.domElement.selected = value;
+                if (value) {
                     this.domElement.setAttribute("selected", "selected");
-                else
+                }
+                else {
                     this.domElement.removeAttribute("selected");
+                }
             },
             enumerable: true,
             configurable: true
@@ -2455,11 +2640,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2534,11 +2724,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2564,16 +2759,20 @@ var cf;
             set: function (value) {
                 if (!value) {
                     this.el.removeAttribute("checked");
+                    this.referenceTag.domElement.removeAttribute("checked");
+                    this.referenceTag.domElement.checked = false;
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
+                    this.referenceTag.domElement.setAttribute("checked", "checked");
+                    this.referenceTag.domElement.checked = true;
                 }
             },
             enumerable: true,
             configurable: true
         });
         RadioButton.prototype.onClick = function (event) {
-            this.checked = !this.checked;
+            this.checked = true; // checked always true like native radio buttons
             _super.prototype.onClick.call(this, event);
         };
         // override
@@ -2587,11 +2786,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2617,10 +2821,12 @@ var cf;
                 if (!value) {
                     this.el.removeAttribute("checked");
                     this.referenceTag.domElement.removeAttribute("checked");
+                    this.referenceTag.domElement.checked = false;
                 }
                 else {
                     this.el.setAttribute("checked", "checked");
                     this.referenceTag.domElement.setAttribute("checked", "checked");
+                    this.referenceTag.domElement.checked = true;
                 }
             },
             enumerable: true,
@@ -2640,11 +2846,16 @@ var cf;
 })(cf || (cf = {}));
 
 /// <reference path="Button.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2799,11 +3010,16 @@ var cf;
 
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -2966,11 +3182,16 @@ var cf;
 /// <reference path="BasicElement.ts"/>
 /// <reference path="control-elements/ControlElements.ts"/>
 /// <reference path="../logic/FlowManager.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3038,10 +3259,15 @@ var cf;
         });
         Object.defineProperty(UserInput.prototype, "visible", {
             set: function (value) {
-                if (!this.el.classList.contains("animate-in") && value)
-                    this.el.classList.add("animate-in");
-                else if (this.el.classList.contains("animate-in") && !value)
+                var _this = this;
+                if (!this.el.classList.contains("animate-in") && value) {
+                    setTimeout(function () {
+                        _this.el.classList.add("animate-in");
+                    }, 0);
+                }
+                else if (this.el.classList.contains("animate-in") && !value) {
                     this.el.classList.remove("animate-in");
+                }
             },
             enumerable: true,
             configurable: true
@@ -3093,6 +3319,7 @@ var cf;
             if (!value.tag)
                 value.tag = this.currentTag;
             value.input = this;
+            value.tag = this.currentTag;
             return value;
         };
         UserInput.prototype.reset = function () {
@@ -3202,12 +3429,12 @@ var cf;
                 // initial height not set
                 this.initialInputHeight = this.inputElement.offsetHeight;
             }
+            this.setFocusOnInput();
         };
         UserInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             // animate input field in
-            this.visible = true;
             this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
             // replace textarea and visa versa
@@ -3233,6 +3460,7 @@ var cf;
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
             setTimeout(function () {
+                _this.visible = true;
                 _this.disabled = false;
                 _this.onInputChange();
             }, 150);
@@ -3463,11 +3691,16 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3479,8 +3712,10 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
+            _this._list = options.list;
             _this._tag = options.tag;
             _this.textEl = _this.el.getElementsByTagName("text")[0];
+            _this.updateThumbnail(_this.image);
             return _this;
         }
         Object.defineProperty(ChatResponse.prototype, "tag", {
@@ -3495,7 +3730,10 @@ var cf;
                 return this.el.classList.contains("disabled");
             },
             set: function (value) {
-                this.el.classList.toggle("disabled", value);
+                if (value)
+                    this.el.classList.add("disabled");
+                else
+                    this.el.classList.remove("disabled");
             },
             enumerable: true,
             configurable: true
@@ -3503,6 +3741,7 @@ var cf;
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
                 if (value) {
+                    this.el.offsetWidth;
                     this.el.classList.add("show");
                 }
                 else {
@@ -3559,7 +3798,7 @@ var cf;
         ChatResponse.prototype.updateThumbnail = function (src) {
             this.image = src;
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
-            thumbEl.style.backgroundImage = "url(" + this.image + ")";
+            thumbEl.style.backgroundImage = 'url("' + this.image + '")';
         };
         ChatResponse.prototype.setLinkToOtherReponse = function (response) {
             // link reponse to another one, keeping the update circle complete.
@@ -3570,7 +3809,7 @@ var cf;
             var innerResponse = this.response;
             if (this._tag && this._tag.type == "password" && !this.isRobotReponse) {
                 var newStr = "";
-                for (var i = 0; i < innerResponse.length; i++) {
+                for (var i_1 = 0; i_1 < innerResponse.length; i_1++) {
                     newStr += "*";
                 }
                 innerResponse = newStr;
@@ -3582,6 +3821,18 @@ var cf;
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+                // Piping, look through IDs, and map values to dynamics
+                var reponses = this._list.getResponses();
+                for (var i = 0; i < reponses.length; i++) {
+                    var response = reponses[i];
+                    if (response !== this) {
+                        if (response.tag.id) {
+                            innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
+                        }
+                    }
+                }
+                // add more..
+                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
@@ -3629,6 +3880,7 @@ var cf;
             _super.prototype.setData.call(this, options);
             setTimeout(function () {
                 _this.setValue();
+                _this.updateThumbnail(_this.image);
                 if (_this.isRobotReponse || options.response != null) {
                     // Robot is pseudo thinking, can also be user -->
                     // , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
@@ -3650,7 +3902,7 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb style=\"background-image: url(" + this.image + ")\"></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
@@ -3661,11 +3913,16 @@ var cf;
 /// <reference path="ChatResponse.ts"/>
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // namespace
 var cf;
 (function (cf) {
@@ -3714,6 +3971,7 @@ var cf;
             }
         };
         ChatList.prototype.onFlowUpdate = function (event) {
+            var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var currentTag = event.detail.tag;
             if (this.currentResponse)
@@ -3725,14 +3983,18 @@ var cf;
             }
             else {
                 // robot response
-                var robot = this.createResponse(true, currentTag, currentTag.question);
-                if (this.currentUserResponse) {
-                    // linked, but only if we should not ignore existing tag
-                    this.currentUserResponse.setLinkToOtherReponse(robot);
-                    robot.setLinkToOtherReponse(this.currentUserResponse);
-                }
-                // user response, create the waiting response
-                this.currentUserResponse = this.createResponse(false, currentTag);
+                setTimeout(function () {
+                    var robot = _this.createResponse(true, currentTag, currentTag.question);
+                    if (_this.currentUserResponse) {
+                        // linked, but only if we should not ignore existing tag
+                        _this.currentUserResponse.setLinkToOtherReponse(robot);
+                        robot.setLinkToOtherReponse(_this.currentUserResponse);
+                    }
+                    // user response, create the waiting response
+                    setTimeout(function () {
+                        _this.currentUserResponse = _this.createResponse(false, currentTag);
+                    }, 200);
+                }, this.responses.length === 0 ? 500 : 0);
             }
         };
         /**
@@ -3743,7 +4005,7 @@ var cf;
         ChatList.prototype.containsTagResponse = function (tagToChange) {
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
-                if (!element.isRobotReponse && element.tag == tagToChange) {
+                if (!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()) {
                     return true;
                 }
             }
@@ -3785,6 +4047,17 @@ var cf;
             }, 0);
         };
         /**
+        * @name clearFrom
+        * remove responses, this usually happens if a user jumps back to a conditional element
+        */
+        ChatList.prototype.clearFrom = function (index) {
+            index += index % 2; // round up so we dont remove the user response element
+            while (this.responses.length > index) {
+                var element = this.responses.pop();
+                element.dealloc();
+            }
+        };
+        /**
         * @name setCurrentUserResponse
         * Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
         * reponse: FlowDTO
@@ -3801,6 +4074,13 @@ var cf;
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
             this.scrollListTo();
+        };
+        /**
+        * @name getResponses
+        * returns the submitted responses.
+        */
+        ChatList.prototype.getResponses = function () {
+            return this.responses;
         };
         ChatList.prototype.updateThumbnail = function (robot, img) {
             cf.Dictionary.set(robot ? "robot-image" : "user-image", robot ? "robot" : "human", img);
@@ -3819,6 +4099,7 @@ var cf;
             if (value === void 0) { value = null; }
             var response = new cf.ChatResponse({
                 // image: null,
+                list: this,
                 tag: currentTag,
                 eventTarget: this.eventTarget,
                 isRobotReponse: isRobotReponse,
@@ -3841,6 +4122,7 @@ var cf;
                 setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
             }
             catch (e) {
+                // catch errors where CF have been removed
             }
         };
         ChatList.prototype.getTemplate = function () {
@@ -3981,6 +4263,37 @@ var cf;
                 this.showStep();
             }
         };
+        FlowManager.prototype.areConditionsInFlowFullfilled = function (tagWithConditions, tagConditions) {
+            if (!this.activeConditions) {
+                // we don't use this (yet), it's only to keep track of active conditions
+                this.activeConditions = [];
+            }
+            var numConditionsFound = 0;
+            // find out if tagWithConditions fullfills conditions
+            for (var i = 0; i < this.tags.length; i++) {
+                var tag = this.tags[i];
+                if (tag !== tagWithConditions) {
+                    // check if tags are fullfilled
+                    for (var j = 0; j < tagConditions.length; j++) {
+                        var tagCondition = tagConditions[j];
+                        if ("cf-conditional-" + tag.name === tagCondition.key) {
+                            // key found, so check condition
+                            var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
+                            var areConditionsMeet = cf.Tag.testConditions(flowTagValue, tagCondition);
+                            if (areConditionsMeet) {
+                                this.activeConditions[tag.id || tag.name] = tagConditions;
+                                // conditions are meet
+                                if (++numConditionsFound == tagConditions.length) {
+                                    console.log("conditions (active) >>", this.activeConditions);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        };
         FlowManager.prototype.start = function () {
             this.stopped = false;
             this.validateStepAndUpdate();
@@ -3991,8 +4304,26 @@ var cf;
         FlowManager.prototype.nextStep = function () {
             if (this.stopped)
                 return;
-            if (this.savedStep != -1)
-                this.step = this.savedStep;
+            if (this.savedStep != -1) {
+                var foundConditionsToCurrentTag = false;
+                // this happens when editing a tag..
+                // check if any tags has a conditional check for this.currentTag.name
+                for (var i = 0; i < this.tags.length; i++) {
+                    var tag = this.tags[i];
+                    if (tag !== this.currentTag && tag.hasConditions()) {
+                        // tag has conditions so check if it also has the right conditions
+                        if (tag.hasConditionsFor(this.currentTag.name)) {
+                            foundConditionsToCurrentTag = true;
+                            this.step = this.tags.indexOf(this.currentTag);
+                            break;
+                        }
+                    }
+                }
+                // no conditional linking found, so resume flow
+                if (!foundConditionsToCurrentTag) {
+                    this.step = this.savedStep;
+                }
+            }
             this.savedStep = -1; //reset saved step
             this.step++;
             this.validateStepAndUpdate();
@@ -4028,15 +4359,27 @@ var cf;
         */
         FlowManager.prototype.editTag = function (tag) {
             this.ignoreExistingTags = false;
-            this.savedStep = this.step - 1;
+            this.savedStep = this.step - 1; //save step
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
+            if (Object.keys(this.activeConditions).length > 0) {
+                this.savedStep = -1; //don't save step, as we wont return
+                // clear chatlist.
+                this.cfReference.chatList.clearFrom(this.step + 1);
+                //reset from active tag, brute force
+                var editTagIndex = this.tags.indexOf(tag);
+                for (var i = editTagIndex + 1; i < this.tags.length; i++) {
+                    var tag_1 = this.tags[i];
+                    tag_1.reset();
+                }
+            }
         };
         FlowManager.prototype.setTags = function (tags) {
             this.tags = tags;
             for (var i = 0; i < this.tags.length; i++) {
                 var tag = this.tags[i];
                 tag.eventTarget = this.eventTarget;
+                tag.flowManager = this;
             }
         };
         FlowManager.prototype.skipStep = function () {
@@ -4199,6 +4542,7 @@ var cf;
                 }
             }
             else {
+                // tags are manually setup and passed as options.tags.
             }
             // remove invalid tags if they've sneaked in.. this could happen if tags are setup manually as we don't encurage to use static Tag.isTagValid
             var indexesToRemove = [];
@@ -4293,7 +4637,18 @@ var cf;
                 for (var group in groups) {
                     if (groups[group].length > 0) {
                         // always build groupd when radio or checkbox
+                        // find the fieldset, if any..
+                        var isFieldsetValidForCF = function (tag) { return tag && tag.tagName.toLowerCase() !== "fieldset" && !tag.hasAttribute("cf-questions"); };
+                        var fieldset = groups[group][0].domElement.parentNode;
+                        if (fieldset && fieldset.tagName.toLowerCase() !== "fieldset") {
+                            fieldset = fieldset.parentNode;
+                            if (isFieldsetValidForCF(fieldset)) {
+                                // not a valid fieldset, we only accept fieldsets that contain cf attr
+                                fieldset = null;
+                            }
+                        }
                         var tagGroup = new cf_1.TagGroup({
+                            fieldset: fieldset,
                             elements: groups[group]
                         });
                         // remove the tags as they are now apart of a group
@@ -4346,7 +4701,7 @@ var cf;
             if (!this.preventAutoStart)
                 this.flowManager.start();
             if (!this.tags || this.tags.length == 0) {
-                // no tags, so just so the input
+                // no tags, so just show the input
                 this.userInput.visible = true;
             }
         };

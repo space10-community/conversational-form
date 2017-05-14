@@ -13,6 +13,7 @@ namespace cf {
 	// interface
 	export interface ITagGroupOptions{
 		elements: Array <ITag>;
+		fieldset?: HTMLFieldSetElement;
 	}
 
 	export interface ITagGroup extends ITag{
@@ -23,6 +24,7 @@ namespace cf {
 		dealloc():void;
 		required: boolean;
 		disabled: boolean;
+		flowManager: FlowManager;
 	}
 
 	// class
@@ -30,12 +32,14 @@ namespace cf {
 
 		private onInputKeyChangeCallback: () => void;
 		private _values: Array<string>;
+		private questions: Array<string>; // can also be set through `fieldset` cf-questions="..."` attribute.
 		
 		/**
 		* Array checked/choosen ITag's
 		*/
 		private _activeElements: Array<ITag>;
 		private _eventTarget: EventDispatcher;
+		private _fieldset: HTMLFieldSetElement;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -60,6 +64,13 @@ namespace cf {
 			}
 		}
 
+		public set flowManager(value: FlowManager){
+			for (let i = 0; i < this.elements.length; i++) {
+				let tag: ITag = <ITag>this.elements[i];
+				tag.flowManager = value;
+			}
+		}
+
 		public get type (): string{
 			return "group";
 		}
@@ -69,18 +80,19 @@ namespace cf {
 		}
 
 		public get name (): string{
-			return this.elements[0].name;
+			return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
 		}
 
 		public get id (): string{
-			return "tag-group";
+			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
 		}
 
 		public get question():string{
 			// check if elements have the questions, else fallback
-			let tagQuestion: string = this.elements[0].question;
-
-			if(tagQuestion){
+			if(this.questions && this.questions.length > 0){
+				return this.questions[Math.floor(Math.random() * this.questions.length)];
+			}else if(this.elements[0] && this.elements[0].question){
+				let tagQuestion: string = this.elements[0].question;
 				return tagQuestion;
 			}else{
 				// fallback to robot response from dictionary
@@ -95,18 +107,19 @@ namespace cf {
 
 		public get value (): Array<string>{
 			// TODO: fix value???
-			return this._values;
+			return this._values ? this._values : [""];
 		}
 
 		public get disabled (): boolean{
 			let disabled: boolean = false;
+			let allShouldBedisabled: number = 0;
 			for (let i = 0; i < this.elements.length; i++) {
 				let element: ITag = <ITag>this.elements[i];
 				if(element.disabled)
-					disabled = true;
+					allShouldBedisabled++;
 			}
 
-			return disabled;
+			return allShouldBedisabled === this.elements.length;
 		}
 		
 		public get errorMessage():string{
@@ -122,6 +135,13 @@ namespace cf {
 
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
+			
+			// set wrapping element
+			this._fieldset = options.fieldset;
+			if(this._fieldset && this._fieldset.getAttribute("cf-questions")){
+				this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+			}
+
 			if(ConversationalForm.illustrateAppFlow)
 				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
@@ -142,8 +162,55 @@ namespace cf {
 			}
 		}
 
+		public reset(){
+			this._values = [];
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.reset();
+			}
+		}
+
 		public getGroupTagType():string{
 			return this.elements[0].type;
+		}
+
+		public hasConditionsFor(tagName: string):boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditionsFor(tagName)){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public hasConditions():boolean{
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				if(element.hasConditions()){
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		* @name checkConditionalAndIsValid
+		* checks for conditional logic, see documentaiton (wiki)
+		* here we check after cf-conditional{-name} on group tags
+		*/
+		public checkConditionalAndIsValid(): boolean {
+			// can we tap into disabled
+			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
+			for (let i = 0; i < this.elements.length; i++) {
+				let element: ITag = <ITag>this.elements[i];
+				element.checkConditionalAndIsValid();
+			}
+
+			// else return true, as no conditional means happy tag
+			return true;
 		}
 
 		public setTagValueAndIsValid(value: FlowDTO):boolean{
@@ -160,41 +227,20 @@ namespace cf {
 					for (let i = 0; i < value.controlElements.length; i++) {
 						let element: RadioButton = <RadioButton> value.controlElements[i];
 						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						if(element.visible){
-							numberRadioButtonsVisible.push(element);
+						numberRadioButtonsVisible.push(element);
 
-							if(tag == element.referenceTag){
-								(<HTMLInputElement> tag.domElement).checked = element.checked;
-								
-								if(element.checked){
-									this._values.push(<string> tag.value);
-									this._activeElements.push(tag);
-								}
-								// a radio button was checked
-								if(!wasRadioButtonChecked && element.checked)
-									wasRadioButtonChecked = true;
-							}else{
-								(<HTMLInputElement> tag.domElement).checked = false;
+						if(tag == element.referenceTag){
+							if(element.checked){
+								this._values.push(<string> tag.value);
+								this._activeElements.push(tag);
 							}
+							// a radio button was checked
+							if(!wasRadioButtonChecked && element.checked)
+								wasRadioButtonChecked = true;
 						}
 					}
 
-					// special case 1, only one radio button visible from a filter
-					if(!isValid && numberRadioButtonsVisible.length == 1){
-						let element: RadioButton = numberRadioButtonsVisible[0];
-						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						element.checked = true;
-						(<HTMLInputElement> tag.domElement).checked = true;
-						isValid = true;
-
-						if(element.checked){
-							this._values.push(<string> tag.value);
-							this._activeElements.push(tag);
-						}
-					}else if(!isValid && wasRadioButtonChecked){
-						// a radio button needs to be checked of
-						isValid = wasRadioButtonChecked;
-					}
+					isValid = wasRadioButtonChecked;
 
 					break;
 

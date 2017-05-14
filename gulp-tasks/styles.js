@@ -139,9 +139,9 @@ global.gulp.task('styles-docs-build', ['stylus-docs'], function(){
  */
 global.gulp.task('stylus-examples', function(){
 	var src = [
-		global.srcFolder + "../examples/src/**/*.styl"
+		global.srcFolder + "../docs/examples/src/**/*.styl"
 	]
-	var dst = global.srcFolder + "../examples/build";
+	var dst = global.srcFolder + "../docs/examples/build";
 
 	var stream = global.gulp.src(src)
 		.pipe(changed(dst, {
@@ -158,13 +158,13 @@ global.gulp.task('stylus-examples', function(){
 
 global.gulp.task('styles-examples-build', ['stylus-examples'], function(){
 	var src = [
-		global.srcFolder + "../examples/build/styles/**/*.css",
+		global.srcFolder + "../docs/examples/build/styles/**/*.css",
 
-		"!" + global.srcFolder + "../examples/build/conversational-form-examples.css",
-		"!" + global.srcFolder + "../examples/build/conversational-form-examples.min.css",
+		"!" + global.srcFolder + "../docs/examples/build/conversational-form-examples.css",
+		"!" + global.srcFolder + "../docs/examples/build/conversational-form-examples.min.css",
 	]
 	
-	var dst = global.srcFolder + "../examples/build";
+	var dst = global.srcFolder + "../docs/examples/build";
 
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form-examples.css'))

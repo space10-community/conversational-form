@@ -4,11 +4,14 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
-		<link rel="stylesheet" href="../docs/build/conversational-form-docs.min.css"> <!-- docs styling -->
+		<link rel="stylesheet" href="../build/conversational-form-docs.min.css"> <!-- docs styling -->
 		<link rel="stylesheet" href="build/conversational-form-examples.min.css"> <!-- examples styling -->
+
+		<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+
 
 
 		<main class="content">
@@ -60,10 +63,10 @@
 
 				<article>
 					<h1 id="writer">
-						....
+						Edit previous submitted user answers
 					</h1>
 					<h2>
-						....
+						Click on a user response to edit it.
 					</h2>
 				</article>
 			</section>
@@ -71,9 +74,28 @@
 			<section role="form">
 				<div class="form-outer">
 
-					<form id="form">
-						<input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+
+
+					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+					<form id="form" cf-form>
+						<input type="text" cf-questions="Input field, once you submitted your answer, you can click your input to <strong>change</strong> it" name="text" value="">
+						
+						<li class="control">
+							<label>
+								<input cf-questions="Checkboxes, once you submitted your answer, you can click your input to select different elements" type="checkbox" name="account-information" id="account_information-flue-1" checked value="1" class="checkbox">Dog
+							</label>
+							<label>
+								<input type="checkbox" name="account-information" id="account_information-flue-2" value="0" class="checkbox">Cat
+							</label>
+							<label>
+								<input type="checkbox" name="account-information" id="account_information-flue-3" checked value="1" class="checkbox">Fish
+							</label>
+						</li>
+
+						<input type="text" cf-questions="Prevent form submit :)" name="text" value="">
 					</form>
+
+
 
 				</div>
 			</section>
@@ -84,24 +106,8 @@
 		</main>
 
 
-
-		<link type="text/css" rel="stylesheet" href="build/examples-boilerplate.css"/>
-		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
-		<script type="text/javascript" src="../dist/conversational-form.min.js" crossorigin id="conversational-form-development"></script>
-
-
 		<script>
-			(function(){
-				var conversationalForm = new cf.ConversationalForm({
-					formEl: document.getElementById("form"),
-					context: document.getElementById("cf-context"),
-					submitCallback: function(){
-						// be aware that this prevents default form submit.
-						alert("Custom submit callback reached, see markup of this file:102")
-					}
-				});
-			})();
+			
 		</script>
-
 	</body>
 </html>

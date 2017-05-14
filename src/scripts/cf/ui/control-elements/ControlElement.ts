@@ -101,7 +101,10 @@ namespace cf {
 		}
 
 		public set highlight(value: boolean){
-			this.el.classList.toggle("highlight", value);
+			if(value)
+				this.el.classList.add("highlight");
+			else
+				this.el.classList.remove("highlight");
 		}
 	
 		public get focus(): boolean{
@@ -137,6 +140,10 @@ namespace cf {
 			this.el.addEventListener('focus', this.onFocusCallback, false);
 			this.onBlurCallback = this.onBlur.bind(this);
 			this.el.addEventListener('blur', this.onBlurCallback, false);
+
+			if(this.referenceTag.disabled){
+				this.el.setAttribute("disabled", "disabled");
+			}
 		}
 
 		private onBlur(event: Event){
