@@ -187,7 +187,6 @@ namespace cf {
 								this.activeConditions[tag.id || tag.name] = tagConditions;
 								// conditions are meet
 								if(++numConditionsFound == tagConditions.length){
-									console.log("conditions (active) >>", this.activeConditions);
 									return true;
 								}
 							}
