@@ -3826,7 +3826,7 @@ var cf;
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
                     if (response !== this) {
-                        if (response.tag.id) {
+                        if (response.tag && response.tag.id) {
                             innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
                         }
                     }
