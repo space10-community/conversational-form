@@ -386,7 +386,7 @@
 					// console.log("chat list updated...", event);
 				}, false);
 
-				var conversationalForm = new cf.ConversationalForm({
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 					formEl: document.getElementById("form"),
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,

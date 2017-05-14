@@ -3880,6 +3880,7 @@ var cf;
             _super.prototype.setData.call(this, options);
             setTimeout(function () {
                 _this.setValue();
+                _this.updateThumbnail(_this.image);
                 if (_this.isRobotReponse || options.response != null) {
                     // Robot is pseudo thinking, can also be user -->
                     // , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
