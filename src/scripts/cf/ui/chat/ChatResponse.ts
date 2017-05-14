@@ -151,7 +151,7 @@ namespace cf {
 				for (var i = 0; i < reponses.length; i++) {
 					var response: ChatResponse = reponses[i];
 					if(response !== this){
-						if(response.tag.id){
+						if(response.tag && response.tag.id){
 							innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
 						}
 					}
