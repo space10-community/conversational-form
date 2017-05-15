@@ -3826,8 +3826,15 @@ var cf;
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
                     if (response !== this) {
-                        if (response.tag && response.tag.id) {
-                            innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
+                        if (response.tag) {
+                            // check for id, standard
+                            if (response.tag.id) {
+                                innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
+                            }
+                            //fallback check for name
+                            if (response.tag.name) {
+                                innerResponse = innerResponse.split("{" + response.tag.name + "}").join(response.tag.value);
+                            }
                         }
                     }
                 }
