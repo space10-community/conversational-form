@@ -1,5 +1,3 @@
-// version 0.9.0
-
 /// <reference path="ui/UserInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
@@ -11,6 +9,7 @@
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
+/// <reference path="interfaces/Behavior.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -59,6 +58,9 @@ namespace cf {
 
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
 		eventDispatcher?: EventDispatcher;
+
+		// optional behaviors
+		behaviors?:Array<Behavior>;
 	}
 
 	// CUI formless options
@@ -113,6 +115,7 @@ namespace cf {
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
+		private behaviors: Array<Behavior>;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -169,6 +172,11 @@ namespace cf {
 				userImage: options.userImage,
 				robotImage: options.robotImage,
 			});
+
+			// behaviors
+			if(options.behaviors){
+				this.behaviors = options.behaviors;
+			}
 
 			// emoji.. fork and set your own values..
 
