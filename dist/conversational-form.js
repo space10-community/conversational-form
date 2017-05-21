@@ -987,7 +987,6 @@ var cf;
                 // crude way of checking if list has changed...
                 var hasListChanged = this.filterListNumberOfVisible != itemsVisible.length;
                 if (hasListChanged) {
-                    this.resize();
                     this.animateElementsIn();
                 }
                 this.filterListNumberOfVisible = itemsVisible.length;
@@ -1008,6 +1007,7 @@ var cf;
         };
         ControlElements.prototype.animateElementsIn = function () {
             if (this.elements) {
+                this.resize();
                 var elements = this.getElements();
                 if (elements.length > 0) {
                     if (!this.el.classList.contains("animate-in"))
@@ -1303,6 +1303,7 @@ var cf;
                             }
                         }
                         // check again after classes are set.
+                        elOffsetWidth_1 = _this.el.offsetWidth;
                         isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
                         // sort the list so we can set tabIndex properly
                         var elementsCopyForSorting = elements.slice();

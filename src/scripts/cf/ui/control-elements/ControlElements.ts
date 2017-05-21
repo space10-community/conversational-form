@@ -321,7 +321,6 @@ namespace cf {
 				// crude way of checking if list has changed...
 				const hasListChanged: boolean = this.filterListNumberOfVisible != itemsVisible.length;
 				if(hasListChanged){
-					this.resize();
 					this.animateElementsIn();
 				}
 				
@@ -346,6 +345,8 @@ namespace cf {
 
 		public animateElementsIn(){
 			if(this.elements){
+				this.resize();
+
 				const elements: Array<IControlElement> = this.getElements();
 				if(elements.length > 0){
 					if(!this.el.classList.contains("animate-in"))
@@ -668,7 +669,7 @@ namespace cf {
 							containsElementWithImage = true;
 					}
 
-					const elOffsetWidth: number = this.el.offsetWidth;
+					let elOffsetWidth: number = this.el.offsetWidth;
 					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
 					if(isListWidthOverElementWidth && !containsElementWithImage){
 						this.el.classList.add("two-row");
@@ -688,6 +689,7 @@ namespace cf {
 						}
 
 						// check again after classes are set.
+						elOffsetWidth = this.el.offsetWidth;
 						isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
 
 						// sort the list so we can set tabIndex properly
