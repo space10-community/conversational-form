@@ -116,7 +116,6 @@ global.gulp.task('styles-docs-build', ['stylus-docs'], function(){
 		global.srcFolder + "../docs/build/styles/cf/ui/sticky-menu.css",
 		global.srcFolder + "../docs/build/styles/cf/ui/switch.css",
 		
-		"!" + global.srcFolder + "../docs/build/**/cf-theming.css",
 		"!" + global.srcFolder + "../docs/build/**/cf-docs-variables.css",
 		"!" + global.srcFolder + "../docs/build/conversational-form-docs.css",
 		"!" + global.srcFolder + "../docs/build/conversational-form-docs.min.css",
