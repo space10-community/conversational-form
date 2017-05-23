@@ -6,4 +6,8 @@ namespace cf {
 	export interface Behavior{
 		
 	}
+
+	export interface UserInputBehavior extends Behavior{
+		// behaviour specifically for UserInput
+	}
 }
