@@ -187,7 +187,6 @@ namespace cf {
 								this.activeConditions[tag.id || tag.name] = tagConditions;
 								// conditions are meet
 								if(++numConditionsFound == tagConditions.length){
-									console.log("conditions (active) >>", this.activeConditions);
 									return true;
 								}
 							}
@@ -281,7 +280,7 @@ namespace cf {
 			this.step = this.tags.indexOf(tag); // === this.currentTag
 			this.validateStepAndUpdate();
 
-			if(Object.keys(this.activeConditions).length > 0){
+			if(this.activeConditions && Object.keys(this.activeConditions).length > 0){
 				this.savedStep = -1;//don't save step, as we wont return
 
 				// clear chatlist.

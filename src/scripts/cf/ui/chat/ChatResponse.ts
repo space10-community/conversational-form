@@ -151,8 +151,16 @@ namespace cf {
 				for (var i = 0; i < reponses.length; i++) {
 					var response: ChatResponse = reponses[i];
 					if(response !== this){
-						if(response.tag.id){
-							innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
+						if(response.tag){
+							// check for id, standard
+							if(response.tag.id){
+								innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
+							}
+
+							//fallback check for name
+							if(response.tag.name){
+								innerResponse = innerResponse.split("{" + response.tag.name + "}").join(<string> response.tag.value);
+							}
 						}
 					}
 				}

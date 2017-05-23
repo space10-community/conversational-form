@@ -4,4 +4,14 @@ bower_components
 .vscode
 /build
 src/scripts/typings
-examples/iam
+docs/build/conversational-form-docs.css
+docs/build/conversational-form-docs.js
+docs/build/conversational-form-examples.js
+docs/build/cf/ConversationalFormDocs.js
+docs/build/cf/ConversationalFormExamples.js
+docs/build/styles/cf/docs.css
+docs/build/styles/cf/ui/section-cf-context.css
+docs/build/styles/cf/ui/section-form.css
+docs/build/styles/cf/ui/section-info.css
+docs/build/styles/cf/ui/sticky-menu.css
+docs/build/styles/cf/ui/switch.css

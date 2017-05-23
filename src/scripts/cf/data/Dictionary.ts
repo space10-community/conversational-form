@@ -124,7 +124,7 @@ namespace cf {
 
 		// can be overwritten
 		protected data: any = {
-			"user-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/human.png",
+			"user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
 			"entry-not-found": "Dictionary item not found.",
 			"input-placeholder": "Type your answer here ...",
 			"group-placeholder": "Type to filter list ...",
@@ -142,7 +142,7 @@ namespace cf {
 
 		// can be overwriten
 		protected robotData: any = {
-			"robot-image": "https://conversational-form-static-0iznjsw.stackpathdns.com/src/images/robot.png",
+			"robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
 			"input": "Please write some text.",
 			"text": "Please write some text.",
 			"checkbox": "Select as many as you want.",
