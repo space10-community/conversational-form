@@ -112,7 +112,7 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 
 global.gulp.task('typescript-docs', function() {
 	var src = [
-		global.srcFolder + "../docs/src/scripts/**/*.ts",
+		global.srcFolder + "../docs/src/scripts/**/ConversationalFormDocs.ts",
 		"!" + global.srcFolder + "../docs/src/scripts/typings/**/*.d.ts"
 		];
 	var dst = global.buildFolder + "../docs/build";
@@ -137,7 +137,7 @@ global.gulp.task('typescript-docs', function() {
 global.gulp.task('scripts-docs-build', ['typescript-docs'], function(){
 	// build order is important in a inheritance world
 	var src = [
-		global.buildFolder + "../docs/build/cf/**/*.js"
+		global.buildFolder + "../docs/build/cf/**/ConversationalFormDocs.js"
 	];
 	var dst = global.srcFolder + "../docs/build";
 
@@ -160,10 +160,10 @@ global.gulp.task('scripts-docs-build', ['typescript-docs'], function(){
 
 global.gulp.task('typescript-examples', function() {
 	var src = [
-		global.srcFolder + "../docs/examples/src/scripts/**/*.ts",
-		"!" + global.srcFolder + "../docs/examples/src/scripts/typings/**/*.d.ts"
+		global.srcFolder + "../docs/src/scripts/**/ConversationalFormExamples.ts",
+		"!" + global.srcFolder + "../docs/src/scripts/typings/**/*.d.ts"
 		];
-	var dst = global.buildFolder + "../docs/examples/build";
+	var dst = global.buildFolder + "../docs/build";
 
 	var stream = global.gulp.src(src)
 		.pipe(changed(dst,{
@@ -185,9 +185,9 @@ global.gulp.task('typescript-examples', function() {
 global.gulp.task('scripts-examples-build', ['typescript-examples'], function(){
 	// build order is important in a inheritance world
 	var src = [
-		global.buildFolder + "../docs/examples/build/cf/**/*.js"
+		global.buildFolder + "../docs/build/cf/**/ConversationalFormExamples.js"
 	];
-	var dst = global.srcFolder + "../docs/examples/build";
+	var dst = global.srcFolder + "../docs/build";
 
 	var stream = global.gulp.src(src)
 		.pipe(concat('conversational-form-examples.js'))
