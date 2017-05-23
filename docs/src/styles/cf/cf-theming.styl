@@ -1,0 +1,112 @@
+@import "_cf-docs-variables"
+
+$color-cf-black = #222222
+$color-cf-grey = #EBEBEB
+$color-cf-white = white
+
+main.content
+	.conversational-form
+		font-family Helvetica Neue, Helvetica
+		font-style normal
+
+		cf-chat-response
+			padding-top 0px
+			min-width 200px
+			+below($breakpoint-1)
+				max-width 83%
+
+			text
+				font-weight $font-weight-bold
+				min-height 42px
+				font-size 13px
+
+			thumb
+				background-color $color-cf-grey
+				height 42px
+				width 42px
+			
+			&:not(:last-of-type)
+				margin-bottom 10px
+
+		cf-chat-response.robot
+			padding-left 48px
+
+			text
+				background $color-cf-grey
+				color $color-cf-black
+				border-radius 4px 20px 20px 20px
+
+			thumb
+				background-color $color-cf-grey
+				background-size 20px 20px
+				background-repeat no-repeat
+		
+		cf-chat-response.user
+			padding-right 48px
+
+			text
+				background $color-cf-black
+				color $color-cf-white
+				border-radius 20px 4px 20px 20px
+
+			thumb
+				background-color $color-cf-black
+				background-size 20px 16px
+				background-repeat no-repeat
+				background-position 11px 12px
+
+		cf-input input, cf-input textarea
+			border-radius 40px
+			min-height 57px
+			font-size 14px
+			+above($breakpoint-1)
+				font-size 16px
+			padding 19px 60px 19px 40px
+			height 56px
+			color rgba($color-cf-black, 0.4)
+			font-weight $font-weight-bold
+			&:not(:focus)
+				box-shadow 0 0 1px rgba(58, 58, 58, 0.5)
+
+
+		cf-input-button
+			background $color-cf-black
+			height 42px
+			width 42px
+			border none
+
+			.cf-icon-progress
+				background-image url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMThweCIgaGVpZ2h0PSIxOXB4IiB2aWV3Qm94PSIwIDAgMTggMTkiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTM3Mi4wMDAwMDAsIC05NDUuMDAwMDAwKSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NTEuMDAwMDAwLCA5MjcuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MjIuMDAwMDAwLCAxOS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNOC4xNDAzNTA4OCwyLjEwOTE4MTE0IEw4LjE0MDM1MDg4LDE2LjA4MDkzODUiIGlkPSJMaW5lIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJSZWN0YW5nbGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcuOTkzODAzLCA4LjA2ODc0NSkgcm90YXRlKC0zMTUuMDAwMDAwKSB0cmFuc2xhdGUoLTcuOTkzODAzLCAtOC4wNjg3NDUpICIgcG9pbnRzPSIyLjYyNTkxMzI4IDEzLjQ4Njk1OCAyLjYyNTkxMzI4IDIuNjUwNTMxMjEgMi42MjU5MTMyOCAyLjY1MDUzMTIxIDEzLjM2MTY5MjEgMi42NTA1MzEyMSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+")
+				background-size 18px 19px
+			
+			&.loading:after
+				border 2px solid #1ed97b
+
+		.cf-button
+			color $color-cf-black
+			border-color #DDDDDD
+			transition border-color $anim-time $anim-easeOut, color $anim-time $anim-easeOut
+			background none !important
+			font-weight $font-weight-bold
+			line-height 1.2
+
+			> div
+				padding 14px 24px
+			
+			cf-radio
+				background rgba($color-cf-black, 0.2)
+
+			&.highlight, &:focus, &:hover, &[checked="checked"], &.selected
+				border-color darken(#DDDDDD, 50%)
+				color lighten($color-cf-black, 25%)
+
+				cf-radio, cf-radio, cf-radio
+					background $color-cf-black
+		
+		cf-list-button:after
+			background-image none
+			background black
+			width 5px
+			height 5px
+			border-radius 50%
+

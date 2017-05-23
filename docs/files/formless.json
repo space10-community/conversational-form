@@ -1,0 +1,105 @@
+{
+	"options": {
+		"preventAutoAppend": true,
+		"submitCallback": "window.onFormlessSubmited"
+	},
+	"tags": [
+		{
+			"tag": "input",
+			"type": "text",
+			"value": "Prefilled value here",
+			"cf-questions": "Input w. prefilled value"
+		},
+		{
+			"tag": "select",
+			"cf-input-placeholder": "Choose one of the above",
+			"multiple": "multiple",
+			"cf-questions": "Choose multiple of the elements from the list",
+			"children":[
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-1",
+					"value": "-1"
+				},
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-2",
+					"value": "-2"
+				}
+			]
+		},
+		{
+			"tag": "fieldset",
+			"type": "Radio buttons",
+			"cf-input-placeholder": "Choose one of the above",
+			"cf-questions": "Choose one of the radioss",
+			"children":[
+				{
+					"tag": "input",
+					"type": "radio",
+					"name": "radio-buttons-1",
+					"cf-label": "radio-1",
+					"checked": "checked"
+				},
+				{
+					"tag": "input",
+					"type": "radio",
+					"name": "radio-buttons-1",
+					"cf-label": "radio-2"
+				}
+			]
+		},
+		{
+			"tag": "fieldset",
+			"type": "Checkboxes",
+			"cf-input-placeholder": "Choose above",
+			"cf-questions": "Choose some checkboxes",
+			"children":[
+				{
+					"tag": "input",
+					"type": "checkbox",
+					"name": "checkboxes-buttons-1",
+					"cf-label": "checkbox-1",
+					"checked": "checked"
+				},
+				{
+					"tag": "input",
+					"type": "checkbox",
+					"name": "checkboxes-buttons-1",
+					"cf-label": "checkbox-2"
+				}
+			]
+		},
+		{
+			"tag": "input",
+			"type": "password",
+			"cf-input-placeholder": "Password field",
+			"cf-questions": "Write a password"
+		},
+		{
+			"tag": "input",
+			"type": "text",
+			"pattern": ".{5,10}",
+			"cf-input-placeholder": "Input w. pattern attribute",
+			"cf-error": "No less than 5 and no more than 10 characters",
+			"cf-questions": "Keep between 5-10 characters"
+		},
+		{
+			"tag": "input",
+			"type": "text",
+			"required": "required",
+			"cf-questions": "This field is required (attribute)",
+			"cf-error": "Please write something"
+		},
+		{
+			"tag": "input",
+			"type": "text",
+			"required": "required",
+			"cf-questions": "This field uses window.testValidation",
+			"cf-validation": "window.testValidation",
+			"cf-error": "Check the window.testValidation method"
+		}
+	]
+}

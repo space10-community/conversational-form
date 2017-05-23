@@ -1,0 +1,103 @@
+@import "../_cf-docs-variables"
+
+main.content
+	&.cf-toggle
+		.switch-btn
+			&:after
+				opacity 0
+
+			&:before
+				opacity 1
+
+			.switch
+				.slider
+					background-color $color-green
+
+				.slider
+					box-shadow 0 0 1px $color-green
+
+				.slider:before
+					transform translateX(26px)
+
+					+above($breakpoint-1)
+						transform translateX(39px)
+
+	.switch-btn
+		font-size 13px
+		font-weight $font-weight-bold
+		border none
+		background none
+		padding 0
+		margin 0
+
+		&:after
+			content attr(data-label)
+			opacity 1
+
+		&:before
+			content attr(data-label-toggled)
+			opacity 0
+
+		&:after, &:before
+			display block
+			position absolute
+			left -11px
+			top 50%
+			transform translateX(-100%) translateY(-50%)
+			white-space nowrap
+			will-change opacity
+			transition opacity $anim-time-2 $anim-easeOut
+
+		.switch
+			position relative
+			display inline-block
+			width 56px
+			height 28px
+
+			+above($breakpoint-1)
+				width 80px
+				height 40px
+
+			padding 0
+			margin 0
+			border none
+			background none
+			cursor pointer
+
+
+			input
+				display none
+
+			.slider
+				position absolute
+				pointer-events none
+				top 0
+				left 0
+				right 0
+				bottom 0
+				background-color #ccc
+				will-change transform, background-color
+				transition transform $anim-time-2 $anim-easeOut, background-color $anim-time-2 $anim-easeOut
+
+				&.round
+					border-radius 34px
+
+					&:before
+						border-radius 50%
+
+				&:before
+					position absolute
+					content ""
+					height 20px
+					width 20px
+					left 4px
+					bottom 4px
+
+					+above($breakpoint-1)
+						height 30px
+						width 30px
+						left 5px
+						bottom 5px
+
+					background-color white
+					transition transform $anim-time-2 $anim-easeOut

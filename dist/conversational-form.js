@@ -3826,8 +3826,15 @@ var cf;
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
                     if (response !== this) {
-                        if (response.tag.id) {
-                            innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
+                        if (response.tag) {
+                            // check for id, standard
+                            if (response.tag.id) {
+                                innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
+                            }
+                            //fallback check for name
+                            if (response.tag.name) {
+                                innerResponse = innerResponse.split("{" + response.tag.name + "}").join(response.tag.value);
+                            }
                         }
                     }
                 }
@@ -4361,7 +4368,7 @@ var cf;
             this.savedStep = this.step - 1; //save step
             this.step = this.tags.indexOf(tag); // === this.currentTag
             this.validateStepAndUpdate();
-            if (Object.keys(this.activeConditions).length > 0) {
+            if (this.activeConditions && Object.keys(this.activeConditions).length > 0) {
                 this.savedStep = -1; //don't save step, as we wont return
                 // clear chatlist.
                 this.cfReference.chatList.clearFrom(this.step + 1);

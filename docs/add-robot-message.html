@@ -4,17 +4,63 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
 	</head>
+
 	<body>
-		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
+		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
 
 		<script>
-			function submitMethod(){
-				console.log("formdata:", window.ConversationalForm.getFormData())
-				console.log("formdata serialized:", window.ConversationalForm.getFormData(true))
-				alert("Check dev console")
+			// example specific code
+			function addRandomClick(){
+				var ran = ["Random message 1", "Random message 2"];
+				if(window.ConversationalForm){
+					window.ConversationalForm.addRobotChatResponse(ran[Math.floor(Math.random() * ran.length)]);
+				}
+			}
 
-				return false;
+			const transcript = ["What is the purpose of life?",
+				"To serve the greater good.",
+				"What is the purpose of living?",
+				"To live forever",
+				"Where are you now?",
+				"I’m in the middle of nowhere.",
+				"What is the purpose of dying?",
+				"To have a life.",
+				"What is the purpose of emotions?",
+				"I don’t know",
+				"What is moral?",
+				"What empowered humanity, what intellectual the essence is",
+				"What is immoral?",
+				"The fact that you have a child.",
+				"What is morality?",
+				"What is altruism?",
+				"What is the definition of altruism?",
+				"If you don’t believe in god, then you don’t know",
+				"Ok ... so what is the definition of morality?",
+				"Well, the truth is, you’re not a believer in god almighty",
+				"Tell me the definition of morality, I am quite upset now!",
+				"I’m done!"];
+
+			let transcriptIndex = 0;
+
+			function robotStartsTalkingToItself(){
+				var next = transcript[transcriptIndex]
+				window.ConversationalForm.addRobotChatResponse(next);
+				transcriptIndex++;
+
+				if(transcriptIndex < transcript.length){
+					setTimeout(() => {
+						robotStartsTalkingToItself();
+					}, (next.length / 50) * 1000);
+				}
+			}
+
+			function initExample(){
+				// called from examples code
+				robotStartsTalkingToItself();
 			}
 		</script>
 
@@ -68,22 +114,17 @@
 
 				<article>
 					<h1 id="writer">
-						Distribution files
+						Add random robot response to Conversational Form
 					</h1>
 					<h2>
-						....
+
 					</h2>
 				</article>
 			</section>
 
 			<section role="form">
 				<div class="form-outer">
-
-					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form onsubmit="return submitMethod();">
-						<input type="text" name="field-name" cf-questions="Fill out field to get Alert from callback method." />
-					</form>
-
+					<form id="form" cf-form></form>
 				</div>
 			</section>
 
@@ -91,10 +132,5 @@
 				
 			</section>
 		</main>
-
-
-		<link type="text/css" rel="stylesheet" href="../..dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../..dist/conversational-form.min.js" crossorigin></script>
-
 	</body>
 </html>
