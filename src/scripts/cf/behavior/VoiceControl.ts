@@ -5,7 +5,7 @@ namespace cf {
 	// interface
 
 	// class
-	export class VoiceControl extends Object implements Behavior{
+	export class VoiceControl implements UserInputBehavior{
 		
 	}
 }
