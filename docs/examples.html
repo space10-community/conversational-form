@@ -1,23 +1,16 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
-		<script src="build/cf/ConversationalFormExamples.js" id="examples-script"></script>
-
-		<script>
-			function submitMethod(){
-				console.log("formdata:", window.ConversationalForm.getFormData())
-				console.log("formdata serialized:", window.ConversationalForm.getFormData(true))
-				alert("Check dev console")
-
-				return false;
-			}
-		</script>
-
+		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
 
 		<main class="content">
 			<menu id="small-screen-menu">
@@ -68,20 +61,38 @@
 
 				<article>
 					<h1 id="writer">
-						Distribution files
+						Examples overview
 					</h1>
 					<h2>
-						....
+						On the right you will find a list of examples.
 					</h2>
 				</article>
 			</section>
+
+			<script>
+				function examplesChoiceMade(event){
+					event.preventDefault();
+					var file = window.ConversationalForm.getFormData(true)["examples"][0];
+					var cur = window.location.href.split("/")[window.location.href.split("/").length - 1];
+					window.location = window.location.href.split(cur).join(file);
+					return false;
+				}
+			</script>
 
 			<section role="form">
 				<div class="form-outer">
 
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
-					<form id="form" cf-form onsubmit="return submitMethod();">
-						<input type="text" name="field-name" cf-questions="Fill out field to get Alert from callback method." />
+					<form id="form" cf-form onsubmit="examplesChoiceMade(event)">
+						<fieldset cf-questions="Choose an example" name="examples" id="examples" cf-error="You need to choose one of the examples above">
+							<input type="radio" value="conditional-flow.html" cf-label="Conditional Flow" />
+							<input type="radio" value="formless.html" cf-label="Formless" />
+							<input type="radio" value="value-piping.html" cf-label="Value piping {value}" />
+							<input type="radio" value="add-robot-response.html" cf-label="Add robot response" />
+							<input type="radio" value="auto-form-detection.html" cf-label="Auto form detection" />
+							<input type="radio" value="image-answers.html" cf-label="Images as answers" />
+							<input type="radio" value="jquery.html" cf-label="Init with jQuery" />
+						</fieldset>
 					</form>
 
 				</div>
@@ -91,10 +102,5 @@
 				
 			</section>
 		</main>
-
-
-		<link type="text/css" rel="stylesheet" href="../..dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../..dist/conversational-form.min.js" crossorigin></script>
-
 	</body>
 </html>
