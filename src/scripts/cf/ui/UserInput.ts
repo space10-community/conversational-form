@@ -223,6 +223,9 @@ namespace cf {
 			this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
 			clearTimeout(this.errorTimer);
 
+			// remove loading class
+			this.submitButton.classList.remove("loading");
+
 			this.errorTimer = setTimeout(() => {
 				this.disabled = false;
 				this.el.removeAttribute("error");

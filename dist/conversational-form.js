@@ -3367,6 +3367,8 @@ var cf;
             // cf-error
             this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
             clearTimeout(this.errorTimer);
+            // remove loading class
+            this.submitButton.classList.remove("loading");
             this.errorTimer = setTimeout(function () {
                 _this.disabled = false;
                 _this.el.removeAttribute("error");
