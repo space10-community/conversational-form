@@ -16,8 +16,6 @@ namespace cf {
 
 	// class
 	export class UserTextInput extends UserInputElement implements IUserInputElement {
-		public el: HTMLElement;
-		private cfReference: ConversationalForm;
 		private inputElement: HTMLInputElement | HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
 
@@ -40,18 +38,6 @@ namespace cf {
 		private _active: boolean = false;
 		public get active(): boolean{
 			return this.inputElement === document.activeElement || this._active;
-		}
-
-		public set visible(value: boolean){
-			this._visible = value;
-
-			if(!this.el.classList.contains("animate-in") && value){
-				setTimeout(() => {
-					this.el.classList.add("animate-in");
-				}, 0);
-			}else if(this.el.classList.contains("animate-in") && !value){
-				this.el.classList.remove("animate-in");
-			}
 		}
 
 		public set disabled(value: boolean){
@@ -313,8 +299,6 @@ namespace cf {
 			}
 
 			setTimeout(() => {
-				this.visible = true;
-				this.disabled = false;
 				this.onInputChange();
 			}, 150);
 		}

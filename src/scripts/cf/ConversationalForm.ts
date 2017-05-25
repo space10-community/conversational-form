@@ -426,6 +426,10 @@ namespace cf {
 				});
 			}
 
+			if(this.userInputObject.init){
+				this.userInputObject.init();
+			}
+
 			innerWrap.appendChild(this.userInput.el);
 
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);

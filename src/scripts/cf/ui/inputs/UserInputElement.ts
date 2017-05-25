@@ -10,6 +10,8 @@ namespace cf {
 	export class UserInputElement extends BasicElement implements IUserInputElement {
 		public static ERROR_TIME: number = 2000;
 		public static preventAutoFocus: boolean = false;
+		public el: HTMLElement;
+		protected cfReference: ConversationalForm;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;
 		protected _currentTag: ITag | ITagGroup;
@@ -19,12 +21,32 @@ namespace cf {
 		public get currentTag(): ITag | ITagGroup{
 			return this._currentTag;
 		}
-		public set disabled(value: boolean){
-			this._disabled = value;
-		}
+	
 		public set visible(value: boolean){
 			this._visible = value;
+
+			if(!this.el.classList.contains("animate-in") && value){
+				setTimeout(() => {
+					this.el.classList.add("animate-in");
+				}, 0);
+			}else if(this.el.classList.contains("animate-in") && !value){
+				this.el.classList.remove("animate-in");
+			}
 		}
+
+		public set disabled(value: boolean){
+			const hasChanged: boolean = this._disabled != value;
+			if(hasChanged){
+				this._disabled = value;
+				if(value){
+					this.el.setAttribute("disabled", "disabled");
+				}else{
+					this.setFocusOnInput();
+					this.el.removeAttribute("disabled");
+				}
+			}
+		}
+
 		constructor(options: any){
 			super(options);
 
@@ -34,6 +56,7 @@ namespace cf {
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
+
 		public getFlowDTO():FlowDTO{
 			let value: FlowDTO;// = this.inputElement.value;
 			return value;
@@ -56,6 +79,11 @@ namespace cf {
 		protected onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
+
+			setTimeout(() => {
+				this.visible = true;
+				this.disabled = false;
+			}, 150);
 		}
 		protected windowFocus(event: Event){
 
