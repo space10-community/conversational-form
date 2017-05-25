@@ -11,14 +11,22 @@
     "url": "https://github.com/space10-community/conversational-form"
   },
   "author": {
-    "name" : "Felix Nielsen",
+    "name": "Felix Nielsen",
     "email": "felix.nielsen@rwatgg.dk",
-    "url"  : "http://rwatgg.dk"
+    "url": "http://rwatgg.dk"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/space10-community/conversational-form/issues"
   },
   "homepage": "https://github.com/space10-community/conversational-form",
-  "ignore": ["build"]
+  "ignore": [
+    "build"
+  ],
+  "devDependencies": {
+    "jasmine-core": "^2.6.2",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-jasmine": "^1.1.0"
+  }
 }
