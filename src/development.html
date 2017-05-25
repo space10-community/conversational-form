@@ -23,6 +23,14 @@
 
 			<form id="form">
 
+				<fieldset cf-questions="Choose an example" name="examples" id="examples">
+						<input type="radio" value="conditional-flow.html" cf-label="Conditional Flow" />
+						<input type="radio" value="formless.html" cf-label="Formless" />
+						<input type="radio" cf-label="Add robot response" />
+						<input type="radio" cf-label="Auto form detection" />
+						<input type="radio" cf-label="jQuery" />
+					</fieldset>
+
 				<div id="test-value" cf-questions="Ready to try a conditional flow?">
 					<label for="intro-yes">Yes
 						<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
@@ -335,7 +343,17 @@
 
 		<script
 			type="text/javascript"
-			src="../build/cf/ui/UserInput.js"
+			src="../build/cf/ui/inputs/UserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserTextInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserVoiceInput.js"
 		></script>
 
 		<script

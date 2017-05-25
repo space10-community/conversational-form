@@ -723,6 +723,9 @@ var cf;
 // namespace
 var cf;
 (function (cf) {
+    cf.ControlElementsEvents = {
+        ON_RESIZE: "on-control-elements-resize"
+    };
     var ControlElements = (function () {
         function ControlElements(options) {
             this.animateInFromReponseTimer = 0;
@@ -987,7 +990,6 @@ var cf;
                 // crude way of checking if list has changed...
                 var hasListChanged = this.filterListNumberOfVisible != itemsVisible.length;
                 if (hasListChanged) {
-                    this.resize();
                     this.animateElementsIn();
                 }
                 this.filterListNumberOfVisible = itemsVisible.length;
@@ -1008,6 +1010,7 @@ var cf;
         };
         ControlElements.prototype.animateElementsIn = function () {
             if (this.elements) {
+                this.resize();
                 var elements = this.getElements();
                 if (elements.length > 0) {
                     if (!this.el.classList.contains("animate-in"))
@@ -1303,6 +1306,7 @@ var cf;
                             }
                         }
                         // check again after classes are set.
+                        elOffsetWidth_1 = _this.el.offsetWidth;
                         isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
                         // sort the list so we can set tabIndex properly
                         var elementsCopyForSorting = elements.slice();
@@ -1314,7 +1318,7 @@ var cf;
                         for (var i = 0; i < tabIndexFilteredElements.length; i++) {
                             var element = tabIndexFilteredElements[i];
                             if (element.visible) {
-                                //tabindex 1 are the UserInput element
+                                //tabindex 1 are the UserTextInput element
                                 element.tabIndex = 2 + (tabIndex++);
                             }
                             else {
@@ -1322,7 +1326,6 @@ var cf;
                             }
                         }
                         // toggle nav button visiblity
-                        cancelAnimationFrame(_this.rAF);
                         if (isListWidthOverElementWidth_1) {
                             _this.el.classList.remove("hide-nav-buttons");
                         }
@@ -1334,6 +1337,7 @@ var cf;
                         _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
                         _this.buildTabableRows();
                         _this.el.classList.add("resized");
+                        _this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
                         if (resolve)
                             resolve();
                     }, 0);
@@ -1343,8 +1347,6 @@ var cf;
         ControlElements.prototype.dealloc = function () {
             this.currentControlElement = null;
             this.tableableRows = null;
-            cancelAnimationFrame(this.rAF);
-            this.rAF = null;
             window.removeEventListener('resize', this.onResizeCallback, false);
             this.onResizeCallback = null;
             this.el.removeEventListener('scroll', this.onScrollCallback, false);
@@ -2136,7 +2138,7 @@ var cf;
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="InputTag.ts"/>
 /// <reference path="SelectTag.ts"/>
-/// <reference path="../ui/UserInput.ts"/>
+/// <reference path="../ui/inputs/UserTextInput.ts"/>
 // group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same
 // multi choice logic for Checkboxes, <input type="checkbox", where name is the same
@@ -3179,9 +3181,11 @@ var cf;
     cf.UploadFileUI = UploadFileUI;
 })(cf || (cf = {}));
 
-/// <reference path="BasicElement.ts"/>
-/// <reference path="control-elements/ControlElements.ts"/>
-/// <reference path="../logic/FlowManager.ts"/>
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInput.ts"/>
+/// <reference path="UserInput.ts"/>
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3196,25 +3200,17 @@ var __extends = (this && this.__extends) || (function () {
 var cf;
 (function (cf) {
     // interface
-    cf.UserInputEvents = {
-        SUBMIT: "cf-input-user-input-submit",
-        KEY_CHANGE: "cf-input-key-change",
-        CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
-        HEIGHT_CHANGE: "cf-input-height-change",
-        FOCUS: "cf-input-focus",
-        BLUR: "cf-input-blur",
-    };
     // class
-    var UserInput = (function (_super) {
-        __extends(UserInput, _super);
-        function UserInput(options) {
+    var UserTextInput = (function (_super) {
+        __extends(UserTextInput, _super);
+        function UserTextInput(options) {
             var _this = _super.call(this, options) || this;
             _this.errorTimer = 0;
             _this.initialInputHeight = 0;
             _this.shiftIsDown = false;
-            _this._disabled = false;
             //acts as a fallb ack for ex. shadow dom implementation
             _this._active = false;
+            alert("123");
             _this.cfReference = options.cfReference;
             _this.eventTarget = options.eventTarget;
             _this.inputElement = _this.el.getElementsByTagName("textarea")[0];
@@ -3229,14 +3225,10 @@ var cf;
                 eventTarget: _this.eventTarget
             });
             // setup event listeners
-            _this.windowFocusCallback = _this.windowFocus.bind(_this);
-            window.addEventListener('focus', _this.windowFocusCallback, false);
             _this.keyUpCallback = _this.onKeyUp.bind(_this);
             document.addEventListener("keyup", _this.keyUpCallback, false);
             _this.keyDownCallback = _this.onKeyDown.bind(_this);
             document.addEventListener("keydown", _this.keyDownCallback, false);
-            _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
-            _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
             _this.onOriginalTagChangedCallback = _this.onOriginalTagChanged.bind(_this);
             _this.eventTarget.addEventListener(cf.TagEvents.ORIGINAL_ELEMENT_CHANGED, _this.onOriginalTagChangedCallback, false);
             _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
@@ -3245,21 +3237,23 @@ var cf;
             _this.eventTarget.addEventListener(cf.ControlElementEvents.SUBMIT_VALUE, _this.onControlElementSubmitCallback, false);
             _this.onControlElementProgressChangeCallback = _this.onControlElementProgressChange.bind(_this);
             _this.eventTarget.addEventListener(cf.ControlElementEvents.PROGRESS_CHANGE, _this.onControlElementProgressChangeCallback, false);
+            // this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
             _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
             _this.onSubmitButtonClickCallback = _this.onSubmitButtonClick.bind(_this);
             _this.submitButton.addEventListener("click", _this.onSubmitButtonClickCallback, false);
             return _this;
         }
-        Object.defineProperty(UserInput.prototype, "active", {
+        Object.defineProperty(UserTextInput.prototype, "active", {
             get: function () {
                 return this.inputElement === document.activeElement || this._active;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(UserInput.prototype, "visible", {
+        Object.defineProperty(UserTextInput.prototype, "visible", {
             set: function (value) {
                 var _this = this;
+                this._visible = value;
                 if (!this.el.classList.contains("animate-in") && value) {
                     setTimeout(function () {
                         _this.el.classList.add("animate-in");
@@ -3272,14 +3266,7 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(UserInput.prototype, "currentTag", {
-            get: function () {
-                return this._currentTag;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UserInput.prototype, "disabled", {
+        Object.defineProperty(UserTextInput.prototype, "disabled", {
             set: function (value) {
                 var hasChanged = this._disabled != value;
                 if (hasChanged) {
@@ -3297,14 +3284,14 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        UserInput.prototype.getInputValue = function () {
+        UserTextInput.prototype.getInputValue = function () {
             var str = this.inputElement.value;
             // Build-in way to handle XSS issues ->
             var div = document.createElement('div');
             div.appendChild(document.createTextNode(str));
             return div.innerHTML;
         };
-        UserInput.prototype.getFlowDTO = function () {
+        UserTextInput.prototype.getFlowDTO = function () {
             var value; // = this.inputElement.value;
             // check for values on control elements as they should overwrite the input value.
             if (this.controlElements && this.controlElements.active) {
@@ -3322,12 +3309,12 @@ var cf;
             value.tag = this.currentTag;
             return value;
         };
-        UserInput.prototype.reset = function () {
+        UserTextInput.prototype.reset = function () {
             if (this.controlElements) {
                 this.controlElements.clearTagsAndReset();
             }
         };
-        UserInput.prototype.onFlowStopped = function () {
+        UserTextInput.prototype.onFlowStopped = function () {
             if (this.controlElements)
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
@@ -3336,7 +3323,7 @@ var cf;
         * @name onOriginalTagChanged
         * on domElement from a Tag value changed..
         */
-        UserInput.prototype.onOriginalTagChanged = function (event) {
+        UserTextInput.prototype.onOriginalTagChanged = function (event) {
             if (this.currentTag == event.detail.tag) {
                 this.onInputChange();
             }
@@ -3344,7 +3331,7 @@ var cf;
                 this.controlElements.updateStateOnElementsFromTag(event.detail.tag);
             }
         };
-        UserInput.prototype.onInputChange = function () {
+        UserTextInput.prototype.onInputChange = function () {
             if (!this.active && !this.controlElements.active)
                 return;
             // safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
@@ -3356,7 +3343,7 @@ var cf;
                 detail: this.inputElement.scrollHeight
             }));
         };
-        UserInput.prototype.inputInvalid = function (event) {
+        UserTextInput.prototype.inputInvalid = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var dto = event.detail;
@@ -3378,9 +3365,9 @@ var cf;
                 _this.setFocusOnInput();
                 if (_this.controlElements)
                     _this.controlElements.resetAfterErrorMessage();
-            }, UserInput.ERROR_TIME);
+            }, cf.UserInput.ERROR_TIME);
         };
-        UserInput.prototype.setPlaceholder = function () {
+        UserTextInput.prototype.setPlaceholder = function () {
             if (this._currentTag) {
                 if (this._currentTag.inputPlaceholder) {
                     this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
@@ -3393,7 +3380,7 @@ var cf;
                 this.inputElement.setAttribute("placeholder", cf.Dictionary.get("group-placeholder"));
             }
         };
-        UserInput.prototype.checkForCorrectInputTag = function () {
+        UserTextInput.prototype.checkForCorrectInputTag = function () {
             // handle password natively
             var currentType = this.inputElement.getAttribute("type");
             var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
@@ -3433,11 +3420,10 @@ var cf;
             }
             this.setFocusOnInput();
         };
-        UserInput.prototype.onFlowUpdate = function (event) {
+        UserTextInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
-            cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+            _super.prototype.onFlowUpdate.call(this, event);
             // animate input field in
-            this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
             // replace textarea and visa versa
             this.checkForCorrectInputTag();
@@ -3467,29 +3453,29 @@ var cf;
                 _this.onInputChange();
             }, 150);
         };
-        UserInput.prototype.onControlElementProgressChange = function (event) {
+        UserTextInput.prototype.onControlElementProgressChange = function (event) {
             var status = event.detail;
             this.disabled = status == cf.ControlElementProgressStates.BUSY;
         };
-        UserInput.prototype.buildControlElements = function (tags) {
+        UserTextInput.prototype.buildControlElements = function (tags) {
             this.controlElements.buildTags(tags);
         };
-        UserInput.prototype.onControlElementSubmit = function (event) {
+        UserTextInput.prototype.onControlElementSubmit = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             // when ex a RadioButton is clicked..
             var controlElement = event.detail;
             this.controlElements.updateStateOnElements(controlElement);
             this.doSubmit();
         };
-        UserInput.prototype.onSubmitButtonClick = function (event) {
+        UserTextInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
-        UserInput.prototype.isMetaKeyPressed = function (event) {
+        UserTextInput.prototype.isMetaKeyPressed = function (event) {
             // if any meta keys, then ignore, getModifierState, but safari does not support..
             if (event.metaKey || [91, 93].indexOf(event.keyCode) !== -1)
                 return;
         };
-        UserInput.prototype.onKeyDown = function (event) {
+        UserTextInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
@@ -3502,7 +3488,7 @@ var cf;
                 event.preventDefault();
             }
         };
-        UserInput.prototype.onKeyUp = function (event) {
+        UserTextInput.prototype.onKeyUp = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
@@ -3556,7 +3542,7 @@ var cf;
                             // if select or checkbox then check for multi select item
                             if (tagType == "checkbox" || mutiTag.multipleChoice) {
                                 if (this.active && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
-                                    // click on UserInput submit button, only ENTER allowed
+                                    // click on UserTextInput submit button, only ENTER allowed
                                     this.submitButton.click();
                                 }
                                 else {
@@ -3591,7 +3577,7 @@ var cf;
             }
             this.onInputChange();
         };
-        UserInput.prototype.dispatchKeyChange = function (dto, keyCode) {
+        UserTextInput.prototype.dispatchKeyChange = function (dto, keyCode) {
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.UserInputEvents.KEY_CHANGE, dto);
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.KEY_CHANGE, {
                 detail: {
@@ -3601,24 +3587,25 @@ var cf;
                 }
             }));
         };
-        UserInput.prototype.windowFocus = function (event) {
+        UserTextInput.prototype.windowFocus = function (event) {
+            _super.prototype.windowFocus.call(this, event);
             this.setFocusOnInput();
         };
-        UserInput.prototype.onInputBlur = function (event) {
+        UserTextInput.prototype.onInputBlur = function (event) {
             this._active = false;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.BLUR));
         };
-        UserInput.prototype.onInputFocus = function (event) {
+        UserTextInput.prototype.onInputFocus = function (event) {
             this._active = true;
             this.onInputChange();
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
-        UserInput.prototype.setFocusOnInput = function () {
-            if (!UserInput.preventAutoFocus) {
+        UserTextInput.prototype.setFocusOnInput = function () {
+            if (!cf.UserInput.preventAutoFocus) {
                 this.inputElement.focus();
             }
         };
-        UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
+        UserTextInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
             if (this.active && this.controlElements.highlighted) {
                 // active input field and focus on control elements happens when a control element is highlighted
@@ -3642,7 +3629,7 @@ var cf;
                 }
             }
         };
-        UserInput.prototype.doSubmit = function () {
+        UserTextInput.prototype.doSubmit = function () {
             var dto = this.getFlowDTO();
             this.submitButton.classList.add("loading");
             this.disabled = true;
@@ -3653,23 +3640,19 @@ var cf;
                 detail: dto
             }));
         };
-        UserInput.prototype.resetValue = function () {
+        UserTextInput.prototype.resetValue = function () {
             this.inputElement.value = "";
             this.onInputChange();
         };
-        UserInput.prototype.dealloc = function () {
+        UserTextInput.prototype.dealloc = function () {
             this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
             this.onInputBlurCallback = null;
             this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
             this.onInputFocusCallback = null;
-            window.removeEventListener('focus', this.windowFocusCallback, false);
-            this.windowFocusCallback = null;
             document.removeEventListener("keydown", this.keyDownCallback, false);
             this.keyDownCallback = null;
             document.removeEventListener("keyup", this.keyUpCallback, false);
             this.keyUpCallback = null;
-            this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
-            this.flowUpdateCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
             this.inputInvalidCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
@@ -3680,14 +3663,81 @@ var cf;
             _super.prototype.dealloc.call(this);
         };
         // override
-        UserInput.prototype.getTemplate = function () {
+        UserTextInput.prototype.getTemplate = function () {
             return "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
         };
-        return UserInput;
-    }(cf.BasicElement));
-    UserInput.preventAutoFocus = false;
-    UserInput.ERROR_TIME = 2000;
-    cf.UserInput = UserInput;
+        return UserTextInput;
+    }(cf.UserInput));
+    cf.UserTextInput = UserTextInput;
+})(cf || (cf = {}));
+
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInput.ts"/>
+/// <reference path="UserInput.ts"/>
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    // class
+    var UserVoiceInput = (function (_super) {
+        __extends(UserVoiceInput, _super);
+        function UserVoiceInput(options) {
+            var _this = _super.call(this, options) || this;
+            _this.cfReference = options.cfReference;
+            _this.eventTarget = options.eventTarget;
+            return _this;
+        }
+        Object.defineProperty(UserVoiceInput.prototype, "visible", {
+            set: function (value) {
+            },
+            enumerable: true,
+            configurable: true
+        });
+        UserVoiceInput.prototype.getFlowDTO = function () {
+            var value; // = this.inputElement.value;
+            return value;
+        };
+        UserVoiceInput.prototype.reset = function () {
+            _super.prototype.reset.call(this);
+        };
+        UserVoiceInput.prototype.onFlowStopped = function () {
+            // this.disabled = true;
+        };
+        UserVoiceInput.prototype.onFlowUpdate = function (event) {
+            _super.prototype.onFlowUpdate.call(this, event);
+        };
+        // private doSubmit(){
+        // 	this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
+        // 		detail: dto
+        // 	}));
+        // }
+        UserVoiceInput.prototype.setFocusOnInput = function () {
+            if (!cf.UserInput.preventAutoFocus) {
+                // ...
+            }
+        };
+        UserVoiceInput.prototype.dealloc = function () {
+            _super.prototype.dealloc.call(this);
+        };
+        // override
+        UserVoiceInput.prototype.getTemplate = function () {
+            return "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
+        };
+        return UserVoiceInput;
+    }(cf.UserInput));
+    cf.UserVoiceInput = UserVoiceInput;
 })(cf || (cf = {}));
 
 /// <reference path="../BasicElement.ts"/>
@@ -4239,7 +4289,7 @@ var cf;
                     // update to latest DTO because values can be changed in validation flow...
                     appDTO = appDTO.input.getFlowDTO();
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_UPDATE, {
-                        detail: appDTO //UserInput value
+                        detail: appDTO //UserTextInput value
                     }));
                     // goto next step when user has answered
                     setTimeout(function () { return _this.nextStep(); }, cf.ConversationalForm.animationsEnabled ? 250 : 0);
@@ -4248,7 +4298,7 @@ var cf;
                     cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.FlowEvents.USER_INPUT_INVALID, appDTO);
                     // Value not valid
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
-                        detail: appDTO //UserInput value
+                        detail: appDTO //UserTextInput value
                     }));
                 }
             };
@@ -4429,8 +4479,8 @@ var cf;
     cf.FlowManager = FlowManager;
 })(cf || (cf = {}));
 
-// version 0.9.0
-/// <reference path="ui/UserInput.ts"/>
+/// <reference path="ui/inputs/UserTextInput.ts"/>
+/// <reference path="ui/inputs/UserVoiceInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
@@ -4441,6 +4491,7 @@ var cf;
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
+/// <reference path="interfaces/IBehavior.ts"/>
 var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
@@ -4490,6 +4541,10 @@ var cf;
                 userImage: options.userImage,
                 robotImage: options.robotImage,
             });
+            // behaviors
+            if (options.behaviors) {
+                this.behaviors = options.behaviors;
+            }
             // emoji.. fork and set your own values..
             this.context = options.context ? options.context : document.body;
             this.tags = options.tags;
@@ -4698,7 +4753,7 @@ var cf;
                 eventTarget: this.eventTarget
             });
             innerWrap.appendChild(this.chatList.el);
-            this.userInput = new cf_1.UserInput({
+            this.userInput = new cf_1.UserTextInput({
                 eventTarget: this.eventTarget,
                 cfReference: this
             });

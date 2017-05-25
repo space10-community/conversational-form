@@ -1,6 +1,5 @@
-// version 0.9.0
-
-/// <reference path="ui/UserInput.ts"/>
+/// <reference path="ui/inputs/UserTextInput.ts"/>
+/// <reference path="ui/inputs/UserVoiceInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
@@ -11,6 +10,7 @@
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
+/// <reference path="interfaces/IBehavior.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -59,6 +59,9 @@ namespace cf {
 
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
 		eventDispatcher?: EventDispatcher;
+
+		// optional behaviors
+		behaviors?:Array<IBehavior>;
 	}
 
 	// CUI formless options
@@ -108,11 +111,12 @@ namespace cf {
 		private flowManager: FlowManager;
 
 		public chatList: ChatList;
-		private userInput: UserInput;
+		private userInput: IUserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
+		private behaviors: Array<IBehavior>;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -169,6 +173,11 @@ namespace cf {
 				userImage: options.userImage,
 				robotImage: options.robotImage,
 			});
+
+			// behaviors
+			if(options.behaviors){
+				this.behaviors = options.behaviors;
+			}
 
 			// emoji.. fork and set your own values..
 
@@ -406,7 +415,7 @@ namespace cf {
 			});
 			innerWrap.appendChild(this.chatList.el);
 
-			this.userInput = new UserInput({
+			this.userInput = new UserTextInput({
 				eventTarget: this.eventTarget,
 				cfReference: this
 			});
