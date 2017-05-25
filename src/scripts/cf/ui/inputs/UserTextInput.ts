@@ -477,7 +477,7 @@ namespace cf {
 				this.inputElement.focus();
 			}
 		}
-		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			if(this.active && this.controlElements.highlighted){
 				// active input field and focus on control elements happens when a control element is highlighted
 				this.controlElements.clickOnHighlighted();

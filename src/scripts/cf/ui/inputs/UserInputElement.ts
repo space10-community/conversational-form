@@ -57,6 +57,10 @@ namespace cf {
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
 
+		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+			
+		}
+
 		public getFlowDTO():FlowDTO{
 			let value: FlowDTO;// = this.inputElement.value;
 			return value;

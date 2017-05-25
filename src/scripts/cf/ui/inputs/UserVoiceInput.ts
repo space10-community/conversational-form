@@ -10,11 +10,17 @@ namespace cf {
 
 	// class
 	export class UserVoiceInput extends UserInputElement implements IUserInputElement {
+		private submitButton: HTMLButtonElement;
+		private onSubmitButtonClickCallback: () => void;
 		constructor(options: IUserInputOptions){
 			super(options);
 
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
+
+			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
+			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
+			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 		}
 
 		public getFlowDTO():FlowDTO{
@@ -32,7 +38,6 @@ namespace cf {
 
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
-			console.log("???");
 		}
 		// private doSubmit(){
 		// 	this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
@@ -40,6 +45,13 @@ namespace cf {
 		// 	}));
 		// }
 
+		private onSubmitButtonClick(event: MouseEvent){
+			this.onEnterOrSubmitButtonSubmit(event);
+		}
+
+		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+			console.log("yes! Do the voice thing!");
+		}
 		public setFocusOnInput(){
 			if(!UserInputElement.preventAutoFocus){
 				// ...
@@ -47,6 +59,10 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
+			this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
+			this.onSubmitButtonClickCallback = null;
+
 			super.dealloc();
 		}
 
