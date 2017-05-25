@@ -9,7 +9,7 @@ namespace cf {
 		response: string;
 		image: string;
 		list: ChatList;
-		isRobotReponse: boolean;
+		isRobotResponse: boolean;
 		tag: ITag;
 	}
 
@@ -21,7 +21,7 @@ namespace cf {
 	export class ChatResponse extends BasicElement {
 		private static THINKING_MARKUP: string = "<thinking><span>.</span><span>.</span><span>.</span></thinking>";
 
-		public isRobotReponse: boolean;
+		public isRobotResponse: boolean;
 
 		public response: string;
 		public parsedResponse: string;
@@ -79,7 +79,7 @@ namespace cf {
 				this.response = dto.text;
 				const processedResponse: string = this.processResponseAndSetText();
 
-				if(this.responseLink && !this.isRobotReponse){
+				if(this.responseLink && !this.isRobotResponse){
 					// call robot and update for binding values ->
 					this.responseLink.processResponseAndSetText();
 				}
@@ -93,7 +93,7 @@ namespace cf {
 					}
 				}
 
-				if(!this.isRobotReponse && !this.onClickCallback){
+				if(!this.isRobotResponse && !this.onClickCallback){
 					this.onClickCallback = this.onClick.bind(this);
 					this.el.addEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				}
@@ -129,7 +129,7 @@ namespace cf {
 		public processResponseAndSetText(): string{
 			var innerResponse: string = this.response;
 			
-			if(this._tag && this._tag.type == "password" && !this.isRobotReponse){
+			if(this._tag && this._tag.type == "password" && !this.isRobotResponse){
 				var newStr: string = "";
 				for (let i = 0; i < innerResponse.length; i++) {
 					newStr += "*";
@@ -140,7 +140,7 @@ namespace cf {
 				innerResponse = Helpers.emojify(innerResponse)
 			}
 
-			if(this.responseLink && this.isRobotReponse){
+			if(this.responseLink && this.isRobotResponse){
 				// if robot, then check linked response for binding values
 				
 				// one way data binding values:
@@ -191,7 +191,7 @@ namespace cf {
 		}
 
 		private checkForEditMode(){
-			if(!this.isRobotReponse && !this.textEl.hasAttribute("thinking")){
+			if(!this.isRobotResponse && !this.textEl.hasAttribute("thinking")){
 				this.el.classList.add("can-edit");
 				this.disabled = false;
 			}
@@ -219,7 +219,7 @@ namespace cf {
 		protected setData(options: IChatResponseOptions):void{
 			this.image = options.image;
 			this.response = "";
-			this.isRobotReponse = options.isRobotReponse;
+			this.isRobotResponse = options.isRobotResponse;
 			super.setData(options);
 
 			setTimeout(() => {
@@ -227,7 +227,7 @@ namespace cf {
 
 				this.updateThumbnail(this.image);
 
-				if(this.isRobotReponse || options.response != null){
+				if(this.isRobotResponse || options.response != null){
 					// Robot is pseudo thinking, can also be user -->
 					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
 					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), 0);//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
@@ -250,7 +250,7 @@ namespace cf {
 
 		// template, can be overwritten ...
 		public getTemplate () : string {
-			return `<cf-chat-response class="` + (this.isRobotReponse ? "robot" : "user") + `">
+			return `<cf-chat-response class="` + (this.isRobotResponse ? "robot" : "user") + `">
 				<thumb></thumb>
 				<text>` + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + `</text>
 			</cf-chat-response>`;

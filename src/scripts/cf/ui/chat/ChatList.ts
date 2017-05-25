@@ -105,7 +105,7 @@ namespace cf {
 		private containsTagResponse(tagToChange: ITag): boolean {
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];
-				if(!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()){
+				if(!element.isRobotResponse && element.tag == tagToChange && !tagToChange.hasConditions()){
 					return true;
 				}
 			}
@@ -120,7 +120,7 @@ namespace cf {
 			let oldReponse: ChatResponse;
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];
-				if(!element.isRobotReponse && element.tag == tagToChange){
+				if(!element.isRobotResponse && element.tag == tagToChange){
 					// update element thhat user wants to edit
 					oldReponse = element;
 					break;
@@ -201,23 +201,23 @@ namespace cf {
 			const newImage: string = robot ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image");
 			for (let i = 0; i < this.responses.length; i++) {
 				let element: ChatResponse = <ChatResponse>this.responses[i];
-				if(robot && element.isRobotReponse){
+				if(robot && element.isRobotResponse){
 					element.updateThumbnail(newImage);
-				}else if(!robot && !element.isRobotReponse){
+				}else if(!robot && !element.isRobotResponse){
 					element.updateThumbnail(newImage);
 				}
 			}
 		}
 
-		public createResponse(isRobotReponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
+		public createResponse(isRobotResponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				list: this,
 				tag: currentTag,
 				eventTarget: this.eventTarget,
-				isRobotReponse: isRobotReponse,
+				isRobotResponse: isRobotResponse,
 				response: value,
-				image: isRobotReponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
+				image: isRobotResponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
 			});
 
 			this.responses.push(response);

@@ -415,9 +415,6 @@
 
 			(function(){
 				const dispatcher = new cf.EventDispatcher();
-				dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
-					// console.log("chat list updated...", event);
-				}, false);
 
 				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 					formEl: document.getElementById("form"),
@@ -430,7 +427,13 @@
 							init: () => {
 								// tap into CF events here
 								// ex.: chat response..
-								console.log("init...");
+								dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+									console.log("chat list updated...", "so speak it!!", event.detail.currentResponse);
+									if(event.detail.currentResponse.isRobotResponse){
+										// robot response, so speak it
+										console.log("chat list updated...", "so speak it!!", event.detail.currentResponse);
+									}
+								}, false);
 							},
 							input: (input) =>{
 								// speak..
