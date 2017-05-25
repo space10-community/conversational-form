@@ -11,6 +11,9 @@
 
 // namespace
 namespace cf {
+	export const ControlElementsEvents = {
+		ON_RESIZE: "on-control-elements-resize"
+	}
 	export interface ControlElementsDTO{
 		height: number;
 	}
@@ -47,7 +50,6 @@ namespace cf {
 		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
 
-		private rAF: number;
 		private listWidth: number = 0;
 
 		public get active():boolean{
@@ -709,7 +711,6 @@ namespace cf {
 						}
 						
 						// toggle nav button visiblity
-						cancelAnimationFrame(this.rAF);
 						if(isListWidthOverElementWidth){
 							this.el.classList.remove("hide-nav-buttons");
 						}else{
@@ -725,6 +726,8 @@ namespace cf {
 
 						this.el.classList.add("resized");
 
+						this.eventTarget.dispatchEvent(new CustomEvent(ControlElementsEvents.ON_RESIZE));
+
 						if(resolve)
 							resolve();
 					}, 0);
@@ -735,9 +738,6 @@ namespace cf {
 		public dealloc(){
 			this.currentControlElement = null;
 			this.tableableRows = null;
-
-			cancelAnimationFrame(this.rAF);
-			this.rAF = null;
 
 			window.removeEventListener('resize', this.onResizeCallback, false);
 			this.onResizeCallback = null;
