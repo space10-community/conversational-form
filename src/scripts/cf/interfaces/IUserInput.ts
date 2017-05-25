@@ -1,16 +1,18 @@
+/// <reference path="../logic/FlowManager.ts"/>
+
 // namespace
 namespace cf {
 	// interface
 
-	// general interface for all user inputs, like UserVoiceInput and UserTextInput (default)
+	export const UserInputTypes = {
+		VOICE: "voice",
+		VR_GESTURE: "vr-gesture", // <-- future..
+		TEXT: "text" // <-- default
+	}
+	// interface that custom inputs will be checked against
 	export interface IUserInput{
-		dealloc():void;
-		onFlowStopped():void;
-		setFocusOnInput():void;
-		reset():void;
-		getFlowDTO():FlowDTO;
-		visible:boolean;
-		disabled:boolean;
-		el: HTMLElement;
+		type:string;
+		init?():void;
+		input?(input: any):void;
 	}
 }

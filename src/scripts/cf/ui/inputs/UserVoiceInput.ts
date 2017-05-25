@@ -1,15 +1,15 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../control-elements/ControlElements.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
-/// <reference path="../../interfaces/IUserInput.ts"/>
-/// <reference path="UserInput.ts"/>
+/// <reference path="../../interfaces/IUserInputElement.ts"/>
+/// <reference path="UserInputElement.ts"/>
 
 // namespace
 namespace cf {
 	// interface
 
 	// class
-	export class UserVoiceInput extends UserInput implements IUserInput {
+	export class UserVoiceInput extends UserInputElement implements IUserInputElement {
 		public el: HTMLElement;
 		private cfReference: ConversationalForm;
 
@@ -47,7 +47,7 @@ namespace cf {
 		// }
 
 		public setFocusOnInput(){
-			if(!UserInput.preventAutoFocus){
+			if(!UserInputElement.preventAutoFocus){
 				// ...
 			}
 		}
@@ -61,9 +61,10 @@ namespace cf {
 			return `<cf-input>
 
 				<cf-input-button class="cf-input-button">
-					<div class="cf-icon-progress"></div>
 					<div class="cf-icon-audio"></div>
 				</cf-input-button>
+
+				Ok, heeej voice!
 
 			</cf-input>
 			`;

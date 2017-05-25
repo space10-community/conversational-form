@@ -1,8 +1,8 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../control-elements/ControlElements.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
-/// <reference path="../../interfaces/IUserInput.ts"/>
-/// <reference path="UserInput.ts"/>
+/// <reference path="../../interfaces/IUserInputElement.ts"/>
+/// <reference path="UserInputElement.ts"/>
 
 // namespace
 namespace cf {
@@ -15,7 +15,7 @@ namespace cf {
 	}
 
 	// class
-	export class UserTextInput extends UserInput implements IUserInput {
+	export class UserTextInput extends UserInputElement implements IUserInputElement {
 		public el: HTMLElement;
 		private cfReference: ConversationalForm;
 		private inputElement: HTMLInputElement | HTMLTextAreaElement;
@@ -214,7 +214,7 @@ namespace cf {
 				if(this.controlElements)
 					this.controlElements.resetAfterErrorMessage();
 
-			}, UserInput.ERROR_TIME);
+			}, UserInputElement.ERROR_TIME);
 		}
 
 		private setPlaceholder() {
@@ -489,7 +489,7 @@ namespace cf {
 		}
 
 		public setFocusOnInput(){
-			if(!UserInput.preventAutoFocus){
+			if(!UserInputElement.preventAutoFocus){
 				this.inputElement.focus();
 			}
 		}

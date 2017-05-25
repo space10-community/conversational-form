@@ -3,10 +3,11 @@
 /// <reference path="../../logic/FlowManager.ts"/>
 /// <reference path="../../interfaces/IUserInput.ts"/>
 
+// Abstract UserInpt element, should be extended when adding a new UI for user input, see UserVoiceInput for reference.
 // namespace
 namespace cf {
 	// interface
-	export class UserInput extends BasicElement implements IUserInput {
+	export class UserInputElement extends BasicElement implements IUserInputElement {
 		public static ERROR_TIME: number = 2000;
 		public static preventAutoFocus: boolean = false;
 		private windowFocusCallback: () => void;
