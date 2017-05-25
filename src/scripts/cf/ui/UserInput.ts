@@ -132,6 +132,8 @@ namespace cf {
 			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
 
+			// this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
+
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
 			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
@@ -301,7 +303,6 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			// animate input field in
-
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
