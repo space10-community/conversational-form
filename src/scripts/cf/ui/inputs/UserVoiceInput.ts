@@ -10,13 +10,6 @@ namespace cf {
 
 	// class
 	export class UserVoiceInput extends UserInputElement implements IUserInputElement {
-		public el: HTMLElement;
-		private cfReference: ConversationalForm;
-
-		public set visible(value: boolean){
-			
-		}
-
 		constructor(options: IUserInputOptions){
 			super(options);
 
@@ -39,6 +32,7 @@ namespace cf {
 
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
+			console.log("???");
 		}
 		// private doSubmit(){
 		// 	this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
