@@ -24,14 +24,22 @@
 			<form id="form">
 
 				<fieldset cf-questions="Choose an example" name="examples" id="examples">
-						<input type="radio" value="conditional-flow.html" cf-label="Conditional Flow" />
-						<input type="radio" value="formless.html" cf-label="Formless" />
-						<input type="radio" cf-label="Add robot response" />
-						<input type="radio" cf-label="Auto form detection" />
-						<input type="radio" cf-label="jQuery" />
-					</fieldset>
+					<input type="radio" name="examples-1" value="conditional-flow.html" cf-label="Conditional Flow" />
+					<input type="radio" name="examples-1" value="formless.html" cf-label="Formless" />
+					<input type="radio" name="examples-1" cf-label="Add robot response" />
+					<input type="radio" name="examples-1" cf-label="Auto form detection" />
+					<input type="radio" name="examples-1" cf-label="jQuery" />
+				</fieldset>
 
-				<div id="test-value" cf-questions="Ready to try a conditional flow?">
+				<div cf-questions="Choose an example" name="examples2" id="examples2">
+					<input type="radio" name="examples-2" value="conditional-flow.html" cf-label="Conditional Flow" />
+					<input type="radio" name="examples-2" value="formless.html" cf-label="Formless" />
+					<input type="radio" name="examples-2" cf-label="Add robot response" />
+					<input type="radio" name="examples-2" cf-label="Auto form detection" />
+					<input type="radio" name="examples-2" cf-label="jQuery" />
+				</div>
+
+				<fieldset id="test-value" cf-questions="Ready to try a conditional flow?">
 					<label for="intro-yes">Yes
 						<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
 					</label>
@@ -41,7 +49,7 @@
 
 					<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
 					<label for="intro-disabled">Disabled..</label>
-				</div>
+				</fieldset>
 
 				<input
 					type="text"
@@ -343,7 +351,17 @@
 
 		<script
 			type="text/javascript"
-			src="../build/cf/ui/inputs/UserInput.js"
+			src="../build/cf/interfaces/IUserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInputElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserInputElement.js"
 		></script>
 
 		<script
@@ -405,6 +423,21 @@
 					formEl: document.getElementById("form"),
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,
+					userInput: 
+						{
+							// behaviors needs to follow interfaces, they will be checked
+							type: cf.UserInputTypes.VOICE,
+							init: () => {
+								// tap into CF events here
+								// ex.: chat response..
+								console.log("init...");
+							},
+							input: (input) =>{
+								// speak..
+								console.log("speak??");
+							}
+						}
+					,
 					flowStepCallback: function(dto, success, error){
 						success();
 					},

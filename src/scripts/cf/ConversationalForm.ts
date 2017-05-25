@@ -10,7 +10,8 @@
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
-/// <reference path="interfaces/IBehavior.ts"/>
+/// <reference path="interfaces/IUserInputElement.ts"/>
+/// <reference path="interfaces/IUserInput.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -60,8 +61,8 @@ namespace cf {
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
 		eventDispatcher?: EventDispatcher;
 
-		// optional behaviors
-		behaviors?:Array<IBehavior>;
+		// define a custom user input ui
+		userInput?:IUserInput;
 	}
 
 	// CUI formless options
@@ -98,7 +99,6 @@ namespace cf {
 			}
 			return this._eventTarget;
 		}
-
 		public dictionary: Dictionary;
 		public el: HTMLElement;
 
@@ -111,12 +111,13 @@ namespace cf {
 		private flowManager: FlowManager;
 
 		public chatList: ChatList;
-		private userInput: IUserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
-		private behaviors: Array<IBehavior>;
+
+		private userInput: IUserInputElement;
+		private userInputObject: IUserInput;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -165,7 +166,7 @@ namespace cf {
 				ConversationalForm.animationsEnabled = false;
 
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
-				UserInput.preventAutoFocus = true;
+				UserInputElement.preventAutoFocus = true;
 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
@@ -174,15 +175,12 @@ namespace cf {
 				robotImage: options.robotImage,
 			});
 
-			// behaviors
-			if(options.behaviors){
-				this.behaviors = options.behaviors;
-			}
-
-			// emoji.. fork and set your own values..
-
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
+
+			this.userInputObject = options.userInput || {
+				type: UserInputTypes.TEXT
+			};
 
 			this.init();
 		}
@@ -413,12 +411,20 @@ namespace cf {
 			this.chatList = new ChatList({
 				eventTarget: this.eventTarget
 			});
+
 			innerWrap.appendChild(this.chatList.el);
 
-			this.userInput = new UserTextInput({
-				eventTarget: this.eventTarget,
-				cfReference: this
-			});
+			if(this.userInputObject.type === UserInputTypes.TEXT){
+				this.userInput = new UserTextInput({
+					eventTarget: this.eventTarget,
+					cfReference: this
+				});
+			}else if(this.userInputObject.type === UserInputTypes.VOICE){
+				this.userInput = new UserVoiceInput({
+					eventTarget: this.eventTarget,
+					cfReference: this
+				});
+			}
 
 			innerWrap.appendChild(this.userInput.el);
 
