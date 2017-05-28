@@ -3398,12 +3398,13 @@ var cf;
             var currentType = this.inputElement.getAttribute("type");
             var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
             var isCurrentInputTypeInputButNewTagNotPassword = this._currentTag.type != "password" && currentType == "password";
+            var isCurrentInputTypeTextAreaButNewTagNumberOrEmail = (this._currentTag.type == "email" && currentType != "email") || (this._currentTag.type == "number" && currentType != "number");
             // remove focus and blur events, because we want to create a new element
             if (this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)) {
                 this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
                 this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
             }
-            if (isCurrentInputTypeTextAreaButNewTagPassword) {
+            if (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeTextAreaButNewTagNumberOrEmail) {
                 // change to input
                 var input_1 = document.createElement("input");
                 Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
@@ -3412,6 +3413,11 @@ var cf;
                 input_1.setAttribute("autocomplete", "new-password");
                 this.inputElement.parentNode.replaceChild(input_1, this.inputElement);
                 this.inputElement = input_1;
+                if (this._currentTag.type === "number" || this._currentTag.type === "email") {
+                    // if field is type number or email then add type to user input
+                    this.inputElement.type = this._currentTag.type;
+                    input_1.setAttribute("type", this._currentTag.type);
+                }
             }
             else if (isCurrentInputTypeInputButNewTagNotPassword) {
                 // change to textarea
@@ -3442,7 +3448,8 @@ var cf;
             // replace textarea and visa versa
             this.checkForCorrectInputTag();
             // set input field to type password if the dom input field is that, covering up the input
-            this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
+            var isInputSpecificType = ["password", "number", "email"].indexOf(this._currentTag.type) !== -1;
+            this.inputElement.setAttribute("type", isInputSpecificType ? this._currentTag.type : "input");
             clearTimeout(this.errorTimer);
             this.el.removeAttribute("error");
             this.inputElement.setAttribute("data-value", "");

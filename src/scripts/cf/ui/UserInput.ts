@@ -257,6 +257,7 @@ namespace cf {
 			const currentType: String = this.inputElement.getAttribute("type");
 			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
 			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
+			const isCurrentInputTypeTextAreaButNewTagNumberOrEmail: boolean = (this._currentTag.type == "email" && currentType != "email") || (this._currentTag.type == "number" && currentType != "number");
 
 			// remove focus and blur events, because we want to create a new element
 			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
@@ -264,7 +265,7 @@ namespace cf {
 				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			}
 
-			if(isCurrentInputTypeTextAreaButNewTagPassword){
+			if(isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeTextAreaButNewTagNumberOrEmail){
 				// change to input
 				const input = document.createElement("input");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
@@ -273,6 +274,12 @@ namespace cf {
 				input.setAttribute("autocomplete", "new-password");
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
+
+				if(this._currentTag.type === "number" || this._currentTag.type === "email"){
+					// if field is type number or email then add type to user input
+					this.inputElement.type = this._currentTag.type;
+					input.setAttribute("type", this._currentTag.type);
+				}
 			}else if(isCurrentInputTypeInputButNewTagNotPassword){
 				// change to textarea
 				const textarea = document.createElement("textarea");
@@ -310,7 +317,8 @@ namespace cf {
 			this.checkForCorrectInputTag()
 
 			// set input field to type password if the dom input field is that, covering up the input
-			this.inputElement.setAttribute("type", this._currentTag.type == "password" ? "password" : "input");
+			var isInputSpecificType: boolean = ["password", "number", "email"].indexOf(this._currentTag.type) !== -1;
+			this.inputElement.setAttribute("type", isInputSpecificType ? this._currentTag.type : "input");
 
 			clearTimeout(this.errorTimer);
 			this.el.removeAttribute("error");
