@@ -61,8 +61,6 @@ namespace cf {
 
 			this.setTags(options.tags);
 
-			this.maxSteps = this.tags.length;
-
 			this.userInputSubmitCallback = this.userInputSubmit.bind(this);
 			this.eventTarget.addEventListener(UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
 		}
@@ -303,6 +301,8 @@ namespace cf {
 				tag.eventTarget = this.eventTarget;
 				tag.flowManager = this;
 			}
+
+			this.maxSteps = this.tags.length;
 		}
 
 		private skipStep(){
