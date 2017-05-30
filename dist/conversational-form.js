@@ -4187,7 +4187,6 @@ var cf;
             this.eventTarget = options.eventTarget;
             this.flowStepCallback = options.flowStepCallback;
             this.setTags(options.tags);
-            this.maxSteps = this.tags.length;
             this.userInputSubmitCallback = this.userInputSubmit.bind(this);
             this.eventTarget.addEventListener(cf.UserInputEvents.SUBMIT, this.userInputSubmitCallback, false);
         }
@@ -4396,6 +4395,7 @@ var cf;
                 tag.eventTarget = this.eventTarget;
                 tag.flowManager = this;
             }
+            this.maxSteps = this.tags.length;
         };
         FlowManager.prototype.skipStep = function () {
             this.nextStep();
