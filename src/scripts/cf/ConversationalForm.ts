@@ -178,6 +178,14 @@ namespace cf {
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
+			if(options.userInput){
+				// validate the custom input
+				if(!options.userInput.type || !options.userInput.init || !options.userInput.input){
+					console.warn("userInput is not correctly setup", options.userInput);
+					options.userInput = null;
+				}
+			}
+
 			this.userInputObject = options.userInput || {
 				type: UserInputTypes.TEXT
 			};
@@ -414,18 +422,17 @@ namespace cf {
 
 			innerWrap.appendChild(this.chatList.el);
 
-			if(this.userInputObject.type === UserInputTypes.TEXT){
-				this.userInput = new UserTextInput({
-					eventTarget: this.eventTarget,
-					cfReference: this
-				});
-			}else if(this.userInputObject.type === UserInputTypes.VOICE){
-				this.userInput = new UserVoiceInput({
-					eventTarget: this.eventTarget,
-					cfReference: this
-				});
-			}
+			const types: any = [];
+			types[UserInputTypes.TEXT] = UserTextInput;
+			types[UserInputTypes.VOICE] = UserVoiceInput;
 
+			this.userInput = new types[this.userInputObject.type]({
+				initObj: this.userInputObject,
+				eventTarget: this.eventTarget,
+				cfReference: this
+			});
+
+			// init if init is there, ex. Voice have init, but Text does not..
 			if(this.userInputObject.init){
 				this.userInputObject.init();
 			}

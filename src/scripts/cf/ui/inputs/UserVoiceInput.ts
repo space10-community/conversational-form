@@ -55,67 +55,17 @@ namespace cf {
 
 		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			this.submitButton.classList.add("loading");
+			this.el.removeAttribute("error");
 
-			// request microphone and start recording
-			navigator.mediaDevices.getUserMedia({ audio: true })
-			.then((stream: any) => {
-				this.startRecording(stream);
-			})
-			.catch((error) =>{
-				console.log("error.", error);
-				this.submitButton.classList.remove("loading");
-			});
-		}
-
-		protected startRecording(stream: any){
-			this.recordChunks = [];
-			var mediaRecorder: any = new (<any> window).MediaRecorder(stream);
-			mediaRecorder.addEventListener('dataavailable', (event: any) => {
-				// push each chunk (blobs) in an array, to use later on
-				// process audio data here if needed (AudioContext)
-				this.recordChunks.push(event.data);
-			});
-
-			mediaRecorder.addEventListener('stop', (event: Event) => {
-				this.onRecordingStopped(event);
-			});
-
-			mediaRecorder.start();
-			
-			setTimeout(() => {
-				mediaRecorder.stop();
-			}, 10000)
-		}
-
-		private onRecordingStopped(event: Event){
-			// Make blob out of our blobs, and open it.
-			var blob = new Blob(this.recordChunks, { 'type' : 'audio/ogg; codecs=opus' });
-			var audio: HTMLAudioElement = <HTMLAudioElement> document.getElementById('audio');
-			// e.data contains a blob representing the recording
-			audio.src = URL.createObjectURL(blob);
-			audio.play();
-
-			this.recordChunks = null;
-
-			this.submitButton.classList.add("active");
-			this.submitButton.classList.remove("loading");
-
-			this.sendAudioToAPI();
-		}
-
-		private sendAudioToAPI(){
-			if(!this.initObj.input){
-				console.warn("userInput input nethod is not defined!");
-				return;
-			}
-
-			// when done with microphone, use API to transmit this to text...
+			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with text/string
 			var a = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
 			.then((result) => {
 				// api contacted
-
 				// save response so it's available in getFlowDTO
 				this.currentTextResponse = result.toString();
+				if(!this.currentTextResponse || this.currentTextResponse == ""){
+					this.currentTextResponse = Dictionary.get("user-reponse-missing");
+				}
 
 				const dto: FlowDTO = this.getFlowDTO();
 
@@ -128,12 +78,17 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 					detail: dto
 				}));
-			}).catch(() => {
-				// api failed
+
+				this.submitButton.classList.add("active");
+				this.submitButton.classList.remove("loading");
+			}).catch((result) => {
+				// api failed ...
+				this.el.setAttribute("error", result);
 				this.disabled = false;
 				this.submitButton.classList.remove("loading");
 			});
 		}
+
 		public setFocusOnInput(){
 			if(!UserInputElement.preventAutoFocus){
 				// ...
