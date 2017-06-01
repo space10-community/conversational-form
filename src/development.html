@@ -23,174 +23,18 @@
 
 			<form id="form">
 
-				<fieldset cf-questions="Choose an example" name="examples" id="examples">
-					<input type="radio" name="examples-1" value="conditional-flow.html" cf-label="Conditional Flow" />
-					<input type="radio" name="examples-1" value="formless.html" cf-label="Formless" />
-					<input type="radio" name="examples-1" cf-label="Add robot response" />
-					<input type="radio" name="examples-1" cf-label="Auto form detection" />
-					<input type="radio" name="examples-1" cf-label="jQuery" />
-				</fieldset>
-
-				<div cf-questions="Choose an example" name="examples2" id="examples2">
-					<input type="radio" name="examples-2" value="conditional-flow.html" cf-label="Conditional Flow" />
-					<input type="radio" name="examples-2" value="formless.html" cf-label="Formless" />
-					<input type="radio" name="examples-2" cf-label="Add robot response" />
-					<input type="radio" name="examples-2" cf-label="Auto form detection" />
-					<input type="radio" name="examples-2" cf-label="jQuery" />
-				</div>
-
-				<fieldset id="test-value" cf-questions="Ready to try a conditional flow?">
-					<label for="intro-yes">Yes
-						<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
-					</label>
-
-					<input type="radio" name="cfc-intro" id="intro-no" value="no">
-					<label for="intro-no">No thanks</label>
-
-					<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
-					<label for="intro-disabled">Disabled..</label>
-				</fieldset>
-
 				<input
+					id="123"
 					type="text"
-					id="gr8"
-					name="cfc-step1"
-					cf-questions="{test-value}! Let's goo! please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
-					cf-conditional-cfc-intro="yes" />
-
-				<fieldset cf-questions="<strong>{gr8}!</strong> Please choose a path.">
-					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$||great">
-					<label for="path-a">Path A</label>
-
-					<input required type="radio" name="cfc-path" id="path-b" value="b" cf-conditional-cfc-step1="^gr8$||great">
-					<label for="path-b">Path B (checkboxes and radiobuttons)</label>
-
-					<input required type="radio" name="cfc-path" id="path-d" value="d" cf-conditional-cfc-step1="^gr8$||great">
-					<label for="path-d">Path D (C is ignored)</label>
-				</fieldset>
-
-				<!--Path A-->
-				<input
-					id="path-a-1"
-					type="text"
-					cf-questions="Path A question 1/1, try and change your previous choice to B"
-					cf-conditional-cfc-path="a"
-				/>
-
-				<!--Path B-->
-				<fieldset
-					cf-questions="Path B question 1/2, multi choice"
-				>
-					<input 
-						required
-						type="checkbox"
-						cf-conditional-cfc-path="b"
-						name="cfc-path-b-checkbox"
-						id="path-b-checkbox-1"
-						value="test1"
-					>
-					<label for="path-b-checkbox-1">Path B, checkbox 1</label>
-
-					<input 
-						required
-						type="checkbox"
-						cf-conditional-cfc-path="b"
-						name="cfc-path-b-checkbox"
-						id="path-b-checkbox-2"
-						value="test2"
-						checked="checked"
-					>
-					<label for="path-b-checkbox-2">Path B, checkbox 2</label>
-				</fieldset>
-
-
-				<!-- if both checkboxes are checked-->
-				<!-- also path b -->
-				<!-- two different conditions !-->
-				<input
-					id="path-b-alternative"
-					type="text"
-					cf-questions="Both checkboxes checked and path 'b' was choosen, hurray \o/"
-					cf-conditional-cfc-path="b"
-					cf-conditional-cfc-path-b-checkbox="test1,test2"
-				/>
-
-				<fieldset
-					cf-questions="Path B question 2/2, radio buttons, <strong>hint:</strong> choose one to continue"
-				>
-					<input 
-						required
-						type="radio"
-						cf-conditional-cfc-path="b"
-						name="cfc-path-b-radio"
-						id="path-b-radio-1"
-						value="test1"
-					>
-					<label for="path-b-radio-1">Path radio 1</label>
-
-					<input 
-						required
-						type="radio"
-						cf-conditional-cfc-path="b"
-						name="cfc-path-b-radio"
-						id="path-b-radio-2"
-						value="test2"
-						checked="checked"
-					>
-					<label for="path-b-radio-2">Path radio 2</label>
-				</fieldset>
-
-				<!--Path C-->
-				<input
-					type="text"
-					cf-questions="Path C question 1/1, I will be completly ignored as there is no C Path."
-					cf-conditional-cfc-path="c"
-				/>
-
-				<!--Path D, section > option-->
-				<select
-					cf-questions="Path D question 1/1, Pick an option."
-					cf-conditional-cfc-path="d"
-					name="path-d-option"
-				>
-					<option value="option-a" selected>Path D 2/2 #1</option>
-					<option value="option-b">Path D 2/2 #2</option>
-				</select>
-
-				<input
-					type="text"
-					cf-questions="Path D question 2/2/1"
-					cf-conditional-path-d-option="option-a"
+					cf-questions="Activate your microphone"
 				/>
 
 				<input
+					id="456"
 					type="text"
-					cf-questions="Path D question 2/2/22"
-					cf-conditional-path-d-option="option-b"
+					cf-questions="Audio input 2 {123}"
 				/>
 
-				<!-- standard flow, no confitionals -->
-				<input
-					id="nope"
-					type="text"
-					cf-questions="You decided not to continue on the conditional adventure, Zelda is sad."
-					cf-conditional-cfc-intro="no" />
-
-				<fieldset 
-					cf-questions="I am apart of standard flow, a natural part of the flow. No conditionals involved here."
-				>
-					<input required type="radio" name="standard-radios" id="standard-yes" value="a">
-					<label for="standard-yes">Standard radio 1</label>
-
-					<input required type="radio" name="standard-radios" id="standard-no" value="b">
-					<label for="standard-no">Standard radio 2</label>
-				</fieldset>
-
-				<input
-					id="outsider"
-					type="text"
-					cf-questions="Lst step of the flow (not a conditional step)"
-					/>
 			</form>
 		</div>
 
@@ -405,42 +249,56 @@
 		<!-- OR -->
 		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
 
+		
 		<script>
-			var testValidation = function(dto, success, error){
-				console.log("dto....", dto, success, error);
-				if(dto.text.indexOf("world") != -1)
-					return success();
-				return error();
-			};
 
 			(function(){
 				const dispatcher = new cf.EventDispatcher();
+
+				var microphoneInput = {
+					// behaviors needs to follow interfaces, they will be checked!
+					type: cf.UserInputTypes.VOICE,
+					init: () => {
+						// tap into CF events here
+						// ex.: chat response..
+
+						// load voices :)
+						var synth = window.speechSynthesis,
+							msg = new SpeechSynthesisUtterance();
+
+						window.speechSynthesis.onvoiceschanged = function(e) {
+							var voices = synth.getVoices();
+							msg.voice = voices[0]; // <-- Alex
+							msg.lang = msg.voice.lang; // change language here
+						};
+						synth.getVoices();
+
+						// setup event to speak robot response
+						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+							if(event.detail.currentResponse.isRobotResponse){
+								// console.log("CHATLIST updated...", "...so speak it!", event.detail.currentResponse.response);
+								// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+								msg.text = event.detail.currentResponse.response
+								window.speechSynthesis.speak(msg);
+							}
+						}, false);
+					},
+					input: (resolve, reject) => {
+						// connect to Speech API, reply with texxt..
+						// using Promise pattern, if API fails use reject.
+						var recognition = new SpeechRecognition();
+
+						setTimeout(function(){
+							resolve("Text from API??");
+						}, 1000);
+					}
+				}
 
 				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 					formEl: document.getElementById("form"),
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,
-					userInput: 
-						{
-							// behaviors needs to follow interfaces, they will be checked
-							type: cf.UserInputTypes.VOICE,
-							init: () => {
-								// tap into CF events here
-								// ex.: chat response..
-								dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
-									console.log("chat list updated...", "so speak it!!", event.detail.currentResponse);
-									if(event.detail.currentResponse.isRobotResponse){
-										// robot response, so speak it
-										console.log("chat list updated...", "so speak it!!", event.detail.currentResponse);
-									}
-								}, false);
-							},
-							input: (input) =>{
-								// speak..
-								console.log("speak??");
-							}
-						}
-					,
+					userInput: microphoneInput, // <--- custom user input
 					flowStepCallback: function(dto, success, error){
 						success();
 					},
@@ -452,6 +310,8 @@
 				});
 			})();
 		</script>
+
+		<audio id="audio"></audio>
 
 	</body>
 </html>

@@ -17,6 +17,7 @@ namespace cf {
 		protected _currentTag: ITag | ITagGroup;
 		protected _disabled: boolean = false;
 		protected _visible: boolean = false;
+		protected initObj: IUserInput;
 
 		public get currentTag(): ITag | ITagGroup{
 			return this._currentTag;
@@ -47,8 +48,11 @@ namespace cf {
 			}
 		}
 
-		constructor(options: any){
+		constructor(options: IUserInputOptions){
 			super(options);
+			this.initObj = options.initObj
+
+			this.el.setAttribute("type", this.initObj.type);
 
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);
@@ -71,6 +75,7 @@ namespace cf {
 		}
 		public reset(){
 		}
+		
 		public dealloc(){
 			window.removeEventListener('focus', this.windowFocusCallback, false);
 			this.windowFocusCallback = null;
@@ -95,7 +100,8 @@ namespace cf {
 	}
 
 	export interface IUserInputOptions extends IBasicElementOptions{
-		cfReference: ConversationalForm
+		cfReference: ConversationalForm;
+		initObj: IUserInput;
 	}
 
 	export const UserInputEvents = {
