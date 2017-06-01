@@ -23,6 +23,8 @@ namespace cf {
 		constructor(options: IBasicElementOptions){
 			super(options);
 
+			ChatResponse.list = this;
+
 			this.responses = [];
 
 			// flow update

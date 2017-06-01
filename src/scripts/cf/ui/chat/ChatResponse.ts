@@ -19,15 +19,16 @@ namespace cf {
 
 	// class
 	export class ChatResponse extends BasicElement {
+		public static list: ChatList;
 		private static THINKING_MARKUP: string = "<thinking><span>.</span><span>.</span><span>.</span></thinking>";
 
 		public isRobotResponse: boolean;
 
 		public response: string;
+		public originalResponse: string; // keep track of original response with id pipings
 		public parsedResponse: string;
 		private textEl: Element;
 		private image: string;
-		private _list: ChatList;
 		private _tag: ITag;
 		private responseLink: ChatResponse; // robot reference from use
 
@@ -49,21 +50,13 @@ namespace cf {
 		}
 
 		public set visible(value: boolean){
-			if(value){
-				this.el.offsetWidth;
-				this.el.classList.add("show");
-			}else{
-				this.el.classList.remove("show");
-			}
+			this.el.offsetWidth;
+			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
 		}
 
 		constructor(options: IChatResponseOptions){
 			super(options);
-			this._list = options.list;
 			this._tag = options.tag;
-			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
-
-			this.updateThumbnail(this.image);
 		}
 
 		public setValue(dto: FlowDTO = null){
@@ -76,8 +69,9 @@ namespace cf {
 			if(!dto){
 				this.setToThinking();
 			}else{
-				this.response = dto.text;
-				const processedResponse: string = this.processResponseAndSetText();
+				this.response = this.originalResponse = dto.text;
+				
+				this.processResponseAndSetText();
 
 				if(this.responseLink && !this.isRobotResponse){
 					// call robot and update for binding values ->
@@ -101,12 +95,12 @@ namespace cf {
 		}
 
 		public hide(){
-			this.el.classList.remove("show");
+			this.visible = false;
 			this.disabled = true;
 		}
 
 		public show(){
-			this.el.classList.add("show");
+			this.visible = true;
 			this.disabled = false;
 			if(!this.response){
 				this.setToThinking();
@@ -127,7 +121,10 @@ namespace cf {
 		}
 
 		public processResponseAndSetText(): string{
-			var innerResponse: string = this.response;
+			if(!this.originalResponse)
+				return "";
+
+			var innerResponse: string = this.originalResponse;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotResponse){
 				var newStr: string = "";
@@ -145,9 +142,12 @@ namespace cf {
 				
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-				
+
+			}
+
+			if(this.isRobotResponse){
 				// Piping, look through IDs, and map values to dynamics
-				const reponses: Array<ChatResponse> = this._list.getResponses();
+				const reponses: Array<ChatResponse> = ChatResponse.list.getResponses();
 				for (var i = 0; i < reponses.length; i++) {
 					var response: ChatResponse = reponses[i];
 					if(response !== this){
@@ -187,6 +187,9 @@ namespace cf {
 
 			this.checkForEditMode();
 
+			// update response
+			this.response = innerResponse;
+
 			return innerResponse;
 		}
 
@@ -218,24 +221,34 @@ namespace cf {
 
 		protected setData(options: IChatResponseOptions):void{
 			this.image = options.image;
-			this.response = "";
+			this.response = this.originalResponse = options.response;
 			this.isRobotResponse = options.isRobotResponse;
+			
 			super.setData(options);
+		}
+		protected onElementCreated(){
+			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
+
+			this.setValue();
+
+			this.updateThumbnail(this.image);
+
+			if(this.isRobotResponse || this.response != null){
+				// Robot is pseudo thinking, can also be user -->
+				// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
+				setTimeout(() =>{
+					this.setValue(<FlowDTO>{text: this.response})
+				}, 0);
+				//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
+			}else{
+				// shows the 3 dots automatically, we expect the reponse to be empty upon creation
+				// TODO: Auto completion insertion point
+				setTimeout(() =>{
+					this.el.classList.add("peak-thumb")
+				}, ConversationalForm.animationsEnabled ? 1400 : 0);
+			}
 
 			setTimeout(() => {
-				this.setValue();
-
-				this.updateThumbnail(this.image);
-
-				if(this.isRobotResponse || options.response != null){
-					// Robot is pseudo thinking, can also be user -->
-					// , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
-					setTimeout(() => this.setValue(<FlowDTO>{text: options.response}), 0);//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
-				}else{
-					// shows the 3 dots automatically, we expect the reponse to be empty upon creation
-					// TODO: Auto completion insertion point
-					setTimeout(() => this.el.classList.add("peak-thumb"), ConversationalForm.animationsEnabled ? 1400 : 0);
-				}
 			}, 0);
 		}
 
