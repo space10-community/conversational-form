@@ -8,7 +8,7 @@ namespace cf {
 		tag?: ITag | ITagGroup,
 		text?: string;
 		errorText?: string;
-		input?: UserTextInput,
+		input?: UserInputElement,
 		controlElements?: Array <IControlElement>;
 	}
 

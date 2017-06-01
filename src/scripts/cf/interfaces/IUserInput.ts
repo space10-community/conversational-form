@@ -13,6 +13,6 @@ namespace cf {
 	export interface IUserInput{
 		type:string;
 		init?():void;
-		input?(input: any):void;
+		input?(resolve: any, reject: any):void;
 	}
 }
