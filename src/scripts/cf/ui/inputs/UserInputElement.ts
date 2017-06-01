@@ -4,6 +4,7 @@
 /// <reference path="../../interfaces/IUserInput.ts"/>
 
 // Abstract UserInpt element, should be extended when adding a new UI for user input, see UserVoiceInput for reference.
+
 // namespace
 namespace cf {
 	// interface
@@ -60,7 +61,6 @@ namespace cf {
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
-
 		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			
 		}

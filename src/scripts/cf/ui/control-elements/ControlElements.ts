@@ -186,7 +186,7 @@ namespace cf {
 			}
 
 			const dto: InputKeyChangeDTO = event.detail;
-			const userInput: UserTextInput = dto.dto.input;
+			const userInput: UserTextInput = <UserTextInput> dto.dto.input;
 
 			if(this.active){
 				const isNavKey: boolean = [Dictionary.keyCodes["left"], Dictionary.keyCodes["right"], Dictionary.keyCodes["down"], Dictionary.keyCodes["up"]].indexOf(dto.keyCode) != -1;
@@ -195,7 +195,7 @@ namespace cf {
 				if(shouldFilter){
 					// input field is active, so we should filter..
 					const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
-					const inputValue: string = dto.input.getInputValue();
+					const inputValue: string = (<UserTextInput> dto.input).getInputValue();
 					this.filterElementsFrom(inputValue);
 				}else{
 					if(dto.keyCode == Dictionary.keyCodes["left"]){
