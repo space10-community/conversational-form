@@ -2210,7 +2210,7 @@ var cf;
         });
         Object.defineProperty(TagGroup.prototype, "name", {
             get: function () {
-                return this._fieldset && this._fieldset.name ? this._fieldset.name : this.elements[0].name;
+                return this._fieldset && this._fieldset.hasAttribute("name") ? this._fieldset.getAttribute("name") : this.elements[0].name;
             },
             enumerable: true,
             configurable: true
