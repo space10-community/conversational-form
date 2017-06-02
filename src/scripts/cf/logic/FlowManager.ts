@@ -8,7 +8,7 @@ namespace cf {
 		tag?: ITag | ITagGroup,
 		text?: string;
 		errorText?: string;
-		input?: UserInput,
+		input?: UserInputElement,
 		controlElements?: Array <IControlElement>;
 	}
 
@@ -120,7 +120,7 @@ namespace cf {
 					appDTO = appDTO.input.getFlowDTO();
 
 					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-						detail: appDTO //UserInput value
+						detail: appDTO //UserTextInput value
 					}));
 
 					// goto next step when user has answered
@@ -130,7 +130,7 @@ namespace cf {
 
 					// Value not valid
 					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-						detail: appDTO //UserInput value
+						detail: appDTO //UserTextInput value
 					}));
 				}
 			}

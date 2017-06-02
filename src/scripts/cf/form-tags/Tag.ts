@@ -77,7 +77,7 @@ namespace cf {
 		private changeCallback: () => void;
 		private conditionalTags: Array<ConditionalValue>;
 
-		// input placeholder text, this is for the UserInput and not the tag it self.
+		// input placeholder text, this is for the UserTextInput and not the tag it self.
 		protected _inputPlaceholder: string;
 		protected _eventTarget: EventDispatcher;
 		protected _label: string;

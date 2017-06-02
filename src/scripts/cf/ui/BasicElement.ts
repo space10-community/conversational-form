@@ -28,9 +28,14 @@ namespace cf {
 
 			this.setData(options);
 			this.createElement();
+			this.onElementCreated();
 		}
 
 		protected setData(options: IBasicElementOptions){
+			
+		}
+
+		protected onElementCreated(){
 			
 		}
 

@@ -101,6 +101,31 @@ cf-input
 
 		.cf-input-button
 			background alpha($color-chat-reponse-default-bg, 75%)
+	
+	// &[type="text"]
+	&[type="voice"]
+		height 46px
+
+		&:after
+			// error message..
+			content attr(error)
+			display block
+			font-size 10px
+			text-align center
+			position absolute
+			bottom -10px
+			width 100%
+			opacity 0.4
+
+		&[error]
+			// be able to click even though error when voice.
+			pointer-events auto
+
+		cf-input-button
+			right auto
+			left calc(50% - 15px)
+			&.loading
+				border 1px solid alpha(#b9bcbe, 60%)
 
 	&[error]
 		pointer-events none
@@ -188,15 +213,19 @@ cf-input-button.cf-input-button
 		transform rotateX(0deg)
 		opacity 1
 
-		background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMzAgMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBmaWxsPSIjMEQ4M0ZGIj4KICAgICAgICAgICAgPHBvbHlnb24gdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUuNTAwMDAwLCAxNS41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTUuNTAwMDAwLCAtMTUuNTAwMDAwKSAiIHBvaW50cz0iMjIgMTQuNjg3NSAxMi4xMTE4NzUgMTQuNjg3NSAxNi42NDk2ODc1IDEwLjE0OTY4NzUgMTUuNSA5IDkgMTUuNSAxNS41IDIyIDE2LjY0OTY4NzUgMjAuODUwMzEyNSAxMi4xMTE4NzUgMTYuMzEyNSAyMiAxNi4zMTI1Ij48L3BvbHlnb24+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=")
-		background-size: 30px 30px;
-
-		polygon
-			fill #b9bcbe
-			will-change fill
-			.conversational-form--enable-animation &
-				transition fill $anim-time * 0.5 $anim-easeOut
+		background-image url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMzAgMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBmaWxsPSIjMEQ4M0ZGIj4KICAgICAgICAgICAgPHBvbHlnb24gdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUuNTAwMDAwLCAxNS41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTUuNTAwMDAwLCAtMTUuNTAwMDAwKSAiIHBvaW50cz0iMjIgMTQuNjg3NSAxMi4xMTE4NzUgMTQuNjg3NSAxNi42NDk2ODc1IDEwLjE0OTY4NzUgMTUuNSA5IDkgMTUuNSAxNS41IDIyIDE2LjY0OTY4NzUgMjAuODUwMzEyNSAxMi4xMTE4NzUgMTYuMzEyNSAyMiAxNi4zMTI1Ij48L3BvbHlnb24+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=")
+		background-size 30px 30px
 	
+	div.cf-icon-audio
+		transform rotateX(0deg)
+		opacity 1
+
+		background-image url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAAABGdBTUEAALGPC/xhBQAAAr1JREFUSA3tVk1oE0EU3k2aQ6RqkkJyEZT8YGjQeKiHeOpJUFBRehL/UC8evEnx5Fmkd0G8VDxqixWs3jwIuXgQSySS3VhBKEFMKq0GzJ/fW/fV2WVmNjmJkIHhzXvv+743+3aTGdMYYmSz2QuDweAGoIdc+Jppmvcty3ocRDd1gHQ6vRf5h5hzCtwTxK/X6/XvirwxoUpQnHaJnavECTIHTAf2PDmyoXyCTCZzAuIvZCR/DEVO2ra96o+TH5IF3dhNTc6fUmJ1BY76VTS+EqssgPZMaQQ9KR1WWQAKyvfjUf/jKLG6AhKd0UPjAoE9G7do3KLADgQC/ulX9CNwe38BSuwEDpYt/BtOMjYaje6uVCrb8C3MIscDLGGNQqEw2W63txiLg2ibWrTBAbKdTmcfWSSfkh1mMJa5AmcjhN2vCwGj2+3Okp9MJhdAtMWcbE0YwlKOuYyD9qcQxksOkAXhItlyudwG4AqWm+QrxiZhCEt55jIW2q/oCVY4QBb+MdyDTtMa15E3MEUQX5MvDjdWdDEGcYgrYkjbOYnwopfgnOUkyN8ikchMtVpd59hBjF6v51y8wuHw2kcMzuXz+QPo/1to7Byz0FjGTeOcUwDVp/v9/nsQwkwC4Ase8VStVnvHMZnN5XJHwH0OcefjcDE9cA/j5vfBEWw2m18TiQR9y8cFkT1YX0N8Kh6P261WqynkDNz6csjdgfADzLiYw+bmsXun9Z7DGq1aBPiSCOY1SHWsP7v+fuDSnBMtcI8gfpljngIgmWjXXdh5BoxiIX4PbbkNO2CepwAHUeQMiixgZjmmsxC0MG9B/JkfJ/2zI2AsFpsG+CqIq5i//ESKUY4whJWJE0f6BH6xUqkUbTQaP8V4KpXaxT8wMe5fD1WASPhqdvpKPn5gQ3GVIL8gieqGqqD0HeiERs39/wV+A407AVUe67RDAAAAAElFTkSuQmCC")
+		background-size 12px * 0.8 19px * 0.8
+
+	&.loading
+		pointer-events none
+
 	&:active
 		&:after
 			opacity 0
