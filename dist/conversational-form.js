@@ -493,8 +493,11 @@ var cf;
                 throw new Error("this.eventTarget not set!! : " + this.constructor.name);
             this.setData(options);
             this.createElement();
+            this.onElementCreated();
         }
         BasicElement.prototype.setData = function (options) {
+        };
+        BasicElement.prototype.onElementCreated = function () {
         };
         BasicElement.prototype.createElement = function () {
             var template = document.createElement('template');
@@ -723,6 +726,9 @@ var cf;
 // namespace
 var cf;
 (function (cf) {
+    cf.ControlElementsEvents = {
+        ON_RESIZE: "on-control-elements-resize"
+    };
     var ControlElements = (function () {
         function ControlElements(options) {
             this.animateInFromReponseTimer = 0;
@@ -987,7 +993,6 @@ var cf;
                 // crude way of checking if list has changed...
                 var hasListChanged = this.filterListNumberOfVisible != itemsVisible.length;
                 if (hasListChanged) {
-                    this.resize();
                     this.animateElementsIn();
                 }
                 this.filterListNumberOfVisible = itemsVisible.length;
@@ -1008,6 +1013,7 @@ var cf;
         };
         ControlElements.prototype.animateElementsIn = function () {
             if (this.elements) {
+                this.resize();
                 var elements = this.getElements();
                 if (elements.length > 0) {
                     if (!this.el.classList.contains("animate-in"))
@@ -1303,6 +1309,7 @@ var cf;
                             }
                         }
                         // check again after classes are set.
+                        elOffsetWidth_1 = _this.el.offsetWidth;
                         isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
                         // sort the list so we can set tabIndex properly
                         var elementsCopyForSorting = elements.slice();
@@ -1314,7 +1321,7 @@ var cf;
                         for (var i = 0; i < tabIndexFilteredElements.length; i++) {
                             var element = tabIndexFilteredElements[i];
                             if (element.visible) {
-                                //tabindex 1 are the UserInput element
+                                //tabindex 1 are the UserTextInput element
                                 element.tabIndex = 2 + (tabIndex++);
                             }
                             else {
@@ -1322,7 +1329,6 @@ var cf;
                             }
                         }
                         // toggle nav button visiblity
-                        cancelAnimationFrame(_this.rAF);
                         if (isListWidthOverElementWidth_1) {
                             _this.el.classList.remove("hide-nav-buttons");
                         }
@@ -1334,6 +1340,7 @@ var cf;
                         _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
                         _this.buildTabableRows();
                         _this.el.classList.add("resized");
+                        _this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
                         if (resolve)
                             resolve();
                     }, 0);
@@ -1343,8 +1350,6 @@ var cf;
         ControlElements.prototype.dealloc = function () {
             this.currentControlElement = null;
             this.tableableRows = null;
-            cancelAnimationFrame(this.rAF);
-            this.rAF = null;
             window.removeEventListener('resize', this.onResizeCallback, false);
             this.onResizeCallback = null;
             this.el.removeEventListener('scroll', this.onScrollCallback, false);
@@ -2136,7 +2141,7 @@ var cf;
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="InputTag.ts"/>
 /// <reference path="SelectTag.ts"/>
-/// <reference path="../ui/UserInput.ts"/>
+/// <reference path="../ui/inputs/UserTextInput.ts"/>
 // group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same
 // multi choice logic for Checkboxes, <input type="checkbox", where name is the same
@@ -3179,9 +3184,130 @@ var cf;
     cf.UploadFileUI = UploadFileUI;
 })(cf || (cf = {}));
 
-/// <reference path="BasicElement.ts"/>
-/// <reference path="control-elements/ControlElements.ts"/>
-/// <reference path="../logic/FlowManager.ts"/>
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInput.ts"/>
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+// Abstract UserInpt element, should be extended when adding a new UI for user input, see UserVoiceInput for reference.
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    var UserInputElement = (function (_super) {
+        __extends(UserInputElement, _super);
+        function UserInputElement(options) {
+            var _this = _super.call(this, options) || this;
+            _this._disabled = false;
+            _this._visible = false;
+            _this.initObj = options.initObj;
+            _this.el.setAttribute("type", _this.initObj.type);
+            _this.windowFocusCallback = _this.windowFocus.bind(_this);
+            window.addEventListener('focus', _this.windowFocusCallback, false);
+            _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
+            _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
+            return _this;
+        }
+        Object.defineProperty(UserInputElement.prototype, "currentTag", {
+            get: function () {
+                return this._currentTag;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UserInputElement.prototype, "visible", {
+            set: function (value) {
+                var _this = this;
+                this._visible = value;
+                if (!this.el.classList.contains("animate-in") && value) {
+                    setTimeout(function () {
+                        _this.el.classList.add("animate-in");
+                    }, 0);
+                }
+                else if (this.el.classList.contains("animate-in") && !value) {
+                    this.el.classList.remove("animate-in");
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UserInputElement.prototype, "disabled", {
+            set: function (value) {
+                var hasChanged = this._disabled != value;
+                if (hasChanged) {
+                    this._disabled = value;
+                    if (value) {
+                        this.el.setAttribute("disabled", "disabled");
+                    }
+                    else {
+                        this.setFocusOnInput();
+                        this.el.removeAttribute("disabled");
+                    }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        UserInputElement.prototype.onEnterOrSubmitButtonSubmit = function (event) {
+            if (event === void 0) { event = null; }
+        };
+        UserInputElement.prototype.getFlowDTO = function () {
+            var value; // = this.inputElement.value;
+            return value;
+        };
+        UserInputElement.prototype.setFocusOnInput = function () {
+        };
+        UserInputElement.prototype.onFlowStopped = function () {
+        };
+        UserInputElement.prototype.reset = function () {
+        };
+        UserInputElement.prototype.dealloc = function () {
+            window.removeEventListener('focus', this.windowFocusCallback, false);
+            this.windowFocusCallback = null;
+            this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+            this.flowUpdateCallback = null;
+            _super.prototype.dealloc.call(this);
+        };
+        UserInputElement.prototype.onFlowUpdate = function (event) {
+            var _this = this;
+            cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+            this._currentTag = event.detail.tag;
+            setTimeout(function () {
+                _this.visible = true;
+                _this.disabled = false;
+            }, 150);
+        };
+        UserInputElement.prototype.windowFocus = function (event) {
+        };
+        return UserInputElement;
+    }(cf.BasicElement));
+    UserInputElement.ERROR_TIME = 2000;
+    UserInputElement.preventAutoFocus = false;
+    cf.UserInputElement = UserInputElement;
+    cf.UserInputEvents = {
+        SUBMIT: "cf-input-user-input-submit",
+        KEY_CHANGE: "cf-input-key-change",
+        CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
+        HEIGHT_CHANGE: "cf-input-height-change",
+        FOCUS: "cf-input-focus",
+        BLUR: "cf-input-blur",
+    };
+})(cf || (cf = {}));
+
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInputElement.ts"/>
+/// <reference path="UserInputElement.ts"/>
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3196,23 +3322,14 @@ var __extends = (this && this.__extends) || (function () {
 var cf;
 (function (cf) {
     // interface
-    cf.UserInputEvents = {
-        SUBMIT: "cf-input-user-input-submit",
-        KEY_CHANGE: "cf-input-key-change",
-        CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
-        HEIGHT_CHANGE: "cf-input-height-change",
-        FOCUS: "cf-input-focus",
-        BLUR: "cf-input-blur",
-    };
     // class
-    var UserInput = (function (_super) {
-        __extends(UserInput, _super);
-        function UserInput(options) {
+    var UserTextInput = (function (_super) {
+        __extends(UserTextInput, _super);
+        function UserTextInput(options) {
             var _this = _super.call(this, options) || this;
             _this.errorTimer = 0;
             _this.initialInputHeight = 0;
             _this.shiftIsDown = false;
-            _this._disabled = false;
             //acts as a fallb ack for ex. shadow dom implementation
             _this._active = false;
             _this.cfReference = options.cfReference;
@@ -3229,14 +3346,10 @@ var cf;
                 eventTarget: _this.eventTarget
             });
             // setup event listeners
-            _this.windowFocusCallback = _this.windowFocus.bind(_this);
-            window.addEventListener('focus', _this.windowFocusCallback, false);
             _this.keyUpCallback = _this.onKeyUp.bind(_this);
             document.addEventListener("keyup", _this.keyUpCallback, false);
             _this.keyDownCallback = _this.onKeyDown.bind(_this);
             document.addEventListener("keydown", _this.keyDownCallback, false);
-            _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
-            _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
             _this.onOriginalTagChangedCallback = _this.onOriginalTagChanged.bind(_this);
             _this.eventTarget.addEventListener(cf.TagEvents.ORIGINAL_ELEMENT_CHANGED, _this.onOriginalTagChangedCallback, false);
             _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
@@ -3245,41 +3358,20 @@ var cf;
             _this.eventTarget.addEventListener(cf.ControlElementEvents.SUBMIT_VALUE, _this.onControlElementSubmitCallback, false);
             _this.onControlElementProgressChangeCallback = _this.onControlElementProgressChange.bind(_this);
             _this.eventTarget.addEventListener(cf.ControlElementEvents.PROGRESS_CHANGE, _this.onControlElementProgressChangeCallback, false);
+            // this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
             _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
             _this.onSubmitButtonClickCallback = _this.onSubmitButtonClick.bind(_this);
             _this.submitButton.addEventListener("click", _this.onSubmitButtonClickCallback, false);
             return _this;
         }
-        Object.defineProperty(UserInput.prototype, "active", {
+        Object.defineProperty(UserTextInput.prototype, "active", {
             get: function () {
                 return this.inputElement === document.activeElement || this._active;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(UserInput.prototype, "visible", {
-            set: function (value) {
-                var _this = this;
-                if (!this.el.classList.contains("animate-in") && value) {
-                    setTimeout(function () {
-                        _this.el.classList.add("animate-in");
-                    }, 0);
-                }
-                else if (this.el.classList.contains("animate-in") && !value) {
-                    this.el.classList.remove("animate-in");
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UserInput.prototype, "currentTag", {
-            get: function () {
-                return this._currentTag;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UserInput.prototype, "disabled", {
+        Object.defineProperty(UserTextInput.prototype, "disabled", {
             set: function (value) {
                 var hasChanged = this._disabled != value;
                 if (hasChanged) {
@@ -3297,14 +3389,14 @@ var cf;
             enumerable: true,
             configurable: true
         });
-        UserInput.prototype.getInputValue = function () {
+        UserTextInput.prototype.getInputValue = function () {
             var str = this.inputElement.value;
             // Build-in way to handle XSS issues ->
             var div = document.createElement('div');
             div.appendChild(document.createTextNode(str));
             return div.innerHTML;
         };
-        UserInput.prototype.getFlowDTO = function () {
+        UserTextInput.prototype.getFlowDTO = function () {
             var value; // = this.inputElement.value;
             // check for values on control elements as they should overwrite the input value.
             if (this.controlElements && this.controlElements.active) {
@@ -3322,12 +3414,12 @@ var cf;
             value.tag = this.currentTag;
             return value;
         };
-        UserInput.prototype.reset = function () {
+        UserTextInput.prototype.reset = function () {
             if (this.controlElements) {
                 this.controlElements.clearTagsAndReset();
             }
         };
-        UserInput.prototype.onFlowStopped = function () {
+        UserTextInput.prototype.onFlowStopped = function () {
             if (this.controlElements)
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
@@ -3336,7 +3428,7 @@ var cf;
         * @name onOriginalTagChanged
         * on domElement from a Tag value changed..
         */
-        UserInput.prototype.onOriginalTagChanged = function (event) {
+        UserTextInput.prototype.onOriginalTagChanged = function (event) {
             if (this.currentTag == event.detail.tag) {
                 this.onInputChange();
             }
@@ -3344,7 +3436,7 @@ var cf;
                 this.controlElements.updateStateOnElementsFromTag(event.detail.tag);
             }
         };
-        UserInput.prototype.onInputChange = function () {
+        UserTextInput.prototype.onInputChange = function () {
             if (!this.active && !this.controlElements.active)
                 return;
             // safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
@@ -3356,7 +3448,7 @@ var cf;
                 detail: this.inputElement.scrollHeight
             }));
         };
-        UserInput.prototype.inputInvalid = function (event) {
+        UserTextInput.prototype.inputInvalid = function (event) {
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var dto = event.detail;
@@ -3378,9 +3470,9 @@ var cf;
                 _this.setFocusOnInput();
                 if (_this.controlElements)
                     _this.controlElements.resetAfterErrorMessage();
-            }, UserInput.ERROR_TIME);
+            }, cf.UserInputElement.ERROR_TIME);
         };
-        UserInput.prototype.setPlaceholder = function () {
+        UserTextInput.prototype.setPlaceholder = function () {
             if (this._currentTag) {
                 if (this._currentTag.inputPlaceholder) {
                     this.inputElement.setAttribute("placeholder", this._currentTag.inputPlaceholder);
@@ -3393,7 +3485,7 @@ var cf;
                 this.inputElement.setAttribute("placeholder", cf.Dictionary.get("group-placeholder"));
             }
         };
-        UserInput.prototype.checkForCorrectInputTag = function () {
+        UserTextInput.prototype.checkForCorrectInputTag = function () {
             // handle password natively
             var currentType = this.inputElement.getAttribute("type");
             var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
@@ -3439,11 +3531,10 @@ var cf;
             }
             this.setFocusOnInput();
         };
-        UserInput.prototype.onFlowUpdate = function (event) {
+        UserTextInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
-            cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+            _super.prototype.onFlowUpdate.call(this, event);
             // animate input field in
-            this._currentTag = event.detail.tag;
             this.el.setAttribute("tag-type", this._currentTag.type);
             // replace textarea and visa versa
             this.checkForCorrectInputTag();
@@ -3469,34 +3560,32 @@ var cf;
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
             setTimeout(function () {
-                _this.visible = true;
-                _this.disabled = false;
                 _this.onInputChange();
             }, 150);
         };
-        UserInput.prototype.onControlElementProgressChange = function (event) {
+        UserTextInput.prototype.onControlElementProgressChange = function (event) {
             var status = event.detail;
             this.disabled = status == cf.ControlElementProgressStates.BUSY;
         };
-        UserInput.prototype.buildControlElements = function (tags) {
+        UserTextInput.prototype.buildControlElements = function (tags) {
             this.controlElements.buildTags(tags);
         };
-        UserInput.prototype.onControlElementSubmit = function (event) {
+        UserTextInput.prototype.onControlElementSubmit = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             // when ex a RadioButton is clicked..
             var controlElement = event.detail;
             this.controlElements.updateStateOnElements(controlElement);
             this.doSubmit();
         };
-        UserInput.prototype.onSubmitButtonClick = function (event) {
+        UserTextInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
-        UserInput.prototype.isMetaKeyPressed = function (event) {
+        UserTextInput.prototype.isMetaKeyPressed = function (event) {
             // if any meta keys, then ignore, getModifierState, but safari does not support..
             if (event.metaKey || [91, 93].indexOf(event.keyCode) !== -1)
                 return;
         };
-        UserInput.prototype.onKeyDown = function (event) {
+        UserTextInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
@@ -3509,7 +3598,7 @@ var cf;
                 event.preventDefault();
             }
         };
-        UserInput.prototype.onKeyUp = function (event) {
+        UserTextInput.prototype.onKeyUp = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
@@ -3563,7 +3652,7 @@ var cf;
                             // if select or checkbox then check for multi select item
                             if (tagType == "checkbox" || mutiTag.multipleChoice) {
                                 if (this.active && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
-                                    // click on UserInput submit button, only ENTER allowed
+                                    // click on UserTextInput submit button, only ENTER allowed
                                     this.submitButton.click();
                                 }
                                 else {
@@ -3598,7 +3687,7 @@ var cf;
             }
             this.onInputChange();
         };
-        UserInput.prototype.dispatchKeyChange = function (dto, keyCode) {
+        UserTextInput.prototype.dispatchKeyChange = function (dto, keyCode) {
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.UserInputEvents.KEY_CHANGE, dto);
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.KEY_CHANGE, {
                 detail: {
@@ -3608,24 +3697,25 @@ var cf;
                 }
             }));
         };
-        UserInput.prototype.windowFocus = function (event) {
+        UserTextInput.prototype.windowFocus = function (event) {
+            _super.prototype.windowFocus.call(this, event);
             this.setFocusOnInput();
         };
-        UserInput.prototype.onInputBlur = function (event) {
+        UserTextInput.prototype.onInputBlur = function (event) {
             this._active = false;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.BLUR));
         };
-        UserInput.prototype.onInputFocus = function (event) {
+        UserTextInput.prototype.onInputFocus = function (event) {
             this._active = true;
             this.onInputChange();
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
-        UserInput.prototype.setFocusOnInput = function () {
-            if (!UserInput.preventAutoFocus) {
+        UserTextInput.prototype.setFocusOnInput = function () {
+            if (!cf.UserInputElement.preventAutoFocus) {
                 this.inputElement.focus();
             }
         };
-        UserInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
+        UserTextInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
             if (this.active && this.controlElements.highlighted) {
                 // active input field and focus on control elements happens when a control element is highlighted
@@ -3649,7 +3739,7 @@ var cf;
                 }
             }
         };
-        UserInput.prototype.doSubmit = function () {
+        UserTextInput.prototype.doSubmit = function () {
             var dto = this.getFlowDTO();
             this.submitButton.classList.add("loading");
             this.disabled = true;
@@ -3660,23 +3750,19 @@ var cf;
                 detail: dto
             }));
         };
-        UserInput.prototype.resetValue = function () {
+        UserTextInput.prototype.resetValue = function () {
             this.inputElement.value = "";
             this.onInputChange();
         };
-        UserInput.prototype.dealloc = function () {
+        UserTextInput.prototype.dealloc = function () {
             this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
             this.onInputBlurCallback = null;
             this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
             this.onInputFocusCallback = null;
-            window.removeEventListener('focus', this.windowFocusCallback, false);
-            this.windowFocusCallback = null;
             document.removeEventListener("keydown", this.keyDownCallback, false);
             this.keyDownCallback = null;
             document.removeEventListener("keyup", this.keyUpCallback, false);
             this.keyUpCallback = null;
-            this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
-            this.flowUpdateCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
             this.inputInvalidCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
@@ -3687,14 +3773,117 @@ var cf;
             _super.prototype.dealloc.call(this);
         };
         // override
-        UserInput.prototype.getTemplate = function () {
+        UserTextInput.prototype.getTemplate = function () {
             return "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
         };
-        return UserInput;
-    }(cf.BasicElement));
-    UserInput.preventAutoFocus = false;
-    UserInput.ERROR_TIME = 2000;
-    cf.UserInput = UserInput;
+        return UserTextInput;
+    }(cf.UserInputElement));
+    cf.UserTextInput = UserTextInput;
+})(cf || (cf = {}));
+
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInputElement.ts"/>
+/// <reference path="UserInputElement.ts"/>
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    // class
+    var UserVoiceInput = (function (_super) {
+        __extends(UserVoiceInput, _super);
+        function UserVoiceInput(options) {
+            var _this = _super.call(this, options) || this;
+            _this.currentTextResponse = "";
+            _this.cfReference = options.cfReference;
+            _this.eventTarget = options.eventTarget;
+            _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
+            _this.onSubmitButtonClickCallback = _this.onSubmitButtonClick.bind(_this);
+            _this.submitButton.addEventListener("click", _this.onSubmitButtonClickCallback, false);
+            return _this;
+        }
+        UserVoiceInput.prototype.getFlowDTO = function () {
+            var value;
+            value = {
+                input: this,
+                text: this.currentTextResponse,
+                tag: this.currentTag
+            };
+            return value;
+        };
+        UserVoiceInput.prototype.reset = function () {
+            _super.prototype.reset.call(this);
+        };
+        UserVoiceInput.prototype.onFlowStopped = function () {
+            // this.disabled = true;
+        };
+        UserVoiceInput.prototype.onFlowUpdate = function (event) {
+            _super.prototype.onFlowUpdate.call(this, event);
+        };
+        UserVoiceInput.prototype.onSubmitButtonClick = function (event) {
+            this.onEnterOrSubmitButtonSubmit(event);
+        };
+        UserVoiceInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
+            var _this = this;
+            if (event === void 0) { event = null; }
+            this.submitButton.classList.add("loading");
+            this.el.removeAttribute("error");
+            // call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with text/string
+            var a = new Promise(function (resolve, reject) { return _this.initObj.input(resolve, reject); })
+                .then(function (result) {
+                // api contacted
+                // save response so it's available in getFlowDTO
+                _this.currentTextResponse = result.toString();
+                if (!_this.currentTextResponse || _this.currentTextResponse == "") {
+                    _this.currentTextResponse = cf.Dictionary.get("user-reponse-missing");
+                }
+                var dto = _this.getFlowDTO();
+                _this.submitButton.classList.remove("loading");
+                _this.disabled = false;
+                _this.el.removeAttribute("error");
+                // continue flow
+                cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.UserInputEvents.SUBMIT, dto);
+                _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.SUBMIT, {
+                    detail: dto
+                }));
+                _this.submitButton.classList.add("active");
+                _this.submitButton.classList.remove("loading");
+            }).catch(function (result) {
+                // api failed ...
+                _this.el.setAttribute("error", result);
+                _this.disabled = false;
+                _this.submitButton.classList.remove("loading");
+            });
+        };
+        UserVoiceInput.prototype.setFocusOnInput = function () {
+            if (!cf.UserInputElement.preventAutoFocus) {
+                // ...
+            }
+        };
+        UserVoiceInput.prototype.dealloc = function () {
+            this.submitButton = this.el.getElementsByClassName("cf-input-button")[0];
+            this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
+            this.onSubmitButtonClickCallback = null;
+            _super.prototype.dealloc.call(this);
+        };
+        // override
+        UserVoiceInput.prototype.getTemplate = function () {
+            return "<cf-input>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-audio\"></div>\n\t\t\t\t</cf-input-button>\n\n\t\t\t</cf-input>\n\t\t\t";
+        };
+        return UserVoiceInput;
+    }(cf.UserInputElement));
+    cf.UserVoiceInput = UserVoiceInput;
 })(cf || (cf = {}));
 
 /// <reference path="../BasicElement.ts"/>
@@ -3721,10 +3910,7 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
-            _this._list = options.list;
             _this._tag = options.tag;
-            _this.textEl = _this.el.getElementsByTagName("text")[0];
-            _this.updateThumbnail(_this.image);
             return _this;
         }
         Object.defineProperty(ChatResponse.prototype, "tag", {
@@ -3749,13 +3935,20 @@ var cf;
         });
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
-                if (value) {
-                    this.el.offsetWidth;
-                    this.el.classList.add("show");
-                }
-                else {
-                    this.el.classList.remove("show");
-                }
+                var _this = this;
+                this.el.offsetWidth;
+                setTimeout(function () { return value ? _this.el.classList.add("show") : _this.el.classList.remove("show"); }, 100);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ChatResponse.prototype, "strippedSesponse", {
+            get: function () {
+                var html = this.response;
+                // use browsers native way of stripping
+                var div = document.createElement("div");
+                div.innerHTML = html;
+                return div.textContent || div.innerText || "";
             },
             enumerable: true,
             configurable: true
@@ -3770,9 +3963,9 @@ var cf;
                 this.setToThinking();
             }
             else {
-                this.response = dto.text;
-                var processedResponse = this.processResponseAndSetText();
-                if (this.responseLink && !this.isRobotReponse) {
+                this.response = this.originalResponse = dto.text;
+                this.processResponseAndSetText();
+                if (this.responseLink && !this.isRobotResponse) {
                     // call robot and update for binding values ->
                     this.responseLink.processResponseAndSetText();
                 }
@@ -3784,18 +3977,18 @@ var cf;
                             break;
                     }
                 }
-                if (!this.isRobotReponse && !this.onClickCallback) {
+                if (!this.isRobotResponse && !this.onClickCallback) {
                     this.onClickCallback = this.onClick.bind(this);
                     this.el.addEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
                 }
             }
         };
         ChatResponse.prototype.hide = function () {
-            this.el.classList.remove("show");
+            this.visible = false;
             this.disabled = true;
         };
         ChatResponse.prototype.show = function () {
-            this.el.classList.add("show");
+            this.visible = true;
             this.disabled = false;
             if (!this.response) {
                 this.setToThinking();
@@ -3815,8 +4008,10 @@ var cf;
         };
         ChatResponse.prototype.processResponseAndSetText = function () {
             var _this = this;
-            var innerResponse = this.response;
-            if (this._tag && this._tag.type == "password" && !this.isRobotReponse) {
+            if (!this.originalResponse)
+                return "";
+            var innerResponse = this.originalResponse;
+            if (this._tag && this._tag.type == "password" && !this.isRobotResponse) {
                 var newStr = "";
                 for (var i_1 = 0; i_1 < innerResponse.length; i_1++) {
                     newStr += "*";
@@ -3826,12 +4021,14 @@ var cf;
             else {
                 innerResponse = cf.Helpers.emojify(innerResponse);
             }
-            if (this.responseLink && this.isRobotReponse) {
+            if (this.responseLink && this.isRobotResponse) {
                 // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
+            }
+            if (this.isRobotResponse) {
                 // Piping, look through IDs, and map values to dynamics
-                var reponses = this._list.getResponses();
+                var reponses = ChatResponse.list.getResponses();
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
                     if (response !== this) {
@@ -3864,10 +4061,12 @@ var cf;
                 _this.textEl.setAttribute("value-added", "");
             }, 0);
             this.checkForEditMode();
+            // update response
+            this.response = innerResponse;
             return innerResponse;
         };
         ChatResponse.prototype.checkForEditMode = function () {
-            if (!this.isRobotReponse && !this.textEl.hasAttribute("thinking")) {
+            if (!this.isRobotResponse && !this.textEl.hasAttribute("thinking")) {
                 this.el.classList.add("can-edit");
                 this.disabled = false;
             }
@@ -3889,24 +4088,32 @@ var cf;
             }));
         };
         ChatResponse.prototype.setData = function (options) {
-            var _this = this;
             this.image = options.image;
-            this.response = "";
-            this.isRobotReponse = options.isRobotReponse;
+            this.response = this.originalResponse = options.response;
+            this.isRobotResponse = options.isRobotResponse;
             _super.prototype.setData.call(this, options);
+        };
+        ChatResponse.prototype.onElementCreated = function () {
+            var _this = this;
+            this.textEl = this.el.getElementsByTagName("text")[0];
+            this.setValue();
+            this.updateThumbnail(this.image);
+            if (this.isRobotResponse || this.response != null) {
+                // Robot is pseudo thinking, can also be user -->
+                // , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
+                setTimeout(function () {
+                    _this.setValue({ text: _this.response });
+                }, 0);
+                //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
+            }
+            else {
+                // shows the 3 dots automatically, we expect the reponse to be empty upon creation
+                // TODO: Auto completion insertion point
+                setTimeout(function () {
+                    _this.el.classList.add("peak-thumb");
+                }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
+            }
             setTimeout(function () {
-                _this.setValue();
-                _this.updateThumbnail(_this.image);
-                if (_this.isRobotReponse || options.response != null) {
-                    // Robot is pseudo thinking, can also be user -->
-                    // , but if addUserChatResponse is called from ConversationalForm, then the value is there, therefore skip ...
-                    setTimeout(function () { return _this.setValue({ text: options.response }); }, 0); //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
-                }
-                else {
-                    // shows the 3 dots automatically, we expect the reponse to be empty upon creation
-                    // TODO: Auto completion insertion point
-                    setTimeout(function () { return _this.el.classList.add("peak-thumb"); }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
-                }
             }, 0);
         };
         ChatResponse.prototype.dealloc = function () {
@@ -3918,7 +4125,7 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotReponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
@@ -3951,6 +4158,7 @@ var cf;
         __extends(ChatList, _super);
         function ChatList(options) {
             var _this = _super.call(this, options) || this;
+            cf.ChatResponse.list = _this;
             _this.responses = [];
             // flow update
             _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
@@ -4021,7 +4229,7 @@ var cf;
         ChatList.prototype.containsTagResponse = function (tagToChange) {
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
-                if (!element.isRobotReponse && element.tag == tagToChange && !tagToChange.hasConditions()) {
+                if (!element.isRobotResponse && element.tag == tagToChange && !tagToChange.hasConditions()) {
                     return true;
                 }
             }
@@ -4035,7 +4243,7 @@ var cf;
             var oldReponse;
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
-                if (!element.isRobotReponse && element.tag == tagToChange) {
+                if (!element.isRobotResponse && element.tag == tagToChange) {
                     // update element thhat user wants to edit
                     oldReponse = element;
                     break;
@@ -4067,6 +4275,7 @@ var cf;
         * remove responses, this usually happens if a user jumps back to a conditional element
         */
         ChatList.prototype.clearFrom = function (index) {
+            index = index * 2; // double up because of robot responses
             index += index % 2; // round up so we dont remove the user response element
             while (this.responses.length > index) {
                 var element = this.responses.pop();
@@ -4103,24 +4312,24 @@ var cf;
             var newImage = robot ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image");
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
-                if (robot && element.isRobotReponse) {
+                if (robot && element.isRobotResponse) {
                     element.updateThumbnail(newImage);
                 }
-                else if (!robot && !element.isRobotReponse) {
+                else if (!robot && !element.isRobotResponse) {
                     element.updateThumbnail(newImage);
                 }
             }
         };
-        ChatList.prototype.createResponse = function (isRobotReponse, currentTag, value) {
+        ChatList.prototype.createResponse = function (isRobotResponse, currentTag, value) {
             if (value === void 0) { value = null; }
             var response = new cf.ChatResponse({
                 // image: null,
                 list: this,
                 tag: currentTag,
                 eventTarget: this.eventTarget,
-                isRobotReponse: isRobotReponse,
+                isRobotResponse: isRobotResponse,
                 response: value,
-                image: isRobotReponse ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image"),
+                image: isRobotResponse ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image"),
             });
             this.responses.push(response);
             this.currentResponse = response;
@@ -4245,7 +4454,7 @@ var cf;
                     // update to latest DTO because values can be changed in validation flow...
                     appDTO = appDTO.input.getFlowDTO();
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_UPDATE, {
-                        detail: appDTO //UserInput value
+                        detail: appDTO //UserTextInput value
                     }));
                     // goto next step when user has answered
                     setTimeout(function () { return _this.nextStep(); }, cf.ConversationalForm.animationsEnabled ? 250 : 0);
@@ -4254,7 +4463,7 @@ var cf;
                     cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.FlowEvents.USER_INPUT_INVALID, appDTO);
                     // Value not valid
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
-                        detail: appDTO //UserInput value
+                        detail: appDTO //UserTextInput value
                     }));
                 }
             };
@@ -4436,8 +4645,8 @@ var cf;
     cf.FlowManager = FlowManager;
 })(cf || (cf = {}));
 
-// version 0.9.0
-/// <reference path="ui/UserInput.ts"/>
+/// <reference path="ui/inputs/UserTextInput.ts"/>
+/// <reference path="ui/inputs/UserVoiceInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
@@ -4448,6 +4657,8 @@ var cf;
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
+/// <reference path="interfaces/IUserInputElement.ts"/>
+/// <reference path="interfaces/IUserInput.ts"/>
 var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
@@ -4490,16 +4701,25 @@ var cf;
             if (this.formEl.getAttribute("cf-no-animation") == "")
                 ConversationalForm.animationsEnabled = false;
             if (this.formEl.getAttribute("cf-prevent-autofocus") == "")
-                cf_1.UserInput.preventAutoFocus = true;
+                cf_1.UserInputElement.preventAutoFocus = true;
             this.dictionary = new cf_1.Dictionary({
                 data: options.dictionaryData,
                 robotData: options.dictionaryRobot,
                 userImage: options.userImage,
                 robotImage: options.robotImage,
             });
-            // emoji.. fork and set your own values..
             this.context = options.context ? options.context : document.body;
             this.tags = options.tags;
+            if (options.userInput) {
+                // validate the custom input
+                if (!options.userInput.type || !options.userInput.init || !options.userInput.input) {
+                    console.warn("userInput is not correctly setup", options.userInput);
+                    options.userInput = null;
+                }
+            }
+            this.userInputObject = options.userInput || {
+                type: cf_1.UserInputTypes.TEXT
+            };
             this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {
@@ -4705,10 +4925,18 @@ var cf;
                 eventTarget: this.eventTarget
             });
             innerWrap.appendChild(this.chatList.el);
-            this.userInput = new cf_1.UserInput({
+            var types = [];
+            types[cf_1.UserInputTypes.TEXT] = cf_1.UserTextInput;
+            types[cf_1.UserInputTypes.VOICE] = cf_1.UserVoiceInput;
+            this.userInput = new types[this.userInputObject.type]({
+                initObj: this.userInputObject,
                 eventTarget: this.eventTarget,
                 cfReference: this
             });
+            // init if init is there, ex. Voice have init, but Text does not..
+            if (this.userInputObject.init) {
+                this.userInputObject.init();
+            }
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
             this.eventTarget.addEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);

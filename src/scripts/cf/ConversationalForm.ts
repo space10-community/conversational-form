@@ -1,6 +1,5 @@
-// version 0.9.0
-
-/// <reference path="ui/UserInput.ts"/>
+/// <reference path="ui/inputs/UserTextInput.ts"/>
+/// <reference path="ui/inputs/UserVoiceInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
@@ -11,6 +10,8 @@
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
+/// <reference path="interfaces/IUserInputElement.ts"/>
+/// <reference path="interfaces/IUserInput.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -59,6 +60,9 @@ namespace cf {
 
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
 		eventDispatcher?: EventDispatcher;
+
+		// define a custom user input ui
+		userInput?:IUserInput;
 	}
 
 	// CUI formless options
@@ -95,7 +99,6 @@ namespace cf {
 			}
 			return this._eventTarget;
 		}
-
 		public dictionary: Dictionary;
 		public el: HTMLElement;
 
@@ -108,11 +111,13 @@ namespace cf {
 		private flowManager: FlowManager;
 
 		public chatList: ChatList;
-		private userInput: UserInput;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
+
+		private userInput: IUserInputElement;
+		private userInputObject: IUserInput;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -161,7 +166,7 @@ namespace cf {
 				ConversationalForm.animationsEnabled = false;
 
 			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
-				UserInput.preventAutoFocus = true;
+				UserInputElement.preventAutoFocus = true;
 
 			this.dictionary = new Dictionary({
 				data: options.dictionaryData,
@@ -170,10 +175,20 @@ namespace cf {
 				robotImage: options.robotImage,
 			});
 
-			// emoji.. fork and set your own values..
-
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
+
+			if(options.userInput){
+				// validate the custom input
+				if(!options.userInput.type || !options.userInput.init || !options.userInput.input){
+					console.warn("userInput is not correctly setup", options.userInput);
+					options.userInput = null;
+				}
+			}
+
+			this.userInputObject = options.userInput || {
+				type: UserInputTypes.TEXT
+			};
 
 			this.init();
 		}
@@ -404,12 +419,23 @@ namespace cf {
 			this.chatList = new ChatList({
 				eventTarget: this.eventTarget
 			});
+
 			innerWrap.appendChild(this.chatList.el);
 
-			this.userInput = new UserInput({
+			const types: any = [];
+			types[UserInputTypes.TEXT] = UserTextInput;
+			types[UserInputTypes.VOICE] = UserVoiceInput;
+
+			this.userInput = new types[this.userInputObject.type]({
+				initObj: this.userInputObject,
 				eventTarget: this.eventTarget,
 				cfReference: this
 			});
+
+			// init if init is there, ex. Voice have init, but Text does not..
+			if(this.userInputObject.init){
+				this.userInputObject.init();
+			}
 
 			innerWrap.appendChild(this.userInput.el);
 

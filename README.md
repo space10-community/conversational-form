@@ -35,7 +35,7 @@ If you want to have the ConversationalForm appended to a certain element (when a
 ```
 
 **cf-prevent-autofocus**  
-If you don't want to have the UserInput to auto focus.
+If you don't want to have the UserTextInput to auto focus.
 ```html
 <form id="my-form-element" cf-form cf-prevent-autofocus>
 ```
@@ -149,7 +149,7 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 ```
 
 ### cf-input-placeholder
-* tag specific, set the placeholder text on the UserInput field
+* tag specific, set the placeholder text on the UserTextInput field
 ```html
 <input type="text" cf-input-placeholder="Should include http" ..
 ```

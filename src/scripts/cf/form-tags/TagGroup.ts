@@ -1,7 +1,7 @@
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="InputTag.ts"/>
 /// <reference path="SelectTag.ts"/>
-/// <reference path="../ui/UserInput.ts"/>
+/// <reference path="../ui/inputs/UserTextInput.ts"/>
 
 // group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same

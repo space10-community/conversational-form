@@ -1,6 +1,8 @@
-/// <reference path="BasicElement.ts"/>
-/// <reference path="control-elements/ControlElements.ts"/>
-/// <reference path="../logic/FlowManager.ts"/>
+/// <reference path="../BasicElement.ts"/>
+/// <reference path="../control-elements/ControlElements.ts"/>
+/// <reference path="../../logic/FlowManager.ts"/>
+/// <reference path="../../interfaces/IUserInputElement.ts"/>
+/// <reference path="UserInputElement.ts"/>
 
 // namespace
 namespace cf {
@@ -12,31 +14,11 @@ namespace cf {
 		inputFieldActive: boolean
 	}
 
-	export interface IUserInputOptions extends IBasicElementOptions{
-		cfReference: ConversationalForm
-	}
-
-	export const UserInputEvents = {
-		SUBMIT: "cf-input-user-input-submit",
-		KEY_CHANGE: "cf-input-key-change",
-		CONTROL_ELEMENTS_ADDED: "cf-input-control-elements-added",
-		HEIGHT_CHANGE: "cf-input-height-change",
-		FOCUS: "cf-input-focus",
-		BLUR: "cf-input-blur",
-	}
-
 	// class
-	export class UserInput extends BasicElement {
-		public static preventAutoFocus: boolean = false;
-
-		public static ERROR_TIME: number = 2000;
-		public el: HTMLElement;
-
-		private cfReference: ConversationalForm;
+	export class UserTextInput extends UserInputElement implements IUserInputElement {
 		private inputElement: HTMLInputElement | HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
-		private windowFocusCallback: () => void;
-		private flowUpdateCallback: () => void;
+
 		private inputInvalidCallback: () => void;
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
@@ -47,31 +29,15 @@ namespace cf {
 		private errorTimer: number = 0;
 		private initialInputHeight: number = 0;
 		private shiftIsDown: boolean = false;
-		private _disabled: boolean = false;
 		private keyUpCallback: () => void;
 		private keyDownCallback: () => void;
 
 		private controlElements: ControlElements;
-		private _currentTag: ITag | ITagGroup;
 
 		//acts as a fallb ack for ex. shadow dom implementation
 		private _active: boolean = false;
 		public get active(): boolean{
 			return this.inputElement === document.activeElement || this._active;
-		}
-
-		public set visible(value: boolean){
-			if(!this.el.classList.contains("animate-in") && value){
-				setTimeout(() => {
-					this.el.classList.add("animate-in");
-				}, 0);
-			}else if(this.el.classList.contains("animate-in") && !value){
-				this.el.classList.remove("animate-in");
-			}
-		}
-
-		public get currentTag(): ITag | ITagGroup{
-			return this._currentTag;
 		}
 
 		public set disabled(value: boolean){
@@ -108,17 +74,12 @@ namespace cf {
 			})
 
 			// setup event listeners
-			this.windowFocusCallback = this.windowFocus.bind(this);
-			window.addEventListener('focus', this.windowFocusCallback, false);
 
 			this.keyUpCallback = this.onKeyUp.bind(this);
 			document.addEventListener("keyup", this.keyUpCallback, false);
 
 			this.keyDownCallback = this.onKeyDown.bind(this);
 			document.addEventListener("keydown", this.keyDownCallback, false);
-
-			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
-			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 
 			this.onOriginalTagChangedCallback = this.onOriginalTagChanged.bind(this);
 			this.eventTarget.addEventListener(TagEvents.ORIGINAL_ELEMENT_CHANGED, this.onOriginalTagChangedCallback, false);
@@ -131,6 +92,8 @@ namespace cf {
 
 			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
+
+			// this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
 
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
@@ -237,7 +200,7 @@ namespace cf {
 				if(this.controlElements)
 					this.controlElements.resetAfterErrorMessage();
 
-			}, UserInput.ERROR_TIME);
+			}, UserInputElement.ERROR_TIME);
 		}
 
 		private setPlaceholder() {
@@ -304,12 +267,10 @@ namespace cf {
 			this.setFocusOnInput();
 		}
 
-		private onFlowUpdate(event: CustomEvent){
-			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
+		protected onFlowUpdate(event: CustomEvent){
+			super.onFlowUpdate(event);
 
 			// animate input field in
-
-			this._currentTag = <ITag | ITagGroup> event.detail.tag;
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
 
@@ -346,8 +307,6 @@ namespace cf {
 			}
 
 			setTimeout(() => {
-				this.visible = true;
-				this.disabled = false;
 				this.onInputChange();
 			}, 150);
 		}
@@ -461,7 +420,7 @@ namespace cf {
 							// if select or checkbox then check for multi select item
 							if(tagType == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
 								if(this.active && event.keyCode == Dictionary.keyCodes["enter"]){
-									// click on UserInput submit button, only ENTER allowed
+									// click on UserTextInput submit button, only ENTER allowed
 									this.submitButton.click();
 								}else{
 									// let UI know that we changed the key
@@ -505,7 +464,8 @@ namespace cf {
 			}));
 		}
 
-		private windowFocus(event: Event){
+		protected windowFocus(event: Event){
+			super.windowFocus(event);
 			this.setFocusOnInput();
 		}
 
@@ -521,12 +481,11 @@ namespace cf {
 		}
 
 		public setFocusOnInput(){
-			if(!UserInput.preventAutoFocus){
+			if(!UserInputElement.preventAutoFocus){
 				this.inputElement.focus();
 			}
 		}
-
-		private onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			if(this.active && this.controlElements.highlighted){
 				// active input field and focus on control elements happens when a control element is highlighted
 				this.controlElements.clickOnHighlighted();
@@ -573,17 +532,11 @@ namespace cf {
 			this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
 			this.onInputFocusCallback = null;
 
-			window.removeEventListener('focus', this.windowFocusCallback, false);
-			this.windowFocusCallback = null;
-
 			document.removeEventListener("keydown", this.keyDownCallback, false);
 			this.keyDownCallback = null;
 
 			document.removeEventListener("keyup", this.keyUpCallback, false);
 			this.keyUpCallback = null;
-
-			this.eventTarget.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
-			this.flowUpdateCallback = null;
 
 			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 			this.inputInvalidCallback = null;

@@ -11,6 +11,9 @@
 
 // namespace
 namespace cf {
+	export const ControlElementsEvents = {
+		ON_RESIZE: "on-control-elements-resize"
+	}
 	export interface ControlElementsDTO{
 		height: number;
 	}
@@ -47,7 +50,6 @@ namespace cf {
 		private filterListNumberOfVisible: number = 0;
 		private listScrollController: ScrollController;
 
-		private rAF: number;
 		private listWidth: number = 0;
 
 		public get active():boolean{
@@ -184,7 +186,7 @@ namespace cf {
 			}
 
 			const dto: InputKeyChangeDTO = event.detail;
-			const userInput: UserInput = dto.dto.input;
+			const userInput: UserTextInput = <UserTextInput> dto.dto.input;
 
 			if(this.active){
 				const isNavKey: boolean = [Dictionary.keyCodes["left"], Dictionary.keyCodes["right"], Dictionary.keyCodes["down"], Dictionary.keyCodes["up"]].indexOf(dto.keyCode) != -1;
@@ -193,7 +195,7 @@ namespace cf {
 				if(shouldFilter){
 					// input field is active, so we should filter..
 					const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
-					const inputValue: string = dto.input.getInputValue();
+					const inputValue: string = (<UserTextInput> dto.input).getInputValue();
 					this.filterElementsFrom(inputValue);
 				}else{
 					if(dto.keyCode == Dictionary.keyCodes["left"]){
@@ -321,7 +323,6 @@ namespace cf {
 				// crude way of checking if list has changed...
 				const hasListChanged: boolean = this.filterListNumberOfVisible != itemsVisible.length;
 				if(hasListChanged){
-					this.resize();
 					this.animateElementsIn();
 				}
 				
@@ -346,6 +347,8 @@ namespace cf {
 
 		public animateElementsIn(){
 			if(this.elements){
+				this.resize();
+
 				const elements: Array<IControlElement> = this.getElements();
 				if(elements.length > 0){
 					if(!this.el.classList.contains("animate-in"))
@@ -668,7 +671,7 @@ namespace cf {
 							containsElementWithImage = true;
 					}
 
-					const elOffsetWidth: number = this.el.offsetWidth;
+					let elOffsetWidth: number = this.el.offsetWidth;
 					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
 					if(isListWidthOverElementWidth && !containsElementWithImage){
 						this.el.classList.add("two-row");
@@ -688,6 +691,7 @@ namespace cf {
 						}
 
 						// check again after classes are set.
+						elOffsetWidth = this.el.offsetWidth;
 						isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
 
 						// sort the list so we can set tabIndex properly
@@ -701,7 +705,7 @@ namespace cf {
 						for (let i = 0; i < tabIndexFilteredElements.length; i++) {
 							let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
 							if(element.visible){
-								//tabindex 1 are the UserInput element
+								//tabindex 1 are the UserTextInput element
 								element.tabIndex = 2 + (tabIndex++);
 							}else{
 								element.tabIndex = -1;
@@ -709,7 +713,6 @@ namespace cf {
 						}
 						
 						// toggle nav button visiblity
-						cancelAnimationFrame(this.rAF);
 						if(isListWidthOverElementWidth){
 							this.el.classList.remove("hide-nav-buttons");
 						}else{
@@ -725,6 +728,8 @@ namespace cf {
 
 						this.el.classList.add("resized");
 
+						this.eventTarget.dispatchEvent(new CustomEvent(ControlElementsEvents.ON_RESIZE));
+
 						if(resolve)
 							resolve();
 					}, 0);
@@ -735,9 +740,6 @@ namespace cf {
 		public dealloc(){
 			this.currentControlElement = null;
 			this.tableableRows = null;
-
-			cancelAnimationFrame(this.rAF);
-			this.rAF = null;
 
 			window.removeEventListener('resize', this.onResizeCallback, false);
 			this.onResizeCallback = null;
