@@ -54,6 +54,14 @@ namespace cf {
 			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
 		}
 
+		public get strippedSesponse():string{
+			var html = this.response;
+			// use browsers native way of stripping
+			var div = document.createElement("div");
+			div.innerHTML = html;
+			return div.textContent || div.innerText || "";
+		}
+
 		constructor(options: IChatResponseOptions){
 			super(options);
 			this._tag = options.tag;
