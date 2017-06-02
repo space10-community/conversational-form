@@ -81,6 +81,7 @@
 
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 					<form id="form" cf-form onsubmit="return submitMethod();">
+						<input type="number" name="field-name" cf-questions="number" />
 						<input type="text" name="field-name" cf-questions="Fill out field to get Alert from callback method." />
 					</form>
 
@@ -88,13 +89,20 @@
 			</section>
 
 			<section id="cf-context" role="cf-context" cf-context>
-				
+				<style>
+					#cf-context{
+						position: absolute;
+						top: 0px;
+						width: 100%;
+						height: 100%;
+					}
+				</style>
 			</section>
 		</main>
 
 
-		<link type="text/css" rel="stylesheet" href="../..dist/conversational-form.min.css"/>
-		<script type="text/javascript" id="conversational-form-development" src="../..dist/conversational-form.min.js" crossorigin></script>
+		<link type="text/css" rel="stylesheet" href="../dist/conversational-form.min.css"/>
+		<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>
 
 	</body>
 </html>
