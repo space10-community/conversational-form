@@ -500,6 +500,8 @@ var cf;
     var BasicElement = (function () {
         function BasicElement(options) {
             this.eventTarget = options.eventTarget;
+            if (options.customTemplate)
+                this.customTemplate = options.customTemplate;
             // TODO: remove
             if (!this.eventTarget)
                 throw new Error("this.eventTarget not set!! : " + this.constructor.name);
@@ -518,7 +520,7 @@ var cf;
             return this.el;
         };
         // template, should be overwritten ...
-        BasicElement.prototype.getTemplate = function () { return "should be overwritten..."; };
+        BasicElement.prototype.getTemplate = function () { return this.customTemplate || "should be overwritten..."; };
         ;
         BasicElement.prototype.dealloc = function () {
             this.el.parentNode.removeChild(this.el);
@@ -1565,6 +1567,8 @@ var cf;
             this.data = {
                 "user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
                 "entry-not-found": "Dictionary item not found.",
+                "awaiting-mic-permission": "Awaiting mic permission",
+                "user-audio-reponse-invalid": "I didn't get that, try again.",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
                 "input-placeholder-error": "Your input is not correct ...",
@@ -2350,27 +2354,46 @@ var cf;
             // else return true, as no conditional means happy tag
             return true;
         };
-        TagGroup.prototype.setTagValueAndIsValid = function (value) {
+        TagGroup.prototype.setTagValueAndIsValid = function (dto) {
             var isValid = false;
             var groupType = this.elements[0].type;
             this._values = [];
             this._activeElements = [];
             switch (groupType) {
                 case "radio":
-                    var numberRadioButtonsVisible = [];
                     var wasRadioButtonChecked = false;
-                    for (var i = 0; i < value.controlElements.length; i++) {
-                        var element = value.controlElements[i];
-                        var tag = this.elements[this.elements.indexOf(element.referenceTag)];
-                        numberRadioButtonsVisible.push(element);
-                        if (tag == element.referenceTag) {
-                            if (element.checked) {
-                                this._values.push(tag.value);
-                                this._activeElements.push(tag);
+                    var numberRadioButtonsVisible = [];
+                    if (dto.controlElements) {
+                        // TODO: Refactor this so it is less dependant on controlElements
+                        for (var i = 0; i < dto.controlElements.length; i++) {
+                            var element = dto.controlElements[i];
+                            var tag = this.elements[this.elements.indexOf(element.referenceTag)];
+                            numberRadioButtonsVisible.push(element);
+                            if (tag == element.referenceTag) {
+                                if (element.checked) {
+                                    this._values.push(tag.value);
+                                    this._activeElements.push(tag);
+                                }
+                                // a radio button was checked
+                                if (!wasRadioButtonChecked && element.checked)
+                                    wasRadioButtonChecked = true;
                             }
-                            // a radio button was checked
-                            if (!wasRadioButtonChecked && element.checked)
+                        }
+                    }
+                    else {
+                        // for when we don't have any control elements, then we just try and map values
+                        for (var i = 0; i < this.elements.length; i++) {
+                            var tag = this.elements[i];
+                            var v1 = tag.value.toString().toLowerCase();
+                            var v2 = dto.text.toString().toLowerCase();
+                            //brute force checking...
+                            if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
+                                this._activeElements.push(tag);
+                                // check the original tag
+                                this._values.push(tag.value);
+                                tag.domElement.checked = true;
                                 wasRadioButtonChecked = true;
+                            }
                         }
                     }
                     isValid = wasRadioButtonChecked;
@@ -2378,13 +2401,15 @@ var cf;
                 case "checkbox":
                     // checkbox is always valid
                     isValid = true;
-                    for (var i = 0; i < value.controlElements.length; i++) {
-                        var element = value.controlElements[i];
-                        var tag = this.elements[this.elements.indexOf(element.referenceTag)];
-                        tag.domElement.checked = element.checked;
-                        if (element.checked) {
-                            this._values.push(tag.value);
-                            this._activeElements.push(tag);
+                    if (dto.controlElements) {
+                        for (var i = 0; i < dto.controlElements.length; i++) {
+                            var element = dto.controlElements[i];
+                            var tag = this.elements[this.elements.indexOf(element.referenceTag)];
+                            tag.domElement.checked = element.checked;
+                            if (element.checked) {
+                                this._values.push(tag.value);
+                                this._activeElements.push(tag);
+                            }
                         }
                     }
                     break;
@@ -3196,6 +3221,19 @@ var cf;
     cf.UploadFileUI = UploadFileUI;
 })(cf || (cf = {}));
 
+/// <reference path="../logic/FlowManager.ts"/>
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    cf.UserInputTypes = {
+        VOICE: "voice",
+        VR_GESTURE: "vr-gesture",
+        TEXT: "text" // <-- default
+    };
+})(cf || (cf = {}));
+
+
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../control-elements/ControlElements.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
@@ -3225,6 +3263,8 @@ var cf;
             _this.el.setAttribute("type", _this.initObj.type);
             _this.windowFocusCallback = _this.windowFocus.bind(_this);
             window.addEventListener('focus', _this.windowFocusCallback, false);
+            _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
+            _this.eventTarget.addEventListener(cf.FlowEvents.USER_INPUT_INVALID, _this.inputInvalidCallback, false);
             _this.flowUpdateCallback = _this.onFlowUpdate.bind(_this);
             _this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, _this.flowUpdateCallback, false);
             return _this;
@@ -3272,6 +3312,8 @@ var cf;
         UserInputElement.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
         };
+        UserInputElement.prototype.inputInvalid = function (event) {
+        };
         UserInputElement.prototype.getFlowDTO = function () {
             var value; // = this.inputElement.value;
             return value;
@@ -3283,6 +3325,8 @@ var cf;
         UserInputElement.prototype.reset = function () {
         };
         UserInputElement.prototype.dealloc = function () {
+            this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+            this.inputInvalidCallback = null;
             window.removeEventListener('focus', this.windowFocusCallback, false);
             this.windowFocusCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -3364,8 +3408,6 @@ var cf;
             document.addEventListener("keydown", _this.keyDownCallback, false);
             _this.onOriginalTagChangedCallback = _this.onOriginalTagChanged.bind(_this);
             _this.eventTarget.addEventListener(cf.TagEvents.ORIGINAL_ELEMENT_CHANGED, _this.onOriginalTagChangedCallback, false);
-            _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
-            _this.eventTarget.addEventListener(cf.FlowEvents.USER_INPUT_INVALID, _this.inputInvalidCallback, false);
             _this.onControlElementSubmitCallback = _this.onControlElementSubmit.bind(_this);
             _this.eventTarget.addEventListener(cf.ControlElementEvents.SUBMIT_VALUE, _this.onControlElementSubmitCallback, false);
             _this.onControlElementProgressChangeCallback = _this.onControlElementProgressChange.bind(_this);
@@ -3775,8 +3817,6 @@ var cf;
             this.keyDownCallback = null;
             document.removeEventListener("keyup", this.keyUpCallback, false);
             this.keyUpCallback = null;
-            this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
-            this.inputInvalidCallback = null;
             this.eventTarget.removeEventListener(cf.ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
             this.onControlElementSubmitCallback = null;
             this.submitButton = this.el.getElementsByClassName("cf-input-button")[0];
@@ -3786,7 +3826,7 @@ var cf;
         };
         // override
         UserTextInput.prototype.getTemplate = function () {
-            return "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
+            return this.customTemplate || "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t</cf-input-button>\n\t\t\t\t\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
         };
         return UserTextInput;
     }(cf.UserInputElement));
@@ -3818,13 +3858,32 @@ var cf;
         function UserVoiceInput(options) {
             var _this = _super.call(this, options) || this;
             _this.currentTextResponse = "";
+            _this.clearMessageTimer = 0;
+            _this._hasUserMedia = false;
             _this.cfReference = options.cfReference;
             _this.eventTarget = options.eventTarget;
             _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
             _this.onSubmitButtonClickCallback = _this.onSubmitButtonClick.bind(_this);
             _this.submitButton.addEventListener("click", _this.onSubmitButtonClickCallback, false);
+            // 
+            _this.el.setAttribute("message", cf.Dictionary.get("awaiting-mic-permission"));
+            _this._hasUserMedia = false;
             return _this;
         }
+        Object.defineProperty(UserVoiceInput.prototype, "hasUserMedia", {
+            set: function (value) {
+                this._hasUserMedia = value;
+                if (!value) {
+                    this.submitButton.classList.add("permission-waiting");
+                }
+                else {
+                    this.submitButton.classList.remove("permission-waiting");
+                    this.el.removeAttribute("message");
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         UserVoiceInput.prototype.getFlowDTO = function () {
             var value;
             value = {
@@ -3841,17 +3900,81 @@ var cf;
             // this.disabled = true;
         };
         UserVoiceInput.prototype.onFlowUpdate = function (event) {
+            var _this = this;
             _super.prototype.onFlowUpdate.call(this, event);
+            if (!this._hasUserMedia) {
+                // check if user has granted
+                var hasGranted_1 = false;
+                window.navigator.mediaDevices.enumerateDevices().then(function (devices) {
+                    devices.forEach(function (device) {
+                        if (!hasGranted_1 && device.label !== "") {
+                            hasGranted_1 = true;
+                        }
+                    });
+                    if (hasGranted_1) {
+                        // user has previously granted
+                        _this.hasUserMedia = true;
+                        _this.callInputInterface();
+                    }
+                    else {
+                        // await click on button, wait state
+                    }
+                });
+            }
+            else {
+                // user has granted ready to go go
+                this.callInputInterface();
+            }
+            // this.getUserMedia();
+        };
+        UserVoiceInput.prototype.inputInvalid = function (event) {
+            //invalid! call interface again
+            this.el.setAttribute("message", cf.Dictionary.get("user-audio-reponse-invalid"));
+            this.callInputInterface(1500);
+        };
+        UserVoiceInput.prototype.getUserMedia = function () {
+            var _this = this;
+            window.navigator.getUserMedia({ audio: true }, function (stream) {
+                if (stream.getAudioTracks().length > 0) {
+                    // interface is active and available, so call it immidiatly
+                    _this.hasUserMedia = true;
+                    _this.callInputInterface();
+                }
+                else {
+                    // code for when both devices are available
+                    // interface is not active, button should be clicked
+                    _this.hasUserMedia = false;
+                }
+            }, function (error) {
+                // error..
+                // not supported..
+                _this.hasUserMedia = false;
+                _this.el.setAttribute("error", error.message || error.name);
+            });
         };
         UserVoiceInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
         UserVoiceInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
-            var _this = this;
             if (event === void 0) { event = null; }
-            this.submitButton.classList.add("loading");
+            if (!this._hasUserMedia) {
+                this.getUserMedia();
+            }
+            else {
+                this.callInputInterface();
+            }
+        };
+        UserVoiceInput.prototype.callInputInterface = function (messageTime) {
+            var _this = this;
+            if (messageTime === void 0) { messageTime = 0; }
+            clearTimeout(this.clearMessageTimer);
+            this.clearMessageTimer = setTimeout(function () {
+                _this.el.removeAttribute("message");
+            }, messageTime);
             this.el.removeAttribute("error");
-            // call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with text/string
+            this.submitButton.classList.add("loading");
+            this.submitButton.classList.remove("permission-waiting");
+            // call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
             var a = new Promise(function (resolve, reject) { return _this.initObj.input(resolve, reject); })
                 .then(function (result) {
                 // api contacted
@@ -3861,6 +3984,7 @@ var cf;
                     _this.currentTextResponse = cf.Dictionary.get("user-reponse-missing");
                 }
                 var dto = _this.getFlowDTO();
+                _this.submitButton.classList.add("active");
                 _this.submitButton.classList.remove("loading");
                 _this.disabled = false;
                 _this.el.removeAttribute("error");
@@ -3869,16 +3993,16 @@ var cf;
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.SUBMIT, {
                     detail: dto
                 }));
-                _this.submitButton.classList.add("active");
-                _this.submitButton.classList.remove("loading");
             }).catch(function (result) {
                 // api failed ...
+                // show result in UI
                 _this.el.setAttribute("error", result);
                 _this.disabled = false;
                 _this.submitButton.classList.remove("loading");
             });
         };
         UserVoiceInput.prototype.setFocusOnInput = function () {
+            console.log("???setFocusOnInpu???");
             if (!cf.UserInputElement.preventAutoFocus) {
                 // ...
             }
@@ -3891,7 +4015,7 @@ var cf;
         };
         // override
         UserVoiceInput.prototype.getTemplate = function () {
-            return "<cf-input>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-audio\"></div>\n\t\t\t\t</cf-input-button>\n\n\t\t\t</cf-input>\n\t\t\t";
+            return this.customTemplate || "<cf-input>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-audio\"></div>\n\t\t\t\t</cf-input-button>\n\n\t\t\t</cf-input>";
         };
         return UserVoiceInput;
     }(cf.UserInputElement));
@@ -4943,7 +5067,9 @@ var cf;
             this.userInput = new types[this.userInputObject.type]({
                 initObj: this.userInputObject,
                 eventTarget: this.eventTarget,
-                cfReference: this
+                cfReference: this,
+                // set a custom template, to allow for further customisation
+                customTemplate: this.userInputObject && this.userInputObject.template ? this.userInputObject.template : null
             });
             // init if init is there, ex. Voice have init, but Text does not..
             if (this.userInputObject.init) {
