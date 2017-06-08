@@ -429,7 +429,9 @@ namespace cf {
 			this.userInput = new types[this.userInputObject.type]({
 				initObj: this.userInputObject,
 				eventTarget: this.eventTarget,
-				cfReference: this
+				cfReference: this,
+				// set a custom template, to allow for further customisation
+				customTemplate: this.userInputObject && this.userInputObject.template ? this.userInputObject.template : null
 			});
 
 			// init if init is there, ex. Voice have init, but Text does not..
