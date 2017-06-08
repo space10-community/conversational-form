@@ -15,6 +15,7 @@ namespace cf {
 
 		protected cfReference: ConversationalForm;
 		private windowFocusCallback: () => void;
+		private inputInvalidCallback: () => void;
 		private flowUpdateCallback: () => void;
 		protected _currentTag: ITag | ITagGroup;
 		protected _disabled: boolean = false;
@@ -59,11 +60,17 @@ namespace cf {
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);
 
+			this.inputInvalidCallback = this.inputInvalid.bind(this);
+			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
 		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
 			
+		}
+
+		protected inputInvalid(event: CustomEvent){
 		}
 
 		public getFlowDTO():FlowDTO{
@@ -78,6 +85,9 @@ namespace cf {
 		}
 		
 		public dealloc(){
+			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
+			this.inputInvalidCallback = null;
+
 			window.removeEventListener('focus', this.windowFocusCallback, false);
 			this.windowFocusCallback = null;
 

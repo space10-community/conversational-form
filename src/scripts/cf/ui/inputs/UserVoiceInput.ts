@@ -14,6 +14,7 @@ namespace cf {
 		private currentTextResponse: string = "";
 		private recordChunks: Array<any>;
 		private onSubmitButtonClickCallback: () => void;
+		private clearMessageTimer: number = 0;
 		private _hasUserMedia: boolean = false;
 		private set hasUserMedia(value: boolean){
 			this._hasUserMedia = value;
@@ -89,6 +90,12 @@ namespace cf {
 			// this.getUserMedia();
 		}
 
+		protected inputInvalid(event: CustomEvent){
+			//invalid! call interface again
+			this.el.setAttribute("message", Dictionary.get("user-audio-reponse-invalid"));
+			this.callInputInterface(1500);
+		}
+
 		private getUserMedia(){
 			(<any> window).navigator.getUserMedia(<any> {audio: true}, (stream: any) => {
 				if(stream.getAudioTracks().length > 0){
@@ -120,8 +127,12 @@ namespace cf {
 			}
 		}
 
-		private callInputInterface(){
-			this.el.removeAttribute("message");
+		private callInputInterface(messageTime: number = 0){
+			clearTimeout(this.clearMessageTimer);
+			this.clearMessageTimer = setTimeout(() =>{
+				this.el.removeAttribute("message");
+			}, messageTime);
+
 			this.el.removeAttribute("error");
 			this.submitButton.classList.add("loading");
 			this.submitButton.classList.remove("permission-waiting");

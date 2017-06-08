@@ -19,7 +19,6 @@ namespace cf {
 		private inputElement: HTMLInputElement | HTMLTextAreaElement;
 		private submitButton: HTMLButtonElement;
 
-		private inputInvalidCallback: () => void;
 		private onControlElementSubmitCallback: () => void;
 		private onSubmitButtonClickCallback: () => void;
 		private onInputFocusCallback: () => void;
@@ -83,9 +82,6 @@ namespace cf {
 
 			this.onOriginalTagChangedCallback = this.onOriginalTagChanged.bind(this);
 			this.eventTarget.addEventListener(TagEvents.ORIGINAL_ELEMENT_CHANGED, this.onOriginalTagChangedCallback, false);
-
-			this.inputInvalidCallback = this.inputInvalid.bind(this);
-			this.eventTarget.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 
 			this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
@@ -173,7 +169,7 @@ namespace cf {
 			}));
 		}
 
-		private inputInvalid(event: CustomEvent){
+		protected inputInvalid(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			const dto: FlowDTO = event.detail;
 
@@ -537,9 +533,6 @@ namespace cf {
 
 			document.removeEventListener("keyup", this.keyUpCallback, false);
 			this.keyUpCallback = null;
-
-			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
-			this.inputInvalidCallback = null;
 
 			this.eventTarget.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 			this.onControlElementSubmitCallback = null;

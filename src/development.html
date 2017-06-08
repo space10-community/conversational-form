@@ -19,15 +19,12 @@
 
 		<div id="context" class="form-outer" cf-context>
 
-
-
 			<form id="form">
-
 				<input
 					id="123"
 					name="123"
 					type="text"
-					cf-questions="Hello, I am awaiting your Audio input"
+					cf-questions="Hello, please tell me your name?"
 				/>
 
 				<fieldset cf-questions="Choose your favourite color, <span style='background: blue;'>blue</span>, <span style='background: red;'>red</span> or <span style='background: yellow;'>yellow</span>">
@@ -35,14 +32,6 @@
 					<input type="radio" value="red" id="2" />
 					<input type="radio" value="yellow" id="3" />
 				</fieldset>
-
-				<input
-					id="456"
-					name="456"
-					type="text"
-					cf-questions="Audio input 2 {123}"
-				/>
-
 			</form>
 		</div>
 
@@ -378,8 +367,8 @@
 					},
 					submitCallback: function(){
 						// remove Conversational Form
+						console.log("Form submitted...", conversationalForm.getFormData(true));
 						alert("You made it!")
-						console.log("Form submitted...");
 					}
 				});
 			})();
