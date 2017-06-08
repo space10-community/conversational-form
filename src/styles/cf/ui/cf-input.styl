@@ -106,20 +106,35 @@ cf-input
 	&[type="voice"]
 		height 46px
 
-		&:after
-			// error message..
-			content attr(error)
-			display block
-			font-size 10px
-			text-align center
-			position absolute
-			bottom -10px
-			width 100%
-			opacity 0.4
-
 		&[error]
 			// be able to click even though error when voice.
 			pointer-events auto
+
+			&:after
+				// error message..
+				content attr(error)
+				display block
+				font-size 10px
+				text-align center
+				position absolute
+				bottom -10px
+				width 100%
+				opacity 0.4
+		
+		&[message]
+			// be able to click even though messages when voice.
+			pointer-events auto
+
+			&:after
+				// message message..
+				content attr(message)
+				display block
+				font-size 10px
+				text-align center
+				position absolute
+				bottom -10px
+				width 100%
+				opacity 0.4
 
 		cf-input-button
 			right auto
@@ -139,6 +154,17 @@ cf-input
 
 			svg polygon
 				fill $color-input-error-text
+	
+	&[message]
+		input, textarea
+			background $color-chat-reponse-user-bg
+			color $color-chat-reponse-user-text
+
+		.cf-input-button
+			background $color-chat-reponse-user-bg
+
+			svg polygon
+				fill $color-chat-reponse-user-text
 
 	&[tag-type="file"] cf-input-button.cf-input-button, cf-input-button.cf-input-button.loading
 		&:after

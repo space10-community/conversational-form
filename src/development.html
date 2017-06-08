@@ -27,7 +27,7 @@
 					id="123"
 					name="123"
 					type="text"
-					cf-questions="Click button below to enable your audio input"
+					cf-questions="Hello, I am awaiting your Audio input"
 				/>
 
 				<fieldset cf-questions="Choose your favourite color, <span style='background: blue;'>blue</span>, <span style='background: red;'>red</span> or <span style='background: yellow;'>yellow</span>">
@@ -258,6 +258,12 @@
 		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
 
 		
+		<style>
+			.custom-template{
+				font-size:12px;
+				color:red;
+			}
+		</style>
 		<script>
 
 			(function(){
@@ -272,14 +278,14 @@
 					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 					
 					if (!SpeechSynthesisUtterance) {
-						console.log("support https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
-						alert("SpeechSynthesisUtterance not supported, check your console");
+						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
+						alert("Example requirement: SpeechSynthesisUtterance not supported, check your console");
 						return;
 					}
 
 					if (!SpeechRecognition) {
-						console.log("support https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
-						alert("SpeechRecognition Web API not supported, check your console for more data");
+						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+						alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
 						return;
 					}
 
@@ -290,6 +296,16 @@
 				var microphoneInput = {
 					// behaviors needs to follow the cf.IUserInput interface, they will be checked
 					type: cf.UserInputTypes.VOICE,
+
+					// template is optional, for cf.UserInputTypes.VOICE and cf.UserInputTypes.TEXT, there are default templates
+					// through templates you can create total custom interfaces for the input like a WebVR interface :) PR!
+					template: `<cf-input>
+						<h1 class="custom-template">I am from a custom template ...</h1>
+						<cf-input-button class="cf-input-button">
+							<div class="cf-icon-audio"></div>
+						</cf-input-button>
+					</cf-input>`,
+
 					init: () => {
 						// init is called one time, when the custom input is instantiated.
 
@@ -306,7 +322,6 @@
 						// setup events to speak robot response
 						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
 							if(event.detail.currentResponse.isRobotResponse){
-								// console.log("CHATLIST updated...", "...so speak it!", event.detail.currentResponse.response);
 								// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
 								// msg.text = event.detail.currentResponse.response
 								msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
