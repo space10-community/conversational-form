@@ -263,14 +263,35 @@
 			(function(){
 				var dispatcher = new cf.EventDispatcher(),
 					synth = null,
-					msg = null;
+					msg = null,
+					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
+						window.mozSpeechSynthesisUtterance ||
+						window.msSpeechSynthesisUtterance ||
+						window.oSpeechSynthesisUtterance ||
+						window.SpeechSynthesisUtterance,
+					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+					
+					if (!SpeechSynthesisUtterance) {
+						console.log("support https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
+						alert("SpeechSynthesisUtterance not supported, check your console");
+						return;
+					}
 
-				// https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+					if (!SpeechRecognition) {
+						console.log("support https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+						alert("SpeechRecognition Web API not supported, check your console for more data");
+						return;
+					}
+
+				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
+
+				// here we create our input
 				var microphoneInput = {
-					// behaviors needs to follow interfaces, they will be checked!
+					// behaviors needs to follow the cf.IUserInput interface, they will be checked
 					type: cf.UserInputTypes.VOICE,
 					init: () => {
-						// init is called when 
+						// init is called one time, when the custom input is instantiated.
 
 						// load voices \o/
 						synth = window.speechSynthesis;
@@ -282,7 +303,7 @@
 						};
 						synth.getVoices();
 
-						// setup event to speak robot response
+						// setup events to speak robot response
 						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
 							if(event.detail.currentResponse.isRobotResponse){
 								// console.log("CHATLIST updated...", "...so speak it!", event.detail.currentResponse.response);
@@ -292,18 +313,22 @@
 								window.speechSynthesis.speak(msg);
 							}
 						}, false);
+
+						// do other init stuff, like connect with external APIs ...
 					},
 					input: (resolve, reject) => {
-						// connect to Speech API (ex. Google Cloud Speech) or use Web Speech API (like below), resolve with text..
-						// using Promise pattern
-							// if API fails use reject(result)
-							// if API succedes use resolve(result)
-						var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+						// input is called when user is interacting with the input button.
 
-						var recognition = new SpeechRecognition();
+						// connect to Speech API (ex. Google Cloud Speech) or use Web Speech API (like below), resolve with the text returned..
+						// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+							// if API fails use reject(result.toString())
+							// if API succedes use resolve(result.toString())
+
+						var recognition = new SpeechRecognition(),
+							finalTranscript = '';
+
 						recognition.continuous = false; // react only on single input
 						recognition.interimResults = false; // we don't care about interim, only final.
-						var finalTranscript = '';
 						
 						// recognition.onstart = function() {}
 						recognition.onresult = function(event) {
@@ -311,9 +336,7 @@
 							for (var i = event.resultIndex; i < event.results.length; ++i) {
 								if (event.results[i].isFinal) {
 									finalTranscript += event.results[i][0].transcript;
-								}/* else {
-									interimTranscript += event.results[i][0].transcript;
-								}*/
+								}
 							}
 						}
 						recognition.onerror = function(event) {
@@ -332,7 +355,9 @@
 					formEl: document.getElementById("form"),
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,
-					userInput: microphoneInput, // <--- custom user input
+					// add the custom input (microphone)
+					userInput: microphoneInput,
+
 					flowStepCallback: function(dto, success, error){
 						success();
 					},
