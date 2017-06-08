@@ -14,8 +14,19 @@ namespace cf {
 		private currentTextResponse: string = "";
 		private recordChunks: Array<any>;
 		private onSubmitButtonClickCallback: () => void;
+		private _hasUserMedia: boolean = false;
+		private set hasUserMedia(value: boolean){
+			this._hasUserMedia = value;
+			if(!value){
+				this.submitButton.classList.add("permission-waiting");
+			}else{
+				this.submitButton.classList.remove("permission-waiting");
+				this.el.removeAttribute("message");
+			}
+		}
 		constructor(options: IUserInputOptions){
 			super(options);
+
 
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
@@ -23,6 +34,10 @@ namespace cf {
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
 			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
+
+			// 
+			this.el.setAttribute("message", Dictionary.get("awaiting-mic-permission"));
+			this._hasUserMedia = false;
 		}
 
 		public getFlowDTO():FlowDTO{
@@ -48,19 +63,48 @@ namespace cf {
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
 
-			(<any> window).navigator.getUserMedia(<any> { audio: true}, (stream: any) => {
+			if(!this._hasUserMedia){
+				// check if user has granted
+				let hasGranted: boolean = false;
+				(<any> window).navigator.mediaDevices.enumerateDevices().then((devices: any) => {
+					devices.forEach((device: any) => {
+						if(!hasGranted && device.label !== ""){
+							hasGranted = true;
+						}
+					});
+
+					if(hasGranted){
+						// user has previously granted
+						this.hasUserMedia = true;
+						this.callInputInterface();
+					}else{
+						// await click on button, wait state
+					}
+				});
+			}else{
+				// user has granted ready to go go
+				this.callInputInterface();
+			}
+
+			// this.getUserMedia();
+		}
+
+		private getUserMedia(){
+			(<any> window).navigator.getUserMedia(<any> {audio: true}, (stream: any) => {
 				if(stream.getAudioTracks().length > 0){
 					// interface is active and available, so call it immidiatly
+					this.hasUserMedia = true;
 					this.callInputInterface();
 				}else{
 					// code for when both devices are available
 					// interface is not active, button should be clicked
-					this.submitButton.classList.add("waiting");
+					this.hasUserMedia = false;
 				}
-			}, () =>{
+			}, (error: any) =>{
 				// error..
 				// not supported..
-				this.el.setAttribute("error", "GetUserMedia not supported..");
+				this.hasUserMedia = false;
+				this.el.setAttribute("error", error.message || error.name);
 			});
 		}
 
@@ -69,13 +113,18 @@ namespace cf {
 		}
 
 		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
-			this.submitButton.classList.remove("waiting");
-			this.callInputInterface();
+			if(!this._hasUserMedia){
+				this.getUserMedia();
+			}else{
+				this.callInputInterface();
+			}
 		}
 
 		private callInputInterface(){
-			this.submitButton.classList.add("loading");
+			this.el.removeAttribute("message");
 			this.el.removeAttribute("error");
+			this.submitButton.classList.add("loading");
+			this.submitButton.classList.remove("permission-waiting");
 
 			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
 			var a = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
