@@ -36,6 +36,7 @@ global.gulp.task('watch', tasks, function() {
 	global.gulp.watch(srcFolder + '../docs/src/scripts/**/ConversationalFormDocs.ts', ['typescript-docs']);
 	global.gulp.watch(srcFolder + '../docs/src/scripts/**/ConversationalFormExamples.ts', ['typescript-examples']);
 	global.gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript-form']);
+	global.gulp.watch(srcFolder + '/scripts/cf/**/*.js', ['scripts-form-build']);
 
 	global.gulp.watch(srcFolder + '../docs/src/styles/**/*.styl', ['stylus-docs']);
 	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus-form']);
