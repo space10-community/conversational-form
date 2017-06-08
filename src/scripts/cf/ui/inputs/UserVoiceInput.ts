@@ -15,6 +15,8 @@ namespace cf {
 		private recordChunks: Array<any>;
 		private onSubmitButtonClickCallback: () => void;
 		private clearMessageTimer: number = 0;
+		private equalizer: SimpleEqualizer;
+		private currentStream: MediaStream;
 		private _hasUserMedia: boolean = false;
 		private set hasUserMedia(value: boolean){
 			this._hasUserMedia = value;
@@ -75,9 +77,8 @@ namespace cf {
 					});
 
 					if(hasGranted){
-						// user has previously granted
-						this.hasUserMedia = true;
-						this.callInputInterface();
+						// user has previously granted, so call getusermedia, as this wont prombt user
+						this.getUserMedia();
 					}else{
 						// await click on button, wait state
 					}
@@ -86,8 +87,6 @@ namespace cf {
 				// user has granted ready to go go
 				this.callInputInterface();
 			}
-
-			// this.getUserMedia();
 		}
 
 		protected inputInvalid(event: CustomEvent){
@@ -97,10 +96,13 @@ namespace cf {
 		}
 
 		private getUserMedia(){
-			(<any> window).navigator.getUserMedia(<any> {audio: true}, (stream: any) => {
+			(<any> window).navigator.getUserMedia(<any> {audio: true}, (stream: MediaStream) => {
+				this.currentStream = stream;
+
 				if(stream.getAudioTracks().length > 0){
 					// interface is active and available, so call it immidiatly
 					this.hasUserMedia = true;
+					this.setupEqualizer();
 					this.callInputInterface();
 				}else{
 					// code for when both devices are available
@@ -113,6 +115,14 @@ namespace cf {
 				this.hasUserMedia = false;
 				this.el.setAttribute("error", error.message || error.name);
 			});
+		}
+
+		private setupEqualizer(){
+			//analyser = audioContext.createAnalyser();
+			if(SimpleEqualizer.supported){
+				console.log("this.currentStream", this.currentStream);
+				this.equalizer = new SimpleEqualizer(this.currentStream);
+			}
 		}
 
 		private onSubmitButtonClick(event: MouseEvent){
@@ -173,13 +183,16 @@ namespace cf {
 		}
 
 		public setFocusOnInput(){
-			console.log("???setFocusOnInpu???")
 			if(!UserInputElement.preventAutoFocus){
 				// ...
 			}
 		}
 
 		public dealloc(){
+			this.currentStream = null;
+			if(this.equalizer){
+				this.equalizer.dealloc();
+			}
 			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
 			this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
 			this.onSubmitButtonClickCallback = null;
@@ -196,6 +209,63 @@ namespace cf {
 				</cf-input-button>
 
 			</cf-input>`;
+		}
+	}
+
+	class SimpleEqualizer{
+		private context: AudioContext;
+		private analyser: AnalyserNode;
+		private mic: MediaStreamAudioSourceNode;
+		private javascriptNode: ScriptProcessorNode;
+		private max: number = 0;
+		constructor(stream: any){
+			this.context = new AudioContext();
+			this.analyser = this.context.createAnalyser();
+			this.mic = this.context.createMediaStreamSource(stream);
+			this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
+
+			this.analyser.smoothingTimeConstant = 0.3;
+			this.analyser.fftSize = 1024;
+
+			this.mic.connect(this.analyser);
+			this.analyser.connect(this.javascriptNode);
+			this.javascriptNode.connect(this.context.destination);
+			this.javascriptNode.onaudioprocess = () => {
+				this.onAudioProcess();
+			};
+		}
+
+		private onAudioProcess(){
+			var array =  new Uint8Array(this.analyser.frequencyBinCount);
+			this.analyser.getByteFrequencyData(array);
+			var values = 0;
+
+			var length = array.length;
+			for (var i = 0; i < length; i++) {
+				values += array[i];
+			}
+
+			var average = values / length;
+			this.max = Math.max(this.max, average);
+			console.log(average, values, "this.max:", this.max);
+
+			// canvasContext.clearRect(0, 0, 60, 130);
+			// canvasContext.fillStyle = '#00ff00';
+			// canvasContext.fillRect(0,130-average,25,130);
+		}
+
+		public dealloc(){
+
+		}
+
+		public static supported():boolean{
+			(<any>window).AudioContext = (<any>window).AudioContext || (<any>window).webkitAudioContext;
+			if((<any>window).AudioContext){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 }
