@@ -45,11 +45,14 @@ namespace cf {
 		// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
 		loadExternalStyleSheet?: boolean;
 
-		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
+		// prevent auto appending of Conversational Form, append it yourself.
 		preventAutoAppend?: boolean;
 
 		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 		preventAutoStart?: boolean;
+		
+		// prevents the initial auto focus on UserInput
+		preventAutoFocus?: boolean;
 
 		// optional horizontal scroll accerlation value, 0-1
 		scrollAccerlation?: number;
@@ -160,7 +163,7 @@ namespace cf {
 			if(this.formEl.getAttribute("cf-no-animation") == "")
 				ConversationalForm.animationsEnabled = false;
 
-			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
+			if(options.preventAutoFocus || this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInput.preventAutoFocus = true;
 
 			this.dictionary = new Dictionary({
@@ -633,7 +636,6 @@ namespace cf {
 			}
 		}
 	}
-
 }
 
 if(document.readyState == "complete"){

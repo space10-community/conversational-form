@@ -64,7 +64,6 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "bower_components/promise-polyfill/promise.js",
 		global.buildFolder + "bower_components/custom-event-polyfill/custom-event-polyfill.js",
 
-		global.buildFolder + "cf/ConversationalForm.plugin.js",
 		global.buildFolder + "cf/logic/Helpers.js",
 		global.buildFolder + "cf/logic/EventDispatcher.js",
 		global.buildFolder + "cf/parsing/TagsParser.js",
@@ -90,8 +89,9 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/ui/chat/ChatResponse.js",
 		global.buildFolder + "cf/ui/chat/ChatList.js",
 		global.buildFolder + "cf/logic/FlowManager.js",
+		global.buildFolder + "cf/ConversationalForm.js",
 
-		global.buildFolder + "cf/ConversationalForm.js"
+		global.buildFolder + "cf/ConversationalForm.plugin.js"
 	];
 
 	var stream = global.gulp.src(src)
