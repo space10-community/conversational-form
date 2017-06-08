@@ -119,9 +119,9 @@ namespace cf {
 
 		private setupEqualizer(){
 			//analyser = audioContext.createAnalyser();
-			if(SimpleEqualizer.supported){
-				console.log("this.currentStream", this.currentStream);
-				this.equalizer = new SimpleEqualizer(this.currentStream);
+			const eqEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-icon-audio-eq")[0];
+			if(SimpleEqualizer.supported && eqEl){
+				this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
 			}
 		}
 
@@ -205,7 +205,9 @@ namespace cf {
 			return this.customTemplate || `<cf-input>
 
 				<cf-input-button class="cf-input-button">
-					<div class="cf-icon-audio"></div>
+					<div class="cf-icon-audio">
+					</div>
+					<cf-icon-audio-eq></cf-icon-audio-eq>
 				</cf-input-button>
 
 			</cf-input>`;
@@ -217,8 +219,9 @@ namespace cf {
 		private analyser: AnalyserNode;
 		private mic: MediaStreamAudioSourceNode;
 		private javascriptNode: ScriptProcessorNode;
-		private max: number = 0;
-		constructor(stream: any){
+		private elementToScale: HTMLElement;
+		constructor(stream: any, elementToScale: HTMLElement){
+			this.elementToScale = elementToScale;
 			this.context = new AudioContext();
 			this.analyser = this.context.createAnalyser();
 			this.mic = this.context.createMediaStreamSource(stream);
@@ -246,16 +249,17 @@ namespace cf {
 			}
 
 			var average = values / length;
-			this.max = Math.max(this.max, average);
-			console.log(average, values, "this.max:", this.max);
-
-			// canvasContext.clearRect(0, 0, 60, 130);
-			// canvasContext.fillStyle = '#00ff00';
-			// canvasContext.fillRect(0,130-average,25,130);
+			const percent: number = 1 - ((100 - average) / 100);
+			Helpers.setTransform(this.elementToScale, "scale("+percent+")");
 		}
 
 		public dealloc(){
-
+			this.javascriptNode.onaudioprocess = null;
+			this.javascriptNode = null;
+			this.analyser = null;
+			this.mic = null;
+			this.elementToScale = null;
+			this.context = null;
 		}
 
 		public static supported():boolean{
