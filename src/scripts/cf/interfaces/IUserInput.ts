@@ -12,6 +12,13 @@ namespace cf {
 	// interface that custom inputs will be checked against
 	export interface IUserInput{
 		type:string;
+
+		/**
+		* template
+		* @type string
+		* overwrite Conversational Form templates with your own markup.. optional, for cf.UserInputTypes.VOICE and cf.UserInputTypes.TEXT, there are default templates
+		*/
+		template?:string;
 		init?():void;
 		input?(resolve: any, reject: any):void;
 	}

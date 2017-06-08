@@ -47,6 +47,21 @@ namespace cf {
 
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
+
+			(<any> window).navigator.getUserMedia(<any> { audio: true}, (stream: any) => {
+				if(stream.getAudioTracks().length > 0){
+					// interface is active and available, so call it immidiatly
+					this.callInputInterface();
+				}else{
+					// code for when both devices are available
+					// interface is not active, button should be clicked
+					this.submitButton.classList.add("waiting");
+				}
+			}, () =>{
+				// error..
+				// not supported..
+				this.el.setAttribute("error", "GetUserMedia not supported..");
+			});
 		}
 
 		private onSubmitButtonClick(event: MouseEvent){
@@ -54,10 +69,15 @@ namespace cf {
 		}
 
 		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+			this.submitButton.classList.remove("waiting");
+			this.callInputInterface();
+		}
+
+		private callInputInterface(){
 			this.submitButton.classList.add("loading");
 			this.el.removeAttribute("error");
 
-			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with text/string
+			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
 			var a = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
 			.then((result) => {
 				// api contacted
@@ -69,7 +89,9 @@ namespace cf {
 
 				const dto: FlowDTO = this.getFlowDTO();
 
+				this.submitButton.classList.add("active");
 				this.submitButton.classList.remove("loading");
+
 				this.disabled = false;
 				this.el.removeAttribute("error");
 
@@ -79,17 +101,19 @@ namespace cf {
 					detail: dto
 				}));
 
-				this.submitButton.classList.add("active");
-				this.submitButton.classList.remove("loading");
 			}).catch((result) => {
 				// api failed ...
+				// show result in UI
 				this.el.setAttribute("error", result);
+
+
 				this.disabled = false;
 				this.submitButton.classList.remove("loading");
 			});
 		}
 
 		public setFocusOnInput(){
+			console.log("???setFocusOnInpu???")
 			if(!UserInputElement.preventAutoFocus){
 				// ...
 			}
@@ -105,14 +129,13 @@ namespace cf {
 
 		// override
 		public getTemplate () : string {
-			return `<cf-input>
+			return this.customTemplate || `<cf-input>
 
 				<cf-input-button class="cf-input-button">
 					<div class="cf-icon-audio"></div>
 				</cf-input-button>
 
-			</cf-input>
-			`;
+			</cf-input>`;
 		}
 	}
 }

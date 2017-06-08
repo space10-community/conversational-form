@@ -12,6 +12,7 @@ namespace cf {
 		public static ERROR_TIME: number = 2000;
 		public static preventAutoFocus: boolean = false;
 		public el: HTMLElement;
+
 		protected cfReference: ConversationalForm;
 		private windowFocusCallback: () => void;
 		private flowUpdateCallback: () => void;

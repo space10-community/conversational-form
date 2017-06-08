@@ -553,7 +553,7 @@ namespace cf {
 
 		// override
 		public getTemplate () : string {
-			return `<cf-input>
+			return this.customTemplate || `<cf-input>
 				<cf-info></cf-info>
 				<cf-input-control-elements>
 					<cf-list-button direction="prev">
