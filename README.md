@@ -96,6 +96,9 @@ new cf.ConversationalForm({
 
 	// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 	preventAutoStart,/*?: boolean;*/
+	
+	// prevents the initial auto focus set on the UserInput
+	preventAutoFocus,/*?: boolean;*/
 
 	// optional horizontal scroll accerlation value, 0-1
 	scrollAccerlation,/*?: number;*/
