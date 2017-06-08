@@ -213,7 +213,7 @@ namespace cf {
 			return true;
 		}
 
-		public setTagValueAndIsValid(value: FlowDTO):boolean{
+		public setTagValueAndIsValid(dto: FlowDTO):boolean{
 			let isValid: boolean = false;
 
 			const groupType: string = this.elements[0].type;
@@ -222,21 +222,40 @@ namespace cf {
 
 			switch(groupType){
 				case "radio" :
-					let numberRadioButtonsVisible: Array <RadioButton> = [];
 					let wasRadioButtonChecked: boolean = false;
-					for (let i = 0; i < value.controlElements.length; i++) {
-						let element: RadioButton = <RadioButton> value.controlElements[i];
-						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						numberRadioButtonsVisible.push(element);
+					let numberRadioButtonsVisible: Array <RadioButton> = [];
+					if(dto.controlElements){
+						// TODO: Refactor this so it is less dependant on controlElements
+						for (let i = 0; i < dto.controlElements.length; i++) {
+							let element: RadioButton = <RadioButton> dto.controlElements[i];
+							let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
+							numberRadioButtonsVisible.push(element);
 
-						if(tag == element.referenceTag){
-							if(element.checked){
-								this._values.push(<string> tag.value);
-								this._activeElements.push(tag);
+							if(tag == element.referenceTag){
+								if(element.checked){
+									this._values.push(<string> tag.value);
+									this._activeElements.push(tag);
+								}
+								// a radio button was checked
+								if(!wasRadioButtonChecked && element.checked)
+									wasRadioButtonChecked = true;
 							}
-							// a radio button was checked
-							if(!wasRadioButtonChecked && element.checked)
+						}
+
+					}else{
+						// for when we don't have any control elements, then we just try and map values
+						for (let i = 0; i < this.elements.length; i++) {
+							let tag: ITag = <ITag>this.elements[i];
+							const v1: string = tag.value.toString().toLowerCase();
+							const v2: string = dto.text.toString().toLowerCase();
+							//brute force checking...
+							if(v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1){
+								this._activeElements.push(tag);
+								// check the original tag
+								this._values.push(<string> tag.value);
+								(<HTMLInputElement> tag.domElement).checked = true;
 								wasRadioButtonChecked = true;
+							}
 						}
 					}
 
@@ -248,14 +267,16 @@ namespace cf {
 					// checkbox is always valid
 					isValid = true;
 
-					for (let i = 0; i < value.controlElements.length; i++) {
-						let element: CheckboxButton = <CheckboxButton> value.controlElements[i];
-						let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-						(<HTMLInputElement> tag.domElement).checked = element.checked;
+					if(dto.controlElements){
+						for (let i = 0; i < dto.controlElements.length; i++) {
+							let element: CheckboxButton = <CheckboxButton> dto.controlElements[i];
+							let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
+							(<HTMLInputElement> tag.domElement).checked = element.checked;
 
-						if(element.checked){
-							this._values.push(<string> tag.value);
-							this._activeElements.push(tag);
+							if(element.checked){
+								this._values.push(<string> tag.value);
+								this._activeElements.push(tag);
+							}
 						}
 					}
 
