@@ -656,7 +656,10 @@ cf-input[disabled="disabled"] .cf-input-button {
 cf-input[type="voice"] {
   height: 46px;
 }
-cf-input[type="voice"]:after {
+cf-input[type="voice"][error] {
+  pointer-events: auto;
+}
+cf-input[type="voice"][error]:after {
   content: attr(error);
   display: block;
   font-size: 10px;
@@ -668,8 +671,20 @@ cf-input[type="voice"]:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
   filter: alpha(opacity=40);
 }
-cf-input[type="voice"][error] {
+cf-input[type="voice"][message] {
   pointer-events: auto;
+}
+cf-input[type="voice"][message]:after {
+  content: attr(message);
+  display: block;
+  font-size: 10px;
+  text-align: center;
+  position: absolute;
+  bottom: -10px;
+  width: 100%;
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
 }
 cf-input[type="voice"] cf-input-button {
   right: auto;
@@ -691,6 +706,17 @@ cf-input[error] .cf-input-button {
 }
 cf-input[error] .cf-input-button svg polygon {
   fill: #fe8d84;
+}
+cf-input[message] input,
+cf-input[message] textarea {
+  background: #e6f3fe;
+  color: #1b9bfc;
+}
+cf-input[message] .cf-input-button {
+  background: #e6f3fe;
+}
+cf-input[message] .cf-input-button svg polygon {
+  fill: #1b9bfc;
 }
 cf-input[tag-type="file"] cf-input-button.cf-input-button:after,
 cf-input cf-input-button.cf-input-button.loading:after {
