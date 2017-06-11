@@ -686,6 +686,20 @@ cf-input[type="voice"][message]:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
   filter: alpha(opacity=40);
 }
+cf-input[type="voice"] cf-icon-audio-eq {
+  display: block;
+  background: currentColor;
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: 0;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
 cf-input[type="voice"] cf-input-button {
   right: auto;
   left: calc(50% - 15px);
@@ -796,6 +810,7 @@ cf-input-button.cf-input-button {
 }
 cf-input-button.cf-input-button > div {
   position: absolute;
+  z-index: 1;
   pointer-events: none;
   width: 100%;
   height: 100%;
@@ -856,9 +871,17 @@ cf-input-button.cf-input-button div.cf-icon-audio {
   -webkit-background-size: 9.600000000000001px 15.200000000000001px;
   -moz-background-size: 9.600000000000001px 15.200000000000001px;
   background-size: 9.600000000000001px 15.200000000000001px;
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
 }
 cf-input-button.cf-input-button.loading {
   pointer-events: none;
+}
+cf-input-button.cf-input-button.loading div.cf-icon-audio {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 cf-input-button.cf-input-button:active:after {
   opacity: 0;
@@ -1819,6 +1842,9 @@ cf-list-button:after {
   }
 }
 
+.conversational-form.done cf-chat-response {
+  pointer-events: none;
+}
 cf-chat-response {
   display: table;
   max-width: 50%;

@@ -3293,6 +3293,9 @@ var cf;
             configurable: true
         });
         Object.defineProperty(UserInputElement.prototype, "disabled", {
+            get: function () {
+                return this._disabled;
+            },
             set: function (value) {
                 var hasChanged = this._disabled != value;
                 if (hasChanged) {
@@ -3313,6 +3316,20 @@ var cf;
             if (event === void 0) { event = null; }
         };
         UserInputElement.prototype.inputInvalid = function (event) {
+        };
+        /**
+        * @name deactivate
+        * DEactivate the field
+        */
+        UserInputElement.prototype.deactivate = function () {
+            this.disabled = true;
+        };
+        /**
+        * @name reactivate
+        * REactivate the field
+        */
+        UserInputElement.prototype.reactivate = function () {
+            this.disabled = false;
         };
         UserInputElement.prototype.getFlowDTO = function () {
             var value; // = this.inputElement.value;
@@ -3865,7 +3882,6 @@ var cf;
             _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
             _this.onSubmitButtonClickCallback = _this.onSubmitButtonClick.bind(_this);
             _this.submitButton.addEventListener("click", _this.onSubmitButtonClickCallback, false);
-            // 
             _this.el.setAttribute("message", cf.Dictionary.get("awaiting-mic-permission"));
             _this._hasUserMedia = false;
             return _this;
@@ -3902,43 +3918,53 @@ var cf;
         UserVoiceInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
             _super.prototype.onFlowUpdate.call(this, event);
+            this.currentTextResponse = null;
             if (!this._hasUserMedia) {
                 // check if user has granted
                 var hasGranted_1 = false;
-                window.navigator.mediaDevices.enumerateDevices().then(function (devices) {
-                    devices.forEach(function (device) {
-                        if (!hasGranted_1 && device.label !== "") {
-                            hasGranted_1 = true;
+                if (window.navigator.mediaDevices) {
+                    window.navigator.mediaDevices.enumerateDevices().then(function (devices) {
+                        devices.forEach(function (device) {
+                            if (!hasGranted_1 && device.label !== "") {
+                                hasGranted_1 = true;
+                            }
+                        });
+                        if (hasGranted_1) {
+                            // user has previously granted, so call getusermedia, as this wont prombt user
+                            _this.getUserMedia();
+                        }
+                        else {
+                            // await click on button, wait state
                         }
                     });
-                    if (hasGranted_1) {
-                        // user has previously granted
-                        _this.hasUserMedia = true;
-                        _this.callInputInterface();
-                    }
-                    else {
-                        // await click on button, wait state
-                    }
-                });
+                }
             }
             else {
                 // user has granted ready to go go
-                this.callInputInterface();
+                if (!this.initObj.awaitingCallback) {
+                    console.log("voice: this.callInputInterface() 1");
+                    this.callInputInterface();
+                }
             }
-            // this.getUserMedia();
         };
         UserVoiceInput.prototype.inputInvalid = function (event) {
             //invalid! call interface again
             this.el.setAttribute("message", cf.Dictionary.get("user-audio-reponse-invalid"));
+            console.log("voice: this.callInputInterface() 5");
             this.callInputInterface(1500);
         };
         UserVoiceInput.prototype.getUserMedia = function () {
             var _this = this;
             window.navigator.getUserMedia({ audio: true }, function (stream) {
+                _this.currentStream = stream;
                 if (stream.getAudioTracks().length > 0) {
                     // interface is active and available, so call it immidiatly
                     _this.hasUserMedia = true;
-                    _this.callInputInterface();
+                    _this.setupEqualizer();
+                    if (!_this.initObj.awaitingCallback) {
+                        console.log("voice: this.callInputInterface() 8");
+                        _this.callInputInterface();
+                    }
                 }
                 else {
                     // code for when both devices are available
@@ -3952,6 +3978,13 @@ var cf;
                 _this.el.setAttribute("error", error.message || error.name);
             });
         };
+        UserVoiceInput.prototype.setupEqualizer = function () {
+            //analyser = audioContext.createAnalyser();
+            var eqEl = this.el.getElementsByTagName("cf-icon-audio-eq")[0];
+            if (SimpleEqualizer.supported && eqEl) {
+                this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
+            }
+        };
         UserVoiceInput.prototype.onSubmitButtonClick = function (event) {
             this.onEnterOrSubmitButtonSubmit(event);
         };
@@ -3961,33 +3994,44 @@ var cf;
                 this.getUserMedia();
             }
             else {
+                console.log("voice: this.callInputInterface() 3");
                 this.callInputInterface();
             }
         };
         UserVoiceInput.prototype.callInputInterface = function (messageTime) {
             var _this = this;
             if (messageTime === void 0) { messageTime = 0; }
+            // remove current error message after x time
             clearTimeout(this.clearMessageTimer);
             this.clearMessageTimer = setTimeout(function () {
                 _this.el.removeAttribute("message");
             }, messageTime);
-            this.el.removeAttribute("error");
+            if (this.disabled) {
+                console.log("voice: callInputInterface > this.disabled:", this.disabled);
+                return;
+            }
             this.submitButton.classList.add("loading");
             this.submitButton.classList.remove("permission-waiting");
-            // call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
-            var a = new Promise(function (resolve, reject) { return _this.initObj.input(resolve, reject); })
+            console.log("voice: callInputInterface", this.promise);
+            // call API, SpeechRecognintion, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
+            this.promise = new Promise(function (resolve, reject) { return _this.initObj.input(resolve, reject, _this.currentStream); })
                 .then(function (result) {
                 // api contacted
+                _this.promise = null;
                 // save response so it's available in getFlowDTO
                 _this.currentTextResponse = result.toString();
+                console.log("voice: this.currentTextResponse:", _this.currentTextResponse);
                 if (!_this.currentTextResponse || _this.currentTextResponse == "") {
-                    _this.currentTextResponse = cf.Dictionary.get("user-reponse-missing");
+                    // this.el.setAttribute("error", Dictionary.get("user-reponse-missing"));
+                    _this.showError(cf.Dictionary.get("user-audio-reponse-invalid"));
+                    return;
                 }
                 var dto = _this.getFlowDTO();
                 _this.submitButton.classList.add("active");
                 _this.submitButton.classList.remove("loading");
                 _this.disabled = false;
                 _this.el.removeAttribute("error");
+                console.log("voice: ------ result received, next step", dto);
                 // continue flow
                 cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.UserInputEvents.SUBMIT, dto);
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.SUBMIT, {
@@ -3996,18 +4040,38 @@ var cf;
             }).catch(function (result) {
                 // api failed ...
                 // show result in UI
-                _this.el.setAttribute("error", result);
-                _this.disabled = false;
-                _this.submitButton.classList.remove("loading");
+                console.log("voice: WTF:.....", result);
+                _this.showError(result);
             });
         };
+        UserVoiceInput.prototype.showError = function (error) {
+            this.el.setAttribute("error", error);
+            console.log("voice: this.callInputInterface() 7");
+            this.callInputInterface();
+        };
+        UserVoiceInput.prototype.deactivate = function () {
+            _super.prototype.deactivate.call(this);
+            this.equalizer.disabled = true;
+            console.log("voice: deactivate");
+        };
+        UserVoiceInput.prototype.reactivate = function () {
+            _super.prototype.reactivate.call(this);
+            console.log("voice: reactivate");
+            console.log("voice: this.callInputInterface() 4");
+            this.equalizer.disabled = false;
+            this.callInputInterface();
+        };
         UserVoiceInput.prototype.setFocusOnInput = function () {
-            console.log("???setFocusOnInpu???");
             if (!cf.UserInputElement.preventAutoFocus) {
                 // ...
             }
         };
         UserVoiceInput.prototype.dealloc = function () {
+            this.promise = null;
+            this.currentStream = null;
+            if (this.equalizer) {
+                this.equalizer.dealloc();
+            }
             this.submitButton = this.el.getElementsByClassName("cf-input-button")[0];
             this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
             this.onSubmitButtonClickCallback = null;
@@ -4015,11 +4079,70 @@ var cf;
         };
         // override
         UserVoiceInput.prototype.getTemplate = function () {
-            return this.customTemplate || "<cf-input>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-audio\"></div>\n\t\t\t\t</cf-input-button>\n\n\t\t\t</cf-input>";
+            return this.customTemplate || "<cf-input>\n\n\t\t\t\t<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t<div class=\"cf-icon-audio\">\n\t\t\t\t\t</div>\n\t\t\t\t\t<cf-icon-audio-eq></cf-icon-audio-eq>\n\t\t\t\t</cf-input-button>\n\n\t\t\t</cf-input>";
         };
         return UserVoiceInput;
     }(cf.UserInputElement));
     cf.UserVoiceInput = UserVoiceInput;
+    var SimpleEqualizer = (function () {
+        function SimpleEqualizer(stream, elementToScale) {
+            var _this = this;
+            this._disabled = false;
+            this.elementToScale = elementToScale;
+            this.context = new AudioContext();
+            this.analyser = this.context.createAnalyser();
+            this.mic = this.context.createMediaStreamSource(stream);
+            this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
+            this.analyser.smoothingTimeConstant = 0.3;
+            this.analyser.fftSize = 1024;
+            this.mic.connect(this.analyser);
+            this.analyser.connect(this.javascriptNode);
+            this.javascriptNode.connect(this.context.destination);
+            this.javascriptNode.onaudioprocess = function () {
+                _this.onAudioProcess();
+            };
+        }
+        Object.defineProperty(SimpleEqualizer.prototype, "disabled", {
+            set: function (value) {
+                this._disabled = value;
+                cf.Helpers.setTransform(this.elementToScale, "scale(0)");
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SimpleEqualizer.prototype.onAudioProcess = function () {
+            if (this._disabled)
+                return;
+            var array = new Uint8Array(this.analyser.frequencyBinCount);
+            this.analyser.getByteFrequencyData(array);
+            var values = 0;
+            var length = array.length;
+            for (var i = 0; i < length; i++) {
+                values += array[i];
+            }
+            var average = values / length;
+            var percent = 1 - ((100 - average) / 100);
+            cf.Helpers.setTransform(this.elementToScale, "scale(" + percent + ")");
+        };
+        SimpleEqualizer.prototype.dealloc = function () {
+            this.javascriptNode.onaudioprocess = null;
+            this.javascriptNode = null;
+            this.analyser = null;
+            this.mic = null;
+            this.elementToScale = null;
+            this.context = null;
+        };
+        SimpleEqualizer.supported = function () {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (window.AudioContext) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        return SimpleEqualizer;
+    }());
 })(cf || (cf = {}));
 
 /// <reference path="../BasicElement.ts"/>
@@ -4764,16 +4887,19 @@ var cf;
             }
         };
         FlowManager.prototype.showStep = function () {
+            var _this = this;
             if (this.stopped)
                 return;
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.FlowEvents.FLOW_UPDATE, this.currentTag);
             this.currentTag.refresh();
-            this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
-                detail: {
-                    tag: this.currentTag,
-                    ignoreExistingTag: this.ignoreExistingTags
-                }
-            }));
+            setTimeout(function () {
+                _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
+                    detail: {
+                        tag: _this.currentTag,
+                        ignoreExistingTag: _this.ignoreExistingTags
+                    }
+                }));
+            }, 0);
         };
         return FlowManager;
     }());
