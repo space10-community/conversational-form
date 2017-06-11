@@ -110,6 +110,7 @@ namespace cf {
 					this.hasUserMedia = true;
 					this.setupEqualizer();
 					if(!this.initObj.awaitingCallback){
+						console.log("voice: this.callInputInterface() 8")
 						this.callInputInterface();
 					}
 				}else{
@@ -163,8 +164,8 @@ namespace cf {
 
 			console.log("voice: callInputInterface", this.promise);
 
-			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
-			this.promise = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
+			// call API, SpeechRecognintion, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
+			this.promise = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject, this.currentStream) )
 			.then((result) => {
 				// api contacted
 				this.promise = null;
@@ -194,6 +195,7 @@ namespace cf {
 			}).catch((result) => {
 				// api failed ...
 				// show result in UI
+				console.log("voice: WTF:.....", result);
 				this.showError(result);
 			});
 		}
@@ -201,6 +203,7 @@ namespace cf {
 		private showError(error: string){
 			this.el.setAttribute("error", error);
 
+			console.log("voice: this.callInputInterface() 7")
 			this.callInputInterface();
 		}
 

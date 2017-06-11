@@ -259,29 +259,15 @@
 				var dispatcher = new cf.EventDispatcher(),
 					synth = null,
 					msg = null,
-					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
-						window.mozSpeechSynthesisUtterance ||
-						window.msSpeechSynthesisUtterance ||
-						window.oSpeechSynthesisUtterance ||
-						window.SpeechSynthesisUtterance,
 					SpeechRecognition = null;
-					try{
-						SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-					}catch(e){
 
-					}
-					
-					if (!SpeechSynthesisUtterance) {
-						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
-						alert("Example requirement: SpeechSynthesisUtterance not supported, check your console");
-						return;
-					}
-
-					// if (!SpeechRecognition) {
-					// 	console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
-					// 	alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
-					// 	return;
-					// }
+				try{
+					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+				}catch(e){
+					console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+					alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
+					return;
+				}
 
 				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
@@ -302,49 +288,15 @@
 					</cf-input>`,
 
 					init: () => {
-						// init is called one time, when the custom input is instantiated.
-
-						// load voices \o/
-						synth = window.speechSynthesis;
-						msg = new SpeechSynthesisUtterance();
-						window.speechSynthesis.onvoiceschanged = function(e) {
-							var voices = synth.getVoices();
-							msg.voice = voices[0]; // <-- Alex
-							msg.lang = msg.voice.lang; // change language here
-						};
-						synth.getVoices();
-
-						// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
-						msg.onstart = function(event) {
-							// on message end, so deactivate input
-							console.log("voice: deactivate 1")
-							conversationalForm.userInput.deactivate();
-						}
-
-						msg.onend = function(event) {
-							// on message end, so reactivate input
-							conversationalForm.userInput.reactivate();
-						}
-
-						// setup events to speak robot response
-						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
-							if(event.detail.currentResponse.isRobotResponse){
-								// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
-								// msg.text = event.detail.currentResponse.response
-								msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
-								window.speechSynthesis.speak(msg);
-							}
-						}, false);
-
-						// do other init stuff, like connect with external APIs ...
+						
 					},
-					// set awaiting callback, as we will await the speak in this example
-					awaitingCallback: true,
-					input: (resolve, reject) => {
-						console.log("voice: INPUT")
+					// set awaiting callback to false, as we will NOT await the speak in this example
+					awaitingCallback: false,
+					input: (resolve, reject, mediaStream) => {
+						console.log("voice: INPUT", mediaStream)
 						// input is called when user is interacting with the CF input button (UserVoiceInput)
 
-						// connect to Speech API (ex. Google Cloud Speech) or use Web Speech API (like below), resolve with the text returned..
+						// connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
 						// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
 							// if API fails use reject(result.toString())
 							// if API succedes use resolve(result.toString())
@@ -371,7 +323,6 @@
 							resolve(finalTranscript);
 						}
 
-						recognition.lang = msg.voice.lang;
 						recognition.start();
 					}
 				}
@@ -389,7 +340,7 @@
 					submitCallback: function(){
 						// remove Conversational Form
 						console.log("voice: Form submitted...", conversationalForm.getFormData(true));
-						// alert("You made it!")
+						alert("You made it! Check console for data")
 					}
 				});
 			})();

@@ -27,6 +27,6 @@ namespace cf {
 		*/
 		template?:string;
 		init?():void;
-		input?(resolve: any, reject: any):void;
+		input?(resolve: any, reject: any, mediaStream: MediaStream):void;
 	}
 }

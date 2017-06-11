@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+
+		<style>
+			.form-outer{
+				background: lightgrey;
+				width: 100%;
+				height: 100vh;
+			}
+			#conversational-form{
+				width: 50vw;
+				left: auto;
+				right: 0px;
+			}
+		</style>
+
+		<div id="context" class="form-outer" cf-context>
+
+			<form id="form">
+				<input
+					id="123"
+					name="123"
+					type="text"
+					cf-questions="Hello, please tell me your name?"
+				/>
+
+				<fieldset cf-questions="Choose your favourite color, <span style='background: blue;'>blue</span>, <span style='background: red;'>red</span> or <span style='background: yellow;'>yellow</span>">
+					<input type="radio" value="blue" id="1" />
+					<input type="radio" value="red" id="2" />
+					<input type="radio" value="yellow" id="3" />
+				</fieldset>
+			</form>
+		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/promise-polyfill/promise.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+		></script>
+
+		<script
+			id="conversational-form-development" 
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/parsing/TagsParser.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.plugin.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/Helpers.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/EventDispatcher.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElements.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/ScrollController.js"
+		></script>
+
+		<script 
+			type="text/javascript"
+			src="../build/cf/data/Dictionary.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/Tag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/TagGroup.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/InputTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/SelectTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/ButtonTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/OptionTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionsList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/UploadFileUI.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInputElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserInputElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserTextInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserVoiceInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatResponse.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/FlowManager.js"
+		></script>
+
+		<link type="text/css" rel="stylesheet" href="../build/cf/cf.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-control-elements.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-radio-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-checkbox-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-options-list.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/control-elements/cf-upload-file-ui.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-input.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-info.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/cf-list-button.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat-response.css"/>
+		<link type="text/css" rel="stylesheet" href="../build/cf/ui/chat/cf-chat.css"/>
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
+
+		
+		<style>
+			.custom-template{
+				font-size:12px;
+				color:red;
+			}
+		</style>
+		<script>
+
+			(function(){
+				var dispatcher = new cf.EventDispatcher(),
+					synth = null,
+					msg = null,
+					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
+						window.mozSpeechSynthesisUtterance ||
+						window.msSpeechSynthesisUtterance ||
+						window.oSpeechSynthesisUtterance ||
+						window.SpeechSynthesisUtterance,
+					SpeechRecognition = null;
+					try{
+						SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+					}catch(e){
+
+					}
+					
+					if (!SpeechSynthesisUtterance) {
+						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
+						alert("Example requirement: SpeechSynthesisUtterance not supported, check your console");
+						return;
+					}
+
+					// if (!SpeechRecognition) {
+					// 	console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+					// 	alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
+					// 	return;
+					// }
+
+				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
+
+				// here we create our input
+				var microphoneInput = {
+					// behaviors needs to follow the cf.IUserInput interface, they will be checked
+					type: cf.UserInputTypes.VOICE,
+
+					// template is optional, for cf.UserInputTypes.VOICE and cf.UserInputTypes.TEXT, there are default templates
+					// through templates you can create total custom interfaces for the input like a WebVR interface :) PR!
+					template: `<cf-input>
+						<h1 class="custom-template">I am from a custom template ...</h1>
+						<cf-input-button class="cf-input-button">
+							<div class="cf-icon-audio"></div>
+							<cf-icon-audio-eq></cf-icon-audio-eq>
+						</cf-input-button>
+					</cf-input>`,
+
+					init: () => {
+						// init is called one time, when the custom input is instantiated.
+
+						// load voices \o/
+						synth = window.speechSynthesis;
+						msg = new SpeechSynthesisUtterance();
+						window.speechSynthesis.onvoiceschanged = function(e) {
+							var voices = synth.getVoices();
+							msg.voice = voices[0]; // <-- Alex
+							msg.lang = msg.voice.lang; // change language here
+						};
+						synth.getVoices();
+
+						// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
+						msg.onstart = function(event) {
+							// on message end, so deactivate input
+							console.log("voice: deactivate 1")
+							conversationalForm.userInput.deactivate();
+						}
+
+						msg.onend = function(event) {
+							// on message end, so reactivate input
+							conversationalForm.userInput.reactivate();
+						}
+
+						// setup events to speak robot response
+						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+							if(event.detail.currentResponse.isRobotResponse){
+								// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+								// msg.text = event.detail.currentResponse.response
+								msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
+								window.speechSynthesis.speak(msg);
+							}
+						}, false);
+
+						// do other init stuff, like connect with external APIs ...
+					},
+					// set awaiting callback, as we will await the speak in this example
+					awaitingCallback: true,
+					input: (resolve, reject, mediaStream) => {
+						console.log("voice: INPUT")
+						// input is called when user is interacting with the CF input button (UserVoiceInput)
+
+						// connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
+						// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+							// if API fails use reject(result.toString())
+							// if API succedes use resolve(result.toString())
+
+						var recognition = new SpeechRecognition(),
+							finalTranscript = '';
+
+						recognition.continuous = false; // react only on single input
+						recognition.interimResults = false; // we don't care about interim, only final.
+						
+						// recognition.onstart = function() {}
+						recognition.onresult = function(event) {
+							// var interimTranscript = "";
+							for (var i = event.resultIndex; i < event.results.length; ++i) {
+								if (event.results[i].isFinal) {
+									finalTranscript += event.results[i][0].transcript;
+								}
+							}
+						}
+						recognition.onerror = function(event) {
+							reject("error: " + event.error);
+						}
+						recognition.onend = function() {
+							resolve(finalTranscript);
+						}
+
+						recognition.lang = msg.voice.lang;
+						recognition.start();
+					}
+				}
+
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("context"),
+					eventDispatcher: dispatcher,
+					// add the custom input (microphone)
+					userInput: microphoneInput,
+
+					flowStepCallback: function(dto, success, error){
+						success();
+					},
+					submitCallback: function(){
+						// remove Conversational Form
+						console.log("voice: Form submitted...", conversationalForm.getFormData(true));
+						alert("You made it! Check console for data")
+					}
+				});
+			})();
+		</script>
+	</body>
+</html>
