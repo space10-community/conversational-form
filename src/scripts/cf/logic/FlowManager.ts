@@ -334,12 +334,14 @@ namespace cf {
 
 			this.currentTag.refresh();
 
-			this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
-				detail: {
-					tag: this.currentTag,
-					ignoreExistingTag: this.ignoreExistingTags
-				}
-			}));
+			setTimeout(() => {
+				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
+					detail: {
+						tag: this.currentTag,
+						ignoreExistingTag: this.ignoreExistingTags
+					}
+				}));
+			}, 0);
 		}
 	}
 }
