@@ -12,6 +12,13 @@ namespace cf {
 	// interface that custom inputs will be checked against
 	export interface IUserInput{
 		type:string;
+		
+		/**
+		* awaitingCallback
+		* @type string
+		* able to set awaiting state, so user can call external apis keeping the flow in check
+		*/
+		awaitingCallback?:boolean;
 
 		/**
 		* template

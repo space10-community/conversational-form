@@ -264,7 +264,12 @@
 						window.msSpeechSynthesisUtterance ||
 						window.oSpeechSynthesisUtterance ||
 						window.SpeechSynthesisUtterance,
-					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+					SpeechRecognition = null;
+					try{
+						SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+					}catch(e){
+
+					}
 					
 					if (!SpeechSynthesisUtterance) {
 						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
@@ -272,11 +277,11 @@
 						return;
 					}
 
-					if (!SpeechRecognition) {
-						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
-						alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
-						return;
-					}
+					// if (!SpeechRecognition) {
+					// 	console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+					// 	alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
+					// 	return;
+					// }
 
 				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
@@ -309,6 +314,18 @@
 						};
 						synth.getVoices();
 
+						// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
+						msg.onstart = function(event) {
+							// on message end, so deactivate input
+							console.log("voice: deactivate 1")
+							conversationalForm.userInput.deactivate();
+						}
+
+						msg.onend = function(event) {
+							// on message end, so reactivate input
+							conversationalForm.userInput.reactivate();
+						}
+
 						// setup events to speak robot response
 						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
 							if(event.detail.currentResponse.isRobotResponse){
@@ -321,8 +338,11 @@
 
 						// do other init stuff, like connect with external APIs ...
 					},
+					// set awaiting callback, as we will await the speak in this example
+					awaitingCallback: true,
 					input: (resolve, reject) => {
-						// input is called when user is interacting with the input button.
+						console.log("voice: INPUT")
+						// input is called when user is interacting with the CF input button (UserVoiceInput)
 
 						// connect to Speech API (ex. Google Cloud Speech) or use Web Speech API (like below), resolve with the text returned..
 						// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
@@ -368,8 +388,8 @@
 					},
 					submitCallback: function(){
 						// remove Conversational Form
-						console.log("Form submitted...", conversationalForm.getFormData(true));
-						alert("You made it!")
+						console.log("voice: Form submitted...", conversationalForm.getFormData(true));
+						// alert("You made it!")
 					}
 				});
 			})();
