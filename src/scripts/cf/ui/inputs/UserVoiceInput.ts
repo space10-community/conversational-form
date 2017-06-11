@@ -16,6 +16,7 @@ namespace cf {
 		private onSubmitButtonClickCallback: () => void;
 		private clearMessageTimer: number = 0;
 		private equalizer: SimpleEqualizer;
+		private promise: Promise<any>;
 		private currentStream: MediaStream;
 		private _hasUserMedia: boolean = false;
 		private set hasUserMedia(value: boolean){
@@ -27,9 +28,9 @@ namespace cf {
 				this.el.removeAttribute("message");
 			}
 		}
+
 		constructor(options: IUserInputOptions){
 			super(options);
-
 
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
@@ -38,7 +39,6 @@ namespace cf {
 			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
 			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
 
-			// 
 			this.el.setAttribute("message", Dictionary.get("awaiting-mic-permission"));
 			this._hasUserMedia = false;
 		}
@@ -50,7 +50,6 @@ namespace cf {
 				text: this.currentTextResponse,
 				tag: this.currentTag
 			};
-
 
 			return value;
 		}
@@ -65,33 +64,40 @@ namespace cf {
 
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
+			this.currentTextResponse = null;
 
 			if(!this._hasUserMedia){
 				// check if user has granted
 				let hasGranted: boolean = false;
-				(<any> window).navigator.mediaDevices.enumerateDevices().then((devices: any) => {
-					devices.forEach((device: any) => {
-						if(!hasGranted && device.label !== ""){
-							hasGranted = true;
+				if((<any> window).navigator.mediaDevices){
+					(<any> window).navigator.mediaDevices.enumerateDevices().then((devices: any) => {
+						devices.forEach((device: any) => {
+							if(!hasGranted && device.label !== ""){
+								hasGranted = true;
+							}
+						});
+
+						if(hasGranted){
+							// user has previously granted, so call getusermedia, as this wont prombt user
+							this.getUserMedia();
+						}else{
+							// await click on button, wait state
 						}
 					});
-
-					if(hasGranted){
-						// user has previously granted, so call getusermedia, as this wont prombt user
-						this.getUserMedia();
-					}else{
-						// await click on button, wait state
-					}
-				});
+				}
 			}else{
 				// user has granted ready to go go
-				this.callInputInterface();
+				if(!this.initObj.awaitingCallback){
+					console.log("voice: this.callInputInterface() 1")
+					this.callInputInterface();
+				}
 			}
 		}
 
 		protected inputInvalid(event: CustomEvent){
 			//invalid! call interface again
 			this.el.setAttribute("message", Dictionary.get("user-audio-reponse-invalid"));
+			console.log("voice: this.callInputInterface() 5")
 			this.callInputInterface(1500);
 		}
 
@@ -103,7 +109,9 @@ namespace cf {
 					// interface is active and available, so call it immidiatly
 					this.hasUserMedia = true;
 					this.setupEqualizer();
-					this.callInputInterface();
+					if(!this.initObj.awaitingCallback){
+						this.callInputInterface();
+					}
 				}else{
 					// code for when both devices are available
 					// interface is not active, button should be clicked
@@ -133,28 +141,40 @@ namespace cf {
 			if(!this._hasUserMedia){
 				this.getUserMedia();
 			}else{
+				console.log("voice: this.callInputInterface() 3")
 				this.callInputInterface();
 			}
 		}
 
 		private callInputInterface(messageTime: number = 0){
+			// remove current error message after x time
 			clearTimeout(this.clearMessageTimer);
 			this.clearMessageTimer = setTimeout(() =>{
 				this.el.removeAttribute("message");
 			}, messageTime);
 
-			this.el.removeAttribute("error");
+			if(this.disabled){
+				console.log("voice: callInputInterface > this.disabled:", this.disabled);
+				return;
+			}
+
 			this.submitButton.classList.add("loading");
 			this.submitButton.classList.remove("permission-waiting");
 
+			console.log("voice: callInputInterface", this.promise);
+
 			// call API, SpeechRecognintion, or getUserMedia can be used.. as long as the resolve is called with string attribute
-			var a = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
+			this.promise = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject) )
 			.then((result) => {
 				// api contacted
+				this.promise = null;
 				// save response so it's available in getFlowDTO
 				this.currentTextResponse = result.toString();
+				console.log("voice: this.currentTextResponse:", this.currentTextResponse)
 				if(!this.currentTextResponse || this.currentTextResponse == ""){
-					this.currentTextResponse = Dictionary.get("user-reponse-missing");
+					// this.el.setAttribute("error", Dictionary.get("user-reponse-missing"));
+					this.showError(Dictionary.get("user-audio-reponse-invalid"));
+					return;
 				}
 
 				const dto: FlowDTO = this.getFlowDTO();
@@ -164,22 +184,38 @@ namespace cf {
 
 				this.disabled = false;
 				this.el.removeAttribute("error");
+				console.log("voice: ------ result received, next step", dto)
 
 				// continue flow
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.SUBMIT, dto);
 				this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 					detail: dto
 				}));
-
 			}).catch((result) => {
 				// api failed ...
 				// show result in UI
-				this.el.setAttribute("error", result);
-
-
-				this.disabled = false;
-				this.submitButton.classList.remove("loading");
+				this.showError(result);
 			});
+		}
+
+		private showError(error: string){
+			this.el.setAttribute("error", error);
+
+			this.callInputInterface();
+		}
+
+		public deactivate(): void {
+			super.deactivate();
+			this.equalizer.disabled = true;
+			console.log("voice: deactivate")
+		}
+
+		public reactivate(): void {
+			super.reactivate();
+			console.log("voice: reactivate")
+			console.log("voice: this.callInputInterface() 4")
+			this.equalizer.disabled = false;
+			this.callInputInterface();
 		}
 
 		public setFocusOnInput(){
@@ -189,6 +225,7 @@ namespace cf {
 		}
 
 		public dealloc(){
+			this.promise = null;
 			this.currentStream = null;
 			if(this.equalizer){
 				this.equalizer.dealloc();
@@ -220,6 +257,12 @@ namespace cf {
 		private mic: MediaStreamAudioSourceNode;
 		private javascriptNode: ScriptProcessorNode;
 		private elementToScale: HTMLElement;
+
+		private _disabled: boolean = false;
+		public set disabled(value: boolean){
+			this._disabled = value;
+			Helpers.setTransform(this.elementToScale, "scale(0)");
+		}
 		constructor(stream: any, elementToScale: HTMLElement){
 			this.elementToScale = elementToScale;
 			this.context = new AudioContext();
@@ -239,6 +282,9 @@ namespace cf {
 		}
 
 		private onAudioProcess(){
+			if(this._disabled)
+				return;
+
 			var array =  new Uint8Array(this.analyser.frequencyBinCount);
 			this.analyser.getByteFrequencyData(array);
 			var values = 0;

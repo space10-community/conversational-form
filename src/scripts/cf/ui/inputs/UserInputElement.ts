@@ -51,6 +51,10 @@ namespace cf {
 			}
 		}
 
+		public get disabled():boolean{
+			return this._disabled
+		}
+
 		constructor(options: IUserInputOptions){
 			super(options);
 			this.initObj = options.initObj
@@ -71,6 +75,22 @@ namespace cf {
 		}
 
 		protected inputInvalid(event: CustomEvent){
+		}
+
+		/**
+		* @name deactivate
+		* DEactivate the field
+		*/
+		public deactivate(): void {
+			this.disabled = true;
+		}
+
+		/**
+		* @name reactivate
+		* REactivate the field
+		*/
+		public reactivate(): void {
+			this.disabled = false;
 		}
 
 		public getFlowDTO():FlowDTO{
