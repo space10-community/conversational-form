@@ -3877,6 +3877,8 @@ var cf;
             _this.currentTextResponse = "";
             _this.clearMessageTimer = 0;
             _this._hasUserMedia = false;
+            _this.inputErrorCount = 0;
+            _this.inputCurrentError = "";
             _this.cfReference = options.cfReference;
             _this.eventTarget = options.eventTarget;
             _this.submitButton = _this.el.getElementsByTagName("cf-input-button")[0];
@@ -4016,6 +4018,8 @@ var cf;
             // call API, SpeechRecognintion, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
             this.promise = new Promise(function (resolve, reject) { return _this.initObj.input(resolve, reject, _this.currentStream); })
                 .then(function (result) {
+                _this.inputErrorCount = 0;
+                _this.inputCurrentError = "";
                 // api contacted
                 _this.promise = null;
                 // save response so it's available in getFlowDTO
@@ -4037,11 +4041,22 @@ var cf;
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.SUBMIT, {
                     detail: dto
                 }));
-            }).catch(function (result) {
-                // api failed ...
-                // show result in UI
-                console.log("voice: WTF:.....", result);
-                _this.showError(result);
+            }).catch(function (error) {
+                if (_this.inputCurrentError != error) {
+                    // api failed ...
+                    // show result in UI
+                    _this.inputErrorCount = 0;
+                    _this.inputCurrentError = error;
+                }
+                else {
+                    _this.inputErrorCount++;
+                }
+                if (_this.inputErrorCount < 5) {
+                    _this.showError(_this.inputCurrentError);
+                }
+                else {
+                    // this.showError("Error happening to many times, abort..");
+                }
             });
         };
         UserVoiceInput.prototype.showError = function (error) {

@@ -19,6 +19,8 @@ namespace cf {
 		private promise: Promise<any>;
 		private currentStream: MediaStream;
 		private _hasUserMedia: boolean = false;
+		private inputErrorCount: number = 0;
+		private inputCurrentError: string = "";
 		private set hasUserMedia(value: boolean){
 			this._hasUserMedia = value;
 			if(!value){
@@ -167,6 +169,8 @@ namespace cf {
 			// call API, SpeechRecognintion, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
 			this.promise = new Promise((resolve: any, reject: any) => this.initObj.input(resolve, reject, this.currentStream) )
 			.then((result) => {
+				this.inputErrorCount = 0;
+				this.inputCurrentError = "";
 				// api contacted
 				this.promise = null;
 				// save response so it's available in getFlowDTO
@@ -192,11 +196,21 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
 					detail: dto
 				}));
-			}).catch((result) => {
-				// api failed ...
-				// show result in UI
-				console.log("voice: WTF:.....", result);
-				this.showError(result);
+			}).catch((error) => {
+				if(this.inputCurrentError != error){
+					// api failed ...
+					// show result in UI
+					this.inputErrorCount = 0;
+					this.inputCurrentError = error;
+				}else{
+					this.inputErrorCount++;
+				}
+
+				if(this.inputErrorCount < 5){
+					this.showError(this.inputCurrentError);
+				}else{
+					// this.showError("Error happening to many times, abort..");
+				}
 			});
 		}
 
