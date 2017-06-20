@@ -186,7 +186,7 @@ namespace cf {
 			}
 
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-			this.scrollListTo();
+			this.scrollListTo(this.currentUserResponse);
 		}
 
 		/**
