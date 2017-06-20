@@ -408,7 +408,7 @@ var cf;
             tag.setAttribute("cf-formless", "");
             // TODO: ES6 mapping??
             for (var k in element) {
-                if (k !== "tag") {
+                if (k !== "tag" && k !== "children") {
                     tag.setAttribute(k, element[k]);
                 }
             }
@@ -4423,7 +4423,7 @@ var cf;
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
             this.version = "0.9.4";
-            this.cdnPath = "//cf-4053.kxcdn.com/conversational-form/{version}/";
+            this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
@@ -4727,7 +4727,7 @@ var cf;
                     }
                 }
                 else {
-                    var tag = cf_1.TagsParser.parseTag(tagData);
+                    var tag = tagData.tag === "select" ? cf_1.TagsParser.parseGroupTag(tagData) : cf_1.TagsParser.parseTag(tagData);
                     if (cf_1.Tag.isTagValid(tag)) {
                         var tagElement = cf_1.Tag.createTag(tag);
                         tags.push(tagElement);

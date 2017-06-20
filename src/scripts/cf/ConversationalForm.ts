@@ -449,6 +449,7 @@ namespace cf {
 
 			for (let i = 0; i < tagsData.length; i++) {
 				let tagData: DataTag = tagsData[i];
+				
 				if(tagData.tag === "fieldset"){
 					// group ..
 					// const fieldSetChildren: Array<DataTag> = tagData.children;
@@ -458,7 +459,7 @@ namespace cf {
 					for (let j = 0; j < groupTag.children.length; j++) {
 						let tag: HTMLElement = <HTMLElement> groupTag.children[j];
 						if(Tag.isTagValid(tag)){
-							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> tag);
 							// add ref for group creation
 							if(!tagElement.name){
 								tagElement.name = "tag-ref-"+j.toString();
@@ -468,9 +469,9 @@ namespace cf {
 						}
 					}
 				}else{
-					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = TagsParser.parseTag(tagData);
+					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement = tagData.tag === "select" ? TagsParser.parseGroupTag(tagData) : TagsParser.parseTag(tagData);
 					if(Tag.isTagValid(tag)){
-						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> tag);
 						tags.push(tagElement);
 					}
 				}
