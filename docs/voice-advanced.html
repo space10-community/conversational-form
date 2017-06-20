@@ -241,7 +241,7 @@
 							}
 						}
 						recognition.onerror = function(event) {
-							reject("error: " + event.error);
+							reject("voice error: " + event.error);
 						}
 						recognition.onend = function() {
 							resolve(finalTranscript);

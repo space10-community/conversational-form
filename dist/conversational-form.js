@@ -3289,7 +3289,7 @@ var cf;
                     // error..
                     // not supported..
                     _this.hasUserMedia = false;
-                    _this.el.setAttribute("error", error.message || error.name);
+                    _this.showError(error.message || error.name);
                 });
             }
             catch (error) {
@@ -3327,7 +3327,6 @@ var cf;
                 _this.currentTextResponse = result.toString();
                 console.log("voice: this.currentTextResponse:", _this.currentTextResponse);
                 if (!_this.currentTextResponse || _this.currentTextResponse == "") {
-                    // this.el.setAttribute("error", Dictionary.get("user-reponse-missing"));
                     _this.showError(cf.Dictionary.get("user-audio-reponse-invalid"));
                     return;
                 }
@@ -3362,7 +3361,13 @@ var cf;
             });
         };
         MicrophoneBridge.prototype.showError = function (error) {
-            this.el.setAttribute("error", error);
+            var dto = {
+                errorText: error
+            };
+            cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.FlowEvents.USER_INPUT_INVALID, dto);
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
+                detail: dto
+            }));
             console.log("voice: this.callInput() 7(error)", error);
             this.callInput();
         };
@@ -3773,7 +3778,8 @@ var cf;
         };
         UserTextInput.prototype.onFlowStopped = function () {
             this.submitButton.loading = false;
-            this.submitButton.typing = false;
+            if (this.submitButton.typing)
+                this.submitButton.typing = false;
             if (this.controlElements)
                 this.controlElements.clearTagsAndReset();
             this.disabled = true;
@@ -3889,7 +3895,8 @@ var cf;
             var _this = this;
             _super.prototype.onFlowUpdate.call(this, event);
             this.submitButton.loading = false;
-            this.submitButton.typing = false;
+            if (this.submitButton.typing)
+                this.submitButton.typing = false;
             // animate input field in
             this.el.setAttribute("tag-type", this._currentTag.type);
             // replace textarea and visa versa
