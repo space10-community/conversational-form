@@ -1,6 +1,7 @@
 {
 	"options": {
 		"preventAutoAppend": true,
+		"preventAutoFocus": true,
 		"submitCallback": "window.onFormlessSubmited"
 	},
 	"tags": [
