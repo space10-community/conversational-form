@@ -240,7 +240,7 @@ namespace cf {
 				const y: number = response ? response.el.offsetTop - 50 : 1000000000;
 				scrollable.scrollTop = y;
 				setTimeout(() => scrollable.scrollTop = y, 100);
-			}catch(e){
+			}catch(error){
 				// catch errors where CF have been removed
 			}
 		}

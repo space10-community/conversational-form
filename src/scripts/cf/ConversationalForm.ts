@@ -72,7 +72,7 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		public version: string = "0.9.4";
+		public version: string = "0.9.5";
 
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
@@ -97,6 +97,7 @@ namespace cf {
 			if(!this._eventTarget){
 				this._eventTarget = new EventDispatcher(this);
 			}
+
 			return this._eventTarget;
 		}
 		public dictionary: Dictionary;
@@ -131,6 +132,9 @@ namespace cf {
 			// possible to create your own event dispatcher, so you can tap into the events of the app
 			if(options.eventDispatcher)
 				this._eventTarget = <EventDispatcher> options.eventDispatcher;
+
+			if(!this.eventTarget.cf)
+				this.eventTarget.cf = this;
 
 			// set a general step validation callback
 			if(options.flowStepCallback)
@@ -563,6 +567,10 @@ namespace cf {
 		}
 
 		public remove(){
+			if(this.userInputObject){
+				this.userInputObject = null;
+			}
+
 			if(this.onUserAnswerClickedCallback){
 				this.eventTarget.removeEventListener(ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
 				this.onUserAnswerClickedCallback = null;
