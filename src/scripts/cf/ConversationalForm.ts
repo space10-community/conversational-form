@@ -1,5 +1,4 @@
 /// <reference path="ui/inputs/UserTextInput.ts"/>
-/// <reference path="ui/inputs/UserVoiceInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
@@ -10,7 +9,6 @@
 /// <reference path="form-tags/ButtonTag.ts"/>
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
-/// <reference path="interfaces/IUserInputElement.ts"/>
 /// <reference path="interfaces/IUserInput.ts"/>
 
 interface Window { ConversationalForm: any; }
@@ -121,7 +119,7 @@ namespace cf {
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
 
-		private userInput: IUserInputElement;
+		private userInput: UserTextInput;
 		private userInputObject: IUserInput;
 
 		constructor(options: ConversationalFormOptions){
@@ -430,16 +428,10 @@ namespace cf {
 
 			innerWrap.appendChild(this.chatList.el);
 
-			const types: any = [];
-			types[UserInputTypes.TEXT] = UserTextInput;
-			types[UserInputTypes.VOICE] = UserVoiceInput;
-
-			this.userInput = new types[this.userInputObject.type]({
+			this.userInput = new UserTextInput({
 				initObj: this.userInputObject,
 				eventTarget: this.eventTarget,
-				cfReference: this,
-				// set a custom template, to allow for further customisation
-				customTemplate: this.userInputObject && this.userInputObject.template ? this.userInputObject.template : null
+				cfReference: this
 			});
 
 			// init if init is there, ex. Voice have init, but Text does not..

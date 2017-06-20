@@ -2,7 +2,7 @@
 namespace cf {
 	// interface
 
-	// general interface for all user inputs, like UserVoiceInput and UserTextInput (default)
+	// general interface for user input, like the default UserTextInput
 	export interface IUserInputElement{
 		dealloc():void;
 		onFlowStopped():void;

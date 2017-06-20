@@ -103,58 +103,58 @@ cf-input
 			background alpha($color-chat-reponse-default-bg, 75%)
 	
 	// &[type="text"]
-	&[type="voice"]
-		height 46px
+	// &[type="voice"]
+	// 	height 46px
 
-		&[error]
-			// be able to click even though error when voice.
-			pointer-events auto
+	// 	&[error]
+	// 		// be able to click even though error when voice.
+	// 		pointer-events auto
 
-			&:after
-				// error message..
-				content attr(error)
-				display block
-				font-size 10px
-				text-align center
-				position absolute
-				bottom -10px
-				width 100%
-				opacity 0.4
+	// 		&:after
+	// 			// error message..
+	// 			content attr(error)
+	// 			display block
+	// 			font-size 10px
+	// 			text-align center
+	// 			position absolute
+	// 			bottom -10px
+	// 			width 100%
+	// 			opacity 0.4
 		
-		&[message]
-			// be able to click even though messages when voice.
-			pointer-events auto
+	// 	&[message]
+	// 		// be able to click even though messages when voice.
+	// 		pointer-events auto
 
-			&:after
-				// message message..
-				content attr(message)
-				display block
-				font-size 10px
-				text-align center
-				position absolute
-				bottom -10px
-				width 100%
-				opacity 0.4
+	// 		&:after
+	// 			// message message..
+	// 			content attr(message)
+	// 			display block
+	// 			font-size 10px
+	// 			text-align center
+	// 			position absolute
+	// 			bottom -10px
+	// 			width 100%
+	// 			opacity 0.4
 		
-		cf-icon-audio-eq
-			display block
-			background currentColor
-			opacity 0.4
-			width 100%
-			height 100%
-			border-radius 50%
-			z-index 0
-			position absolute
-			top 0px
-			left 0px
+	// 	cf-icon-audio-eq
+	// 		display block
+	// 		background currentColor
+	// 		opacity 0.4
+	// 		width 100%
+	// 		height 100%
+	// 		border-radius 50%
+	// 		z-index 0
+	// 		position absolute
+	// 		top 0px
+	// 		left 0px
 
 
-		cf-input-button
-			right auto
-			left calc(50% - 15px)
-			&.loading
+	// 	cf-input-button
+	// 		right auto
+	// 		left calc(50% - 15px)
+	// 		&.loading
 				
-				border 1px solid alpha(#b9bcbe, 60%)
+	// 			border 1px solid alpha(#b9bcbe, 60%)
 
 	&[error]
 		pointer-events none

@@ -210,10 +210,10 @@
 			src="../build/cf/ui/inputs/UserTextInput.js"
 		></script>
 
-		<script
+		<!--<script
 			type="text/javascript"
 			src="../build/cf/ui/inputs/UserVoiceInput.js"
-		></script>
+		></script>-->
 
 		<script
 			type="text/javascript"
@@ -332,7 +332,7 @@
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,
 					// add the custom input (microphone)
-					// userInput: microphoneInput,
+					userInput: microphoneInput,
 
 					flowStepCallback: function(dto, success, error){
 						success();
