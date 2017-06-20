@@ -90,7 +90,6 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/interfaces/IUserInputElement.js",
 		global.buildFolder + "cf/ui/inputs/UserInputElement.js",
 		global.buildFolder + "cf/ui/inputs/UserTextInput.js",
-		global.buildFolder + "cf/ui/inputs/UserVoiceInput.js",
 
 		global.buildFolder + "cf/ui/chat/ChatResponse.js",
 		global.buildFolder + "cf/ui/chat/ChatList.js",

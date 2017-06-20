@@ -5175,15 +5175,10 @@ var cf;
                 eventTarget: this.eventTarget
             });
             innerWrap.appendChild(this.chatList.el);
-            var types = [];
-            types[cf_1.UserInputTypes.TEXT] = cf_1.UserTextInput;
-            types[cf_1.UserInputTypes.VOICE] = cf_1.UserVoiceInput;
-            this.userInput = new types[this.userInputObject.type]({
+            this.userInput = new cf_1.UserTextInput({
                 initObj: this.userInputObject,
                 eventTarget: this.eventTarget,
-                cfReference: this,
-                // set a custom template, to allow for further customisation
-                customTemplate: this.userInputObject && this.userInputObject.template ? this.userInputObject.template : null
+                cfReference: this
             });
             // init if init is there, ex. Voice have init, but Text does not..
             if (this.userInputObject.init) {

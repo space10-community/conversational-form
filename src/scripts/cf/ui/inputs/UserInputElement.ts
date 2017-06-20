@@ -3,7 +3,7 @@
 /// <reference path="../../logic/FlowManager.ts"/>
 /// <reference path="../../interfaces/IUserInput.ts"/>
 
-// Abstract UserInpt element, should be extended when adding a new UI for user input, see UserVoiceInput for reference.
+// Abstract UserInpt element, should be extended when adding a new UI for user input
 
 // namespace
 namespace cf {
@@ -58,8 +58,6 @@ namespace cf {
 		constructor(options: IUserInputOptions){
 			super(options);
 			this.initObj = options.initObj
-
-			this.el.setAttribute("type", this.initObj.type);
 
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);

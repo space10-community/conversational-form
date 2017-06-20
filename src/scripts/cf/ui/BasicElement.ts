@@ -6,7 +6,7 @@ namespace cf {
 	export interface IBasicElementOptions{
 		eventTarget: EventDispatcher;
 		cfReference?: ConversationalForm,
-		// set a custom template, wow
+		// set a custom template
 		customTemplate?: string
 	}
 
