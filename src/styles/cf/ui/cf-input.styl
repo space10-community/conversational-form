@@ -100,8 +100,8 @@ cf-input
 			background alpha($color-chat-reponse-default-bg, 50%)
 
 		.cf-input-button
-			background alpha($color-chat-reponse-default-bg, 75%)
-	
+			background alpha($color-chat-reponse-default-bg, 75%)		
+
 	// &[type="text"]
 	// &[type="voice"]
 	// 	height 46px
@@ -221,22 +221,53 @@ cf-input-button.cf-input-button
 	will-change background, border
 	transform-origin 50% 50%
 	transform scale(0, 0)
+	border: 1px solid lighten($color-chat-reponse-user-text, 95%)
 
 	.conversational-form--enable-animation &
 		transition background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack 0s
 
-	> div
+	// &.typing
+	// 	background red !important
+	
+	// mic behavior
+	&.microphone-interface
+		.cf-input-icons:not(.cf-microphone)
+			visibility hidden
+		.cf-input-icons.cf-microphone
+			visibility visible
+		
+		// when user is typing
+		&.typing
+			.cf-input-icons:not(.cf-microphone)
+				visibility visible
+			.cf-input-icons.cf-microphone
+				visibility hidden
+	// ------------------------------------------
+
+	.cf-input-icons
 		position absolute
 		z-index 1
 		pointer-events none
 		width 100%
 		height 100%
-		background-repeat: no-repeat;
-		background-position: 50% 50%;
-		transform-origin 50% 50%
-		will-change transform, opacity
-		.conversational-form--enable-animation &
-			transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
+
+		> div
+			width 100%
+			height 100%
+			position absolute
+			z-index 1
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			transform-origin 50% 50%
+			will-change transform, opacity
+			.conversational-form--enable-animation &
+				transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
+		
+		&.cf-microphone
+			&.loading
+				pointer-events none
+				div.cf-icon-audio
+					opacity 1
 
 	div.cf-icon-attachment
 		transform rotateX(90deg)
@@ -264,18 +295,13 @@ cf-input-button.cf-input-button
 		background-size 12px * 0.8 19px * 0.8
 		opacity 0.5
 
-	&.loading
-		pointer-events none
-		div.cf-icon-audio
-			opacity 1
-
 	&:active
 		&:after
 			opacity 0
 
 		div
 			transform scale(0.75, 0.75)
-
+	
 	&:hover, &:focus
 		background: $color-chat-reponse-user-bg
 		border: 1px solid lighten($color-chat-reponse-user-text, 75%)

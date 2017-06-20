@@ -3,6 +3,7 @@
 /// <reference path="../../logic/FlowManager.ts"/>
 /// <reference path="../../interfaces/IUserInputElement.ts"/>
 /// <reference path="UserInputElement.ts"/>
+/// <reference path="UserInputSubmitButton.ts"/>
 
 // namespace
 namespace cf {
@@ -17,10 +18,10 @@ namespace cf {
 	// class
 	export class UserTextInput extends UserInputElement implements IUserInputElement {
 		private inputElement: HTMLInputElement | HTMLTextAreaElement;
-		private submitButton: HTMLButtonElement;
+		private submitButton: UserInputSubmitButton;
 
 		private onControlElementSubmitCallback: () => void;
-		private onSubmitButtonClickCallback: () => void;
+		private onSubmitButtonChangeStateCallback: () => void;
 		private onInputFocusCallback: () => void;
 		private onInputBlurCallback: () => void;
 		private onOriginalTagChangedCallback: () => void;
@@ -31,9 +32,12 @@ namespace cf {
 		private keyUpCallback: () => void;
 		private keyDownCallback: () => void;
 
+
+		protected microphoneObj: IUserInput;
+
 		private controlElements: ControlElements;
 
-		//acts as a fallb ack for ex. shadow dom implementation
+		//acts as a fallback for ex. shadow dom implementation
 		private _active: boolean = false;
 		public get active(): boolean{
 			return this.inputElement === document.activeElement || this._active;
@@ -70,7 +74,7 @@ namespace cf {
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0],
 				infoEl: <HTMLElement> this.el.getElementsByTagName("cf-info")[0],
 				eventTarget: this.eventTarget
-			})
+			});
 
 			// setup event listeners
 
@@ -89,11 +93,27 @@ namespace cf {
 			this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this);
 			this.eventTarget.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false);
 
+			this.onSubmitButtonChangeStateCallback = this.onSubmitButtonChangeState.bind(this);
+			this.eventTarget.addEventListener(UserInputSubmitButtonEvents.CHANGE, this.onSubmitButtonChangeStateCallback, false);
+
 			// this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
 
-			this.submitButton = <HTMLButtonElement> this.el.getElementsByTagName("cf-input-button")[0];
-			this.onSubmitButtonClickCallback = this.onSubmitButtonClick.bind(this);
-			this.submitButton.addEventListener("click", this.onSubmitButtonClickCallback, false);
+			this.submitButton = new UserInputSubmitButton({
+				eventTarget: this.eventTarget
+			});
+
+			this.el.appendChild(this.submitButton.el);
+
+			// setup microphone support, audio
+			if(options.microphoneInputObj){
+				this.microphoneObj = options.microphoneInputObj;
+				if(this.microphoneObj && this.microphoneObj.init){
+					// init if init method is defined
+					this.microphoneObj.init();
+				}
+
+				this.submitButton.addMicrophone(this.microphoneObj);
+			}
 		}
 
 		public getInputValue():string{
@@ -134,6 +154,9 @@ namespace cf {
 		}
 
 		public onFlowStopped(){
+			this.submitButton.loading = false;
+			this.submitButton.typing = false;
+			
 			if(this.controlElements)
 				this.controlElements.clearTagsAndReset();
 			
@@ -183,7 +206,7 @@ namespace cf {
 			clearTimeout(this.errorTimer);
 
 			// remove loading class
-			this.submitButton.classList.remove("loading");
+			this.submitButton.loading = false;
 
 			this.errorTimer = setTimeout(() => {
 				this.disabled = false;
@@ -266,6 +289,9 @@ namespace cf {
 		protected onFlowUpdate(event: CustomEvent){
 			super.onFlowUpdate(event);
 
+			this.submitButton.loading = false;
+			this.submitButton.typing = false;
+
 			// animate input field in
 
 			this.el.setAttribute("tag-type", this._currentTag.type);
@@ -282,7 +308,7 @@ namespace cf {
 			this.inputElement.setAttribute("data-value", "");
 			this.inputElement.value = "";
 
-			this.submitButton.classList.remove("loading");
+			this.submitButton.loading = false;
 
 			this.setPlaceholder();
 
@@ -327,7 +353,7 @@ namespace cf {
 			this.doSubmit();
 		}
 
-		private onSubmitButtonClick(event: MouseEvent){
+		private onSubmitButtonChangeState(event: CustomEvent){
 			this.onEnterOrSubmitButtonSubmit(event);
 		}
 
@@ -450,6 +476,9 @@ namespace cf {
 		}
 
 		private dispatchKeyChange(dto: FlowDTO, keyCode: number){
+			// typing --->
+			this.submitButton.typing = dto.text && dto.text.length > 0;
+
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.KEY_CHANGE, dto);
 			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
 				detail: <InputKeyChangeDTO> {
@@ -481,7 +510,8 @@ namespace cf {
 				this.inputElement.focus();
 			}
 		}
-		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+
+		protected onEnterOrSubmitButtonSubmit(event: CustomEvent = null){
 			if(this.active && this.controlElements.highlighted){
 				// active input field and focus on control elements happens when a control element is highlighted
 				this.controlElements.clickOnHighlighted();
@@ -504,7 +534,7 @@ namespace cf {
 
 		private doSubmit(){
 			const dto: FlowDTO = this.getFlowDTO();
-			this.submitButton.classList.add("loading");
+			this.submitButton.loading = true;
 
 			this.disabled = true;
 			this.el.removeAttribute("error");
@@ -537,9 +567,11 @@ namespace cf {
 			this.eventTarget.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false);
 			this.onControlElementSubmitCallback = null;
 
-			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
-			this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
-			this.onSubmitButtonClickCallback = null;
+			// remove submit button instance
+			this.submitButton.el.removeEventListener(UserInputSubmitButtonEvents.CHANGE, this.onSubmitButtonChangeStateCallback, false);
+			this.onSubmitButtonChangeStateCallback = null;
+			this.submitButton.dealloc();
+			this.submitButton = null;
 
 			super.dealloc();
 		}
@@ -557,11 +589,6 @@ namespace cf {
 					</cf-list>
 				</cf-input-control-elements>
 
-				<cf-input-button class="cf-input-button">
-					<div class="cf-icon-progress"></div>
-					<div class="cf-icon-attachment"></div>
-				</cf-input-button>
-				
 				<textarea type='input' tabindex="1" rows="1"></textarea>
 
 			</cf-input>

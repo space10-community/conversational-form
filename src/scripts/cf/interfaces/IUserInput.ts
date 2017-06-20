@@ -11,8 +11,6 @@ namespace cf {
 	}
 	// interface that custom inputs will be checked against
 	export interface IUserInput{
-		type:string;
-		
 		/**
 		* awaitingCallback
 		* @type string
@@ -20,12 +18,9 @@ namespace cf {
 		*/
 		awaitingCallback?:boolean;
 
-		/**
-		* template
-		* @type string
-		* overwrite Conversational Form templates with your own markup.. optional, for cf.UserInputTypes.VOICE and cf.UserInputTypes.TEXT, there are default templates
-		*/
-		template?:string;
+		// optional way of cancelling input
+		cancelInput?():void;
+
 		init?():void;
 		input?(resolve: any, reject: any, mediaStream: MediaStream):void;
 	}

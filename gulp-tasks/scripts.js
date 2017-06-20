@@ -86,6 +86,8 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/ui/control-elements/OptionsList.js",
 		global.buildFolder + "cf/ui/control-elements/UploadFileUI.js",
 		
+		global.buildFolder + "cf/logic/MicrophoneBridge.js",
+		global.buildFolder + "cf/ui/inputs/UserInputSubmitButton.js",
 		global.buildFolder + "cf/interfaces/IUserInput.js",
 		global.buildFolder + "cf/interfaces/IUserInputElement.js",
 		global.buildFolder + "cf/ui/inputs/UserInputElement.js",
