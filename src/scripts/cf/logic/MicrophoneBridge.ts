@@ -126,7 +126,7 @@ namespace cf {
 					// error..
 					// not supported..
 					this.hasUserMedia = false;
-					this.el.setAttribute("error", error.message || error.name);
+					this.showError(error.message || error.name)
 				});
 			}catch(error){
 				// whoops
@@ -171,7 +171,6 @@ namespace cf {
 				this.currentTextResponse = result.toString();
 				console.log("voice: this.currentTextResponse:", this.currentTextResponse)
 				if(!this.currentTextResponse || this.currentTextResponse == ""){
-					// this.el.setAttribute("error", Dictionary.get("user-reponse-missing"));
 					this.showError(Dictionary.get("user-audio-reponse-invalid"));
 					return;
 				}
@@ -213,7 +212,14 @@ namespace cf {
 
 
 		private showError(error: string){
-			this.el.setAttribute("error", error);
+			const dto: FlowDTO = {
+				errorText: error
+			};
+
+			ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, dto)
+			this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+				detail: dto
+			}));
 
 			console.log("voice: this.callInput() 7(error)", error)
 			this.callInput();

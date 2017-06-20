@@ -155,8 +155,9 @@ namespace cf {
 
 		public onFlowStopped(){
 			this.submitButton.loading = false;
-			this.submitButton.typing = false;
-			
+			if(this.submitButton.typing)
+				this.submitButton.typing = false;
+
 			if(this.controlElements)
 				this.controlElements.clearTagsAndReset();
 			
@@ -290,7 +291,8 @@ namespace cf {
 			super.onFlowUpdate(event);
 
 			this.submitButton.loading = false;
-			this.submitButton.typing = false;
+			if(this.submitButton.typing)
+				this.submitButton.typing = false;
 
 			// animate input field in
 
