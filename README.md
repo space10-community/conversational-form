@@ -108,6 +108,9 @@ new cf.ConversationalForm({
 
 	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
 	eventDispatcher,/*?: cf.EventDispatcher;*/
+
+	// optional, set microphone nput, future, add other custom inputs, ex. VR, see voice examples
+	microphoneInput?:IUserInput;
 });
 ```
 

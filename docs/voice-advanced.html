@@ -127,6 +127,7 @@
 
 				var dispatcher = new cf.EventDispatcher(),
 					synth = null,
+					recognition,
 					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
 						window.mozSpeechSynthesisUtterance ||
 						window.msSpeechSynthesisUtterance ||
@@ -210,6 +211,11 @@
 					},
 					// set awaiting callback, as we will await the speak in this example
 					awaitingCallback: true,
+					cancelInput: () => {
+						if(recognition){
+							recognition.stop();
+						}
+					},
 					input: (resolve, reject, mediaStream) => {
 						console.log("voice: INPUT")
 						// input is called when user is interacting with the CF input button (UserVoiceInput)
@@ -219,7 +225,7 @@
 							// if API fails use reject(result.toString())
 							// if API succedes use resolve(result.toString())
 
-						var recognition = new SpeechRecognition(),
+						recognition = new SpeechRecognition(),
 							finalTranscript = '';
 
 						recognition.continuous = false; // react only on single input

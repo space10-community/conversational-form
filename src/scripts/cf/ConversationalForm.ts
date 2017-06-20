@@ -62,8 +62,8 @@ namespace cf {
 		// optional event dispatcher, has to be an instance of cf.EventDispatcher
 		eventDispatcher?: EventDispatcher;
 
-		// define a custom user input ui
-		userInput?:IUserInput;
+		// optional, set microphone nput, future, add other custom inputs, ex. VR
+		microphoneInput?:IUserInput;
 	}
 
 	// CUI formless options
@@ -120,7 +120,7 @@ namespace cf {
 		private preventAutoStart: boolean = false;
 
 		private userInput: UserTextInput;
-		private userInputObject: IUserInput;
+		private microphoneInputObj: IUserInput;
 
 		constructor(options: ConversationalFormOptions){
 			window.ConversationalForm = this;
@@ -184,16 +184,15 @@ namespace cf {
 			this.context = options.context ? options.context : document.body;
 			this.tags = options.tags;
 
-			if(options.userInput){
-				// validate the custom input
-				if(!options.userInput.type || !options.userInput.init || !options.userInput.input){
-					console.warn("userInput is not correctly setup", options.userInput);
-					options.userInput = null;
+			if(options.microphoneInput){
+				// validate the user ..... TODO....
+				if(!options.microphoneInput.init || !options.microphoneInput.input){
+					console.warn("userInput is not correctly setup", options.microphoneInput);
+					options.microphoneInput = null;
 				}
 			}
 
-			this.userInputObject = options.userInput || {
-				type: UserInputTypes.TEXT
+			this.microphoneInputObj = options.microphoneInput || {
 			};
 
 			this.init();
@@ -429,15 +428,10 @@ namespace cf {
 			innerWrap.appendChild(this.chatList.el);
 
 			this.userInput = new UserTextInput({
-				initObj: this.userInputObject,
+				microphoneInputObj: this.microphoneInputObj,
 				eventTarget: this.eventTarget,
 				cfReference: this
 			});
-
-			// init if init is there, ex. Voice have init, but Text does not..
-			if(this.userInputObject.init){
-				this.userInputObject.init();
-			}
 
 			innerWrap.appendChild(this.userInput.el);
 
@@ -564,8 +558,8 @@ namespace cf {
 		}
 
 		public remove(){
-			if(this.userInputObject){
-				this.userInputObject = null;
+			if(this.microphoneInputObj){
+				this.microphoneInputObj = null;
 			}
 
 			if(this.onUserAnswerClickedCallback){

@@ -20,7 +20,6 @@ namespace cf {
 		protected _currentTag: ITag | ITagGroup;
 		protected _disabled: boolean = false;
 		protected _visible: boolean = false;
-		protected initObj: IUserInput;
 
 		public get currentTag(): ITag | ITagGroup{
 			return this._currentTag;
@@ -57,7 +56,6 @@ namespace cf {
 
 		constructor(options: IUserInputOptions){
 			super(options);
-			this.initObj = options.initObj
 
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);
@@ -68,7 +66,7 @@ namespace cf {
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
-		protected onEnterOrSubmitButtonSubmit(event: MouseEvent = null){
+		protected onEnterOrSubmitButtonSubmit(event: CustomEvent = null){
 			
 		}
 
@@ -114,6 +112,7 @@ namespace cf {
 
 			super.dealloc();
 		}
+
 		protected onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
@@ -130,7 +129,7 @@ namespace cf {
 
 	export interface IUserInputOptions extends IBasicElementOptions{
 		cfReference: ConversationalForm;
-		initObj: IUserInput;
+		microphoneInputObj: IUserInput;
 	}
 
 	export const UserInputEvents = {

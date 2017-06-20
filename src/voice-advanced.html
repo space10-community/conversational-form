@@ -210,10 +210,15 @@
 			src="../build/cf/ui/inputs/UserTextInput.js"
 		></script>
 
-		<!--<script
+		<script
 			type="text/javascript"
-			src="../build/cf/ui/inputs/UserVoiceInput.js"
-		></script>-->
+			src="../build/cf/logic/MicrophoneBridge.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserInputSubmitButton.js"
+		></script>
 
 		<script
 			type="text/javascript"
@@ -258,6 +263,7 @@
 			(function(){
 				var dispatcher = new cf.EventDispatcher(),
 					synth = null,
+					recognition = null,
 					msg = null,
 					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
 						window.mozSpeechSynthesisUtterance ||
@@ -288,19 +294,6 @@
 
 				// here we create our input
 				var microphoneInput = {
-					// behaviors needs to follow the cf.IUserInput interface, they will be checked
-					type: cf.UserInputTypes.VOICE,
-
-					// template is optional, for cf.UserInputTypes.VOICE and cf.UserInputTypes.TEXT, there are default templates
-					// through templates you can create total custom interfaces for the input like a WebVR interface :) PR!
-					template: `<cf-input>
-						<h1 class="custom-template">I am from a custom template ...</h1>
-						<cf-input-button class="cf-input-button">
-							<div class="cf-icon-audio"></div>
-							<cf-icon-audio-eq></cf-icon-audio-eq>
-						</cf-input-button>
-					</cf-input>`,
-
 					init: () => {
 						// init is called one time, when the custom input is instantiated.
 
@@ -340,6 +333,13 @@
 					},
 					// set awaiting callback, as we will await the speak in this example
 					awaitingCallback: true,
+					cancelInput: function() {
+						if(recognition){
+							recognition.onend = null;
+							recognition.onerror = null;
+							recognition.stop();
+						}
+					},
 					input: (resolve, reject, mediaStream) => {
 						console.log("voice: INPUT")
 						// input is called when user is interacting with the CF input button (UserVoiceInput)
@@ -349,7 +349,7 @@
 							// if API fails use reject(result.toString())
 							// if API succedes use resolve(result.toString())
 
-						var recognition = new SpeechRecognition(),
+						recognition = new SpeechRecognition(),
 							finalTranscript = '';
 
 						recognition.continuous = false; // react only on single input
@@ -367,7 +367,8 @@
 						recognition.onerror = function(event) {
 							reject("error: " + event.error);
 						}
-						recognition.onend = function() {
+
+						recognition.onend = function(event) {
 							resolve(finalTranscript);
 						}
 
@@ -381,7 +382,7 @@
 					context: document.getElementById("context"),
 					eventDispatcher: dispatcher,
 					// add the custom input (microphone)
-					userInput: microphoneInput,
+					microphoneInput: microphoneInput,
 
 					flowStepCallback: function(dto, success, error){
 						success();
