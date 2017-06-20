@@ -46,11 +46,14 @@ namespace cf {
 		// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
 		loadExternalStyleSheet?: boolean;
 
-		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
+		// prevent auto appending of Conversational Form, append it yourself.
 		preventAutoAppend?: boolean;
 
 		// start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag, see examples: manual-start.html
 		preventAutoStart?: boolean;
+		
+		// prevents the initial auto focus on UserInput
+		preventAutoFocus?: boolean;
 
 		// optional horizontal scroll accerlation value, 0-1
 		scrollAccerlation?: number;
@@ -77,7 +80,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 
-		private cdnPath: string = "//cf-4053.kxcdn.com/conversational-form/{version}/";
+		private cdnPath: string = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
@@ -100,6 +103,7 @@ namespace cf {
 
 			return this._eventTarget;
 		}
+
 		public dictionary: Dictionary;
 		public el: HTMLElement;
 
@@ -169,7 +173,7 @@ namespace cf {
 			if(this.formEl.getAttribute("cf-no-animation") == "")
 				ConversationalForm.animationsEnabled = false;
 
-			if(this.formEl.getAttribute("cf-prevent-autofocus") == "")
+			if(options.preventAutoFocus || this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInputElement.preventAutoFocus = true;
 
 			this.dictionary = new Dictionary({
@@ -478,6 +482,7 @@ namespace cf {
 
 			for (let i = 0; i < tagsData.length; i++) {
 				let tagData: DataTag = tagsData[i];
+				
 				if(tagData.tag === "fieldset"){
 					// group ..
 					// const fieldSetChildren: Array<DataTag> = tagData.children;
@@ -487,7 +492,7 @@ namespace cf {
 					for (let j = 0; j < groupTag.children.length; j++) {
 						let tag: HTMLElement = <HTMLElement> groupTag.children[j];
 						if(Tag.isTagValid(tag)){
-							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+							let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> tag);
 							// add ref for group creation
 							if(!tagElement.name){
 								tagElement.name = "tag-ref-"+j.toString();
@@ -497,9 +502,9 @@ namespace cf {
 						}
 					}
 				}else{
-					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = TagsParser.parseTag(tagData);
+					let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement = tagData.tag === "select" ? TagsParser.parseGroupTag(tagData) : TagsParser.parseTag(tagData);
 					if(Tag.isTagValid(tag)){
-						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> tag);
+						let tagElement : ITag = Tag.createTag(<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> tag);
 						tags.push(tagElement);
 					}
 				}
@@ -669,7 +674,6 @@ namespace cf {
 			}
 		}
 	}
-
 }
 
 if(document.readyState == "complete"){

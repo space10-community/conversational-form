@@ -277,48 +277,6 @@ try {
   window.CustomEvent = CustomEvent; // expose definition to window
 }
 
-// jquery plugin
-(function (factory) {
-	try{
-		factory(jQuery);
-	}catch(e){
-		// whoops no jquery..
-	}
-}(function ($) {
-	$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
-		options = options || {};
-		if(!options.formEl){
-			options.formEl = this[0];
-		}
-
-		if(!options.context){
-			var formContexts = document.querySelectorAll("*[cf-context]");
-			if(formContexts[0]){
-				options.context = formContexts[0];
-			}
-		}
-
-		return new cf.ConversationalForm(options);
-	};
-}));
-
-// requirejs/amd plugin
-(function (root, factory) {
-	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
-	if(typeof define === "function" && define.amd) {
-		define(["conversationalform"], function(conversationalform){
-			return (root.conversationalform = factory(conversationalform));
-		});
-	} else if(typeof module === "object" && module.exports) {
-		module.exports = (root.conversationalform = factory(require("conversationalform")));
-	} else {
-		root.conversationalform = factory(cf.ConversationalForm);
-	}
-	}(this, function(conversationalform) {
-		// module code here....
-		return conversationalform || cf.ConversationalForm;
-	}
-));
 // namespace
 var cf;
 (function (cf) {
@@ -421,6 +379,9 @@ var cf;
             get: function () {
                 return this._cf;
             },
+            set: function (value) {
+                this._cf = value;
+            },
             enumerable: true,
             configurable: true
         });
@@ -450,7 +411,7 @@ var cf;
             tag.setAttribute("cf-formless", "");
             // TODO: ES6 mapping??
             for (var k in element) {
-                if (k !== "tag") {
+                if (k !== "tag" && k !== "children") {
                     tag.setAttribute(k, element[k]);
                 }
             }
@@ -3957,28 +3918,35 @@ var cf;
         };
         UserVoiceInput.prototype.getUserMedia = function () {
             var _this = this;
-            window.navigator.getUserMedia({ audio: true }, function (stream) {
-                _this.currentStream = stream;
-                if (stream.getAudioTracks().length > 0) {
-                    // interface is active and available, so call it immidiatly
-                    _this.hasUserMedia = true;
-                    _this.setupEqualizer();
-                    if (!_this.initObj.awaitingCallback) {
-                        console.log("voice: this.callInputInterface() 8");
-                        _this.callInputInterface();
+            try {
+                navigator.getUserMedia = navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+                navigator.getUserMedia({ audio: true }, function (stream) {
+                    _this.currentStream = stream;
+                    if (stream.getAudioTracks().length > 0) {
+                        // interface is active and available, so call it immidiatly
+                        _this.hasUserMedia = true;
+                        _this.setupEqualizer();
+                        if (!_this.initObj.awaitingCallback) {
+                            console.log("voice: this.callInputInterface() 8");
+                            _this.callInputInterface();
+                        }
                     }
-                }
-                else {
-                    // code for when both devices are available
-                    // interface is not active, button should be clicked
+                    else {
+                        // code for when both devices are available
+                        // interface is not active, button should be clicked
+                        _this.hasUserMedia = false;
+                    }
+                }, function (error) {
+                    // error..
+                    // not supported..
                     _this.hasUserMedia = false;
-                }
-            }, function (error) {
-                // error..
-                // not supported..
-                _this.hasUserMedia = false;
-                _this.el.setAttribute("error", error.message || error.name);
-            });
+                    _this.el.setAttribute("error", error.message || error.name);
+                });
+            }
+            catch (error) {
+                // whoops
+                // roll back to standard UI
+            }
         };
         UserVoiceInput.prototype.setupEqualizer = function () {
             //analyser = audioContext.createAnalyser();
@@ -4045,12 +4013,13 @@ var cf;
                 if (_this.inputCurrentError != error) {
                     // api failed ...
                     // show result in UI
-                    _this.inputErrorCount = 0;
+                    // this.inputErrorCount = 0;
                     _this.inputCurrentError = error;
                 }
                 else {
-                    _this.inputErrorCount++;
                 }
+                console.log('>>', error, "<<");
+                _this.inputErrorCount++;
                 if (_this.inputErrorCount < 5) {
                     _this.showError(_this.inputCurrentError);
                 }
@@ -4061,19 +4030,21 @@ var cf;
         };
         UserVoiceInput.prototype.showError = function (error) {
             this.el.setAttribute("error", error);
-            console.log("voice: this.callInputInterface() 7");
+            console.log("voice: this.callInputInterface() 7(error)", error);
             this.callInputInterface();
         };
         UserVoiceInput.prototype.deactivate = function () {
             _super.prototype.deactivate.call(this);
-            this.equalizer.disabled = true;
+            if (this.equalizer)
+                this.equalizer.disabled = true;
             console.log("voice: deactivate");
         };
         UserVoiceInput.prototype.reactivate = function () {
             _super.prototype.reactivate.call(this);
             console.log("voice: reactivate");
             console.log("voice: this.callInputInterface() 4");
-            this.equalizer.disabled = false;
+            if (this.equalizer)
+                this.equalizer.disabled = false;
             this.callInputInterface();
         };
         UserVoiceInput.prototype.setFocusOnInput = function () {
@@ -4087,7 +4058,7 @@ var cf;
             if (this.equalizer) {
                 this.equalizer.dealloc();
             }
-            this.submitButton = this.el.getElementsByClassName("cf-input-button")[0];
+            this.equalizer = null;
             this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
             this.onSubmitButtonClickCallback = null;
             _super.prototype.dealloc.call(this);
@@ -4572,7 +4543,7 @@ var cf;
                 }
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-            this.scrollListTo();
+            this.scrollListTo(this.currentUserResponse);
         };
         /**
         * @name getResponses
@@ -4620,7 +4591,7 @@ var cf;
                 scrollable_1.scrollTop = y_1;
                 setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
             }
-            catch (e) {
+            catch (error) {
                 // catch errors where CF have been removed
             }
         };
@@ -4940,8 +4911,8 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.4";
-            this.cdnPath = "//cf-4053.kxcdn.com/conversational-form/{version}/";
+            this.version = "0.9.5";
+            this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
@@ -4953,6 +4924,8 @@ var cf;
             // possible to create your own event dispatcher, so you can tap into the events of the app
             if (options.eventDispatcher)
                 this._eventTarget = options.eventDispatcher;
+            if (!this.eventTarget.cf)
+                this.eventTarget.cf = this;
             // set a general step validation callback
             if (options.flowStepCallback)
                 this.flowStepCallback = options.flowStepCallback;
@@ -4977,7 +4950,7 @@ var cf;
             }
             if (this.formEl.getAttribute("cf-no-animation") == "")
                 ConversationalForm.animationsEnabled = false;
-            if (this.formEl.getAttribute("cf-prevent-autofocus") == "")
+            if (options.preventAutoFocus || this.formEl.getAttribute("cf-prevent-autofocus") == "")
                 cf_1.UserInputElement.preventAutoFocus = true;
             this.dictionary = new cf_1.Dictionary({
                 data: options.dictionaryData,
@@ -5264,7 +5237,7 @@ var cf;
                     }
                 }
                 else {
-                    var tag = cf_1.TagsParser.parseTag(tagData);
+                    var tag = tagData.tag === "select" ? cf_1.TagsParser.parseGroupTag(tagData) : cf_1.TagsParser.parseTag(tagData);
                     if (cf_1.Tag.isTagValid(tag)) {
                         var tagElement = cf_1.Tag.createTag(tag);
                         tags.push(tagElement);
@@ -5328,6 +5301,9 @@ var cf;
             }
         };
         ConversationalForm.prototype.remove = function () {
+            if (this.userInputObject) {
+                this.userInputObject = null;
+            }
             if (this.onUserAnswerClickedCallback) {
                 this.eventTarget.removeEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
                 this.onUserAnswerClickedCallback = null;
@@ -5428,3 +5404,46 @@ else {
         cf.ConversationalForm.autoStartTheConversation();
     }, false);
 }
+
+// jquery plugin
+(function (factory) {
+	try{
+		factory(jQuery);
+	}catch(e){
+		// whoops no jquery..
+	}
+}(function ($) {
+	$.fn.conversationalForm = function (options /* ConversationalFormOptions, see README */) {
+		options = options || {};
+		if(!options.formEl){
+			options.formEl = this[0];
+		}
+
+		if(!options.context){
+			var formContexts = document.querySelectorAll("*[cf-context]");
+			if(formContexts[0]){
+				options.context = formContexts[0];
+			}
+		}
+
+		return new cf.ConversationalForm(options);
+	};
+}));
+
+// requirejs/amd plugin
+(function (root, factory) {
+	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
+	if(typeof define === "function" && define.amd) {
+		define(["conversationalform"], function(conversationalform){
+			return (root.conversationalform = factory(conversationalform));
+		});
+	} else if(typeof module === "object" && module.exports) {
+		module.exports = (root.conversationalform = factory(require("conversationalform")));
+	} else {
+		root.conversationalform = factory(cf.ConversationalForm);
+	}
+	}(this, function(conversationalform) {
+		// module code here....
+		return conversationalform || cf.ConversationalForm;
+	}
+));

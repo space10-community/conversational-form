@@ -9,19 +9,19 @@ namespace cf {
 		children: Array<DataTag>; // "password", "text" etc.
 		// TODO: extend native tag interface?
 	}
+
 	export class TagsParser {
 		public static parseTag(element: DataTag) : HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement{
-			const tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = <HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> document.createElement(element.tag)
+			let tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement = <HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement> document.createElement(element.tag);
 			tag.setAttribute("cf-formless", "");
-			
+
 			// TODO: ES6 mapping??
 			for(var k in element){
-				if(k !== "tag"){
+				if(k !== "tag" && k !== "children"){
 					tag.setAttribute(k, (<any> element)[k])
 				}
 			}
 
-			
 			return tag;
 
 		}
