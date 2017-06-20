@@ -76,7 +76,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 
-		private cdnPath: string = "//cf-4053.kxcdn.com/conversational-form/{version}/";
+		private cdnPath: string = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
