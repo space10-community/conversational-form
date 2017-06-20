@@ -93,12 +93,18 @@ class ConversationalFormExamples{
 		clearTimeout(this.introTimer);
 
 		if(!this.el.classList.contains('cf-toggle')){
+			if((<any> window).toggleOn){
+				(<any> window).toggleOn();
+			}
 			setTimeout(() =>{
 				this.el.classList.remove('menu-toggle');
 				this.el.classList.add('cf-toggle')
 			}, 10);
 		}else{
 			this.el.classList.remove('cf-toggle');
+			if((<any> window).toggleOff){
+				(<any> window).toggleOff();
+			}
 		}
 
 		return false;

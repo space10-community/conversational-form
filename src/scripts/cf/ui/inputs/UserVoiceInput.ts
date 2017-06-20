@@ -21,6 +21,7 @@ namespace cf {
 		private _hasUserMedia: boolean = false;
 		private inputErrorCount: number = 0;
 		private inputCurrentError: string = "";
+
 		private set hasUserMedia(value: boolean){
 			this._hasUserMedia = value;
 			if(!value){
@@ -104,28 +105,34 @@ namespace cf {
 		}
 
 		private getUserMedia(){
-			(<any> window).navigator.getUserMedia(<any> {audio: true}, (stream: MediaStream) => {
-				this.currentStream = stream;
+			try{
+				navigator.getUserMedia = navigator.getUserMedia || (<any>window).navigator.webkitGetUserMedia || (<any>window).navigator.mozGetUserMedia;
+				navigator.getUserMedia(<any> {audio: true}, (stream: MediaStream) => {
+					this.currentStream = stream;
 
-				if(stream.getAudioTracks().length > 0){
-					// interface is active and available, so call it immidiatly
-					this.hasUserMedia = true;
-					this.setupEqualizer();
-					if(!this.initObj.awaitingCallback){
-						console.log("voice: this.callInputInterface() 8")
-						this.callInputInterface();
+					if(stream.getAudioTracks().length > 0){
+						// interface is active and available, so call it immidiatly
+						this.hasUserMedia = true;
+						this.setupEqualizer();
+						if(!this.initObj.awaitingCallback){
+							console.log("voice: this.callInputInterface() 8")
+							this.callInputInterface();
+						}
+					}else{
+						// code for when both devices are available
+						// interface is not active, button should be clicked
+						this.hasUserMedia = false;
 					}
-				}else{
-					// code for when both devices are available
-					// interface is not active, button should be clicked
+				}, (error: any) =>{
+					// error..
+					// not supported..
 					this.hasUserMedia = false;
-				}
-			}, (error: any) =>{
-				// error..
-				// not supported..
-				this.hasUserMedia = false;
-				this.el.setAttribute("error", error.message || error.name);
-			});
+					this.el.setAttribute("error", error.message || error.name);
+				});
+			}catch(error){
+				// whoops
+				// roll back to standard UI
+			}
 		}
 
 		private setupEqualizer(){
@@ -200,11 +207,14 @@ namespace cf {
 				if(this.inputCurrentError != error){
 					// api failed ...
 					// show result in UI
-					this.inputErrorCount = 0;
+					// this.inputErrorCount = 0;
 					this.inputCurrentError = error;
 				}else{
-					this.inputErrorCount++;
 				}
+
+				console.log('>>', error, "<<");
+
+				this.inputErrorCount++;
 
 				if(this.inputErrorCount < 5){
 					this.showError(this.inputCurrentError);
@@ -217,13 +227,14 @@ namespace cf {
 		private showError(error: string){
 			this.el.setAttribute("error", error);
 
-			console.log("voice: this.callInputInterface() 7")
+			console.log("voice: this.callInputInterface() 7(error)", error)
 			this.callInputInterface();
 		}
 
 		public deactivate(): void {
 			super.deactivate();
-			this.equalizer.disabled = true;
+			if(this.equalizer)
+				this.equalizer.disabled = true;
 			console.log("voice: deactivate")
 		}
 
@@ -231,7 +242,8 @@ namespace cf {
 			super.reactivate();
 			console.log("voice: reactivate")
 			console.log("voice: this.callInputInterface() 4")
-			this.equalizer.disabled = false;
+			if(this.equalizer)
+				this.equalizer.disabled = false;
 			this.callInputInterface();
 		}
 
@@ -247,7 +259,8 @@ namespace cf {
 			if(this.equalizer){
 				this.equalizer.dealloc();
 			}
-			this.submitButton = <HTMLButtonElement> this.el.getElementsByClassName("cf-input-button")[0];
+			this.equalizer = null;
+
 			this.submitButton.removeEventListener("click", this.onSubmitButtonClickCallback, false);
 			this.onSubmitButtonClickCallback = null;
 

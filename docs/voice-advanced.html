@@ -6,17 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
 
-		<script src="../dist/conversational-form.min.js"></script>
+		<script id="conversational-form-development" src="../dist/conversational-form.min.js"></script>
+		<link rel="stylesheet" href="../dist/conversational-form.min.css">
 		<!-- <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script> -->
 	</head>
 	<body>
-		<style>
-			.custom-template{
-				font-size:12px;
-				color:red;
-			}
-		</style>
-
 		<main class="content">
 			<menu id="small-screen-menu">
 				<h2>Conversational Form examples</h2>
@@ -66,10 +60,10 @@
 
 				<article>
 					<h1 id="writer">
-						Manual start the conversation
+						Voice Control
 					</h1>
 					<h2>
-						Delay the Conversational Form start.
+						Fill out a firm using your voice. This example uses HTML5s SpeechSynthesisUtterance and SpeechRecognition APIs to have text 2 speech and speech 2 text.
 					</h2>
 				</article>
 			</section>
@@ -79,8 +73,22 @@
 
 					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 					<form id="form">
-						<label for="text">Insert text</label>
-						<input required cf-label="Insert text" type="text" id="text">
+						<label for="123">Name</label>
+						<input
+							id="123"
+							name="123"
+							type="text"
+							cf-questions="Hello, please tell me your name?"
+						/>
+						<label for="456">Favourite color</label>
+						<fieldset id="456" cf-questions="Choose your favourite color, <span style='background: blue;'>blue</span>, <span style='background: red;'>red</span> or <span style='background: yellow;'>yellow</span>">
+							<label for="1">Blue</label>
+							<input type="radio" value="blue" id="1" />
+							<label for="2">Red</label>
+							<input type="radio" value="red" id="2" />
+							<label for="3">Yellow</label>
+							<input type="radio" value="yellow" id="3" />
+						</fieldset>
 					</form>
 		
 				</div>
@@ -92,16 +100,56 @@
 		</main>
 
 		<script>
-			function initExample(){
-				var SpeechRecognition = null;
+			var conversationalForm,
+				recognition,
+				msg;
 
-				try{
-					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-				}catch(e){
-					console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
-					alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
-					return;
+			function toggleOff(){
+				if(conversationalForm)
+					conversationalForm.remove();
+				conversationalForm = null;
+				if(recognition){
+					recognition.stop();
+					recognition.onresult = null;
+					recognition.onerror = null;
+					recognition.onend = null;
+					recognition = null;
 				}
+
+				if(msg){
+					msg.onstart = null;
+					msg.onend = null;
+				}
+			}
+
+			function toggleOn(){
+				toggleOff();
+
+				var dispatcher = new cf.EventDispatcher(),
+					synth = null,
+					SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
+						window.mozSpeechSynthesisUtterance ||
+						window.msSpeechSynthesisUtterance ||
+						window.oSpeechSynthesisUtterance ||
+						window.SpeechSynthesisUtterance,
+					SpeechRecognition = null;
+					try{
+						SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+					}catch(e){
+
+					}
+					
+					if (!SpeechSynthesisUtterance) {
+						console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
+						alert("Example requirement: SpeechSynthesisUtterance not supported, check your console");
+						return;
+					}
+
+					// if (!SpeechRecognition) {
+					// 	console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility")
+					// 	alert("Example requirement: SpeechRecognition Web API not supported, check your console for more data");
+					// 	return;
+					// }
 
 				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
@@ -122,12 +170,48 @@
 					</cf-input>`,
 
 					init: () => {
-						
+						// init is called one time, when the custom input is instantiated.
+
+						// load voices \o/
+						synth = window.speechSynthesis;
+						if(!msg){
+							msg = new SpeechSynthesisUtterance();
+							window.speechSynthesis.onvoiceschanged = function(e) {
+								var voices = synth.getVoices();
+								msg.voice = voices[0]; // <-- Alex
+								msg.lang = msg.voice.lang; // change language here
+							};
+							synth.getVoices();
+						}
+
+						// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
+						msg.onstart = function(event) {
+							// on message end, so deactivate input
+							console.log("voice: deactivate 1")
+							conversationalForm.userInput.deactivate();
+						}
+
+						msg.onend = function(event) {
+							// on message end, so reactivate input
+							conversationalForm.userInput.reactivate();
+						}
+
+						// setup events to speak robot response
+						dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+							if(event.detail.currentResponse.isRobotResponse){
+								// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+								// msg.text = event.detail.currentResponse.response
+								msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
+								window.speechSynthesis.speak(msg);
+							}
+						}, false);
+
+						// do other init stuff, like connect with external APIs ...
 					},
-					// set awaiting callback to false, as we will NOT await the speak in this example
-					awaitingCallback: false,
+					// set awaiting callback, as we will await the speak in this example
+					awaitingCallback: true,
 					input: (resolve, reject, mediaStream) => {
-						console.log("voice: INPUT", mediaStream)
+						console.log("voice: INPUT")
 						// input is called when user is interacting with the CF input button (UserVoiceInput)
 
 						// connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
@@ -157,6 +241,7 @@
 							resolve(finalTranscript);
 						}
 
+						recognition.lang = msg.voice.lang;
 						recognition.start();
 					}
 				}
@@ -164,6 +249,7 @@
 				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 					formEl: document.getElementById("form"),
 					context: document.getElementById("cf-context"),
+					eventDispatcher: dispatcher,
 					// add the custom input (microphone)
 					userInput: microphoneInput,
 
@@ -180,5 +266,23 @@
 		</script>
 
 		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
+
+		<style>
+			.custom-template{
+				font-size:12px;
+				color:red;
+			}
+
+			main.content section[role=form] form > input{
+				margin-bottom: 10px;
+			}
+			main.content section[role=form] form > label{
+				display: block;
+			}
+			main.content section[role=form] form > fieldset > label, main.content section[role=form] form > fieldset > input{
+				display: inline-block !important;
+				width: auto;
+			}
+		</style>
 	</body>
 </html>

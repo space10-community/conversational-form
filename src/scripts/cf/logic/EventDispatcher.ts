@@ -10,6 +10,11 @@ namespace cf {
 		public get cf(): ConversationalForm{
 			return this._cf;
 		}
+
+		public set cf(value: ConversationalForm){
+			this._cf = value;
+		}
+
 		constructor(cfRef: ConversationalForm) {
 			this._cf = cfRef;
 
