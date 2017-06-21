@@ -1097,6 +1097,7 @@ var cf;
             }
         };
         ControlElements.prototype.reset = function () {
+            this.infoElement.classList.remove("show");
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
         };
@@ -3350,7 +3351,6 @@ var cf;
                 }
                 else {
                 }
-                console.log('>>', error, "<<");
                 _this.inputErrorCount++;
                 if (_this.inputErrorCount < 5) {
                     _this.showError(_this.inputCurrentError);
