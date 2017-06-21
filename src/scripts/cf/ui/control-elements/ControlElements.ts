@@ -469,6 +469,8 @@ namespace cf {
 		}
 
 		public reset(){
+			this.infoElement.classList.remove("show");
+
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
 		}

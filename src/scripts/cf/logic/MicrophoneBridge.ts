@@ -197,8 +197,6 @@ namespace cf {
 				}else{
 				}
 
-				console.log('>>', error, "<<");
-
 				this.inputErrorCount++;
 
 				if(this.inputErrorCount < 5){
