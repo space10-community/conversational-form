@@ -222,9 +222,9 @@ namespace cf {
 		}
 
 		protected isErrorTerminal(error: string): boolean{
-			if(error === "network")
+			const terminalErrors: Array<string> = ["network", "aborted"];
+			if(terminalErrors.indexOf(error) !== -1)
 				return true;
-			
 
 			return false;
 		}
