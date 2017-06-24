@@ -95,6 +95,13 @@ namespace cf {
 			// this.el.appendChild(this.mic.el);
 		}
 
+		public reset(){
+			if(this.mic && !this.typing){
+				// if microphone and not typing
+				this.mic.callInput();
+			}
+		}
+
 		public getTemplate () : string {
 			return `<cf-input-button class="cf-input-button">
 						<div class="cf-input-icons">
@@ -104,7 +111,7 @@ namespace cf {
 					</cf-input-button>`;
 		}
 
-		protected onMicrophoneTerminalError(event: Error){
+		protected onMicrophoneTerminalError(event: CustomEvent){
 			console.log('voice: onMicrophoneTerminalError', event);
 			if(this.mic){
 				this.mic.dealloc();
@@ -112,6 +119,13 @@ namespace cf {
 				this.el.classList.remove("microphone-interface");
 				this.loading = false;
 				this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
+				setTimeout(() => this.el.offsetWidth, 0); // <- repaint?
+
+				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+					detail: <FlowDTO>{
+						errorText: event.detail
+					} //UserTextInput value
+				}));
 			}
 		}
 

@@ -329,6 +329,8 @@
 						recognition.onend = function(event) {
 							if(finalTranscript && finalTranscript !== "")
 								resolve(finalTranscript);
+							else
+								reject("no-input");
 						}
 
 						recognition.start();

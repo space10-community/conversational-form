@@ -128,6 +128,7 @@ namespace cf {
 			"entry-not-found": "Dictionary item not found.",
 			"awaiting-mic-permission": "Awaiting mic permission",
 			"user-audio-reponse-invalid": "I didn't get that, try again.",
+			"microphone-terminal-error": "Microphone error: ",
 			"input-placeholder": "Type your answer here ...",
 			"group-placeholder": "Type to filter list ...",
 			"input-placeholder-error": "Your input is not correct ...",
