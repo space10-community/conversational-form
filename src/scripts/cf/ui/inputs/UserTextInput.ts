@@ -216,11 +216,15 @@ namespace cf {
 				this.inputElement.setAttribute("data-value", "");
 				this.setPlaceholder();
 				this.setFocusOnInput();
+				
+				//TODO: reset submit button..
+				this.submitButton.reset();
 
 				if(this.controlElements)
 					this.controlElements.resetAfterErrorMessage();
 
 			}, UserInputElement.ERROR_TIME);
+
 		}
 
 		private setPlaceholder() {

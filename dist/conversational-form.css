@@ -773,6 +773,14 @@ cf-input-button.cf-input-button {
   -ms-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -ms-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
   transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
 }
+cf-input-button.cf-input-button .cf-input-icons.cf-microphone {
+  -webkit-transform: scale(0, 0);
+  -moz-transform: scale(0, 0);
+  -o-transform: scale(0, 0);
+  -ms-transform: scale(0, 0);
+  transform: scale(0, 0);
+  pointer-events: none;
+}
 cf-input-button.cf-input-button.microphone-interface .cf-input-icons {
   -webkit-transform-origin: 50% 50%;
   -moz-transform-origin: 50% 50%;

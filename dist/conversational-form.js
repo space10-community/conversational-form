@@ -1531,6 +1531,7 @@ var cf;
                 "entry-not-found": "Dictionary item not found.",
                 "awaiting-mic-permission": "Awaiting mic permission",
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
+                "microphone-terminal-error": "Microphone error: ",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
                 "input-placeholder-error": "Your input is not correct ...",
@@ -3321,6 +3322,9 @@ var cf;
             var _this = this;
             if (messageTime === void 0) { messageTime = 0; }
             this.button.loading = true;
+            if (this.equalizer) {
+                this.equalizer.disabled = false;
+            }
             console.log("voice: ------------------------------------------------------");
             // call API, SpeechRecognintion etc. you decide, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
             this.promise = new Promise(function (resolve, reject) { return _this.microphoneObj.input(resolve, reject, _this.currentStream); })
@@ -3331,7 +3335,10 @@ var cf;
                 _this.currentTextResponse = result.toString();
                 console.log("voice: this.currentTextResponse:", _this.currentTextResponse);
                 if (!_this.currentTextResponse || _this.currentTextResponse == "") {
+                    console.log("voice: invalid..");
                     _this.showError(cf.Dictionary.get("user-audio-reponse-invalid"));
+                    // invalid input, so call API again
+                    _this.callInput();
                     return;
                 }
                 _this.inputErrorCount = 0;
@@ -3349,7 +3356,9 @@ var cf;
                 console.log('voice: (callInput) error!', error);
                 if (_this.isErrorTerminal(error)) {
                     // terminal error, fallback to 
-                    _this.eventTarget.dispatchEvent(new Event(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR));
+                    _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
+                        detail: cf.Dictionary.get("microphone-terminal-error") + error
+                    }));
                 }
                 else {
                     if (_this.inputCurrentError != error) {
@@ -3534,10 +3543,17 @@ var cf;
             // this.mic = null;
             // this.el.appendChild(this.mic.el);
         };
+        UserInputSubmitButton.prototype.reset = function () {
+            if (this.mic && !this.typing) {
+                // if microphone and not typing
+                this.mic.callInput();
+            }
+        };
         UserInputSubmitButton.prototype.getTemplate = function () {
             return "<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t\t<div class=\"cf-input-icons\">\n\t\t\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</cf-input-button>";
         };
         UserInputSubmitButton.prototype.onMicrophoneTerminalError = function (event) {
+            var _this = this;
             console.log('voice: onMicrophoneTerminalError', event);
             if (this.mic) {
                 this.mic.dealloc();
@@ -3545,6 +3561,12 @@ var cf;
                 this.el.classList.remove("microphone-interface");
                 this.loading = false;
                 this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
+                setTimeout(function () { return _this.el.offsetWidth; }, 0); // <- repaint?
+                this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
+                    detail: {
+                        errorText: event.detail
+                    } //UserTextInput value
+                }));
             }
         };
         UserInputSubmitButton.prototype.onClick = function (event) {
@@ -3917,6 +3939,8 @@ var cf;
                 _this.inputElement.setAttribute("data-value", "");
                 _this.setPlaceholder();
                 _this.setFocusOnInput();
+                //TODO: reset submit button..
+                _this.submitButton.reset();
                 if (_this.controlElements)
                     _this.controlElements.resetAfterErrorMessage();
             }, cf.UserInputElement.ERROR_TIME);

@@ -167,6 +167,10 @@ namespace cf {
 
 			this.button.loading = true;
 
+			if(this.equalizer){
+				this.equalizer.disabled = false;
+			}
+
 			console.log("voice: ------------------------------------------------------");
 
 			// call API, SpeechRecognintion etc. you decide, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
@@ -179,7 +183,10 @@ namespace cf {
 				this.currentTextResponse = result.toString();
 				console.log("voice: this.currentTextResponse:", this.currentTextResponse)
 				if(!this.currentTextResponse || this.currentTextResponse == ""){
+					console.log("voice: invalid..");
 					this.showError(Dictionary.get("user-audio-reponse-invalid"));
+					// invalid input, so call API again
+					this.callInput();
 					return;
 				}
 
@@ -200,7 +207,9 @@ namespace cf {
 				console.log('voice: (callInput) error!', error);
 				if(this.isErrorTerminal(error)){
 					// terminal error, fallback to 
-					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
+					this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
+						detail: Dictionary.get("microphone-terminal-error") + error
+					}));
 				}else{
 					if(this.inputCurrentError != error){
 						// api failed ...
