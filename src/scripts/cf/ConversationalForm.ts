@@ -192,8 +192,7 @@ namespace cf {
 				}
 			}
 
-			this.microphoneInputObj = options.microphoneInput || {
-			};
+			this.microphoneInputObj = options.microphoneInput;
 
 			this.init();
 		}
