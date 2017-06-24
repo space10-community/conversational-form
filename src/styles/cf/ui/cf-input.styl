@@ -221,6 +221,7 @@ cf-input-button.cf-input-button
 	will-change background, border
 	transform-origin 50% 50%
 	transform scale(0, 0)
+	backface-visibility hidden
 	border: 1px solid lighten($color-chat-reponse-user-text, 95%)
 
 	.conversational-form--enable-animation &
@@ -231,17 +232,30 @@ cf-input-button.cf-input-button
 	
 	// mic behavior
 	&.microphone-interface
+		.cf-input-icons
+			transform-origin 50% 50%
+			transform scale(1, 1) rotateX(0deg) translateZ(0px)
+			transition transform $anim-time * 0.5 $anim-easeOut
+
 		.cf-input-icons:not(.cf-microphone)
-			visibility hidden
+			// visibility hidden
+			pointer-events none
+			transform scale(0.25, 0.25) rotateX(90deg) translateZ(0px)
 		.cf-input-icons.cf-microphone
-			visibility visible
+			// visibility visible
+			pointer-events auto
+			transform scale(1, 1) rotateX(0deg) translateZ(0px)
 		
 		// when user is typing
 		&.typing
 			.cf-input-icons:not(.cf-microphone)
-				visibility visible
+				// visibility visible
+				pointer-events auto
+				transform scale(1, 1) rotateX(0deg) translateZ(0px)
 			.cf-input-icons.cf-microphone
-				visibility hidden
+				transform scale(0.25, 0.25) rotateX(90deg) translateZ(0px)
+				pointer-events none
+				// visibility hidden
 	// ------------------------------------------
 
 	.cf-input-icons
@@ -264,7 +278,7 @@ cf-input-button.cf-input-button
 				transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
 		
 		&.cf-microphone
-			&.loading
+			&.loading:not(.typing)
 				pointer-events none
 				div.cf-icon-audio
 					opacity 1
