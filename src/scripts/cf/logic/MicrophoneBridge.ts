@@ -15,8 +15,13 @@ namespace cf {
 		eventTarget: EventDispatcher;
 	}
 
+	export const MicrophoneBridgeEvent = {
+		TERMNIAL_ERROR: "cf-microphone-bridge-error"
+	}
+
 	// class
 	export class MicrophoneBridge{
+		private equalizer: SimpleEqualizer;
 		private el: HTMLElement;
 		private button: UserInputSubmitButton;
 		private currentTextResponse: string = "";
@@ -27,7 +32,7 @@ namespace cf {
 		private _hasUserMedia: boolean = false;
 		private inputErrorCount: number = 0;
 		private inputCurrentError: string = "";
-		private microphoneObj: IUserInput = "";
+		private microphoneObj: IUserInput;
 		private eventTarget: EventDispatcher;
 		private flowUpdateCallback: () => void;
 
@@ -44,6 +49,8 @@ namespace cf {
 			this.el = options.el;
 			this.button = options.button;
 			this.eventTarget = options.eventTarget;
+
+			// data object
 			this.microphoneObj = options.microphoneObj;
 
 			console.log('voice: this.el', this.el);
@@ -112,25 +119,26 @@ namespace cf {
 						if(!this.microphoneObj.awaitingCallback){
 							// user
 							console.log('voice: getUserMedia 3', "not awaiting feedback");
-							console.log("voice: this.callInput() 2")
 							this.callInput();
 						}
 					}else{
-						console.log('voice: getUserMedia 3');
+						console.log('voice: getUserMedia 4, button should be clicked');
 						// code for when both devices are available
 						// interface is not active, button should be clicked
 						this.hasUserMedia = false;
 					}
 				}, (error: any) =>{
-					console.log('voice: getUserMedia error..');
+					console.log('voice: (getUserMedia) error!', error);
 					// error..
 					// not supported..
 					this.hasUserMedia = false;
-					this.showError(error.message || error.name)
+					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 				});
 			}catch(error){
 				// whoops
 				// roll back to standard UI
+
+				this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 			}
 		}
 
@@ -140,11 +148,11 @@ namespace cf {
 			this.promise = null;
 			this.currentStream = null;
 
-// 			if(this.equalizer){
-// 				this.equalizer.dealloc();
-// 			}
+			if(this.equalizer){
+				this.equalizer.dealloc();
+			}
 
-// 			this.equalizer = null;
+			this.equalizer = null;
 
 			this.eventTarget.removeEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 			this.flowUpdateCallback = null;
@@ -189,25 +197,37 @@ namespace cf {
 					detail: dto
 				}));
 			}).catch((error) => {
-				if(this.inputCurrentError != error){
-					// api failed ...
-					// show result in UI
-					// this.inputErrorCount = 0;
-					this.inputCurrentError = error;
+				console.log('voice: (callInput) error!', error);
+				if(this.isErrorTerminal(error)){
+					// terminal error, fallback to 
+					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 				}else{
-				}
+					if(this.inputCurrentError != error){
+						// api failed ...
+						// show result in UI
+						// this.inputErrorCount = 0;
+						this.inputCurrentError = error;
+					}else{
+					}
 
-				this.inputErrorCount++;
+					this.inputErrorCount++;
 
-				if(this.inputErrorCount < 5){
-					this.showError(this.inputCurrentError);
-				}else{
-					// this.showError("Error happening to many times, abort..");
+					if(this.inputErrorCount < 5){
+						this.showError(this.inputCurrentError);
+					}else{
+						// this.showError("Error happening to many times, abort..");
+					}
 				}
 			});
 		}
 
+		protected isErrorTerminal(error: string): boolean{
+			if(error === "network")
+				return true;
+			
 
+			return false;
+		}
 
 		private showError(error: string){
 			const dto: FlowDTO = {
@@ -219,16 +239,85 @@ namespace cf {
 				detail: dto
 			}));
 
-			console.log("voice: this.callInput() 7(error)", error)
+			console.log("voice: showError(currentError..", error)
 			this.callInput();
 		}
 
 		private setupEqualizer(){
-			//analyser = audioContext.createAnalyser();
 			const eqEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-icon-audio-eq")[0];
-			// if(SimpleEqualizer.supported && eqEl){
-			// 	this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
-			// }
+			if(SimpleEqualizer.supported && eqEl){
+				this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
+			}
+
+			console.log("voice:", this.equalizer, eqEl, this.currentStream);
+		}
+	}
+
+	class SimpleEqualizer{
+		private context: AudioContext;
+		private analyser: AnalyserNode;
+		private mic: MediaStreamAudioSourceNode;
+		private javascriptNode: ScriptProcessorNode;
+		private elementToScale: HTMLElement;
+
+		private _disabled: boolean = false;
+		public set disabled(value: boolean){
+			this._disabled = value;
+			Helpers.setTransform(this.elementToScale, "scale(0)");
+		}
+		constructor(stream: any, elementToScale: HTMLElement){
+			this.elementToScale = elementToScale;
+			this.context = new AudioContext();
+			this.analyser = this.context.createAnalyser();
+			this.mic = this.context.createMediaStreamSource(stream);
+			this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
+
+			this.analyser.smoothingTimeConstant = 0.3;
+			this.analyser.fftSize = 1024;
+
+			this.mic.connect(this.analyser);
+			this.analyser.connect(this.javascriptNode);
+			this.javascriptNode.connect(this.context.destination);
+			this.javascriptNode.onaudioprocess = () => {
+				this.onAudioProcess();
+			};
+		}
+
+		private onAudioProcess(){
+			if(this._disabled)
+				return;
+
+			var array =  new Uint8Array(this.analyser.frequencyBinCount);
+			this.analyser.getByteFrequencyData(array);
+			var values = 0;
+
+			var length = array.length;
+			for (var i = 0; i < length; i++) {
+				values += array[i];
+			}
+
+			var average = values / length;
+			const percent: number = 1 - ((100 - average) / 100);
+			Helpers.setTransform(this.elementToScale, "scale("+percent+")");
+		}
+
+		public dealloc(){
+			this.javascriptNode.onaudioprocess = null;
+			this.javascriptNode = null;
+			this.analyser = null;
+			this.mic = null;
+			this.elementToScale = null;
+			this.context = null;
+		}
+
+		public static supported():boolean{
+			(<any>window).AudioContext = (<any>window).AudioContext || (<any>window).webkitAudioContext;
+			if((<any>window).AudioContext){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 }

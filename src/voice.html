@@ -323,7 +323,7 @@
 
 						recognition.onerror = function(event) {
 							console.log("voice: onerror..", event);
-							reject("voice error: " + event.error);
+							reject(event.error);
 						}
 
 						recognition.onend = function(event) {

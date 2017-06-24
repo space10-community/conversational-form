@@ -21,7 +21,9 @@ namespace cf {
 	export class UserInputSubmitButton {
 		private onClickCallback: () => void;
 		private eventTarget: EventDispatcher;
+
 		private mic: MicrophoneBridge;
+		private onMicrophoneTerminalErrorCallback: () => void;
 
 		public el: HTMLElement;
 
@@ -64,6 +66,9 @@ namespace cf {
 
 			this.onClickCallback = this.onClick.bind(this);
 			this.el.addEventListener("click", this.onClickCallback, false);
+
+			this.onMicrophoneTerminalErrorCallback = this.onMicrophoneTerminalError.bind(this);
+			this.eventTarget.addEventListener(MicrophoneBridgeEvent.TERMNIAL_ERROR, this.onMicrophoneTerminalErrorCallback, false);
 		}
 
 		public addMicrophone (microphoneObj: IUserInput) {
@@ -99,6 +104,17 @@ namespace cf {
 					</cf-input-button>`;
 		}
 
+		protected onMicrophoneTerminalError(event: Error){
+			console.log('voice: onMicrophoneTerminalError', event);
+			if(this.mic){
+				this.mic.dealloc();
+				this.mic = null;
+				this.el.classList.remove("microphone-interface");
+				this.loading = false;
+				this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
+			}
+		}
+
 		private onClick(event: MouseEvent){
 			console.log('voice: onClick');
 			const isMicVisible: boolean = this.mic && !this.typing;
@@ -122,6 +138,9 @@ namespace cf {
 		* remove instance
 		*/
 		public dealloc(): void {
+			this.eventTarget.removeEventListener(MicrophoneBridgeEvent.TERMNIAL_ERROR, this.onMicrophoneTerminalErrorCallback, false);
+			this.onMicrophoneTerminalErrorCallback = null;
+
 			if(this.mic){
 				this.mic.dealloc();
 			}
