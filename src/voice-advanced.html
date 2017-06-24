@@ -365,7 +365,7 @@
 							}
 						}
 						recognition.onerror = function(event) {
-							reject("error: " + event.error);
+							reject(event.error);
 						}
 
 						recognition.onend = function(event) {
