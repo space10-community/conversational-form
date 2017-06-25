@@ -1525,13 +1525,13 @@ var cf;
     // class
     var Dictionary = (function () {
         function Dictionary(options) {
-            // can be overwritten
+            // can be overwrittenMicrophone error
             this.data = {
                 "user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
                 "entry-not-found": "Dictionary item not found.",
                 "awaiting-mic-permission": "Awaiting mic permission",
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
-                "microphone-terminal-error": "Microphone error: ",
+                "microphone-terminal-error": "Microphone input turned off: ",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
                 "input-placeholder-error": "Your input is not correct ...",
@@ -3194,7 +3194,8 @@ var cf;
 var cf;
 (function (cf) {
     cf.MicrophoneBridgeEvent = {
-        TERMNIAL_ERROR: "cf-microphone-bridge-error"
+        ERROR: "cf-microphone-bridge-error",
+        TERMNIAL_ERROR: "cf-microphone-bridge-terminal-error"
     };
     // class
     var MicrophoneBridge = (function () {
@@ -3208,7 +3209,6 @@ var cf;
             this.eventTarget = options.eventTarget;
             // data object
             this.microphoneObj = options.microphoneObj;
-            console.log('voice: this.el', this.el);
             this.flowUpdateCallback = this.onFlowUpdate.bind(this);
             this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
         }
@@ -3226,7 +3226,6 @@ var cf;
             configurable: true
         });
         MicrophoneBridge.prototype.cancel = function () {
-            console.log('voice: mic cancel');
             this.button.loading = false;
             if (this.microphoneObj.cancelInput) {
                 this.microphoneObj.cancelInput();
@@ -3235,7 +3234,6 @@ var cf;
         MicrophoneBridge.prototype.onFlowUpdate = function () {
             var _this = this;
             this.currentTextResponse = null;
-            console.log('voice: onFlowUpdate');
             if (!this._hasUserMedia) {
                 // check if user has granted
                 var hasGranted_1 = false;
@@ -3259,7 +3257,6 @@ var cf;
             else {
                 // user has granted ready to go go
                 if (!this.microphoneObj.awaitingCallback) {
-                    console.log("voice: this.callInput() 1");
                     this.callInput();
                 }
             }
@@ -3270,26 +3267,21 @@ var cf;
                 navigator.getUserMedia = navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
                 navigator.getUserMedia({ audio: true }, function (stream) {
                     _this.currentStream = stream;
-                    console.log('voice: getUserMedia 1');
                     if (stream.getAudioTracks().length > 0) {
                         // interface is active and available, so call it immidiatly
                         _this.hasUserMedia = true;
                         _this.setupEqualizer();
-                        console.log('voice: getUserMedia 2');
                         if (!_this.microphoneObj.awaitingCallback) {
-                            // user
-                            console.log('voice: getUserMedia 3', "not awaiting feedback");
+                            // microphone interface awaits speak out loud callback
                             _this.callInput();
                         }
                     }
                     else {
-                        console.log('voice: getUserMedia 4, button should be clicked');
                         // code for when both devices are available
                         // interface is not active, button should be clicked
                         _this.hasUserMedia = false;
                     }
                 }, function (error) {
-                    console.log('voice: (getUserMedia) error!', error);
                     // error..
                     // not supported..
                     _this.hasUserMedia = false;
@@ -3325,7 +3317,6 @@ var cf;
             if (this.equalizer) {
                 this.equalizer.disabled = false;
             }
-            console.log("voice: ------------------------------------------------------");
             // call API, SpeechRecognintion etc. you decide, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
             this.promise = new Promise(function (resolve, reject) { return _this.microphoneObj.input(resolve, reject, _this.currentStream); })
                 .then(function (result) {
@@ -3333,9 +3324,7 @@ var cf;
                 _this.promise = null;
                 // save response so it's available in getFlowDTO
                 _this.currentTextResponse = result.toString();
-                console.log("voice: this.currentTextResponse:", _this.currentTextResponse);
                 if (!_this.currentTextResponse || _this.currentTextResponse == "") {
-                    console.log("voice: invalid..");
                     _this.showError(cf.Dictionary.get("user-audio-reponse-invalid"));
                     // invalid input, so call API again
                     _this.callInput();
@@ -3353,7 +3342,12 @@ var cf;
                     detail: dto
                 }));
             }).catch(function (error) {
-                console.log('voice: (callInput) error!', error);
+                // API error
+                cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.MicrophoneBridgeEvent.ERROR, error);
+                // this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
+                // 	detail: error
+                // }));
+                console.log("error...", _this.inputCurrentError);
                 if (_this.isErrorTerminal(error)) {
                     // terminal error, fallback to 
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
@@ -3364,23 +3358,25 @@ var cf;
                     if (_this.inputCurrentError != error) {
                         // api failed ...
                         // show result in UI
-                        // this.inputErrorCount = 0;
+                        _this.inputErrorCount = 0;
                         _this.inputCurrentError = error;
                     }
                     else {
                     }
                     _this.inputErrorCount++;
-                    if (_this.inputErrorCount < 5) {
+                    if (_this.inputErrorCount < 3) {
                         _this.showError(_this.inputCurrentError);
                     }
                     else {
-                        // this.showError("Error happening to many times, abort..");
+                        _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
+                            detail: cf.Dictionary.get("microphone-terminal-error") + error
+                        }));
                     }
                 }
             });
         };
         MicrophoneBridge.prototype.isErrorTerminal = function (error) {
-            var terminalErrors = ["network", "aborted"];
+            var terminalErrors = ["network"];
             if (terminalErrors.indexOf(error) !== -1)
                 return true;
             return false;
@@ -3393,30 +3389,32 @@ var cf;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
                 detail: dto
             }));
-            console.log("voice: showError(currentError..", error);
             this.callInput();
         };
         MicrophoneBridge.prototype.setupEqualizer = function () {
             var eqEl = this.el.getElementsByTagName("cf-icon-audio-eq")[0];
             if (SimpleEqualizer.supported && eqEl) {
-                this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
+                this.equalizer = new SimpleEqualizer({
+                    stream: this.currentStream,
+                    elementToScale: eqEl
+                });
             }
-            console.log("voice:", this.equalizer, eqEl, this.currentStream);
         };
         return MicrophoneBridge;
     }());
     cf.MicrophoneBridge = MicrophoneBridge;
     var SimpleEqualizer = (function () {
-        function SimpleEqualizer(stream, elementToScale) {
+        function SimpleEqualizer(options) {
             var _this = this;
             this._disabled = false;
-            this.elementToScale = elementToScale;
+            this.elementToScale = options.elementToScale;
             this.context = new AudioContext();
             this.analyser = this.context.createAnalyser();
-            this.mic = this.context.createMediaStreamSource(stream);
+            this.mic = this.context.createMediaStreamSource(options.stream);
             this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
             this.analyser.smoothingTimeConstant = 0.3;
             this.analyser.fftSize = 1024;
+            this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
             this.mic.connect(this.analyser);
             this.analyser.connect(this.javascriptNode);
             this.javascriptNode.connect(this.context.destination);
@@ -3427,7 +3425,7 @@ var cf;
         Object.defineProperty(SimpleEqualizer.prototype, "disabled", {
             set: function (value) {
                 this._disabled = value;
-                cf.Helpers.setTransform(this.elementToScale, "scale(0)");
+                this.elementToScale.style.borderWidth = 0 + "px";
             },
             enumerable: true,
             configurable: true
@@ -3444,7 +3442,7 @@ var cf;
             }
             var average = values / length;
             var percent = 1 - ((100 - average) / 100);
-            cf.Helpers.setTransform(this.elementToScale, "scale(" + percent + ")");
+            this.elementToScale.style.borderWidth = (this.maxBorderWidth * percent) + "px";
         };
         SimpleEqualizer.prototype.dealloc = function () {
             this.javascriptNode.onaudioprocess = null;
@@ -3528,7 +3526,6 @@ var cf;
             configurable: true
         });
         UserInputSubmitButton.prototype.addMicrophone = function (microphoneObj) {
-            console.log('voice: yeyees mic!');
             this.el.classList.add("microphone-interface");
             var template = document.createElement('template');
             template.innerHTML = "<div class=\"cf-input-icons cf-microphone\">\n\t\t\t\t<div class=\"cf-icon-audio\"></div>\n\t\t\t\t<cf-icon-audio-eq></cf-icon-audio-eq>\n\t\t\t</div>";
@@ -3553,15 +3550,12 @@ var cf;
             return "<cf-input-button class=\"cf-input-button\">\n\t\t\t\t\t\t<div class=\"cf-input-icons\">\n\t\t\t\t\t\t\t<div class=\"cf-icon-progress\"></div>\n\t\t\t\t\t\t\t<div class=\"cf-icon-attachment\"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</cf-input-button>";
         };
         UserInputSubmitButton.prototype.onMicrophoneTerminalError = function (event) {
-            var _this = this;
-            console.log('voice: onMicrophoneTerminalError', event);
             if (this.mic) {
                 this.mic.dealloc();
                 this.mic = null;
+                this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
                 this.el.classList.remove("microphone-interface");
                 this.loading = false;
-                this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
-                setTimeout(function () { return _this.el.offsetWidth; }, 0); // <- repaint?
                 this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_INVALID, {
                     detail: {
                         errorText: event.detail
@@ -3570,7 +3564,6 @@ var cf;
             }
         };
         UserInputSubmitButton.prototype.onClick = function (event) {
-            console.log('voice: onClick');
             var isMicVisible = this.mic && !this.typing;
             if (isMicVisible) {
                 this.mic.callInput();

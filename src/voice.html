@@ -303,6 +303,9 @@
 						// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
 							// if API fails use reject(result.toString())
 							// if API succedes use resolve(result.toString())
+						
+						if(recognition)
+							recognition.stop();
 
 						recognition = new SpeechRecognition(),
 							finalTranscript = '';
@@ -313,7 +316,6 @@
 						// recognition.onstart = function() {}
 						recognition.onresult = function(event) {
 							// var interimTranscript = "";
-							console.log("voice: ONRESULT", finalTranscript)
 							for (var i = event.resultIndex; i < event.results.length; ++i) {
 								if (event.results[i].isFinal) {
 									finalTranscript += event.results[i][0].transcript;
@@ -322,15 +324,13 @@
 						}
 
 						recognition.onerror = function(event) {
-							console.log("voice: onerror..", event);
 							reject(event.error);
 						}
 
 						recognition.onend = function(event) {
-							if(finalTranscript && finalTranscript !== "")
+							if(finalTranscript && finalTranscript !== ""){
 								resolve(finalTranscript);
-							else
-								reject("no-input");
+							}
 						}
 
 						recognition.start();
