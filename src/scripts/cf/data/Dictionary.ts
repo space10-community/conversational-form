@@ -122,13 +122,13 @@ namespace cf {
 			return newData;
 		}
 
-		// can be overwritten
+		// can be overwrittenMicrophone error
 		protected data: any = {
 			"user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
 			"entry-not-found": "Dictionary item not found.",
 			"awaiting-mic-permission": "Awaiting mic permission",
 			"user-audio-reponse-invalid": "I didn't get that, try again.",
-			"microphone-terminal-error": "Microphone error: ",
+			"microphone-terminal-error": "Microphone input turned off: ",
 			"input-placeholder": "Type your answer here ...",
 			"group-placeholder": "Type to filter list ...",
 			"input-placeholder-error": "Your input is not correct ...",

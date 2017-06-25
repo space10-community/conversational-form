@@ -54,14 +54,11 @@ namespace cf {
 			// data object
 			this.microphoneObj = options.microphoneObj;
 
-			console.log('voice: this.el', this.el);
-
 			this.flowUpdateCallback = this.onFlowUpdate.bind(this);
 			this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
 		}
 
 		public cancel(){
-			console.log('voice: mic cancel');
 			this.button.loading = false;
 
 			if(this.microphoneObj.cancelInput){
@@ -71,8 +68,6 @@ namespace cf {
 
 		public onFlowUpdate(){
 			this.currentTextResponse = null;
-
-			console.log('voice: onFlowUpdate');
 
 			if(!this._hasUserMedia){
 				// check if user has granted
@@ -107,28 +102,21 @@ namespace cf {
 				navigator.getUserMedia(<any> {audio: true}, (stream: MediaStream) => {
 					this.currentStream = stream;
 
-					console.log('voice: getUserMedia 1');
-
 					if(stream.getAudioTracks().length > 0){
 						// interface is active and available, so call it immidiatly
 						this.hasUserMedia = true;
 						this.setupEqualizer();
 
-						console.log('voice: getUserMedia 2');
-
 						if(!this.microphoneObj.awaitingCallback){
-							// user
-							console.log('voice: getUserMedia 3', "not awaiting feedback");
+							// microphone interface awaits speak out loud callback
 							this.callInput();
 						}
 					}else{
-						console.log('voice: getUserMedia 4, button should be clicked');
 						// code for when both devices are available
 						// interface is not active, button should be clicked
 						this.hasUserMedia = false;
 					}
 				}, (error: any) =>{
-					console.log('voice: (getUserMedia) error!', error);
 					// error..
 					// not supported..
 					this.hasUserMedia = false;
@@ -200,10 +188,13 @@ namespace cf {
 					detail: dto
 				}));
 			}).catch((error) => {
+				// API error
 				ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
-				this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
-					detail: error
-				}));
+				// this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
+				// 	detail: error
+				// }));
+
+				console.log("error...", this.inputCurrentError)
 
 				if(this.isErrorTerminal(error)){
 					// terminal error, fallback to 
@@ -214,7 +205,7 @@ namespace cf {
 					if(this.inputCurrentError != error){
 						// api failed ...
 						// show result in UI
-						// this.inputErrorCount = 0;
+						this.inputErrorCount = 0;
 						this.inputCurrentError = error;
 					}else{
 					}
