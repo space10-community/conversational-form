@@ -96,7 +96,6 @@ namespace cf {
 			}else{
 				// user has granted ready to go go
 				if(!this.microphoneObj.awaitingCallback){
-					console.log("voice: this.callInput() 1")
 					this.callInput();
 				}
 			}
@@ -172,8 +171,6 @@ namespace cf {
 				this.equalizer.disabled = false;
 			}
 
-			console.log("voice: ------------------------------------------------------");
-
 			// call API, SpeechRecognintion etc. you decide, passing along the stream from getUserMedia can be used.. as long as the resolve is called with string attribute
 			this.promise = new Promise((resolve: any, reject: any) => this.microphoneObj.input(resolve, reject, this.currentStream) )
 			.then((result) => {
@@ -182,9 +179,7 @@ namespace cf {
 				this.promise = null;
 				// save response so it's available in getFlowDTO
 				this.currentTextResponse = result.toString();
-				console.log("voice: this.currentTextResponse:", this.currentTextResponse)
 				if(!this.currentTextResponse || this.currentTextResponse == ""){
-					console.log("voice: invalid..");
 					this.showError(Dictionary.get("user-audio-reponse-invalid"));
 					// invalid input, so call API again
 					this.callInput();
@@ -255,17 +250,17 @@ namespace cf {
 				detail: dto
 			}));
 
-			console.log("voice: showError(currentError..", error)
 			this.callInput();
 		}
 
 		private setupEqualizer(){
 			const eqEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("cf-icon-audio-eq")[0];
 			if(SimpleEqualizer.supported && eqEl){
-				this.equalizer = new SimpleEqualizer(this.currentStream, eqEl);
+				this.equalizer = new SimpleEqualizer({
+					stream: this.currentStream,
+					elementToScale: eqEl
+				});
 			}
-
-			console.log("voice:", this.equalizer, eqEl, this.currentStream);
 		}
 	}
 
@@ -275,21 +270,23 @@ namespace cf {
 		private mic: MediaStreamAudioSourceNode;
 		private javascriptNode: ScriptProcessorNode;
 		private elementToScale: HTMLElement;
+		private maxBorderWidth: number;
 
 		private _disabled: boolean = false;
 		public set disabled(value: boolean){
 			this._disabled = value;
-			Helpers.setTransform(this.elementToScale, "scale(0)");
+			this.elementToScale.style.borderWidth = 0 + "px";
 		}
-		constructor(stream: any, elementToScale: HTMLElement){
-			this.elementToScale = elementToScale;
+		constructor(options: any){
+			this.elementToScale = options.elementToScale;
 			this.context = new AudioContext();
 			this.analyser = this.context.createAnalyser();
-			this.mic = this.context.createMediaStreamSource(stream);
+			this.mic = this.context.createMediaStreamSource(options.stream);
 			this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
 
 			this.analyser.smoothingTimeConstant = 0.3;
 			this.analyser.fftSize = 1024;
+			this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
 
 			this.mic.connect(this.analyser);
 			this.analyser.connect(this.javascriptNode);
@@ -314,7 +311,7 @@ namespace cf {
 
 			var average = values / length;
 			const percent: number = 1 - ((100 - average) / 100);
-			Helpers.setTransform(this.elementToScale, "scale("+percent+")");
+			this.elementToScale.style.borderWidth = (this.maxBorderWidth * percent) + "px";
 		}
 
 		public dealloc(){

@@ -72,7 +72,6 @@ namespace cf {
 		}
 
 		public addMicrophone (microphoneObj: IUserInput) {
-			console.log('voice: yeyees mic!');
 
 			this.el.classList.add("microphone-interface");
 			var template: HTMLTemplateElement = document.createElement('template');
@@ -112,14 +111,13 @@ namespace cf {
 		}
 
 		protected onMicrophoneTerminalError(event: CustomEvent){
-			console.log('voice: onMicrophoneTerminalError', event);
 			if(this.mic){
 				this.mic.dealloc();
 				this.mic = null;
+				this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
+
 				this.el.classList.remove("microphone-interface");
 				this.loading = false;
-				this.el.removeChild(this.el.getElementsByClassName("cf-microphone")[0]);
-				setTimeout(() => this.el.offsetWidth, 0); // <- repaint?
 
 				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
 					detail: <FlowDTO>{
@@ -130,7 +128,6 @@ namespace cf {
 		}
 
 		private onClick(event: MouseEvent){
-			console.log('voice: onClick');
 			const isMicVisible: boolean = this.mic && !this.typing;
 			if(isMicVisible){
 				this.mic.callInput();
