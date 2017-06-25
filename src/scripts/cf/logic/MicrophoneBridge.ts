@@ -98,8 +98,37 @@ namespace cf {
 		
 		public getUserMedia(){
 			try{
-				navigator.getUserMedia = navigator.getUserMedia || (<any>window).navigator.webkitGetUserMedia || (<any>window).navigator.mozGetUserMedia;
-				navigator.getUserMedia(<any> {audio: true}, (stream: MediaStream) => {
+				// from https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Using_the_new_API_in_older_browsers
+
+				// Older browsers might not implement mediaDevices at all, so we set an empty object first
+				if (navigator.mediaDevices === undefined) {
+					(<any>navigator).mediaDevices = {};
+				}
+
+				// Some browsers partially implement mediaDevices. We can't just assign an object
+				// with getUserMedia as it would overwrite existing properties.
+				// Here, we will just add the getUserMedia property if it's missing.
+				if (navigator.mediaDevices.getUserMedia === undefined) {
+					navigator.mediaDevices.getUserMedia = function(constraints) {
+
+						// First get ahold of the legacy getUserMedia, if present
+						var getUserMedia = navigator.getUserMedia || (<any>window).navigator.webkitGetUserMedia || (<any>window).navigator.mozGetUserMedia;
+
+						// Some browsers just don't implement it - return a rejected promise with an error
+						// to keep a consistent interface
+						if (!getUserMedia) {
+						return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+						}
+
+						// Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+						return new Promise(function(resolve, reject) {
+							getUserMedia.call(navigator, constraints, resolve, reject);
+						});
+					}
+				}
+
+				navigator.mediaDevices.getUserMedia(<any> {audio: true})
+				.then((stream: MediaStream) => {
 					this.currentStream = stream;
 
 					if(stream.getAudioTracks().length > 0){
@@ -116,16 +145,14 @@ namespace cf {
 						// interface is not active, button should be clicked
 						this.hasUserMedia = false;
 					}
-				}, (error: any) =>{
-					// error..
-					// not supported..
+				})
+				.catch((err) => {
 					this.hasUserMedia = false;
 					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 				});
 			}catch(error){
-				// whoops
-				// roll back to standard UI
-
+				// whoops no getUserMedia, so roll back to standard UI
+				this.hasUserMedia = false;
 				this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 			}
 		}
@@ -189,12 +216,10 @@ namespace cf {
 				}));
 			}).catch((error) => {
 				// API error
-				ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
+				// ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
 				// this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
 				// 	detail: error
 				// }));
-
-				console.log("error...", this.inputCurrentError)
 
 				if(this.isErrorTerminal(error)){
 					// terminal error, fallback to 
@@ -212,8 +237,8 @@ namespace cf {
 
 					this.inputErrorCount++;
 
-					if(this.inputErrorCount < 3){
-						this.showError(this.inputCurrentError);
+					if(this.inputErrorCount > 2){
+						this.showError(error);
 					}else{
 						this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
 							detail: Dictionary.get("microphone-terminal-error") + error
@@ -261,7 +286,7 @@ namespace cf {
 		private mic: MediaStreamAudioSourceNode;
 		private javascriptNode: ScriptProcessorNode;
 		private elementToScale: HTMLElement;
-		private maxBorderWidth: number;
+		private maxBorderWidth: number = 0;
 
 		private _disabled: boolean = false;
 		public set disabled(value: boolean){
@@ -277,7 +302,6 @@ namespace cf {
 
 			this.analyser.smoothingTimeConstant = 0.3;
 			this.analyser.fftSize = 1024;
-			this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
 
 			this.mic.connect(this.analyser);
 			this.analyser.connect(this.javascriptNode);
@@ -291,7 +315,7 @@ namespace cf {
 			if(this._disabled)
 				return;
 
-			var array =  new Uint8Array(this.analyser.frequencyBinCount);
+			var array = new Uint8Array(this.analyser.frequencyBinCount);
 			this.analyser.getByteFrequencyData(array);
 			var values = 0;
 
@@ -301,7 +325,12 @@ namespace cf {
 			}
 
 			var average = values / length;
-			const percent: number = 1 - ((100 - average) / 100);
+			const percent: number = Math.min(1, Math.max(0, 1 - ((50 - average) / 50)));
+
+			if(this.maxBorderWidth === 0){
+				this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
+			}
+
 			this.elementToScale.style.borderWidth = (this.maxBorderWidth * percent) + "px";
 		}
 

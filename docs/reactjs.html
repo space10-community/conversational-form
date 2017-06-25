@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
 
-		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
@@ -63,7 +63,7 @@
 						Setup Conversational Form from a React component
 					</h1>
 					<h2>
-						Check the source, here we create a React component, Hello, and renders Conversational Form using React API basics.
+						Check the source — we use ES6 class — we create a React component {Hello} and renders Conversational Form using React API basics.
 					</h2>
 				</article>
 			</section>
@@ -88,7 +88,6 @@
 						constructor(props) {
 							super(props);
 							this.cf = null; // <-- Conversational Form ref
-
 						}
 						componentDidMount(){
 							// add Conversational Form info
@@ -108,7 +107,6 @@
 									console.log("Form submitted...");
 								}
 							});
-						
 						}
 						render() {
 							return React.createElement('form', {

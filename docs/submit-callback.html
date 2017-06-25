@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
 
-		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
 	</head>
 	<body>
 		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
@@ -89,6 +89,7 @@
 					formEl: document.getElementById("form"),
 					context: document.getElementById("cf-context"),
 					submitCallback: function(){
+						alert("Submit: check dev tools console for more");
 						// be aware that this prevents default form submit.
 						var formData = conversationalForm.getFormData();
 						var formDataSerialized = conversationalForm.getFormData(true);
