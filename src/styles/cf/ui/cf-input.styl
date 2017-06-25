@@ -249,6 +249,12 @@ cf-input-button.cf-input-button
 			pointer-events auto
 			transform scale(1, 1) rotateX(0deg) translateZ(0px)
 		
+		&.loading:not(.typing)
+			pointer-events none
+			.cf-microphone
+				div.cf-icon-audio
+					opacity 1
+
 		// when user is typing
 		&.typing
 			.cf-input-icons:not(.cf-microphone)
@@ -279,12 +285,6 @@ cf-input-button.cf-input-button
 			will-change transform, opacity
 			.conversational-form--enable-animation &
 				transition transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut
-		
-		&.cf-microphone
-			&.loading:not(.typing)
-				pointer-events none
-				div.cf-icon-audio
-					opacity 1
 
 	div.cf-icon-attachment
 		transform rotateX(90deg)

@@ -153,6 +153,17 @@ namespace cf {
 			}
 		}
 
+		public reactivate(): void {
+			super.reactivate();
+
+			// called from microphone interface, check if active microphone, and set loading if yes
+			if(this.microphoneObj && !this.submitButton.typing){
+				this.submitButton.loading = true;
+				// setting typing to false calls the externa interface, like Microphone
+				this.submitButton.typing = false;
+			}
+		}
+
 		public onFlowStopped(){
 			this.submitButton.loading = false;
 			if(this.submitButton.typing)

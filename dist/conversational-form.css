@@ -812,6 +812,14 @@ cf-input-button.cf-input-button.microphone-interface .cf-input-icons.cf-micropho
   -ms-transform: scale(1, 1) rotateX(0deg) translateZ(0px);
   transform: scale(1, 1) rotateX(0deg) translateZ(0px);
 }
+cf-input-button.cf-input-button.microphone-interface.loading:not(.typing) {
+  pointer-events: none;
+}
+cf-input-button.cf-input-button.microphone-interface.loading:not(.typing) .cf-microphone div.cf-icon-audio {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 cf-input-button.cf-input-button.microphone-interface.typing .cf-input-icons:not(.cf-microphone) {
   pointer-events: auto;
   -webkit-transform: scale(1, 1) rotateX(0deg) translateZ(0px);
@@ -855,14 +863,6 @@ cf-input-button.cf-input-button .cf-input-icons > div {
   -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-cf-input-button.cf-input-button .cf-input-icons.cf-microphone.loading:not(.typing) {
-  pointer-events: none;
-}
-cf-input-button.cf-input-button .cf-input-icons.cf-microphone.loading:not(.typing) div.cf-icon-audio {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
 }
 cf-input-button.cf-input-button div.cf-icon-attachment {
   -webkit-transform: rotateX(90deg);

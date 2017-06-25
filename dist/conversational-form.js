@@ -3264,8 +3264,31 @@ var cf;
         MicrophoneBridge.prototype.getUserMedia = function () {
             var _this = this;
             try {
-                navigator.getUserMedia = navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
-                navigator.getUserMedia({ audio: true }, function (stream) {
+                // from https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Using_the_new_API_in_older_browsers
+                // Older browsers might not implement mediaDevices at all, so we set an empty object first
+                if (navigator.mediaDevices === undefined) {
+                    navigator.mediaDevices = {};
+                }
+                // Some browsers partially implement mediaDevices. We can't just assign an object
+                // with getUserMedia as it would overwrite existing properties.
+                // Here, we will just add the getUserMedia property if it's missing.
+                if (navigator.mediaDevices.getUserMedia === undefined) {
+                    navigator.mediaDevices.getUserMedia = function (constraints) {
+                        // First get ahold of the legacy getUserMedia, if present
+                        var getUserMedia = navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+                        // Some browsers just don't implement it - return a rejected promise with an error
+                        // to keep a consistent interface
+                        if (!getUserMedia) {
+                            return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+                        }
+                        // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+                        return new Promise(function (resolve, reject) {
+                            getUserMedia.call(navigator, constraints, resolve, reject);
+                        });
+                    };
+                }
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(function (stream) {
                     _this.currentStream = stream;
                     if (stream.getAudioTracks().length > 0) {
                         // interface is active and available, so call it immidiatly
@@ -3281,16 +3304,15 @@ var cf;
                         // interface is not active, button should be clicked
                         _this.hasUserMedia = false;
                     }
-                }, function (error) {
-                    // error..
-                    // not supported..
+                })
+                    .catch(function (err) {
                     _this.hasUserMedia = false;
                     _this.eventTarget.dispatchEvent(new Event(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR));
                 });
             }
             catch (error) {
-                // whoops
-                // roll back to standard UI
+                // whoops no getUserMedia, so roll back to standard UI
+                this.hasUserMedia = false;
                 this.eventTarget.dispatchEvent(new Event(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR));
             }
         };
@@ -3343,11 +3365,10 @@ var cf;
                 }));
             }).catch(function (error) {
                 // API error
-                cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.MicrophoneBridgeEvent.ERROR, error);
+                // ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
                 // this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
                 // 	detail: error
                 // }));
-                console.log("error...", _this.inputCurrentError);
                 if (_this.isErrorTerminal(error)) {
                     // terminal error, fallback to 
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
@@ -3364,8 +3385,8 @@ var cf;
                     else {
                     }
                     _this.inputErrorCount++;
-                    if (_this.inputErrorCount < 3) {
-                        _this.showError(_this.inputCurrentError);
+                    if (_this.inputErrorCount > 2) {
+                        _this.showError(error);
                     }
                     else {
                         _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
@@ -3406,6 +3427,7 @@ var cf;
     var SimpleEqualizer = (function () {
         function SimpleEqualizer(options) {
             var _this = this;
+            this.maxBorderWidth = 0;
             this._disabled = false;
             this.elementToScale = options.elementToScale;
             this.context = new AudioContext();
@@ -3414,7 +3436,6 @@ var cf;
             this.javascriptNode = this.context.createScriptProcessor(2048, 1, 1);
             this.analyser.smoothingTimeConstant = 0.3;
             this.analyser.fftSize = 1024;
-            this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
             this.mic.connect(this.analyser);
             this.analyser.connect(this.javascriptNode);
             this.javascriptNode.connect(this.context.destination);
@@ -3441,7 +3462,10 @@ var cf;
                 values += array[i];
             }
             var average = values / length;
-            var percent = 1 - ((100 - average) / 100);
+            var percent = Math.min(1, Math.max(0, 1 - ((50 - average) / 50)));
+            if (this.maxBorderWidth === 0) {
+                this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
+            }
             this.elementToScale.style.borderWidth = (this.maxBorderWidth * percent) + "px";
         };
         SimpleEqualizer.prototype.dealloc = function () {
@@ -3878,6 +3902,15 @@ var cf;
         UserTextInput.prototype.reset = function () {
             if (this.controlElements) {
                 this.controlElements.clearTagsAndReset();
+            }
+        };
+        UserTextInput.prototype.reactivate = function () {
+            _super.prototype.reactivate.call(this);
+            // called from microphone interface, check if active microphone, and set loading if yes
+            if (this.microphoneObj && !this.submitButton.typing) {
+                this.submitButton.loading = true;
+                // setting typing to false calls the externa interface, like Microphone
+                this.submitButton.typing = false;
             }
         };
         UserTextInput.prototype.onFlowStopped = function () {

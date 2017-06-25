@@ -16,7 +16,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
@@ -109,7 +109,7 @@ new cf.ConversationalForm({
 	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
 	eventDispatcher,/*?: cf.EventDispatcher;*/
 
-	// optional, set microphone nput, future, add other custom inputs, ex. VR, see voice examples
+	// optional, set microphone input, future, add other custom inputs, ex. VR, see voice (1, 2) examples in docs folder
 	microphoneInput?:IUserInput;
 });
 ```

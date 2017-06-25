@@ -11,14 +11,6 @@
 	<body>
 		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
 
-		<style>
-			cf-chat-response:first-of-type text{
-				background: #0facf3 !important;
-				color: white;
-				font-size: 120%;
-			}
-		</style>
-
 		<main class="content">
 			<menu id="small-screen-menu">
 				<h2>Conversational Form examples</h2>
@@ -68,10 +60,10 @@
 
 				<article>
 					<h1 id="writer">
-						Add a welcome message
+						Add cf-questions atribute to input tag for custom questions.
 					</h1>
 					<h2>
-						And style it like a champ
+						cf-questions="Place holder text..||alternative text", seperate by bars
 					</h2>
 				</article>
 			</section>
@@ -79,15 +71,11 @@
 			<section role="form">
 				<div class="form-outer">
 
+					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
 					<form id="form" cf-form>
-						<label for="radio">
-							<input cf-questions="Hi friend, this is a welcome message example, let's begin?" cf-label="Yes, let's begin!" type="radio" value="0">
-							Newsletter
-						</label>
-
-						<input type="text" cf-questions="..." />
+						<input type="text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
 					</form>
-
+					
 				</div>
 			</section>
 
