@@ -16,7 +16,8 @@ namespace cf {
 	}
 
 	export const MicrophoneBridgeEvent = {
-		TERMNIAL_ERROR: "cf-microphone-bridge-error"
+		ERROR: "cf-microphone-bridge-error",
+		TERMNIAL_ERROR: "cf-microphone-bridge-terminal-error"
 	}
 
 	// class
@@ -204,7 +205,11 @@ namespace cf {
 					detail: dto
 				}));
 			}).catch((error) => {
-				console.log('voice: (callInput) error!', error);
+				ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
+				this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
+					detail: error
+				}));
+
 				if(this.isErrorTerminal(error)){
 					// terminal error, fallback to 
 					this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
@@ -221,17 +226,19 @@ namespace cf {
 
 					this.inputErrorCount++;
 
-					if(this.inputErrorCount < 5){
+					if(this.inputErrorCount < 3){
 						this.showError(this.inputCurrentError);
 					}else{
-						// this.showError("Error happening to many times, abort..");
+						this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
+							detail: Dictionary.get("microphone-terminal-error") + error
+						}));
 					}
 				}
 			});
 		}
 
 		protected isErrorTerminal(error: string): boolean{
-			const terminalErrors: Array<string> = ["network", "aborted"];
+			const terminalErrors: Array<string> = ["network"];
 			if(terminalErrors.indexOf(error) !== -1)
 				return true;
 
