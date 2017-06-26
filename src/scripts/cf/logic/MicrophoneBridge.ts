@@ -146,7 +146,7 @@ namespace cf {
 						this.hasUserMedia = false;
 					}
 				})
-				.catch((err) => {
+				.catch((err: any) => {
 					this.hasUserMedia = false;
 					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 				});
