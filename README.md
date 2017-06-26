@@ -325,6 +325,24 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 ### Version log
 User previous versions. These versions are also available through bower, npm and Github tags
 
+[v0.9.4](https://github.com/space10-community/conversational-form/tree/0.9.4)
+```html
+<!-- v0.9.4 -->
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.4/conversational-form.min.js" crossorigin></script>
+```
+
+[v0.9.3](https://github.com/space10-community/conversational-form/tree/0.9.3)
+```html
+<!-- v0.9.3 -->
+<script type="text/javascript" src="https://conversational-form-093-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
+```
+
+[v0.9.2](https://github.com/space10-community/conversational-form/tree/0.9.2)
+```html
+<!-- v0.9.2 -->
+<script type="text/javascript" src="https://conversational-form-092-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
+```
+
 [v0.9.1](https://github.com/space10-community/conversational-form/tree/0.9.1)
 ```html
 <!-- v0.9.1 -->
