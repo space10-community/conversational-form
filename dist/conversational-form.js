@@ -3305,12 +3305,14 @@ var cf;
                         _this.hasUserMedia = false;
                     }
                 })
-                    .catch(function (err) {
+                    .catch(function (error) {
+                    // Promise catch
                     _this.hasUserMedia = false;
                     _this.eventTarget.dispatchEvent(new Event(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR));
                 });
             }
             catch (error) {
+                // try catch
                 // whoops no getUserMedia, so roll back to standard UI
                 this.hasUserMedia = false;
                 this.eventTarget.dispatchEvent(new Event(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR));
@@ -4851,7 +4853,8 @@ var cf;
                     // do the normal flow..
                     cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.FlowEvents.USER_INPUT_UPDATE, appDTO);
                     // update to latest DTO because values can be changed in validation flow...
-                    appDTO = appDTO.input ? appDTO.input.getFlowDTO() : appDTO;
+                    if (appDTO.input)
+                        appDTO = appDTO.input.getFlowDTO();
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.USER_INPUT_UPDATE, {
                         detail: appDTO //UserTextInput value
                     }));
