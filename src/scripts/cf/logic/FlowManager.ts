@@ -117,7 +117,8 @@ namespace cf {
 					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_UPDATE, appDTO)
 
 					// update to latest DTO because values can be changed in validation flow...
-					appDTO = appDTO.input.getFlowDTO();
+					if(appDTO.input)
+						appDTO = appDTO.input.getFlowDTO();
 
 					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
 						detail: appDTO //UserTextInput value

@@ -127,7 +127,7 @@ namespace cf {
 					}
 				}
 
-				navigator.mediaDevices.getUserMedia(<any> {audio: true})
+				(<any> navigator.mediaDevices).getUserMedia(<any> {audio: true})
 				.then((stream: MediaStream) => {
 					this.currentStream = stream;
 
@@ -146,11 +146,13 @@ namespace cf {
 						this.hasUserMedia = false;
 					}
 				})
-				.catch((err: any) => {
+				.catch((error: any) => {
+					// Promise catch
 					this.hasUserMedia = false;
 					this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
 				});
 			}catch(error){
+				// try catch
 				// whoops no getUserMedia, so roll back to standard UI
 				this.hasUserMedia = false;
 				this.eventTarget.dispatchEvent(new Event(MicrophoneBridgeEvent.TERMNIAL_ERROR));
