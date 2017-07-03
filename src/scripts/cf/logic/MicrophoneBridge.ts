@@ -295,6 +295,7 @@ namespace cf {
 			this._disabled = value;
 			this.elementToScale.style.borderWidth = 0 + "px";
 		}
+		
 		constructor(options: any){
 			this.elementToScale = options.elementToScale;
 			this.context = new AudioContext();
@@ -329,7 +330,7 @@ namespace cf {
 			var average = values / length;
 			const percent: number = Math.min(1, Math.max(0, 1 - ((50 - average) / 50)));
 
-			if(this.maxBorderWidth === 0){
+			if(!this.maxBorderWidth){
 				this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5;
 			}
 
