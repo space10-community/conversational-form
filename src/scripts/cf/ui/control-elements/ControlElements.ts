@@ -510,6 +510,7 @@ namespace cf {
 
 							dto.controlElements.push(element);
 						}
+
 						
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 						
@@ -525,6 +526,8 @@ namespace cf {
 
 							dto.controlElements.push(element);
 						}
+
+
 						break;
 					case "OptionsList":
 						var element: OptionsList = <OptionsList> this.elements[0];

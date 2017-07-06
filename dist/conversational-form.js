@@ -372,6 +372,7 @@ var cf;
     // interface
     var EventDispatcher = (function () {
         function EventDispatcher(cfRef) {
+            if (cfRef === void 0) { cfRef = null; }
             this._cf = cfRef;
             this.target = document.createDocumentFragment();
         }
@@ -2509,22 +2510,42 @@ var cf;
             // select tag values are set via selected attribute on option tag
             var numberOptionButtonsVisible = [];
             this._values = [];
-            for (var i = 0; i < this.optionTags.length; i++) {
-                var tag = this.optionTags[i];
-                for (var j = 0; j < dto.controlElements.length; j++) {
-                    var controllerElement = dto.controlElements[j];
-                    if (controllerElement.referenceTag == tag) {
-                        // tag match found, so set value
-                        tag.selected = controllerElement.selected;
-                        // check for minimum one selected
-                        if (!isValid && tag.selected)
-                            isValid = true;
-                        if (tag.selected)
-                            this._values.push(tag.value);
-                        if (controllerElement.visible)
-                            numberOptionButtonsVisible.push(controllerElement);
+            if (dto.controlElements) {
+                // TODO: Refactor this so it is less dependant on controlElements
+                for (var i = 0; i < this.optionTags.length; i++) {
+                    var tag = this.optionTags[i];
+                    for (var j = 0; j < dto.controlElements.length; j++) {
+                        var controllerElement = dto.controlElements[j];
+                        if (controllerElement.referenceTag == tag) {
+                            // tag match found, so set value
+                            tag.selected = controllerElement.selected;
+                            // check for minimum one selected
+                            if (!isValid && tag.selected)
+                                isValid = true;
+                            if (tag.selected)
+                                this._values.push(tag.value);
+                            if (controllerElement.visible)
+                                numberOptionButtonsVisible.push(controllerElement);
+                        }
                     }
                 }
+            }
+            else {
+                var wasSelected = false;
+                // for when we don't have any control elements, then we just try and map values
+                for (var i = 0; i < this.optionTags.length; i++) {
+                    var tag = this.optionTags[i];
+                    var v1 = tag.value.toString().toLowerCase();
+                    var v2 = dto.text.toString().toLowerCase();
+                    //brute force checking...
+                    if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
+                        // check the original tag
+                        this._values.push(tag.value);
+                        tag.domElement.checked = true;
+                        wasSelected = true;
+                    }
+                }
+                isValid = wasSelected;
             }
             // special case 1, only one optiontag visible from a filter
             if (!isValid && numberOptionButtonsVisible.length == 1) {

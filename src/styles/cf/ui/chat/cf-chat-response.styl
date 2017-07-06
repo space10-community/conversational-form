@@ -27,18 +27,19 @@ cf-chat-response
 
 		&:hover
 			color darken($color-chat-reponse-default-text, 25%)
+
 			text
 				background lighten($color-chat-reponse-user-bg, 50%)
 
-	// &.robot + &.robot
-	// 	// merge subsequent robot responses
-	// 	padding-top 0px
-	// 	text
-	// 		border-radius 0px
-	// 		margin-top -11px
-		
-	// 	thumb
-	// 		display none
+	&.robot
+		text > p
+			opacity 0
+			will-change opacity
+			transition opacity $anim-time * 0.5 $anim-easeOut 0.2s
+			&.show
+				opacity 1
+			&:not(:first-child)
+				margin-top 5px
 
 	&.user// user..
 		margin-right 0px
@@ -79,6 +80,10 @@ cf-chat-response
 		text
 			background lighten($color-chat-reponse-user-bg, 50%)
 
+	&[thinking]
+		thinking
+			display block
+
 	text
 		user-select none
 		display block
@@ -104,21 +109,33 @@ cf-chat-response
 
 		&:not(.contains-image)
 			padding 12px 24px 12px 24px
+		
+		> p 
+			margin 0px
+			padding 0px
 
-		&.contains-image
-			> div
+			> img
 				max-width 140px
-				text-align left
-				padding-bottom 10px
-				> span
-					padding-left 24px
+				padding-bottom 5px
+				width 100%
+				height auto
+				display block
+				margin-bottom 4px
 
-				> img
-					padding-bottom 5px
-					width 100%
-					height auto
-					display block
-					margin-bottom 4px
+		// &.contains-image
+		// 	> div
+		// 		max-width 140px
+		// 		text-align left
+		// 		padding-bottom 10px
+		// 		> span
+		// 			padding-left 24px
+
+		// 		> img
+		// 			padding-bottom 5px
+		// 			width 100%
+		// 			height auto
+		// 			display block
+		// 			margin-bottom 4px
 
 		&:after
 			content ""
@@ -128,7 +145,7 @@ cf-chat-response
 			left 20px
 			transform translateY(-50%)
 			padding-right 20px
-		
+
 		thinking
 			position absolute
 			top 6px
@@ -136,6 +153,7 @@ cf-chat-response
 			display table
 			font-size 150%
 			user-select none
+			display none
 
 			for num in 1 2 3
 				span:nth-child({num})

@@ -145,9 +145,10 @@ namespace cf {
 			if(!this.errorMessages){
 				// custom tag error messages
 				if(this.domElement.getAttribute("cf-error")){
-					this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
+					this.errorMessages = Helpers.getValuesOfBars(this.domElement.getAttribute("cf-error"));
+
 				}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error")){
-					this.errorMessages = (<HTMLElement> this.domElement.parentNode).getAttribute("cf-error").split("|");
+					this.errorMessages = Helpers.getValuesOfBars((<HTMLElement> this.domElement.parentNode).getAttribute("cf-error"));
 				}else if(this.required){
 					this.errorMessages = [Dictionary.get("input-placeholder-required")]
 				}else{
@@ -429,10 +430,10 @@ namespace cf {
 						if(attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
 							let _conditionals: Array<string | RegExp> = [];
-							let condictionalsFromAttribute: Array<string> = attr.value.split("||");
+							let conditionalsFromAttribute: Array<string> = attr.value.split("||");
 
-							for (var i = 0; i < condictionalsFromAttribute.length; i++) {
-								var _conditional: string = condictionalsFromAttribute[i];
+							for (var i = 0; i < conditionalsFromAttribute.length; i++) {
+								var _conditional: string = conditionalsFromAttribute[i];
 								try {
 									_conditionals.push(new RegExp(_conditional));
 								} catch(e) {
@@ -461,13 +462,14 @@ namespace cf {
 			// from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
 			if(this.domElement.getAttribute("cf-questions")){
-				this.questions = this.domElement.getAttribute("cf-questions").split("|");
+				this.questions = Helpers.getValuesOfBars(this.domElement.getAttribute("cf-questions"));
+				
 				if(this.domElement.getAttribute("cf-input-placeholder"))
 					this._inputPlaceholder = this.domElement.getAttribute("cf-input-placeholder");
 			}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions")){
 				// for groups the parentNode can have the cf-questions..
 				const parent: HTMLElement = (<HTMLElement> this.domElement.parentNode);
-				this.questions = parent.getAttribute("cf-questions").split("|");
+				this.questions = Helpers.getValuesOfBars(parent.getAttribute("cf-questions"));
 				if(parent.getAttribute("cf-input-placeholder"))
 					this._inputPlaceholder = parent.getAttribute("cf-input-placeholder");
 			}else{
