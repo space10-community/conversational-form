@@ -31,6 +31,7 @@ namespace cf {
 		private image: string;
 		private _tag: ITag;
 		private responseLink: ChatResponse; // robot reference from use
+		private onReadyCallback: () => void;
 
 		private onClickCallback: () => void;
 
@@ -67,16 +68,21 @@ namespace cf {
 			this._tag = options.tag;
 		}
 
+		public whenReady(resolve: () => void){
+			this.onReadyCallback = resolve;
+		}
+
 		public setValue(dto: FlowDTO = null){
 			if(!this.visible){
 				this.visible = true;
 			}
 
-			const isThinking: boolean = this.textEl.hasAttribute("thinking");
+			const isThinking: boolean = this.el.hasAttribute("thinking");
 
 			if(!dto){
 				this.setToThinking();
 			}else{
+				// same same
 				this.response = this.originalResponse = dto.text;
 				
 				this.processResponseAndSetText();
@@ -96,15 +102,11 @@ namespace cf {
 				}
 
 				if(!this.isRobotResponse && !this.onClickCallback){
+					// edit
 					this.onClickCallback = this.onClick.bind(this);
 					this.el.addEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				}
 			}
-		}
-
-		public hide(){
-			this.visible = false;
-			this.disabled = true;
 		}
 
 		public show(){
@@ -128,10 +130,11 @@ namespace cf {
 			this.responseLink = response;
 		}
 
-		public processResponseAndSetText(): string{
+		public processResponseAndSetText(){
 			if(!this.originalResponse)
-				return "";
+				return;
 
+			console.log('multiple: this.originalResponse', this.originalResponse);
 			var innerResponse: string = this.originalResponse;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotResponse){
@@ -181,13 +184,43 @@ namespace cf {
 			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
+			
 
-			// now set it
-			this.textEl.innerHTML = innerResponse;
-			this.parsedResponse = innerResponse;
+			console.log('multiple: innerResponse', innerResponse,"+++", this.response);
+
+			// if(this.response != innerResponse){
+				// now set it
+				if(this.isRobotResponse){
+					this.textEl.innerHTML = "";
+					// robot response, allow for && for multiple responses
+					var chainedResponses: Array<string> = innerResponse.split("&&");
+					for (let i = 0; i < chainedResponses.length; i++) {
+						let str: string = <string>chainedResponses[i];
+						setTimeout(() =>{
+							this.textEl.innerHTML += "<p>" + str + "</p>";
+							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+							p[p.length - 1].offsetWidth;
+							p[p.length - 1].classList.add("show");
+						}, 500 + (i * 500));
+					}
+
+					setTimeout(() => {
+						if(this.onReadyCallback)
+							this.onReadyCallback();
+					}, chainedResponses.length * 500);
+				}else{
+					// user response, act normal
+					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+					p[p.length - 1].offsetWidth;
+					p[p.length - 1].classList.add("show");
+				}
+
+				this.parsedResponse = innerResponse;
+			// }
 
 			// bounce
-			this.textEl.removeAttribute("thinking");
+			this.el.removeAttribute("thinking");
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
@@ -197,12 +230,10 @@ namespace cf {
 
 			// update response
 			this.response = innerResponse;
-
-			return innerResponse;
 		}
 
 		private checkForEditMode(){
-			if(!this.isRobotResponse && !this.textEl.hasAttribute("thinking")){
+			if(!this.isRobotResponse && !this.el.hasAttribute("thinking")){
 				this.el.classList.add("can-edit");
 				this.disabled = false;
 			}
@@ -211,7 +242,7 @@ namespace cf {
 		private setToThinking(){
 			this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
 			this.el.classList.remove("can-edit");
-			this.textEl.setAttribute("thinking", "");
+			this.el.setAttribute("thinking", "");
 		}
 
 		/**
@@ -255,12 +286,11 @@ namespace cf {
 					this.el.classList.add("peak-thumb")
 				}, ConversationalForm.animationsEnabled ? 1400 : 0);
 			}
-
-			setTimeout(() => {
-			}, 0);
 		}
 
 		public dealloc(){
+			this.onReadyCallback = null;
+
 			if(this.onClickCallback){
 				this.el.removeEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
 				this.onClickCallback = null;
@@ -273,7 +303,7 @@ namespace cf {
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotResponse ? "robot" : "user") + `">
 				<thumb></thumb>
-				<text>` + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + `</text>
+				<text></text>
 			</cf-chat-response>`;
 		}
 	}

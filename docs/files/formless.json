@@ -8,8 +8,9 @@
 		{
 			"tag": "input",
 			"type": "text",
+			"id": "first-tag",
 			"value": "Prefilled value here",
-			"cf-questions": "Input w. prefilled value"
+			"cf-questions": "Prefilled1&&with follow-up1||Prefilled2&&with follow-up2"
 		},
 		{
 			"tag": "select",
