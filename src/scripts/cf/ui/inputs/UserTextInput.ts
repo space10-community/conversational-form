@@ -463,14 +463,13 @@ namespace cf {
 									this.submitButton.click();
 								}else{
 									// let UI know that we changed the key
-									this.dispatchKeyChange(value, event.keyCode);
-
 									if(!this.active){
 										// after ui has been selected we RESET the input/filter
 										this.resetValue();
 										this.setFocusOnInput();
-										this.dispatchKeyChange(value, event.keyCode);
 									}
+
+									this.dispatchKeyChange(value, event.keyCode);
 								}
 							}else{
 								this.dispatchKeyChange(value, event.keyCode);
