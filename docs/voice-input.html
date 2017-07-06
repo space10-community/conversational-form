@@ -127,7 +127,7 @@
 					// here we create our input
 					var microphoneInput = {
 						// behaviors needs to follow the cf.IUserInput interface, they will be checked
-						init: () => {
+						init: function() {
 							console.log("voice: init method called from mic integration");
 						},
 						// set awaiting callback to false, as we will NOT await the speak in this example
@@ -141,7 +141,7 @@
 								recognition.stop();
 							}
 						},
-						input: (resolve, reject, mediaStream) => {
+						input: function(resolve, reject, mediaStream) {
 							console.log("voice: INPUT")
 							// input is called when user is interacting with the CF input button (UserVoiceInput)
 

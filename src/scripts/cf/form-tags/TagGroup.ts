@@ -260,7 +260,6 @@ namespace cf {
 					}
 
 					isValid = wasRadioButtonChecked;
-
 					break;
 
 				case "checkbox" :

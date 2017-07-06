@@ -103,8 +103,137 @@ class ConversationalFormDocs{
 		if(!this.el.classList.contains('cf-toggle')){
 
 			if(!this.cf){
+				const formEl: HTMLFormElement = <HTMLFormElement> document.getElementById("cf-form");
+
+				let microphoneInput: any = {};
+				var dispatcher: any = new (<any> window).cf.EventDispatcher(),
+					synth: any = null,
+					recognition: any = null,
+					msg: any = null,
+					finalTranscript: string = "";
+
+				if(this.canUseMicrophone()){
+					microphoneInput = {
+						init: () => {
+							// init is called one time, when the custom input is instantiated.
+
+							// load voices \o/
+							synth = window.speechSynthesis;
+							msg = new (<any> window).SpeechSynthesisUtterance();
+							window.speechSynthesis.onvoiceschanged = (event: any) => {
+								var voices = synth.getVoices();
+								msg.voice = voices[0]; // <-- Alex
+								msg.lang = msg.voice.lang; // change language here
+							};
+							synth.getVoices();
+
+							// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
+							msg.onstart = (event: any) => {
+								// on message end, so deactivate input
+								console.log("voice: deactivate 1")
+								this.cf.userInput.deactivate();
+							}
+
+							msg.onend = (event: any) => {
+								// on message end, so reactivate input
+								this.cf.userInput.reactivate();
+							}
+
+							// setup events to speak robot response
+							dispatcher.addEventListener((<any> window).cf.ChatListEvents.CHATLIST_UPDATED, (event: any) => {
+								if(event.detail.currentResponse.isRobotResponse){
+									// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+									// msg.text = event.detail.currentResponse.response
+									msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
+									window.speechSynthesis.speak(msg);
+								}
+							}, false);
+
+							// do other init stuff, like connect with external APIs ...
+						},
+						// set awaiting callback, as we will await the speak in this example
+						awaitingCallback: true,
+						cancelInput: (event: any) => {
+							console.log("voice: CANCEL")
+							finalTranscript = null;
+							if(recognition){
+								recognition.onend = null;
+								recognition.onerror = null;
+								recognition.stop();
+							}
+						},
+						input: (resolve: any, reject: any, mediaStream: any) => {
+							console.log("voice: INPUT")
+							// input is called when user is interacting with the CF input button (UserVoiceInput)
+
+							// connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
+							// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+								// if API fails use reject(result.toString())
+								// if API succedes use resolve(result.toString())
+							
+							if(recognition)
+								recognition.stop();
+
+							recognition = new (<any> window).SpeechRecognition(),
+								finalTranscript = '';
+
+							recognition.continuous = false; // react only on single input
+							recognition.interimResults = false; // we don't care about interim, only final.
+							
+							// recognition.onstart = function() {}
+							recognition.onresult = (event: any) => {
+								// var interimTranscript = "";
+								for (var i = event.resultIndex; i < event.results.length; ++i) {
+									if (event.results[i].isFinal) {
+										finalTranscript += event.results[i][0].transcript;
+									}
+								}
+							}
+
+							recognition.onerror = (event: any) => {
+								reject(event.error);
+							}
+
+							recognition.onend = (event: any) => {
+								if(finalTranscript && finalTranscript !== ""){
+									resolve(finalTranscript);
+								}
+							}
+
+							recognition.start();
+						}
+					}
+
+					// insert yes no if user wants to enroll with Voice
+					// 	var fieldset = document.createElement("fieldset");
+					// 	fieldset.setAttribute("cf-questions", "Want to try microphone?");
+
+					// 	let checkYes: HTMLInputElement = document.createElement("input");
+					// 	checkYes.setAttribute("type", "checkbox");
+					// 	checkYes.setAttribute("cf-label", "Yes!");
+					// 	fieldset.appendChild(checkYes);
+
+					// 	let checkNo: HTMLInputElement = document.createElement("input");
+					// 	checkNo.setAttribute("type", "checkbox");
+					// 	checkNo.setAttribute("cf-label", "No");
+					// 	fieldset.appendChild(checkNo);
+					// 	formEl.insertBefore(fieldset, formEl.children[0]);
+					
+					// no choice, just do it
+
+					// remove e-mail field because it is impossible to fill out the e-mail with the voice
+					const emailInput: HTMLInputElement = <HTMLInputElement> formEl.querySelector("input[type='email']");
+					emailInput.parentNode.removeChild(emailInput);
+				}
+
+
 				this.cf = new (<any> window).cf.ConversationalForm({
-					formEl: document.getElementById("cf-form"),
+					formEl: formEl,
+
+					eventDispatcher: dispatcher,
+					// add the custom input (microphone)
+					microphoneInput: microphoneInput,
+
 					context: document.getElementById("cf-context"),
 					robotImage: "data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzY0LjAwMDAwMCwgLTUzMC4wMDAwMDApIiBmaWxsPSIjMjIyMjIyIj4KICAgICAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzUzLjAwMDAwMCwgNTE5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgeD0iMTEiIHk9IjExIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+",
 					userImage: "data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMjAgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTM3MS4wMDAwMDAsIC02MTAuMDAwMDAwKSIgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEyNzQuMDAwMDAwLCA1OTkuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8cG9seWdvbiBwb2ludHM9IjEwNyAxMSAxMTcgMjcgOTcgMjciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+",
@@ -112,7 +241,7 @@ class ConversationalFormDocs{
 						
 					},
 					flowStepCallback: (dto: any, success: () => void, error: () => void,) => {
-						if(dto.tag.domElement){
+						if(dto.tag && dto.tag.domElement){
 							if(dto.tag.domElement.getAttribute("name") == "repeat"){
 								location.reload();
 							}else if(dto.tag.domElement.getAttribute("name") == "submit-form"){
@@ -147,6 +276,29 @@ class ConversationalFormDocs{
 
 
 		return false;
+	}
+
+	private canUseMicrophone(): boolean{
+		let canUse: boolean = true;
+		try{
+			(<any> window).SpeechRecognition = (<any> window).SpeechRecognition || (<any> window).webkitSpeechRecognition;
+		}catch(e){
+			//console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility");
+			canUse = false;
+		}
+
+		try{
+			(<any> window).SpeechSynthesisUtterance = (<any> window).webkitSpeechSynthesisUtterance ||
+			(<any> window).mozSpeechSynthesisUtterance ||
+			(<any> window).msSpeechSynthesisUtterance ||
+			(<any> window).oSpeechSynthesisUtterance ||
+			(<any> window).SpeechSynthesisUtterance;
+		}catch(e){
+			//console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance#Browser_compatibility")
+			canUse = false;
+		}
+
+		return canUse;
 	}
 
 	public static start(){
@@ -220,3 +372,46 @@ if(document.readyState == "complete"){
 		ConversationalFormDocs.start();
 	}, false);
 }
+
+
+
+
+
+
+
+
+// var dispatcher = new cf.EventDispatcher(),
+// 	synth = null,
+// 	recognition = null,
+// 	msg = null,
+// 	SpeechSynthesisUtterance = null,
+// 	SpeechRecognition = null;
+
+// // here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+// // you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
+
+// // here we create our input
+// if(SpeechSynthesisUtterance && SpeechRecognition){
+
+// var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+// 	formEl: document.getElementById("form"),
+// 	context: document.getElementById("cf-context"),
+// 	eventDispatcher: dispatcher,
+
+// 	// add the custom input (microphone)
+// 	microphoneInput: microphoneInput,
+
+// 	submitCallback: function(){
+// 		// remove Conversational Form
+// 		console.log("voice: Form submitted...", conversationalForm.getFormData(true));
+// 		alert("You made it! Check console for data")
+// 	}
+// });
+
+// if(!SpeechRecognition){
+// 	conversationalForm.addRobotChatResponse("SpeechRecognition not supported, so <strong>no</strong> Microphone here.");
+// }
+
+// if(!SpeechSynthesisUtterance){
+// 	conversationalForm.addRobotChatResponse("SpeechSynthesisUtterance not supported, so <strong>no</strong> Microphone here.");
+// }

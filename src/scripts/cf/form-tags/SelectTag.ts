@@ -47,26 +47,46 @@ namespace cf {
 			let numberOptionButtonsVisible: Array <OptionButton> = [];
 			this._values = [];
 
-			for (let i = 0; i < this.optionTags.length; i++) {
-				let tag: OptionTag = <OptionTag>this.optionTags[i];
+			if(dto.controlElements){
+				// TODO: Refactor this so it is less dependant on controlElements
+				for (let i = 0; i < this.optionTags.length; i++) {
+					let tag: OptionTag = <OptionTag>this.optionTags[i];
 
-				for (let j = 0; j < dto.controlElements.length; j++) {
-					let controllerElement: OptionButton = <OptionButton>dto.controlElements[j];
-					if(controllerElement.referenceTag == tag){
-						// tag match found, so set value
-						tag.selected = controllerElement.selected;
+					for (let j = 0; j < dto.controlElements.length; j++) {
+						let controllerElement: OptionButton = <OptionButton>dto.controlElements[j];
+						if(controllerElement.referenceTag == tag){
+							// tag match found, so set value
+							tag.selected = controllerElement.selected;
 
-						// check for minimum one selected
-						if(!isValid && tag.selected)
-							isValid = true;
+							// check for minimum one selected
+							if(!isValid && tag.selected)
+								isValid = true;
 
-						if(tag.selected)
-							this._values.push(<string> tag.value);
+							if(tag.selected)
+								this._values.push(<string> tag.value);
 
-						if(controllerElement.visible)
-							numberOptionButtonsVisible.push(controllerElement);
+							if(controllerElement.visible)
+								numberOptionButtonsVisible.push(controllerElement);
+						}
 					}
 				}
+			}else{
+				let wasSelected: boolean = false;
+				// for when we don't have any control elements, then we just try and map values
+				for (let i = 0; i < this.optionTags.length; i++) {
+					let tag: ITag = <ITag>this.optionTags[i];
+					const v1: string = tag.value.toString().toLowerCase();
+					const v2: string = dto.text.toString().toLowerCase();
+					//brute force checking...
+					if(v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1){
+						// check the original tag
+						this._values.push(<string> tag.value);
+						(<HTMLInputElement> tag.domElement).checked = true;
+						wasSelected = true;
+					}
+				}
+
+				isValid = wasSelected;
 			}
 
 			// special case 1, only one optiontag visible from a filter
