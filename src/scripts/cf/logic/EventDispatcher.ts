@@ -15,7 +15,7 @@ namespace cf {
 			this._cf = value;
 		}
 
-		constructor(cfRef: ConversationalForm) {
+		constructor(cfRef: ConversationalForm = null) {
 			this._cf = cfRef;
 
 			this.target = document.createDocumentFragment();
