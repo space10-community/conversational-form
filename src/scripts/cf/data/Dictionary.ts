@@ -62,7 +62,7 @@ namespace cf {
 			if(!value){
 				value = ins.data["entry-not-found"];
 			}else{
-				const values: Array<string> = value.split("|");
+				const values: Array<string> = Helpers.getValuesOfBars(value);
 				value = values[Math.floor(Math.random() * values.length)];
 			}
 
@@ -89,10 +89,10 @@ namespace cf {
 			let value: string = ins.robotData[tagType];
 			if(!value){
 				// value not found, so pick a general one
-				const generals: Array<string> = ins.robotData["general"].split("|");
+				let generals: Array<string> = Helpers.getValuesOfBars(ins.robotData["general"]);
 				value = generals[Math.floor(Math.random() * generals.length)];
 			}else{
-				const values: Array<string> = value.split("|");
+				let values: Array<string> = Helpers.getValuesOfBars(value);
 				value = values[Math.floor(Math.random() * values.length)];
 			}
 
@@ -139,7 +139,7 @@ namespace cf {
 			"user-reponse-and": " and ",
 			"user-reponse-missing": "Missing input ...",
 			"user-reponse-missing-group": "Nothing selected ...",
-			"general": "General type1|General type2",
+			"general": "General type1||General type2",
 			"icon-type-file": "<svg class='cf-icon-file' viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'><g transform='translate(-756.000000, -549.000000)' fill='#0D83FF'><g transform='translate(736.000000, 127.000000)'><g transform='translate(0.000000, 406.000000)'><polygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'></polygon></g></g></g></g></svg>",
 		}
 
@@ -155,7 +155,7 @@ namespace cf {
 			"tel": "What's your phone number?",
 			"radio": "I need you to select one of these.",
 			"select": "Choose any of these options.",
-			"general": "General1|General2|General3.."
+			"general": "General1||General2||General3.."
 		}
 	}
 }

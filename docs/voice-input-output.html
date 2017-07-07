@@ -130,7 +130,7 @@
 				// here we create our input
 				if(SpeechSynthesisUtterance && SpeechRecognition){
 					var microphoneInput = {
-						init: () => {
+						init: function() {
 							// init is called one time, when the custom input is instantiated.
 
 							// load voices \o/
@@ -178,7 +178,7 @@
 								recognition.stop();
 							}
 						},
-						input: (resolve, reject, mediaStream) => {
+						input: function(resolve, reject, mediaStream) {
 							console.log("voice: INPUT")
 							// input is called when user is interacting with the CF input button (UserVoiceInput)
 

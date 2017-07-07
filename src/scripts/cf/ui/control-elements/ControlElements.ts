@@ -510,6 +510,7 @@ namespace cf {
 
 							dto.controlElements.push(element);
 						}
+
 						
 						dto.text = Dictionary.parseAndGetMultiValueString(values);
 						
@@ -525,6 +526,8 @@ namespace cf {
 
 							dto.controlElements.push(element);
 						}
+
+
 						break;
 					case "OptionsList":
 						var element: OptionsList = <OptionsList> this.elements[0];
@@ -652,7 +655,7 @@ namespace cf {
 			this.el.classList.remove("two-row");
 			this.elementWidth = 0;
 
-			setTimeout(() => {
+			// setTimeout(() => {
 				this.listWidth = 0;
 				const elements: Array <IControlElement> = this.getElements();
 
@@ -683,7 +686,7 @@ namespace cf {
 						this.el.classList.add("one-row");
 					}
 
-					setTimeout(() => {
+					// setTimeout(() => {
 						// recalc after LIST classes has been added
 						for (let i = 0; i < elements.length; i++) {
 							let element: IControlElement = <IControlElement>elements[i];
@@ -734,9 +737,9 @@ namespace cf {
 
 						if(resolve)
 							resolve();
-					}, 0);
+					// }, 0);
 				}
-			}, 0);
+			// }, 0);
 		}
 
 		public dealloc(){
