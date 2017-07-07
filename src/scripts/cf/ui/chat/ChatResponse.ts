@@ -134,7 +134,6 @@ namespace cf {
 			if(!this.originalResponse)
 				return;
 
-			console.log('multiple: this.originalResponse', this.originalResponse);
 			var innerResponse: string = this.originalResponse;
 			
 			if(this._tag && this._tag.type == "password" && !this.isRobotResponse){
@@ -184,9 +183,6 @@ namespace cf {
 			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
-			
-
-			console.log('multiple: innerResponse', innerResponse,"+++", this.response);
 
 			// if(this.response != innerResponse){
 				// now set it

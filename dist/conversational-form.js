@@ -344,8 +344,8 @@ var cf;
         Helpers.getValuesOfBars = function (str) {
             var strs = str.split("||");
             // TODO: remove single |
-            // fallback to the stanard
-            if (strs.length === 0)
+            // fallback to the standard
+            if (strs.length <= 1)
                 strs = str.split("|");
             return strs;
         };
@@ -4441,7 +4441,6 @@ var cf;
             var _this = this;
             if (!this.originalResponse)
                 return;
-            console.log('multiple: this.originalResponse', this.originalResponse);
             var innerResponse = this.originalResponse;
             if (this._tag && this._tag.type == "password" && !this.isRobotResponse) {
                 var newStr = "";
@@ -4483,7 +4482,6 @@ var cf;
             var responseContains = innerResponse.indexOf("contains-image") != -1;
             if (responseContains)
                 this.textEl.classList.add("contains-image");
-            console.log('multiple: innerResponse', innerResponse, "+++", this.response);
             // if(this.response != innerResponse){
             // now set it
             if (this.isRobotResponse) {
@@ -4764,7 +4762,6 @@ var cf;
                     this.flowDTOFromUserInputUpdate.text = cf.Dictionary.get("user-reponse-missing");
                 }
             }
-            console.log('multiple: flowDTOFromUserInputUpdate', this.flowDTOFromUserInputUpdate);
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
             this.scrollListTo(this.currentUserResponse);
         };
@@ -5133,7 +5130,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.5";
+            this.version = "0.9.6.x";
             this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
