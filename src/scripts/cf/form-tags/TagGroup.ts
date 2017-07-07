@@ -139,7 +139,7 @@ namespace cf {
 			// set wrapping element
 			this._fieldset = options.fieldset;
 			if(this._fieldset && this._fieldset.getAttribute("cf-questions")){
-				this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+				this.questions = Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
 			}
 
 			if(ConversationalForm.illustrateAppFlow)
@@ -260,7 +260,6 @@ namespace cf {
 					}
 
 					isValid = wasRadioButtonChecked;
-
 					break;
 
 				case "checkbox" :

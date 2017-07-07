@@ -83,6 +83,18 @@ namespace cf {
 			head.appendChild(script);
 		}
 
+		public static getValuesOfBars(str: string): Array<string>{
+
+			let strs: Array<string> = str.split("||");
+			
+			// TODO: remove single |
+			// fallback to the standard
+			if(strs.length <= 1)
+				strs = str.split("|");
+			
+			return strs;
+		}
+
 		public static emojify(str: string): string{
 			if(Helpers.emojilib){
 				str = Helpers.emojilib.replace(str);

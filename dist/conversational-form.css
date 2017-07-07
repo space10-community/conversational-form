@@ -1894,6 +1894,25 @@ cf-chat-response.can-edit:hover {
 cf-chat-response.can-edit:hover text {
   background: #f2f9fe;
 }
+cf-chat-response.robot text > p {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  will-change: opacity;
+  -webkit-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+  -moz-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+  -o-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+  -ms-transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+  transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+}
+cf-chat-response.robot text > p.show {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+cf-chat-response.robot text > p:not(:first-child) {
+  margin-top: 5px;
+}
 cf-chat-response.user {
   margin-right: 0px;
   margin-left: auto;
@@ -1968,6 +1987,9 @@ cf-chat-response.disabled {
 cf-chat-response.disabled text {
   background: #f2f9fe;
 }
+cf-chat-response[thinking] thinking {
+  display: block;
+}
 cf-chat-response text {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -2010,15 +2032,12 @@ cf-chat-response text strong {
 cf-chat-response text:not(.contains-image) {
   padding: 12px 24px 12px 24px;
 }
-cf-chat-response text.contains-image > div {
+cf-chat-response text > p {
+  margin: 0px;
+  padding: 0px;
+}
+cf-chat-response text > p > img {
   max-width: 140px;
-  text-align: left;
-  padding-bottom: 10px;
-}
-cf-chat-response text.contains-image > div > span {
-  padding-left: 24px;
-}
-cf-chat-response text.contains-image > div > img {
   padding-bottom: 5px;
   width: 100%;
   height: auto;
@@ -2048,6 +2067,7 @@ cf-chat-response text thinking {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: none;
 }
 cf-chat-response text thinking span:nth-child(1) {
   -webkit-animation: dot-fade 1s linear 0.333333333333333s infinite;

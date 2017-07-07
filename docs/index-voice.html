@@ -41,11 +41,11 @@
 		<!-- Load Conversational Form (v0.9.6) -->
 		 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6.x/conversational-form.min.js" crossorigin></script> 
 		<!-- Load docs -->
-		 <script src="build/conversational-form-docs.min.js"></script> 
+		<!-- <script src="build/conversational-form-docs.min.js"></script> -->
 
 		<!-- dev -> -->
-		<!-- <script id="conversational-form-development" src="../build/conversational-form.js"></script>
 		<script src="build/cf/ConversationalFormDocs.js"></script>
+		<!-- <script id="conversational-form-development" src="../dist/conversational-form.js"></script>
 		<link rel="stylesheet" href="../dist/conversational-form.min.css"> -->
 
 		<main id="conversational-form-docs" class="content">
@@ -113,7 +113,6 @@
 						</br></br>Find some examples <a href="examples.html" target="_self">here</a> or fill out the form on the right 👉
 					</h2>
 
-
 					<div class="github-button__outer">
 						<a class="github-button" 
 							href="https://github.com/space10-community/conversational-form/fork" 
@@ -159,73 +158,64 @@
 
 			<section id="form" role="form">
 				<form id="cf-form" method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
-					<fieldset>
-						<label for="name">What's your name?</label>
-						<input required cf-questions="Hi there! What's your name? 😊" type="text" class="form-control" name="name" id="name">
-					</fieldset>
 
 					<fieldset>
-						<label for="occupation">Occupation</label>
-						<div class="radio">
-						<label>
-							<input cf-questions="Great to meet you, {previous-answer}! I'm a web form, what do you do?|Awesome, {previous-answer}! And what do you do?" type="radio" name="occupation" id="occupation-1" value="developer">
-							Developer
-						</label>
-						</div>
-						<div class="radio">
-						<label>
-							<input type="radio" name="occupation" id="occupation-2" value="designer">
-							Designer
-						</label>
-						</div>
-						<div class="radio">
-						<label>
-							<input type="radio" name="occupation" id="occupation-3" value="curious-mind">
-							Curious mind
-						</label>
-						</div>
-						<div class="radio">
-							<label>
-								<input type="radio" name="occupation" id="occupation-2" value="lost">
-								Lost cause
-							</label>
-						</div>
+						<label for="name">Name</label>
+						<input required cf-questions="Hey there! It’s nice to meet you — what should I call you?" type="text" name="name" id="name">
+					</fieldset>
+
+					<fieldset cf-questions="That’s great, {name}! Can you believe it’s this easy to use your voice?">
+						<label for="believe-1">Yes</label>
+						<input type="radio" name="believe" id="believe-1" value="yes">
+
+						<label for="believe-2">No</label>
+						<input type="radio" name="believe" id="believe-2" value="no">
+
+						<label for="believe-3">We’re in the future!</label>
+						<input type="radio" name="believe" id="believe-3" value="future">
 					</fieldset>
 
 					<fieldset>
-						<label for="company">Company</label>
-						<input cf-questions="Which company are you with?" type="text" class="form-control" name="company" id="company">
+						<label for="from">Country</label>
+						<input required cf-questions="And where are you from?" type="text" name="country" id="country">
 					</fieldset>
 
 					<fieldset>
-						<label for="opinion">Will conversational interfaces be everywhere?</label>
-						<select cf-questions="Do you think conversational forms will replace web forms in the future?" name="opinion" id="opinion" class="form-control">
-							<option></option>
-							<option>Definitely</option>
-							<option>Maybe</option>
-							<option>No</option>
-						</select>
+						<label for="from">Season</label>
+						<input required cf-questions="Lovely, I always wanted to visit {country}. What’s your favorite season of the year there?" type="text" name="season" id="season">
 					</fieldset>
 
-					<fieldset>
-						<label for="email">Email</label>
-						<input pattern=".+\@.+\..+" cf-error="E-mail not correct" cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="email" id="your-email">
+					<fieldset cf-questions="Wow, that’s cool, I love {season} too, but spring is my favorite!&&What’s your favorite color?">
+						<label for="color-1">Red</label>
+						<input type="radio" name="color" id="color-1" value="red">
+
+						<label for="color-2">Blue</label>
+						<input type="radio" name="color" id="color-2" value="blue">
+
+						<label for="color-3">Yellow</label>
+						<input type="radio" name="color" id="color-3" value="yellow">
+
+						<label for="color-4">Purple</label>
+						<input type="radio" name="color" id="color-4" value="purple">
 					</fieldset>
 
-					<fieldset style="display: none;">
-						<label for="thats-all">Are you ready to submit the form?</label>
-						<select cf-questions="Are you ready to submit the form?" name="submit-form" id="submit-form" class="form-control">
-							<option></option>
-							<option>Yup</option>
-						</select>
+					<fieldset cf-questions="Oh, I like {color} too.&&I can’t believe we’re just talking... Do you think this is the future of web forms?">
+						<label for="future-1">Yes</label>
+						<input type="radio" name="future" id="future-1" value="yes">
+
+						<label for="future-2">No</label>
+						<input type="radio" name="future" id="future-2" value="no">
+
+						<label for="future-3">Not sure</label>
+						<input type="radio" name="future" id="future-3" value="not-sure">
 					</fieldset>
 
-					<fieldset style="display: none;">
-						<label for="thats-all">Want to start over?</label>
-						<select cf-questions="Want to start over?" name="repeat" id="repeat" class="form-control">
-							<option></option>
-							<option>Yes, let's go again</option>
-						</select>
+					<fieldset cf-questions="Shall we do that again? Just say yes!">
+						<label for="repeat-1">Yes</label>
+						<input type="radio" name="repeat-voice" id="repeat-1" value="yes">
+
+						<label for="repeat-2">No</label>
+						<input type="radio" name="repeat-voice" id="repeat-2" value="no">
 					</fieldset>
 
 					<button type="submit" class="btn btn-default">Submit</button>

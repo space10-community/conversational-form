@@ -84,6 +84,10 @@ namespace cf {
 				// robot response
 				setTimeout(() => {
 					const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
+					robot.whenReady(() =>{
+						// create user response
+						this.currentUserResponse = this.createResponse(false, currentTag);
+					});
 					if(this.currentUserResponse){
 						// linked, but only if we should not ignore existing tag
 						this.currentUserResponse.setLinkToOtherReponse(robot);
@@ -91,10 +95,9 @@ namespace cf {
 					}
 
 					// user response, create the waiting response
-					setTimeout(() => {
-						this.currentUserResponse = this.createResponse(false, currentTag);
-
-					}, 200);
+					// setTimeout(() => {
+					// 	this.currentUserResponse = this.createResponse(false, currentTag);
+					// }, 200);
 				}, this.responses.length === 0 ? 500 : 0);
 			}
 		}
@@ -135,7 +138,7 @@ namespace cf {
 			if(oldReponse){
 				// only disable latest tag when we jump back
 				if(this.currentUserResponse == this.responses[this.responses.length - 1]){
-					this.currentUserResponse.hide();
+					this.currentUserResponse.dealloc();
 				}
 
 				this.currentUserResponse = oldReponse;
@@ -144,8 +147,10 @@ namespace cf {
 			}
 		}
 
+		private updateTimer: number = 0;
 		private onListUpdate(chatResponse: ChatResponse){
-			setTimeout(() => {
+			clearTimeout(this.updateTimer);
+			this.updateTimer = setTimeout(() => {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
@@ -153,7 +158,7 @@ namespace cf {
 				chatResponse.show();
 
 				this.scrollListTo(chatResponse);
-			}, 0);
+			}, 500);
 		}
 
 		/**
@@ -171,7 +176,7 @@ namespace cf {
 
 		/**
 		* @name setCurrentUserResponse
-		* Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
+		* Update current reponse, is being called automatically from onFlowUpdate, but can also, in rare cases, be called when flow is controlled manually.
 		* reponse: FlowDTO
 		*/
 		public setCurrentUserResponse(dto: FlowDTO){

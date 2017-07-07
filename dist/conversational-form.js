@@ -341,6 +341,14 @@ var cf;
             script.setAttribute("src", scriptSrc);
             head.appendChild(script);
         };
+        Helpers.getValuesOfBars = function (str) {
+            var strs = str.split("||");
+            // TODO: remove single |
+            // fallback to the standard
+            if (strs.length <= 1)
+                strs = str.split("|");
+            return strs;
+        };
         Helpers.emojify = function (str) {
             if (Helpers.emojilib) {
                 str = Helpers.emojilib.replace(str);
@@ -372,6 +380,7 @@ var cf;
     // interface
     var EventDispatcher = (function () {
         function EventDispatcher(cfRef) {
+            if (cfRef === void 0) { cfRef = null; }
             this._cf = cfRef;
             this.target = document.createDocumentFragment();
         }
@@ -558,13 +567,15 @@ var cf;
                 var str;
                 if (hasTagImage && !this.partOfSeveralChoices) {
                     var image = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
-                    str = "<div class='contains-image'>";
-                    str += image;
-                    str += "<span>" + cf.Helpers.getInnerTextOfElement(this.el) + "</span>";
-                    str += "</div>";
+                    // str = "<div class='contains-image'>"
+                    // str += image;
+                    // str += "<span>" + Helpers.getInnerTextOfElement(this.el) + "</span>";
+                    // str += "</div>";
+                    str = image + cf.Helpers.getInnerTextOfElement(this.el);
                 }
                 else {
-                    str = "<div><span>" + cf.Helpers.getInnerTextOfElement(this.el) + "</span></div>";
+                    // str = "<div><span>" + Helpers.getInnerTextOfElement(this.el) + "</span></div>";
+                    str = cf.Helpers.getInnerTextOfElement(this.el);
                 }
                 return str;
             },
@@ -1240,7 +1251,6 @@ var cf;
             this.resize();
         };
         ControlElements.prototype.resize = function (resolve, reject) {
-            var _this = this;
             // scrollbar things
             // Element.offsetWidth - Element.clientWidth
             this.list.style.width = "100%";
@@ -1248,80 +1258,80 @@ var cf;
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
             this.elementWidth = 0;
-            setTimeout(function () {
-                _this.listWidth = 0;
-                var elements = _this.getElements();
-                if (elements && elements.length > 0) {
-                    var listWidthValues = [];
-                    var listWidthValues2 = [];
-                    var containsElementWithImage = false;
-                    for (var i = 0; i < elements.length; i++) {
-                        var element = elements[i];
-                        if (element.visible) {
-                            element.calcPosition();
-                            _this.listWidth += element.positionVector.width;
-                            listWidthValues.push(element.positionVector.x + element.positionVector.width);
-                            listWidthValues2.push(element);
-                        }
-                        if (element.hasImage())
-                            containsElementWithImage = true;
+            // setTimeout(() => {
+            this.listWidth = 0;
+            var elements = this.getElements();
+            if (elements && elements.length > 0) {
+                var listWidthValues = [];
+                var listWidthValues2 = [];
+                var containsElementWithImage = false;
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (element.visible) {
+                        element.calcPosition();
+                        this.listWidth += element.positionVector.width;
+                        listWidthValues.push(element.positionVector.x + element.positionVector.width);
+                        listWidthValues2.push(element);
                     }
-                    var elOffsetWidth_1 = _this.el.offsetWidth;
-                    var isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
-                    if (isListWidthOverElementWidth_1 && !containsElementWithImage) {
-                        _this.el.classList.add("two-row");
-                        _this.listWidth = Math.max(elOffsetWidth_1, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
-                        _this.list.style.width = _this.listWidth + "px";
+                    if (element.hasImage())
+                        containsElementWithImage = true;
+                }
+                var elOffsetWidth = this.el.offsetWidth;
+                var isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
+                if (isListWidthOverElementWidth && !containsElementWithImage) {
+                    this.el.classList.add("two-row");
+                    this.listWidth = Math.max(elOffsetWidth, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
+                    this.list.style.width = this.listWidth + "px";
+                }
+                else {
+                    this.el.classList.add("one-row");
+                }
+                // setTimeout(() => {
+                // recalc after LIST classes has been added
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    if (element.visible) {
+                        element.calcPosition();
+                    }
+                }
+                // check again after classes are set.
+                elOffsetWidth = this.el.offsetWidth;
+                isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
+                // sort the list so we can set tabIndex properly
+                var elementsCopyForSorting = elements.slice();
+                var tabIndexFilteredElements = elementsCopyForSorting.sort(function (a, b) {
+                    var aOverB = a.positionVector.y > b.positionVector.y;
+                    return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
+                });
+                var tabIndex = 0;
+                for (var i = 0; i < tabIndexFilteredElements.length; i++) {
+                    var element = tabIndexFilteredElements[i];
+                    if (element.visible) {
+                        //tabindex 1 are the UserTextInput element
+                        element.tabIndex = 2 + (tabIndex++);
                     }
                     else {
-                        _this.el.classList.add("one-row");
+                        element.tabIndex = -1;
                     }
-                    setTimeout(function () {
-                        // recalc after LIST classes has been added
-                        for (var i = 0; i < elements.length; i++) {
-                            var element = elements[i];
-                            if (element.visible) {
-                                element.calcPosition();
-                            }
-                        }
-                        // check again after classes are set.
-                        elOffsetWidth_1 = _this.el.offsetWidth;
-                        isListWidthOverElementWidth_1 = _this.listWidth > elOffsetWidth_1;
-                        // sort the list so we can set tabIndex properly
-                        var elementsCopyForSorting = elements.slice();
-                        var tabIndexFilteredElements = elementsCopyForSorting.sort(function (a, b) {
-                            var aOverB = a.positionVector.y > b.positionVector.y;
-                            return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
-                        });
-                        var tabIndex = 0;
-                        for (var i = 0; i < tabIndexFilteredElements.length; i++) {
-                            var element = tabIndexFilteredElements[i];
-                            if (element.visible) {
-                                //tabindex 1 are the UserTextInput element
-                                element.tabIndex = 2 + (tabIndex++);
-                            }
-                            else {
-                                element.tabIndex = -1;
-                            }
-                        }
-                        // toggle nav button visiblity
-                        if (isListWidthOverElementWidth_1) {
-                            _this.el.classList.remove("hide-nav-buttons");
-                        }
-                        else {
-                            _this.el.classList.add("hide-nav-buttons");
-                        }
-                        _this.elementWidth = elOffsetWidth_1;
-                        // resize scroll
-                        _this.listScrollController.resize(_this.listWidth, _this.elementWidth);
-                        _this.buildTabableRows();
-                        _this.el.classList.add("resized");
-                        _this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
-                        if (resolve)
-                            resolve();
-                    }, 0);
                 }
-            }, 0);
+                // toggle nav button visiblity
+                if (isListWidthOverElementWidth) {
+                    this.el.classList.remove("hide-nav-buttons");
+                }
+                else {
+                    this.el.classList.add("hide-nav-buttons");
+                }
+                this.elementWidth = elOffsetWidth;
+                // resize scroll
+                this.listScrollController.resize(this.listWidth, this.elementWidth);
+                this.buildTabableRows();
+                this.el.classList.add("resized");
+                this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
+                if (resolve)
+                    resolve();
+                // }, 0);
+            }
+            // }, 0);
         };
         ControlElements.prototype.dealloc = function () {
             this.currentControlElement = null;
@@ -1542,7 +1552,7 @@ var cf;
                 "user-reponse-and": " and ",
                 "user-reponse-missing": "Missing input ...",
                 "user-reponse-missing-group": "Nothing selected ...",
-                "general": "General type1|General type2",
+                "general": "General type1||General type2",
                 "icon-type-file": "<svg class='cf-icon-file' viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'><g transform='translate(-756.000000, -549.000000)' fill='#0D83FF'><g transform='translate(736.000000, 127.000000)'><g transform='translate(0.000000, 406.000000)'><polygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'></polygon></g></g></g></g></svg>",
             };
             // can be overwriten
@@ -1557,7 +1567,7 @@ var cf;
                 "tel": "What's your phone number?",
                 "radio": "I need you to select one of these.",
                 "select": "Choose any of these options.",
-                "general": "General1|General2|General3.."
+                "general": "General1||General2||General3.."
             };
             Dictionary.instance = this;
             // overwrite data if defined 
@@ -1580,7 +1590,7 @@ var cf;
                 value = ins.data["entry-not-found"];
             }
             else {
-                var values = value.split("|");
+                var values = cf.Helpers.getValuesOfBars(value);
                 value = values[Math.floor(Math.random() * values.length)];
             }
             return value;
@@ -1603,11 +1613,11 @@ var cf;
             var value = ins.robotData[tagType];
             if (!value) {
                 // value not found, so pick a general one
-                var generals = ins.robotData["general"].split("|");
+                var generals = cf.Helpers.getValuesOfBars(ins.robotData["general"]);
                 value = generals[Math.floor(Math.random() * generals.length)];
             }
             else {
-                var values = value.split("|");
+                var values = cf.Helpers.getValuesOfBars(value);
                 value = values[Math.floor(Math.random() * values.length)];
             }
             return value;
@@ -1794,10 +1804,10 @@ var cf;
                 if (!this.errorMessages) {
                     // custom tag error messages
                     if (this.domElement.getAttribute("cf-error")) {
-                        this.errorMessages = this.domElement.getAttribute("cf-error").split("|");
+                        this.errorMessages = cf.Helpers.getValuesOfBars(this.domElement.getAttribute("cf-error"));
                     }
                     else if (this.domElement.parentNode && this.domElement.parentNode.getAttribute("cf-error")) {
-                        this.errorMessages = this.domElement.parentNode.getAttribute("cf-error").split("|");
+                        this.errorMessages = cf.Helpers.getValuesOfBars(this.domElement.parentNode.getAttribute("cf-error"));
                     }
                     else if (this.required) {
                         this.errorMessages = [cf.Dictionary.get("input-placeholder-required")];
@@ -2018,9 +2028,9 @@ var cf;
                         if (attr.name.indexOf("cf-conditional") !== -1) {
                             // conditional found
                             var _conditionals = [];
-                            var condictionalsFromAttribute = attr.value.split("||");
-                            for (var i = 0; i < condictionalsFromAttribute.length; i++) {
-                                var _conditional = condictionalsFromAttribute[i];
+                            var conditionalsFromAttribute = attr.value.split("||");
+                            for (var i = 0; i < conditionalsFromAttribute.length; i++) {
+                                var _conditional = conditionalsFromAttribute[i];
                                 try {
                                     _conditionals.push(new RegExp(_conditional));
                                 }
@@ -2044,14 +2054,14 @@ var cf;
             // check for label tag, we only go 2 steps backwards..
             // from standardize markup: http://www.w3schools.com/tags/tag_label.asp
             if (this.domElement.getAttribute("cf-questions")) {
-                this.questions = this.domElement.getAttribute("cf-questions").split("|");
+                this.questions = cf.Helpers.getValuesOfBars(this.domElement.getAttribute("cf-questions"));
                 if (this.domElement.getAttribute("cf-input-placeholder"))
                     this._inputPlaceholder = this.domElement.getAttribute("cf-input-placeholder");
             }
             else if (this.domElement.parentNode && this.domElement.parentNode.getAttribute("cf-questions")) {
                 // for groups the parentNode can have the cf-questions..
                 var parent_1 = this.domElement.parentNode;
-                this.questions = parent_1.getAttribute("cf-questions").split("|");
+                this.questions = cf.Helpers.getValuesOfBars(parent_1.getAttribute("cf-questions"));
                 if (parent_1.getAttribute("cf-input-placeholder"))
                     this._inputPlaceholder = parent_1.getAttribute("cf-input-placeholder");
             }
@@ -2134,7 +2144,7 @@ var cf;
             // set wrapping element
             this._fieldset = options.fieldset;
             if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
-                this.questions = this._fieldset.getAttribute("cf-questions").split("|");
+                this.questions = cf.Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
             }
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
@@ -2509,22 +2519,42 @@ var cf;
             // select tag values are set via selected attribute on option tag
             var numberOptionButtonsVisible = [];
             this._values = [];
-            for (var i = 0; i < this.optionTags.length; i++) {
-                var tag = this.optionTags[i];
-                for (var j = 0; j < dto.controlElements.length; j++) {
-                    var controllerElement = dto.controlElements[j];
-                    if (controllerElement.referenceTag == tag) {
-                        // tag match found, so set value
-                        tag.selected = controllerElement.selected;
-                        // check for minimum one selected
-                        if (!isValid && tag.selected)
-                            isValid = true;
-                        if (tag.selected)
-                            this._values.push(tag.value);
-                        if (controllerElement.visible)
-                            numberOptionButtonsVisible.push(controllerElement);
+            if (dto.controlElements) {
+                // TODO: Refactor this so it is less dependant on controlElements
+                for (var i = 0; i < this.optionTags.length; i++) {
+                    var tag = this.optionTags[i];
+                    for (var j = 0; j < dto.controlElements.length; j++) {
+                        var controllerElement = dto.controlElements[j];
+                        if (controllerElement.referenceTag == tag) {
+                            // tag match found, so set value
+                            tag.selected = controllerElement.selected;
+                            // check for minimum one selected
+                            if (!isValid && tag.selected)
+                                isValid = true;
+                            if (tag.selected)
+                                this._values.push(tag.value);
+                            if (controllerElement.visible)
+                                numberOptionButtonsVisible.push(controllerElement);
+                        }
                     }
                 }
+            }
+            else {
+                var wasSelected = false;
+                // for when we don't have any control elements, then we just try and map values
+                for (var i = 0; i < this.optionTags.length; i++) {
+                    var tag = this.optionTags[i];
+                    var v1 = tag.value.toString().toLowerCase();
+                    var v2 = dto.text.toString().toLowerCase();
+                    //brute force checking...
+                    if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
+                        // check the original tag
+                        this._values.push(tag.value);
+                        tag.domElement.checked = true;
+                        wasSelected = true;
+                    }
+                }
+                isValid = wasSelected;
             }
             // special case 1, only one optiontag visible from a filter
             if (!isValid && numberOptionButtonsVisible.length == 1) {
@@ -4161,13 +4191,12 @@ var cf;
                                 }
                                 else {
                                     // let UI know that we changed the key
-                                    this.dispatchKeyChange(value, event.keyCode);
                                     if (!this.active) {
                                         // after ui has been selected we RESET the input/filter
                                         this.resetValue();
                                         this.setFocusOnInput();
-                                        this.dispatchKeyChange(value, event.keyCode);
                                     }
+                                    this.dispatchKeyChange(value, event.keyCode);
                                 }
                             }
                             else {
@@ -4354,16 +4383,20 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        ChatResponse.prototype.whenReady = function (resolve) {
+            this.onReadyCallback = resolve;
+        };
         ChatResponse.prototype.setValue = function (dto) {
             if (dto === void 0) { dto = null; }
             if (!this.visible) {
                 this.visible = true;
             }
-            var isThinking = this.textEl.hasAttribute("thinking");
+            var isThinking = this.el.hasAttribute("thinking");
             if (!dto) {
                 this.setToThinking();
             }
             else {
+                // same same
                 this.response = this.originalResponse = dto.text;
                 this.processResponseAndSetText();
                 if (this.responseLink && !this.isRobotResponse) {
@@ -4379,14 +4412,11 @@ var cf;
                     }
                 }
                 if (!this.isRobotResponse && !this.onClickCallback) {
+                    // edit
                     this.onClickCallback = this.onClick.bind(this);
                     this.el.addEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
                 }
             }
-        };
-        ChatResponse.prototype.hide = function () {
-            this.visible = false;
-            this.disabled = true;
         };
         ChatResponse.prototype.show = function () {
             this.visible = true;
@@ -4410,7 +4440,7 @@ var cf;
         ChatResponse.prototype.processResponseAndSetText = function () {
             var _this = this;
             if (!this.originalResponse)
-                return "";
+                return;
             var innerResponse = this.originalResponse;
             if (this._tag && this._tag.type == "password" && !this.isRobotResponse) {
                 var newStr = "";
@@ -4452,22 +4482,51 @@ var cf;
             var responseContains = innerResponse.indexOf("contains-image") != -1;
             if (responseContains)
                 this.textEl.classList.add("contains-image");
+            // if(this.response != innerResponse){
             // now set it
-            this.textEl.innerHTML = innerResponse;
+            if (this.isRobotResponse) {
+                this.textEl.innerHTML = "";
+                // robot response, allow for && for multiple responses
+                var chainedResponses = innerResponse.split("&&");
+                var _loop_1 = function (i_2) {
+                    var str = chainedResponses[i_2];
+                    setTimeout(function () {
+                        _this.textEl.innerHTML += "<p>" + str + "</p>";
+                        var p = _this.textEl.getElementsByTagName("p");
+                        p[p.length - 1].offsetWidth;
+                        p[p.length - 1].classList.add("show");
+                    }, 500 + (i_2 * 500));
+                };
+                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
+                    _loop_1(i_2);
+                }
+                setTimeout(function () {
+                    if (_this.onReadyCallback)
+                        _this.onReadyCallback();
+                }, chainedResponses.length * 500);
+            }
+            else {
+                // user response, act normal
+                this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+                var p = this.textEl.getElementsByTagName("p");
+                p[p.length - 1].offsetWidth;
+                p[p.length - 1].classList.add("show");
+            }
             this.parsedResponse = innerResponse;
+            // }
             // bounce
-            this.textEl.removeAttribute("thinking");
+            this.el.removeAttribute("thinking");
             this.textEl.removeAttribute("value-added");
             setTimeout(function () {
                 _this.textEl.setAttribute("value-added", "");
             }, 0);
             this.checkForEditMode();
             // update response
-            this.response = innerResponse;
-            return innerResponse;
+            // remove the double ampersands if present
+            this.response = innerResponse.split("&&").join(" ");
         };
         ChatResponse.prototype.checkForEditMode = function () {
-            if (!this.isRobotResponse && !this.textEl.hasAttribute("thinking")) {
+            if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
                 this.el.classList.add("can-edit");
                 this.disabled = false;
             }
@@ -4475,7 +4534,7 @@ var cf;
         ChatResponse.prototype.setToThinking = function () {
             this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
             this.el.classList.remove("can-edit");
-            this.textEl.setAttribute("thinking", "");
+            this.el.setAttribute("thinking", "");
         };
         /**
         * @name onClickCallback
@@ -4514,10 +4573,9 @@ var cf;
                     _this.el.classList.add("peak-thumb");
                 }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
             }
-            setTimeout(function () {
-            }, 0);
         };
         ChatResponse.prototype.dealloc = function () {
+            this.onReadyCallback = null;
             if (this.onClickCallback) {
                 this.el.removeEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
                 this.onClickCallback = null;
@@ -4526,7 +4584,7 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text>" + (!this.response ? ChatResponse.THINKING_MARKUP : this.response) + "</text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text></text>\n\t\t\t</cf-chat-response>";
         };
         return ChatResponse;
     }(cf.BasicElement));
@@ -4559,6 +4617,7 @@ var cf;
         __extends(ChatList, _super);
         function ChatList(options) {
             var _this = _super.call(this, options) || this;
+            _this.updateTimer = 0;
             cf.ChatResponse.list = _this;
             _this.responses = [];
             // flow update
@@ -4610,15 +4669,19 @@ var cf;
                 // robot response
                 setTimeout(function () {
                     var robot = _this.createResponse(true, currentTag, currentTag.question);
+                    robot.whenReady(function () {
+                        // create user response
+                        _this.currentUserResponse = _this.createResponse(false, currentTag);
+                    });
                     if (_this.currentUserResponse) {
                         // linked, but only if we should not ignore existing tag
                         _this.currentUserResponse.setLinkToOtherReponse(robot);
                         robot.setLinkToOtherReponse(_this.currentUserResponse);
                     }
                     // user response, create the waiting response
-                    setTimeout(function () {
-                        _this.currentUserResponse = _this.createResponse(false, currentTag);
-                    }, 200);
+                    // setTimeout(() => {
+                    // 	this.currentUserResponse = this.createResponse(false, currentTag);
+                    // }, 200);
                 }, this.responses.length === 0 ? 500 : 0);
             }
         };
@@ -4655,7 +4718,7 @@ var cf;
             if (oldReponse) {
                 // only disable latest tag when we jump back
                 if (this.currentUserResponse == this.responses[this.responses.length - 1]) {
-                    this.currentUserResponse.hide();
+                    this.currentUserResponse.dealloc();
                 }
                 this.currentUserResponse = oldReponse;
                 this.onListUpdate(this.currentUserResponse);
@@ -4663,13 +4726,14 @@ var cf;
         };
         ChatList.prototype.onListUpdate = function (chatResponse) {
             var _this = this;
-            setTimeout(function () {
+            clearTimeout(this.updateTimer);
+            this.updateTimer = setTimeout(function () {
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.ChatListEvents.CHATLIST_UPDATED, {
                     detail: _this
                 }));
                 chatResponse.show();
                 _this.scrollListTo(chatResponse);
-            }, 0);
+            }, 500);
         };
         /**
         * @name clearFrom
@@ -4685,7 +4749,7 @@ var cf;
         };
         /**
         * @name setCurrentUserResponse
-        * Update current reponse, is being called automatically from onFlowUpdate, but can also in rare cases be called automatically when flow is controlled manually.
+        * Update current reponse, is being called automatically from onFlowUpdate, but can also, in rare cases, be called when flow is controlled manually.
         * reponse: FlowDTO
         */
         ChatList.prototype.setCurrentUserResponse = function (dto) {
@@ -5066,7 +5130,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.5";
+            this.version = "0.9.6.x";
             this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
