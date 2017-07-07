@@ -112,7 +112,8 @@ class ConversationalFormDocs{
 					msg: any = null,
 					finalTranscript: string = "";
 
-				if(this.canUseMicrophone()){
+				const isVoiceForm: boolean = window.location.pathname.toLowerCase().indexOf("index-voice") !== -1;
+				if(this.canUseMicrophone() && isVoiceForm){
 					microphoneInput = {
 						init: () => {
 							// init is called one time, when the custom input is instantiated.
@@ -223,7 +224,8 @@ class ConversationalFormDocs{
 
 					// remove e-mail field because it is impossible to fill out the e-mail with the voice
 					const emailInput: HTMLInputElement = <HTMLInputElement> formEl.querySelector("input[type='email']");
-					emailInput.parentNode.removeChild(emailInput);
+					if(emailInput && emailInput.parentNode)
+						emailInput.parentNode.removeChild(emailInput);
 				}
 
 

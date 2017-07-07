@@ -229,7 +229,8 @@ namespace cf {
 			this.checkForEditMode();
 
 			// update response
-			this.response = innerResponse;
+			// remove the double ampersands if present
+			this.response = innerResponse.split("&&").join(" ");
 		}
 
 		private checkForEditMode(){
