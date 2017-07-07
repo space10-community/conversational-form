@@ -190,8 +190,6 @@ namespace cf {
 				}
 			}
 
-			console.log('multiple: flowDTOFromUserInputUpdate', this.flowDTOFromUserInputUpdate);
-
 			this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
 			this.scrollListTo(this.currentUserResponse);
 		}

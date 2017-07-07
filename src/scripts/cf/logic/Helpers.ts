@@ -88,8 +88,8 @@ namespace cf {
 			let strs: Array<string> = str.split("||");
 			
 			// TODO: remove single |
-			// fallback to the stanard
-			if(strs.length === 0)
+			// fallback to the standard
+			if(strs.length <= 1)
 				strs = str.split("|");
 			
 			return strs;

@@ -38,15 +38,15 @@
 	</head>
 
 	<body>
-		<!-- Load Conversational Form (v0.9.5) -->
-		<!-- <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.js" crossorigin></script> -->
+		<!-- Load Conversational Form (v0.9.6) -->
+		 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6.x/conversational-form.min.js" crossorigin></script> 
 		<!-- Load docs -->
 		<!-- <script src="build/conversational-form-docs.min.js"></script> -->
 
 		<!-- dev -> -->
-		<script id="conversational-form-development" src="../dist/conversational-form.js"></script>
 		<script src="build/cf/ConversationalFormDocs.js"></script>
-		<link rel="stylesheet" href="../dist/conversational-form.min.css">
+		<!-- <script id="conversational-form-development" src="../dist/conversational-form.js"></script>
+		<link rel="stylesheet" href="../dist/conversational-form.min.css"> -->
 
 		<main id="conversational-form-docs" class="content">
 			<menu id="small-screen-menu">
@@ -210,10 +210,13 @@
 						<input type="radio" name="future" id="future-3" value="not-sure">
 					</fieldset>
 
+					<fieldset cf-questions="Shall we do that again? Just say yes!">
+						<label for="repeat-1">Yes</label>
+						<input type="radio" name="repeat-voice" id="repeat-1" value="yes">
 
-					<!-- Maybe you’d like to try this for yourself? Here’s a link to our GitHub.
-					Thanks!
-					Shall we do that again? Just say yes! -->
+						<label for="repeat-2">No</label>
+						<input type="radio" name="repeat-voice" id="repeat-2" value="no">
+					</fieldset>
 
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
