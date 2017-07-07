@@ -121,12 +121,26 @@ class ConversationalFormDocs{
 							// load voices \o/
 							synth = window.speechSynthesis;
 							msg = new (<any> window).SpeechSynthesisUtterance();
-							window.speechSynthesis.onvoiceschanged = (event: any) => {
+							
+							const setVoice = () => {
+								if(typeof synth === 'undefined') {
+									return;
+								}
+
 								var voices = synth.getVoices();
-								msg.voice = voices[0]; // <-- Alex
-								msg.lang = msg.voice.lang; // change language here
-							};
-							synth.getVoices();
+								for (let i = 0; i < voices.length; i++) {
+									let element = voices[i];
+									if(element.name.toLowerCase() == "alex"){
+										msg.voice = element;
+										msg.lang = msg.voice.lang; // change language here
+									}
+								}
+							}
+
+							setVoice();
+							if (typeof synth !== 'undefined' && synth.onvoiceschanged !== undefined) {
+								synth.onvoiceschanged = setVoice;
+							}
 
 							// here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
 							msg.onstart = (event: any) => {
@@ -228,6 +242,18 @@ class ConversationalFormDocs{
 						emailInput.parentNode.removeChild(emailInput);
 				}
 
+				const submitForm = (successCallback: () => void = null) => {
+					const xhr: XMLHttpRequest = new XMLHttpRequest();
+					xhr.addEventListener("load", () =>{
+						this.cf.addRobotChatResponse("We received your submission 🙌");
+						if(successCallback)
+							successCallback();
+					});
+					xhr.open('POST', document.getElementById("cf-form").getAttribute("action"));
+					xhr.setRequestHeader("accept", "application/javascript");
+					xhr.setRequestHeader("Content-Type", "application/json");
+					xhr.send(JSON.stringify(this.cf.getFormData(true)));
+				}
 
 				this.cf = new (<any> window).cf.ConversationalForm({
 					formEl: formEl,
@@ -240,22 +266,14 @@ class ConversationalFormDocs{
 					robotImage: "data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzY0LjAwMDAwMCwgLTUzMC4wMDAwMDApIiBmaWxsPSIjMjIyMjIyIj4KICAgICAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzUzLjAwMDAwMCwgNTE5LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgeD0iMTEiIHk9IjExIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+",
 					userImage: "data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMjAgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTM3MS4wMDAwMDAsIC02MTAuMDAwMDAwKSIgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEyNzQuMDAwMDAwLCA1OTkuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8cG9seWdvbiBwb2ludHM9IjEwNyAxMSAxMTcgMjcgOTcgMjciPjwvcG9seWdvbj4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+",
 					submitCallback: () => {
-						
+						submitForm();
 					},
 					flowStepCallback: (dto: any, success: () => void, error: () => void,) => {
 						if(dto.tag && dto.tag.domElement){
 							if(dto.tag.domElement.getAttribute("name") == "repeat"){
 								location.reload();
 							}else if(dto.tag.domElement.getAttribute("name") == "submit-form"){
-								const xhr: XMLHttpRequest = new XMLHttpRequest();
-								xhr.addEventListener("load", () =>{
-									this.cf.addRobotChatResponse("We received your submission 🙌");
-									success();
-								});
-								xhr.open('POST', document.getElementById("cf-form").getAttribute("action"));
-								xhr.setRequestHeader("accept", "application/javascript");
-								xhr.setRequestHeader("Content-Type", "application/json");
-								xhr.send(JSON.stringify(this.cf.getFormData(true)));
+								submitForm(success);
 							}else{
 								success()
 							}
