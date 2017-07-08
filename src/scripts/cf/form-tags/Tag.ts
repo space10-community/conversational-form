@@ -427,7 +427,7 @@ namespace cf {
 				for (var key in keys) {
 					if (keys.hasOwnProperty(key)) {	
 						let attr: any = keys[key];
-						if(attr.name.indexOf("cf-conditional") !== -1){
+						if(attr && attr.name && attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
 							let _conditionals: Array<string | RegExp> = [];
 							let conditionalsFromAttribute: Array<string> = attr.value.split("||");
