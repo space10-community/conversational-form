@@ -36,6 +36,12 @@ main.content .conversational-form cf-chat-response.robot text > p {
   border-radius: 4px 20px 20px 20px;
   background: #ebebeb;
 }
+main.content .conversational-form cf-chat-response.robot text > p:not(:only-child):first-child {
+  border-radius: 20px 20px 20px 4px;
+}
+main.content .conversational-form cf-chat-response.robot text > p:not(:only-child):last-child {
+  border-radius: 4px 20px 20px 20px;
+}
 main.content .conversational-form cf-chat-response.robot thumb {
   background-color: #ebebeb;
   background-size: 20px 20px;

@@ -2029,11 +2029,17 @@ cf-chat-response text > p {
   padding: 12px 24px 12px 24px;
   border-radius: 0px 20px 20px 20px;
 }
+cf-chat-response text > p:not(:only-child) {
+  border-radius: 0px 20px 20px 0px;
+}
 cf-chat-response text > p:not(:only-child):first-child {
   border-radius: 20px 20px 20px 0px;
 }
+cf-chat-response text > p:not(:only-child):last-child {
+  border-radius: 0px 20px 20px 20px;
+}
 cf-chat-response text > p:not(:only-child):not(:first-child) {
-  margin-top: 2px;
+  margin-top: 3px;
 }
 cf-chat-response text > p > img {
   max-width: 140px;
