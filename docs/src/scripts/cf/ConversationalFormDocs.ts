@@ -160,7 +160,7 @@ class ConversationalFormDocs{
 									// https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
 									// msg.text = event.detail.currentResponse.response
 									msg.text = event.detail.currentResponse.strippedSesponse//<-- no html tags
-									window.speechSynthesis.speak(msg);
+									synth.speak(msg);
 								}
 							}, false);
 

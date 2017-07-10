@@ -1,3 +1,5 @@
+@import "nib"
+@import "rupture"
 @import "../_cf-docs-variables"
 
 main.content
@@ -11,15 +13,19 @@ main.content
 		z-index $zIndex-middle
 		pointer-events none
 		overflow hidden
-		height 100%
+		height calc(100% - 60px)
 		width 100%
-		top 0px
 		left 0px
 		opacity 0
 		will-change opacity
 		transition opacity $anim-time-2 $anim-easeOut
+		bottom 0px
+		top auto
 
 		+above($breakpoint-1)
+			top 0px
+			bottom auto
+			height 100%
 			width 50%
 			z-index $zIndex-high - 1
 			right 0px

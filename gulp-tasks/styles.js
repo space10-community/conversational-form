@@ -99,7 +99,7 @@ global.gulp.task('stylus-docs', function(){
 		.pipe(stylus({
 			use: [nib(), rupture()],
 			errors: true
-		}))
+		}))	
 		.pipe(global.gulp.dest(dst));
 	
 	return stream;
