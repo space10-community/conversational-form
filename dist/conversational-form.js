@@ -4590,7 +4590,7 @@ var cf;
         };
         return ChatResponse;
     }(cf.BasicElement));
-    ChatResponse.THINKING_MARKUP = "<thinking><span>.</span><span>.</span><span>.</span></thinking>";
+    ChatResponse.THINKING_MARKUP = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
     cf.ChatResponse = ChatResponse;
 })(cf || (cf = {}));
 

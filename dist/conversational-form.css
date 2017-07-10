@@ -1910,9 +1910,6 @@ cf-chat-response.robot text > p.show {
   -ms-filter: none;
   filter: none;
 }
-cf-chat-response.robot text > p:not(:first-child) {
-  margin-top: 5px;
-}
 cf-chat-response.user {
   margin-right: 0px;
   margin-left: auto;
@@ -1925,8 +1922,6 @@ cf-chat-response.user thumb {
   right: 0px;
 }
 cf-chat-response.user text {
-  border-radius: 20px 0px 20px 20px;
-  background: #e6f3fe;
   -webkit-transform-origin: 100% 0%;
   -moz-transform-origin: 100% 0%;
   -o-transform-origin: 100% 0%;
@@ -1938,9 +1933,9 @@ cf-chat-response.user text {
   -ms-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
   transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
 }
-cf-chat-response.user text thinking {
-  left: 24px;
-  right: auto;
+cf-chat-response.user text > p {
+  background: #e6f3fe;
+  border-radius: 20px 0px 20px 20px;
 }
 cf-chat-response.user text thinking span:nth-child(1) {
   -webkit-animation-delay: 0.666666666666667s;
@@ -1999,8 +1994,6 @@ cf-chat-response text {
   overflow: hidden;
   position: relative;
   min-height: 40px;
-  background: #f8f8f8;
-  border-radius: 0px 20px 20px 20px;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
@@ -2029,12 +2022,18 @@ cf-chat-response text > div {
 cf-chat-response text strong {
   font-weight: 900;
 }
-cf-chat-response text:not(.contains-image) {
-  padding: 12px 24px 12px 24px;
-}
 cf-chat-response text > p {
   margin: 0px;
   padding: 0px;
+  background: #f8f8f8;
+  padding: 12px 24px 12px 24px;
+  border-radius: 0px 20px 20px 20px;
+}
+cf-chat-response text > p:not(:only-child):first-child {
+  border-radius: 20px 20px 20px 0px;
+}
+cf-chat-response text > p:not(:only-child):not(:first-child) {
+  margin-top: 2px;
 }
 cf-chat-response text > p > img {
   max-width: 140px;
@@ -2058,16 +2057,23 @@ cf-chat-response text:after {
   padding-right: 20px;
 }
 cf-chat-response text thinking {
-  position: absolute;
-  top: 6px;
-  left: 24px;
+  position: relative;
   display: table;
-  font-size: 150%;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   display: none;
+  -webkit-transform-origin: 0% 50%;
+  -moz-transform-origin: 0% 50%;
+  -o-transform-origin: 0% 50%;
+  -ms-transform-origin: 0% 50%;
+  transform-origin: 0% 50%;
+  -webkit-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  transform: scale(1.5);
 }
 cf-chat-response text thinking span:nth-child(1) {
   -webkit-animation: dot-fade 1s linear 0.333333333333333s infinite;

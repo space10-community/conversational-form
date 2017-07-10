@@ -10,7 +10,7 @@
 			"type": "text",
 			"id": "first-tag",
 			"value": "Prefilled value here",
-			"cf-questions": "Prefilled1&&with follow-up1||Prefilled2&&with follow-up2"
+			"cf-questions": "Prefilled1&&with follow-up1&&with follow-up2||Prefilled2&&with follow-up2"
 		},
 		{
 			"tag": "select",
