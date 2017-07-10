@@ -21,9 +21,11 @@ main.content
 				font-size 13px
 
 			thumb
-				background-color $color-cf-grey
 				height 42px
 				width 42px
+
+				> p
+					background-color $color-cf-grey
 			
 			&:not(:last-of-type)
 				margin-bottom 10px
@@ -32,9 +34,10 @@ main.content
 			padding-left 48px
 
 			text
-				background $color-cf-grey
 				color $color-cf-black
-				border-radius 4px 20px 20px 20px
+				> p
+					border-radius 4px 20px 20px 20px
+					background $color-cf-grey
 
 			thumb
 				background-color $color-cf-grey
@@ -45,9 +48,10 @@ main.content
 			padding-right 48px
 
 			text
-				background $color-cf-black
 				color $color-cf-white
-				border-radius 20px 4px 20px 20px
+				> p
+					background $color-cf-black
+					border-radius 20px 4px 20px 20px
 
 			thumb
 				background-color $color-cf-black

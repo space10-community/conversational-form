@@ -17,9 +17,11 @@ main.content .conversational-form cf-chat-response text {
   font-size: 13px;
 }
 main.content .conversational-form cf-chat-response thumb {
-  background-color: #ebebeb;
   height: 42px;
   width: 42px;
+}
+main.content .conversational-form cf-chat-response thumb > p {
+  background-color: #ebebeb;
 }
 main.content .conversational-form cf-chat-response:not(:last-of-type) {
   margin-bottom: 10px;
@@ -28,9 +30,11 @@ main.content .conversational-form cf-chat-response.robot {
   padding-left: 48px;
 }
 main.content .conversational-form cf-chat-response.robot text {
-  background: #ebebeb;
   color: #222;
+}
+main.content .conversational-form cf-chat-response.robot text > p {
   border-radius: 4px 20px 20px 20px;
+  background: #ebebeb;
 }
 main.content .conversational-form cf-chat-response.robot thumb {
   background-color: #ebebeb;
@@ -41,8 +45,10 @@ main.content .conversational-form cf-chat-response.user {
   padding-right: 48px;
 }
 main.content .conversational-form cf-chat-response.user text {
-  background: #222;
   color: #fff;
+}
+main.content .conversational-form cf-chat-response.user text > p {
+  background: #222;
   border-radius: 20px 4px 20px 20px;
 }
 main.content .conversational-form cf-chat-response.user thumb {

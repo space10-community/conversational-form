@@ -20,7 +20,7 @@ namespace cf {
 	// class
 	export class ChatResponse extends BasicElement {
 		public static list: ChatList;
-		private static THINKING_MARKUP: string = "<thinking><span>.</span><span>.</span><span>.</span></thinking>";
+		private static THINKING_MARKUP: string = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
 
 		public isRobotResponse: boolean;
 
