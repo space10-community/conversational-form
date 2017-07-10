@@ -226,8 +226,10 @@ namespace cf {
 				if(this.isErrorTerminal(error)){
 					// terminal error, fallback to 
 					this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
-						detail: Dictionary.get("microphone-terminal-error") + error
+						detail: Dictionary.get("microphone-terminal-error")
 					}));
+
+					console.log("Conversational Form: Terminal error: ", error);
 				}else{
 					if(this.inputCurrentError != error){
 						// api failed ...
@@ -243,8 +245,10 @@ namespace cf {
 						this.showError(error);
 					}else{
 						this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR,{
-							detail: Dictionary.get("microphone-terminal-error") + error
+							detail: Dictionary.get("microphone-terminal-error")
 						}));
+
+						console.log("Conversational Form: Terminal error: ", error);
 					}
 				}
 			});

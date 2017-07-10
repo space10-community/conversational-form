@@ -1541,7 +1541,7 @@ var cf;
                 "entry-not-found": "Dictionary item not found.",
                 "awaiting-mic-permission": "Awaiting mic permission",
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
-                "microphone-terminal-error": "Microphone input turned off: ",
+                "microphone-terminal-error": "Audio input not supported",
                 "input-placeholder": "Type your answer here ...",
                 "group-placeholder": "Type to filter list ...",
                 "input-placeholder-error": "Your input is not correct ...",
@@ -2025,7 +2025,7 @@ var cf;
                 for (var key in keys) {
                     if (keys.hasOwnProperty(key)) {
                         var attr = keys[key];
-                        if (attr.name.indexOf("cf-conditional") !== -1) {
+                        if (attr && attr.name && attr.name.indexOf("cf-conditional") !== -1) {
                             // conditional found
                             var _conditionals = [];
                             var conditionalsFromAttribute = attr.value.split("||");
@@ -3404,8 +3404,9 @@ var cf;
                 if (_this.isErrorTerminal(error)) {
                     // terminal error, fallback to 
                     _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
-                        detail: cf.Dictionary.get("microphone-terminal-error") + error
+                        detail: cf.Dictionary.get("microphone-terminal-error")
                     }));
+                    console.log("Conversational Form: Terminal error: ", error);
                 }
                 else {
                     if (_this.inputCurrentError != error) {
@@ -3422,8 +3423,9 @@ var cf;
                     }
                     else {
                         _this.eventTarget.dispatchEvent(new CustomEvent(cf.MicrophoneBridgeEvent.TERMNIAL_ERROR, {
-                            detail: cf.Dictionary.get("microphone-terminal-error") + error
+                            detail: cf.Dictionary.get("microphone-terminal-error")
                         }));
+                        console.log("Conversational Form: Terminal error: ", error);
                     }
                 }
             });
@@ -5182,7 +5184,7 @@ var cf;
             if (options.microphoneInput) {
                 // validate the user ..... TODO....
                 if (!options.microphoneInput.init || !options.microphoneInput.input) {
-                    console.warn("userInput is not correctly setup", options.microphoneInput);
+                    console.warn("Conversational Form: microphoneInput is not correctly setup", options.microphoneInput);
                     options.microphoneInput = null;
                 }
             }

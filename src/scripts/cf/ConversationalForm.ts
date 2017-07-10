@@ -187,7 +187,7 @@ namespace cf {
 			if(options.microphoneInput){
 				// validate the user ..... TODO....
 				if(!options.microphoneInput.init || !options.microphoneInput.input){
-					console.warn("userInput is not correctly setup", options.microphoneInput);
+					console.warn("Conversational Form: microphoneInput is not correctly setup", options.microphoneInput);
 					options.microphoneInput = null;
 				}
 			}
