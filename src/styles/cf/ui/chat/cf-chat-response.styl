@@ -109,15 +109,19 @@ cf-chat-response
 			padding 12px 24px 12px 24px
 
 			// border radius rules
-			// &:only-child
-			// 	border-radius 0px 20px 20px 20px
 			border-radius 0px 20px 20px 20px
 			
 			&:not(:only-child)
+				border-radius 0px 20px 20px 0px
+
 				&:first-child
 					border-radius 20px 20px 20px 0px
+				
+				&:last-child
+					border-radius 0px 20px 20px 20px
+
 				&:not(:first-child)
-					margin-top 2px
+					margin-top 3px
 			//--------------------
 
 			> img

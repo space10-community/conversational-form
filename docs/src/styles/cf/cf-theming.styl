@@ -35,9 +35,17 @@ main.content
 
 			text
 				color $color-cf-black
+
 				> p
 					border-radius 4px 20px 20px 20px
 					background $color-cf-grey
+
+					&:not(:only-child)
+						&:first-child
+							border-radius 20px 20px 20px 4px
+						
+						&:last-child
+							border-radius 4px 20px 20px 20px
 
 			thumb
 				background-color $color-cf-grey
