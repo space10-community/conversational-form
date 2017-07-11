@@ -153,6 +153,13 @@ namespace cf {
 			}
 		}
 
+		public deactivate(): void {
+			super.deactivate();
+			if(this.microphoneObj){
+				this.submitButton.active = false;
+			}
+		}
+
 		public reactivate(): void {
 			super.reactivate();
 
@@ -161,6 +168,7 @@ namespace cf {
 				this.submitButton.loading = true;
 				// setting typing to false calls the externa interface, like Microphone
 				this.submitButton.typing = false;
+				this.submitButton.active = true;
 			}
 		}
 

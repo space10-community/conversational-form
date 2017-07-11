@@ -46,6 +46,12 @@ namespace cf {
 			}
 		}
 
+		public set active(value: boolean){
+			if(this.equalizer){
+				this.equalizer.disabled = !value;
+			}
+		}
+
 		constructor(options: IMicrophoneBridgeOptions){
 			this.el = options.el;
 			this.button = options.button;

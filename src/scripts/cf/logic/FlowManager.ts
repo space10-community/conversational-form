@@ -69,6 +69,9 @@ namespace cf {
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 
 			let appDTO: FlowDTO = event.detail;
+			if(!appDTO.tag)
+				appDTO.tag = this.currentTag;
+
 			let isTagValid: Boolean = this.currentTag.setTagValueAndIsValid(appDTO);
 			let hasCheckedForTagSpecificValidation: boolean = false;
 			let hasCheckedForGlobalFlowValidation: boolean = false;

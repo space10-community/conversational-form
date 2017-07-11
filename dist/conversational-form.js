@@ -3255,6 +3255,15 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(MicrophoneBridge.prototype, "active", {
+            set: function (value) {
+                if (this.equalizer) {
+                    this.equalizer.disabled = !value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         MicrophoneBridge.prototype.cancel = function () {
             this.button.loading = false;
             if (this.microphoneObj.cancelInput) {
@@ -3539,6 +3548,7 @@ var cf;
     // class
     var UserInputSubmitButton = (function () {
         function UserInputSubmitButton(options) {
+            this._active = true;
             this.eventTarget = options.eventTarget;
             var template = document.createElement('template');
             template.innerHTML = this.getTemplate();
@@ -3565,6 +3575,19 @@ var cf;
                     if (this.mic) {
                         this.mic.callInput();
                     }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UserInputSubmitButton.prototype, "active", {
+            get: function () {
+                return this._active;
+            },
+            set: function (value) {
+                this._active = value;
+                if (this.mic) {
+                    this.mic.active = value;
                 }
             },
             enumerable: true,
@@ -3938,6 +3961,12 @@ var cf;
                 this.controlElements.clearTagsAndReset();
             }
         };
+        UserTextInput.prototype.deactivate = function () {
+            _super.prototype.deactivate.call(this);
+            if (this.microphoneObj) {
+                this.submitButton.active = false;
+            }
+        };
         UserTextInput.prototype.reactivate = function () {
             _super.prototype.reactivate.call(this);
             // called from microphone interface, check if active microphone, and set loading if yes
@@ -3945,6 +3974,7 @@ var cf;
                 this.submitButton.loading = true;
                 // setting typing to false calls the externa interface, like Microphone
                 this.submitButton.typing = false;
+                this.submitButton.active = true;
             }
         };
         UserTextInput.prototype.onFlowStopped = function () {
@@ -4877,6 +4907,8 @@ var cf;
             var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             var appDTO = event.detail;
+            if (!appDTO.tag)
+                appDTO.tag = this.currentTag;
             var isTagValid = this.currentTag.setTagValueAndIsValid(appDTO);
             var hasCheckedForTagSpecificValidation = false;
             var hasCheckedForGlobalFlowValidation = false;
