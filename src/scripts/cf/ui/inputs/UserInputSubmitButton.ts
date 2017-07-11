@@ -23,6 +23,7 @@ namespace cf {
 		private eventTarget: EventDispatcher;
 
 		private mic: MicrophoneBridge;
+		private _active: boolean = true;
 		private onMicrophoneTerminalErrorCallback: () => void;
 
 		public el: HTMLElement;
@@ -44,6 +45,17 @@ namespace cf {
 
 		public get typing(): boolean{
 			return this.el.classList.contains("typing");
+		}
+
+		public set active(value: boolean){
+			this._active = value;
+			if(this.mic){
+				this.mic.active = value;
+			}
+		}
+
+		public get active(): boolean{
+			return this._active;
 		}
 
 		public set loading(value: boolean){

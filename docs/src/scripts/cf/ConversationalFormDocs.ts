@@ -271,8 +271,9 @@ class ConversationalFormDocs{
 						}
 					},
 					flowStepCallback: (dto: any, success: () => void, error: () => void,) => {
+						console.log('flowStepCallback', dto);
 						if(dto.tag && dto.tag.name == "repeat-voice"){
-							if(dto.tag.value[0] === "yes"){
+							if(dto.tag.value[0] !== "no"){
 								location.reload();
 							}else{
 								this.cf.addRobotChatResponse("No problem. Talk soon");
