@@ -110,7 +110,11 @@ new cf.ConversationalForm({
 	eventDispatcher,/*?: cf.EventDispatcher;*/
 
 	// optional, set microphone input, future, add other custom inputs, ex. VR, see voice (1, 2) examples in docs folder
-	microphoneInput?:IUserInput;
+	microphoneInput,/*?:IUserInput;*/
+
+
+	// optional, hide ÜserInputField when radio, checkbox, select input is active
+	hideUserInputOnNoneStandardInput,/*?: boolean*/
 });
 ```
 

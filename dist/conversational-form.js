@@ -843,7 +843,7 @@ var cf;
             clearTimeout(this.animateInFromReponseTimer);
             this.animateInFromReponseTimer = setTimeout(function () {
                 _this.animateElementsIn();
-            }, 500);
+            }, 250);
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -1258,7 +1258,6 @@ var cf;
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
             this.elementWidth = 0;
-            // setTimeout(() => {
             this.listWidth = 0;
             var elements = this.getElements();
             if (elements && elements.length > 0) {
@@ -1286,7 +1285,6 @@ var cf;
                 else {
                     this.el.classList.add("one-row");
                 }
-                // setTimeout(() => {
                 // recalc after LIST classes has been added
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
@@ -1324,14 +1322,14 @@ var cf;
                 this.elementWidth = elOffsetWidth;
                 // resize scroll
                 this.listScrollController.resize(this.listWidth, this.elementWidth);
-                this.buildTabableRows();
                 this.el.classList.add("resized");
                 this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
-                if (resolve)
+                if (resolve) {
+                    // only build when there is something to resolve
+                    this.buildTabableRows();
                     resolve();
-                // }, 0);
+                }
             }
-            // }, 0);
         };
         ControlElements.prototype.dealloc = function () {
             this.currentControlElement = null;
@@ -3823,6 +3821,7 @@ var cf;
     }(cf.BasicElement));
     UserInputElement.ERROR_TIME = 2000;
     UserInputElement.preventAutoFocus = false;
+    UserInputElement.hideUserInputOnNoneStandardInput = false;
     cf.UserInputElement = UserInputElement;
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
@@ -4125,6 +4124,17 @@ var cf;
             if (this._currentTag.type == "text" || this._currentTag.type == "email") {
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
+            if (cf.UserInputElement.hideUserInputOnNoneStandardInput) {
+                // toggle userinput hide
+                if (this.controlElements.active) {
+                    this.el.classList.add("hide-input");
+                    // set focus on first control element
+                    this.controlElements.focusFrom("bottom");
+                }
+                else {
+                    this.el.classList.remove("hide-input");
+                }
+            }
             setTimeout(function () {
                 _this.onInputChange();
             }, 150);
@@ -4154,6 +4164,8 @@ var cf;
         UserTextInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
+            if (this.isControlElementsActiveAndUserInputHidden())
+                return;
             if (this.isMetaKeyPressed(event))
                 return;
             // if any meta keys, then ignore
@@ -4164,8 +4176,11 @@ var cf;
                 event.preventDefault();
             }
         };
+        UserTextInput.prototype.isControlElementsActiveAndUserInputHidden = function () {
+            return this.controlElements && this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+        };
         UserTextInput.prototype.onKeyUp = function (event) {
-            if (!this.active && !this.controlElements.focus)
+            if ((!this.active && !this.isControlElementsActiveAndUserInputHidden()) && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
                 return;
@@ -4217,13 +4232,13 @@ var cf;
                             var mutiTag = this._currentTag;
                             // if select or checkbox then check for multi select item
                             if (tagType == "checkbox" || mutiTag.multipleChoice) {
-                                if (this.active && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
+                                if ((this.active || this.isControlElementsActiveAndUserInputHidden()) && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
                                     // click on UserTextInput submit button, only ENTER allowed
                                     this.submitButton.click();
                                 }
                                 else {
                                     // let UI know that we changed the key
-                                    if (!this.active) {
+                                    if (!this.active && !this.controlElements.active && !this.isControlElementsActiveAndUserInputHidden()) {
                                         // after ui has been selected we RESET the input/filter
                                         this.resetValue();
                                         this.setFocusOnInput();
@@ -4278,13 +4293,14 @@ var cf;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserTextInput.prototype.setFocusOnInput = function () {
-            if (!cf.UserInputElement.preventAutoFocus) {
+            if (!cf.UserInputElement.preventAutoFocus && !this.el.classList.contains("hide-input")) {
                 this.inputElement.focus();
             }
         };
         UserTextInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
-            if (this.active && this.controlElements.highlighted) {
+            var isControlElementsActiveAndUserInputHidden = this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+            if ((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted) {
                 // active input field and focus on control elements happens when a control element is highlighted
                 this.controlElements.clickOnHighlighted();
             }
@@ -5173,6 +5189,7 @@ var cf;
             window.ConversationalForm = this;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             console.log('Conversational Form > version:', this.version);
+            console.log('Conversational Form > options:', options);
             window.ConversationalForm[this.createId] = this;
             // possible to create your own event dispatcher, so you can tap into the events of the app
             if (options.eventDispatcher)
@@ -5194,6 +5211,9 @@ var cf;
                 throw new Error("Conversational Form error, the formEl needs to be defined.");
             this.formEl = options.formEl;
             this.formEl.setAttribute("cf-create-id", this.createId);
+            if (options.hideUserInputOnNoneStandardInput === true) {
+                cf_1.UserInputElement.hideUserInputOnNoneStandardInput = true;
+            }
             // TODO: can be a string when added as formless..
             // this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
             this.submitCallback = options.submitCallback;

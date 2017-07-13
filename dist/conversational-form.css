@@ -239,10 +239,12 @@ cf-list.disabled {
 .cf-button:not(:last-child) {
   margin-right: 10px;
 }
-.cf-button:hover,
-.cf-button:focus,
-.cf-button[selected="selected"],
-.cf-button[checked="checked"] {
+:not(.cf-button:hover[selected="selected"]):not([checked="checked"])),
+:not(.cf-button:focus[selected="selected"]):not([checked="checked"])) {
+  background: rgba(13,131,255,0.1);
+}
+.cf-button[selected="selected"]:not(:focus):not(.highlight),
+.cf-button[checked="checked"]:not(:focus):not(.highlight) {
   background: rgba(13,131,255,0.1);
 }
 .cf-button[disabled="disabled"] {
@@ -642,6 +644,13 @@ cf-input textarea:-moz-input-placeholder {
 cf-input input:-ms-input-placeholder,
 cf-input textarea:-ms-input-placeholder {
   color: currentColor;
+}
+cf-input.hide-input input,
+cf-input.hide-input textarea {
+  display: none;
+}
+cf-input.hide-input cf-input-button {
+  display: none;
 }
 cf-input[disabled="disabled"] {
   pointer-events: none;
@@ -1891,7 +1900,7 @@ cf-chat-response.can-edit {
 cf-chat-response.can-edit:hover {
   color: #7d8586;
 }
-cf-chat-response.can-edit:hover text {
+cf-chat-response.can-edit:hover text > p {
   background: #f2f9fe;
 }
 cf-chat-response.robot text > p {
@@ -2028,6 +2037,11 @@ cf-chat-response text > p {
   background: #f8f8f8;
   padding: 12px 24px 12px 24px;
   border-radius: 0px 20px 20px 20px;
+  -webkit-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 cf-chat-response text > p:not(:only-child) {
   border-radius: 0px 20px 20px 0px;
@@ -2154,11 +2168,11 @@ cf-chat-response.show text {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.show text {
-  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 .conversational-form--enable-animation cf-chat-response.show text {
   -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);

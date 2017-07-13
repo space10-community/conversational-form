@@ -282,7 +282,7 @@
 								// select group
 								"tag": "select",
 								"name": "country",
-								"cf-questions": "First tag value: {first-tag}&& + follow-up",
+								"cf-questions": "Runtime injected tags, first tag value: {first-tag}&& + follow-up",
 								"cf-input-placeholder": "Some copy",
 								"multiple": false,
 								"children":[
@@ -491,7 +491,7 @@
 					// 	formEl: document.getElementById("empty-form")
 					// });
 				}
-				xhr.open("GET", "../docs/files/formless.json");
+				xhr.open("GET", "files/formless-test-data.json");
 				xhr.send();
 			};
 		</script>

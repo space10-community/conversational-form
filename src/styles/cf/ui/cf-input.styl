@@ -92,6 +92,15 @@ cf-input
 			color currentColor
 		&:-ms-input-placeholder
 			color currentColor
+	
+	// hide input
+	&.hide-input
+		input, textarea
+			display none
+
+		cf-input-button
+			display none
+	// --------------------
 
 	&[disabled="disabled"]
 		pointer-events none
@@ -113,48 +122,6 @@ cf-input
 		position absolute
 		top 0px
 		left 0px
-
-	// &[type="text"]
-	// &[type="voice"]
-	// 	height 46px
-
-	// 	&[error]
-	// 		// be able to click even though error when voice.
-	// 		pointer-events auto
-
-	// 		&:after
-	// 			// error message..
-	// 			content attr(error)
-	// 			display block
-	// 			font-size 10px
-	// 			text-align center
-	// 			position absolute
-	// 			bottom -10px
-	// 			width 100%
-	// 			opacity 0.4
-		
-	// 	&[message]
-	// 		// be able to click even though messages when voice.
-	// 		pointer-events auto
-
-	// 		&:after
-	// 			// message message..
-	// 			content attr(message)
-	// 			display block
-	// 			font-size 10px
-	// 			text-align center
-	// 			position absolute
-	// 			bottom -10px
-	// 			width 100%
-	// 			opacity 0.4
-
-
-	// 	cf-input-button
-	// 		right auto
-	// 		left calc(50% - 15px)
-	// 		&.loading
-				
-	// 			border 1px solid alpha(#b9bcbe, 60%)
 
 	&[error]
 		pointer-events none
