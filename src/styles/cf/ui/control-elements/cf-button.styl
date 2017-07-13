@@ -48,8 +48,13 @@
 	&:not(:last-child)
 		margin-right 10px
 
-	&:hover, &:focus, &[selected="selected"], &[checked="checked"]
-		background alpha($color-dark-blue, 10%)
+	&:hover, &:focus
+		:not(&[selected="selected"]):not([checked="checked"]))
+			background alpha($color-dark-blue, 10%)
+
+	&[selected="selected"], &[checked="checked"]
+		&:not(:focus):not(.highlight)
+			background alpha($color-dark-blue, 10%)
 	
 	&[disabled="disabled"]
 		pointer-events none

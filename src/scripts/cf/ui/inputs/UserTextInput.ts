@@ -353,6 +353,17 @@ namespace cf {
 				this.inputElement.value = this._currentTag.defaultValue.toString();
 			}
 
+			if(UserInputElement.hideUserInputOnNoneStandardInput){
+				// toggle userinput hide
+				if(this.controlElements.active){
+					this.el.classList.add("hide-input");
+					// set focus on first control element
+					this.controlElements.focusFrom("bottom");
+				}else{
+					this.el.classList.remove("hide-input");
+				}
+			}
+
 			setTimeout(() => {
 				this.onInputChange();
 			}, 150);
@@ -391,6 +402,9 @@ namespace cf {
 		private onKeyDown(event: KeyboardEvent){
 			if(!this.active && !this.controlElements.focus)
 				return;
+			
+			if(this.isControlElementsActiveAndUserInputHidden())
+				return;
 
 			if(this.isMetaKeyPressed(event))
 				return;
@@ -405,8 +419,12 @@ namespace cf {
 			}
 		}
 
+		private isControlElementsActiveAndUserInputHidden():boolean{
+			return this.controlElements && this.controlElements.active && UserInputElement.hideUserInputOnNoneStandardInput
+		}
+
 		private onKeyUp(event: KeyboardEvent){
-			if(!this.active && !this.controlElements.focus)
+			if((!this.active && !this.isControlElementsActiveAndUserInputHidden()) && !this.controlElements.focus)
 				return;
 
 			if(this.isMetaKeyPressed(event))
@@ -466,12 +484,12 @@ namespace cf {
 							const mutiTag: SelectTag | InputTag = <SelectTag | InputTag> this._currentTag;
 							// if select or checkbox then check for multi select item
 							if(tagType == "checkbox" || (<SelectTag> mutiTag).multipleChoice){
-								if(this.active && event.keyCode == Dictionary.keyCodes["enter"]){
+								if((this.active || this.isControlElementsActiveAndUserInputHidden()) && event.keyCode == Dictionary.keyCodes["enter"]){
 									// click on UserTextInput submit button, only ENTER allowed
 									this.submitButton.click();
 								}else{
 									// let UI know that we changed the key
-									if(!this.active){
+									if(!this.active && !this.controlElements.active && !this.isControlElementsActiveAndUserInputHidden()){
 										// after ui has been selected we RESET the input/filter
 										this.resetValue();
 										this.setFocusOnInput();
@@ -530,13 +548,14 @@ namespace cf {
 		}
 
 		public setFocusOnInput(){
-			if(!UserInputElement.preventAutoFocus){
+			if(!UserInputElement.preventAutoFocus && !this.el.classList.contains("hide-input")){
 				this.inputElement.focus();
 			}
 		}
 
 		protected onEnterOrSubmitButtonSubmit(event: CustomEvent = null){
-			if(this.active && this.controlElements.highlighted){
+			const isControlElementsActiveAndUserInputHidden: boolean = this.controlElements.active && UserInputElement.hideUserInputOnNoneStandardInput;
+			if((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted){
 				// active input field and focus on control elements happens when a control element is highlighted
 				this.controlElements.clickOnHighlighted();
 			}else{

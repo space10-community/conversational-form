@@ -11,6 +11,8 @@ namespace cf {
 	export class UserInputElement extends BasicElement implements IUserInputElement {
 		public static ERROR_TIME: number = 2000;
 		public static preventAutoFocus: boolean = false;
+		public static hideUserInputOnNoneStandardInput: boolean = false;
+
 		public el: HTMLElement;
 
 		protected cfReference: ConversationalForm;

@@ -176,7 +176,7 @@ namespace cf {
 			clearTimeout(this.animateInFromReponseTimer);
 			this.animateInFromReponseTimer = setTimeout(() => {
 				this.animateElementsIn();
-			}, 500);
+			}, 250);
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
@@ -184,7 +184,7 @@ namespace cf {
 				this.ignoreKeyboardInput = false;
 				return;
 			}
-
+			
 			const dto: InputKeyChangeDTO = event.detail;
 			const userInput: UserTextInput = <UserTextInput> dto.dto.input;
 
@@ -655,91 +655,89 @@ namespace cf {
 			this.el.classList.remove("two-row");
 			this.elementWidth = 0;
 
-			// setTimeout(() => {
-				this.listWidth = 0;
-				const elements: Array <IControlElement> = this.getElements();
+			this.listWidth = 0;
+			const elements: Array <IControlElement> = this.getElements();
 
-				if(elements && elements.length > 0){
-					const listWidthValues: Array<number> = [];
-					const listWidthValues2: Array<IControlElement> = [];
-					let containsElementWithImage: boolean = false;
-					for (let i = 0; i < elements.length; i++) {
-						let element: IControlElement = <IControlElement>elements[i];
-						if(element.visible){
-							element.calcPosition();
-							this.listWidth += element.positionVector.width;
-							listWidthValues.push(element.positionVector.x + element.positionVector.width);
-							listWidthValues2.push(element);
-						}
-
-						if(element.hasImage())
-							containsElementWithImage = true;
+			if(elements && elements.length > 0){
+				const listWidthValues: Array<number> = [];
+				const listWidthValues2: Array<IControlElement> = [];
+				let containsElementWithImage: boolean = false;
+				for (let i = 0; i < elements.length; i++) {
+					let element: IControlElement = <IControlElement>elements[i];
+					if(element.visible){
+						element.calcPosition();
+						this.listWidth += element.positionVector.width;
+						listWidthValues.push(element.positionVector.x + element.positionVector.width);
+						listWidthValues2.push(element);
 					}
 
-					let elOffsetWidth: number = this.el.offsetWidth;
-					let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
-					if(isListWidthOverElementWidth && !containsElementWithImage){
-						this.el.classList.add("two-row");
-						this.listWidth = Math.max(elOffsetWidth, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
-						this.list.style.width = this.listWidth + "px";
-					}else{
-						this.el.classList.add("one-row");
-					}
-
-					// setTimeout(() => {
-						// recalc after LIST classes has been added
-						for (let i = 0; i < elements.length; i++) {
-							let element: IControlElement = <IControlElement>elements[i];
-							if(element.visible){
-								element.calcPosition();
-							}
-						}
-
-						// check again after classes are set.
-						elOffsetWidth = this.el.offsetWidth;
-						isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
-
-						// sort the list so we can set tabIndex properly
-						var elementsCopyForSorting: Array <IControlElement> = elements.slice();
-						const tabIndexFilteredElements: Array<IControlElement> = elementsCopyForSorting.sort((a: IControlElement, b: IControlElement) => {
-							const aOverB: boolean = a.positionVector.y > b.positionVector.y;
-							return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
-						});
-
-						let tabIndex: number = 0;
-						for (let i = 0; i < tabIndexFilteredElements.length; i++) {
-							let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
-							if(element.visible){
-								//tabindex 1 are the UserTextInput element
-								element.tabIndex = 2 + (tabIndex++);
-							}else{
-								element.tabIndex = -1;
-							}
-						}
-						
-						// toggle nav button visiblity
-						if(isListWidthOverElementWidth){
-							this.el.classList.remove("hide-nav-buttons");
-						}else{
-							this.el.classList.add("hide-nav-buttons");
-						}
-
-						this.elementWidth = elOffsetWidth;
-
-						// resize scroll
-						this.listScrollController.resize(this.listWidth, this.elementWidth);
-
-						this.buildTabableRows();
-
-						this.el.classList.add("resized");
-
-						this.eventTarget.dispatchEvent(new CustomEvent(ControlElementsEvents.ON_RESIZE));
-
-						if(resolve)
-							resolve();
-					// }, 0);
+					if(element.hasImage())
+						containsElementWithImage = true;
 				}
-			// }, 0);
+
+				let elOffsetWidth: number = this.el.offsetWidth;
+				let isListWidthOverElementWidth: boolean = this.listWidth > elOffsetWidth;
+				if(isListWidthOverElementWidth && !containsElementWithImage){
+					this.el.classList.add("two-row");
+					this.listWidth = Math.max(elOffsetWidth, Math.round((listWidthValues[Math.floor(listWidthValues.length / 2)]) + 50));
+					this.list.style.width = this.listWidth + "px";
+				}else{
+					this.el.classList.add("one-row");
+				}
+
+				// recalc after LIST classes has been added
+				for (let i = 0; i < elements.length; i++) {
+					let element: IControlElement = <IControlElement>elements[i];
+					if(element.visible){
+						element.calcPosition();
+					}
+				}
+
+				// check again after classes are set.
+				elOffsetWidth = this.el.offsetWidth;
+				isListWidthOverElementWidth = this.listWidth > elOffsetWidth;
+
+				// sort the list so we can set tabIndex properly
+				var elementsCopyForSorting: Array <IControlElement> = elements.slice();
+				const tabIndexFilteredElements: Array<IControlElement> = elementsCopyForSorting.sort((a: IControlElement, b: IControlElement) => {
+					const aOverB: boolean = a.positionVector.y > b.positionVector.y;
+					return a.positionVector.x == b.positionVector.x ? (aOverB ? 1 : -1) : a.positionVector.x < b.positionVector.x ? -1 : 1;
+				});
+
+				let tabIndex: number = 0;
+				for (let i = 0; i < tabIndexFilteredElements.length; i++) {
+					let element: IControlElement = <IControlElement>tabIndexFilteredElements[i];
+					if(element.visible){
+						//tabindex 1 are the UserTextInput element
+						element.tabIndex = 2 + (tabIndex++);
+					}else{
+						element.tabIndex = -1;
+					}
+				}
+				
+				// toggle nav button visiblity
+				if(isListWidthOverElementWidth){
+					this.el.classList.remove("hide-nav-buttons");
+				}else{
+					this.el.classList.add("hide-nav-buttons");
+				}
+
+				this.elementWidth = elOffsetWidth;
+
+				// resize scroll
+				this.listScrollController.resize(this.listWidth, this.elementWidth);
+
+				
+				this.el.classList.add("resized");
+				
+				this.eventTarget.dispatchEvent(new CustomEvent(ControlElementsEvents.ON_RESIZE));
+				
+				if(resolve){
+					// only build when there is something to resolve
+					this.buildTabableRows();
+					resolve();
+				}
+			}
 		}
 
 		public dealloc(){
