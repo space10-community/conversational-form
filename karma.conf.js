@@ -1,6 +1,10 @@
 // Karma configuration
 // Generated on Thu May 25 2017 09:50:40 GMT+0200 (CEST)
 
+// run
+// $ karma start
+// will run through /tests files
+
 module.exports = function(config) {
   config.set({
 
