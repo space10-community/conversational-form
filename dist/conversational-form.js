@@ -361,6 +361,21 @@ var cf;
             el.style["-ms-transform"] = transformString;
             el.style["transform"] = transformString;
         };
+        // deep extends and object, from: https://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
+        Helpers.extendObject = function (destination, source) {
+            for (var property in source) {
+                if (source[property] && source[property].constructor &&
+                    source[property].constructor === Object) {
+                    destination[property] = destination[property] || {};
+                    arguments.callee(destination[property], source[property]);
+                }
+                else {
+                    destination[property] = source[property];
+                }
+            }
+            return destination;
+        };
+        ;
         return Helpers;
     }());
     Helpers.caniuse = {
@@ -462,6 +477,22 @@ var cf;
     cf.TagsParser = TagsParser;
 })(cf || (cf = {}));
 
+// namespace
+var cf;
+(function (cf) {
+    // default options interface for optional parameters for the UI of Conversational Form
+    cf.UserInterfaceDefaultOptions = {
+        controlElementsInAnimationDelay: 250,
+        robot: {
+            chainedResponseTime: 500
+        },
+        user: {
+            showThinking: false,
+            showThumb: false
+        }
+    };
+})(cf || (cf = {}));
+
 /// <reference path="../logic/EventDispatcher.ts"/>
 // namespace
 var cf;
@@ -470,6 +501,7 @@ var cf;
     var BasicElement = (function () {
         function BasicElement(options) {
             this.eventTarget = options.eventTarget;
+            this.cfReference = options.cfReference;
             if (options.customTemplate)
                 this.customTemplate = options.customTemplate;
             // TODO: remove
@@ -726,6 +758,7 @@ var cf;
             this.listWidth = 0;
             this.el = options.el;
             this.eventTarget = options.eventTarget;
+            this.cfReference = options.cfReference;
             this.list = this.el.getElementsByTagName("cf-list")[0];
             this.infoElement = options.infoEl;
             this.onScrollCallback = this.onScroll.bind(this);
@@ -841,9 +874,12 @@ var cf;
         ControlElements.prototype.onChatReponsesUpdated = function (event) {
             var _this = this;
             clearTimeout(this.animateInFromReponseTimer);
-            this.animateInFromReponseTimer = setTimeout(function () {
-                _this.animateElementsIn();
-            }, 250);
+            // only show when user response
+            if (!event.detail.currentResponse.isRobotResponse) {
+                this.animateInFromReponseTimer = setTimeout(function () {
+                    _this.animateElementsIn();
+                }, this.cfReference.uiOptions.controlElementsInAnimationDelay);
+            }
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -3717,6 +3753,8 @@ var cf;
             var _this = _super.call(this, options) || this;
             _this._disabled = false;
             _this._visible = false;
+            _this.onChatReponsesUpdatedCallback = _this.onChatReponsesUpdated.bind(_this);
+            _this.eventTarget.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, _this.onChatReponsesUpdatedCallback, false);
             _this.windowFocusCallback = _this.windowFocus.bind(_this);
             window.addEventListener('focus', _this.windowFocusCallback, false);
             _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
@@ -3798,6 +3836,8 @@ var cf;
         UserInputElement.prototype.reset = function () {
         };
         UserInputElement.prototype.dealloc = function () {
+            this.eventTarget.removeEventListener(cf.ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
+            this.onChatReponsesUpdatedCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
             this.inputInvalidCallback = null;
             window.removeEventListener('focus', this.windowFocusCallback, false);
@@ -3807,15 +3847,18 @@ var cf;
             _super.prototype.dealloc.call(this);
         };
         UserInputElement.prototype.onFlowUpdate = function (event) {
-            var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             this._currentTag = event.detail.tag;
-            setTimeout(function () {
-                _this.visible = true;
-                _this.disabled = false;
-            }, 150);
         };
         UserInputElement.prototype.windowFocus = function (event) {
+        };
+        UserInputElement.prototype.onChatReponsesUpdated = function (event) {
+            // only show when user response
+            if (!event.detail.currentResponse.isRobotResponse) {
+                this.visible = true;
+                this.disabled = false;
+                this.setFocusOnInput();
+            }
         };
         return UserInputElement;
     }(cf.BasicElement));
@@ -3873,6 +3916,7 @@ var cf;
             //<cf-input-control-elements> is defined in the ChatList.ts
             _this.controlElements = new cf.ControlElements({
                 el: _this.el.getElementsByTagName("cf-input-control-elements")[0],
+                cfReference: _this.cfReference,
                 infoEl: _this.el.getElementsByTagName("cf-info")[0],
                 eventTarget: _this.eventTarget
             });
@@ -3915,6 +3959,7 @@ var cf;
         Object.defineProperty(UserTextInput.prototype, "disabled", {
             set: function (value) {
                 var hasChanged = this._disabled != value;
+                console.log('option hasChanged', value);
                 if (hasChanged) {
                     this._disabled = value;
                     if (value) {
@@ -4023,6 +4068,7 @@ var cf;
             this.submitButton.loading = false;
             this.errorTimer = setTimeout(function () {
                 _this.disabled = false;
+                console.log('option, disabled 1');
                 _this.el.removeAttribute("error");
                 _this.inputElement.value = _this.inputElement.getAttribute("data-value");
                 _this.inputElement.setAttribute("data-value", "");
@@ -4142,6 +4188,7 @@ var cf;
         UserTextInput.prototype.onControlElementProgressChange = function (event) {
             var status = event.detail;
             this.disabled = status == cf.ControlElementProgressStates.BUSY;
+            console.log('option, disabled 2');
         };
         UserTextInput.prototype.buildControlElements = function (tags) {
             this.controlElements.buildTags(tags);
@@ -4367,6 +4414,7 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
+/// <reference path="../../interfaces/IUserInterfaceOptions.ts"/>
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -4388,6 +4436,7 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
+            _this.uiOptions = options.cfReference.uiOptions;
             _this._tag = options.tag;
             return _this;
         }
@@ -4543,15 +4592,16 @@ var cf;
                         var p = _this.textEl.getElementsByTagName("p");
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
-                    }, 500 + (i_2 * 500));
+                    }, this_1.uiOptions.robot.chainedResponseTime + (i_2 * this_1.uiOptions.robot.chainedResponseTime));
                 };
+                var this_1 = this;
                 for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
                     _loop_1(i_2);
                 }
                 setTimeout(function () {
                     if (_this.onReadyCallback)
                         _this.onReadyCallback();
-                }, chainedResponses.length * 500);
+                }, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
             }
             else {
                 // user response, act normal
@@ -4567,6 +4617,7 @@ var cf;
             this.textEl.removeAttribute("value-added");
             setTimeout(function () {
                 _this.textEl.setAttribute("value-added", "");
+                _this.el.classList.add("peak-thumb");
             }, 0);
             this.checkForEditMode();
             // update response
@@ -4580,9 +4631,11 @@ var cf;
             }
         };
         ChatResponse.prototype.setToThinking = function () {
-            this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-            this.el.classList.remove("can-edit");
-            this.el.setAttribute("thinking", "");
+            if (this.cfReference.uiOptions.user.showThinking) {
+                this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+                this.el.classList.remove("can-edit");
+                this.el.setAttribute("thinking", "");
+            }
         };
         /**
         * @name onClickCallback
@@ -4615,14 +4668,14 @@ var cf;
                 //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
             }
             else {
-                // shows the 3 dots automatically, we expect the reponse to be empty upon creation
                 // TODO: Auto completion insertion point
-                setTimeout(function () {
-                    _this.el.classList.add("peak-thumb");
-                }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
+                if (this.cfReference.uiOptions.user.showThumb) {
+                    this.el.classList.add("peak-thumb");
+                }
             }
         };
         ChatResponse.prototype.dealloc = function () {
+            this.uiOptions = null;
             this.onReadyCallback = null;
             if (this.onClickCallback) {
                 this.el.removeEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
@@ -4837,6 +4890,7 @@ var cf;
             if (value === void 0) { value = null; }
             var response = new cf.ChatResponse({
                 // image: null,
+                cfReference: this.cfReference,
                 list: this,
                 tag: currentTag,
                 eventTarget: this.eventTarget,
@@ -5176,6 +5230,7 @@ var cf;
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
 /// <reference path="interfaces/IUserInput.ts"/>
+/// <reference path="interfaces/IUserInterfaceOptions.ts"/>
 var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
@@ -5241,6 +5296,9 @@ var cf;
                 }
             }
             this.microphoneInputObj = options.microphoneInput;
+            // set the ui options
+            this.uiOptions = cf_1.Helpers.extendObject(cf_1.UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
+            console.log('this.uiOptions:', this.uiOptions);
             this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {
@@ -5365,6 +5423,7 @@ var cf;
         };
         ConversationalForm.prototype.start = function () {
             this.userInput.disabled = false;
+            console.log('option, disabled 3');
             this.userInput.visible = true;
             this.flowManager.start();
         };
@@ -5443,7 +5502,8 @@ var cf;
             this.el.appendChild(innerWrap);
             // Conversational Form UI
             this.chatList = new cf_1.ChatList({
-                eventTarget: this.eventTarget
+                eventTarget: this.eventTarget,
+                cfReference: this
             });
             innerWrap.appendChild(this.chatList.el);
             this.userInput = new cf_1.UserTextInput({

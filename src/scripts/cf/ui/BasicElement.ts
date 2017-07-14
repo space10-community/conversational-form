@@ -21,11 +21,13 @@ namespace cf {
 	export class BasicElement implements IBasicElement{
 		public el: HTMLElement;
 		protected eventTarget: EventDispatcher;
+		protected cfReference: ConversationalForm;
 		// optional value, but this can be used to overwrite the UI of Conversational Interface
 		protected customTemplate: string;
 
 		constructor(options: IBasicElementOptions){
 			this.eventTarget = options.eventTarget;
+			this.cfReference = options.cfReference;
 
 			if(options.customTemplate)
 				this.customTemplate = options.customTemplate;

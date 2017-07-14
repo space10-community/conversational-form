@@ -2,15 +2,22 @@
 	"options": {
 		"preventAutoAppend": true,
 		"preventAutoFocus": false,
-		"hideUserInputOnNoneStandardInput": true,
+		"hideUserInputOnNoneStandardInput": false,
 		"submitCallback": "window.onFormlessSubmited"
 	},
 	"tags": [
 		{
+			"tag": "input",
+			"type": "text",
+			"id": "first-tag",
+			"value": "Prefilled value here",
+			"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
+		},
+		{
 			"tag": "fieldset",
 			"type": "Radio buttons",
 			"cf-input-placeholder": "Choose one of the above",
-			"cf-questions": "Choose one of the radioss",
+			"cf-questions": "Choose one of the radios&&Step 2&&step 3&&step 4",
 			"children":[
 				{
 					"tag": "input",
@@ -25,13 +32,6 @@
 					"cf-label": "radio-2"
 				}
 			]
-		},
-		{
-			"tag": "input",
-			"type": "text",
-			"id": "first-tag",
-			"value": "Prefilled value here",
-			"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		},
 		{
 			"tag": "select",

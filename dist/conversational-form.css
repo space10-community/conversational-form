@@ -243,8 +243,8 @@ cf-list.disabled {
 :not(.cf-button:focus[selected="selected"]):not([checked="checked"])) {
   background: rgba(13,131,255,0.1);
 }
-.cf-button[selected="selected"]:not(:focus):not(.highlight),
-.cf-button[checked="checked"]:not(:focus):not(.highlight) {
+.cf-button[selected="selected"]:not(:focus).cf-button[selected="selected"]:not(:hover):not(.highlight),
+.cf-button[checked="checked"]:not(:focus).cf-button[checked="checked"]:not(:hover):not(.highlight) {
   background: rgba(13,131,255,0.1);
 }
 .cf-button[disabled="disabled"] {
@@ -2189,7 +2189,7 @@ cf-chat-response.show text {
 cf-chat-response.show text[value-added] {
   will-change: auto;
 }
-cf-chat-response.show thumb {
+cf-chat-response.show.robot thumb {
   -webkit-transform: scale(1, 1) translateY(0px);
   -moz-transform: scale(1, 1) translateY(0px);
   -o-transform: scale(1, 1) translateY(0px);
@@ -2199,7 +2199,7 @@ cf-chat-response.show thumb {
   -ms-filter: none;
   filter: none;
 }
-.conversational-form--enable-animation cf-chat-response.show thumb {
+.conversational-form--enable-animation cf-chat-response.show.robot thumb {
   -webkit-transition-delay: 0s, 0s, 0s;
   -moz-transition-delay: 0s, 0s, 0s;
   -o-transition-delay: 0s, 0s, 0s;

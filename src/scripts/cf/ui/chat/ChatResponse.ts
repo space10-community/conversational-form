@@ -1,6 +1,7 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
+/// <reference path="../../interfaces/IUserInterfaceOptions.ts"/>
 
 // namespace
 namespace cf {
@@ -27,6 +28,8 @@ namespace cf {
 		public response: string;
 		public originalResponse: string; // keep track of original response with id pipings
 		public parsedResponse: string;
+		
+		private uiOptions: IUserInterfaceOptions;
 		private textEl: Element;
 		private image: string;
 		private _tag: ITag;
@@ -65,6 +68,7 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			this.uiOptions = options.cfReference.uiOptions;
 			this._tag = options.tag;
 		}
 
@@ -197,13 +201,13 @@ namespace cf {
 							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 							p[p.length - 1].offsetWidth;
 							p[p.length - 1].classList.add("show");
-						}, 500 + (i * 500));
+						}, this.uiOptions.robot.chainedResponseTime + (i * this.uiOptions.robot.chainedResponseTime));
 					}
 
 					setTimeout(() => {
 						if(this.onReadyCallback)
 							this.onReadyCallback();
-					}, chainedResponses.length * 500);
+					}, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
 				}else{
 					// user response, act normal
 					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
@@ -220,7 +224,9 @@ namespace cf {
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
+				this.el.classList.add("peak-thumb");
 			}, 0);
+
 
 			this.checkForEditMode();
 
@@ -237,9 +243,11 @@ namespace cf {
 		}
 
 		private setToThinking(){
-			this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-			this.el.classList.remove("can-edit");
-			this.el.setAttribute("thinking", "");
+			if(this.cfReference.uiOptions.user.showThinking){
+				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+				this.el.classList.remove("can-edit");
+				this.el.setAttribute("thinking", "");
+			}
 		}
 
 		/**
@@ -277,15 +285,15 @@ namespace cf {
 				}, 0);
 				//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 			}else{
-				// shows the 3 dots automatically, we expect the reponse to be empty upon creation
 				// TODO: Auto completion insertion point
-				setTimeout(() =>{
-					this.el.classList.add("peak-thumb")
-				}, ConversationalForm.animationsEnabled ? 1400 : 0);
+				if(this.cfReference.uiOptions.user.showThumb){
+					this.el.classList.add("peak-thumb");
+				}
 			}
 		}
 
 		public dealloc(){
+			this.uiOptions = null;
 			this.onReadyCallback = null;
 
 			if(this.onClickCallback){

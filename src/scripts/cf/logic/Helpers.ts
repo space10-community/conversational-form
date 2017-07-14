@@ -109,5 +109,19 @@ namespace cf {
 			el.style["-ms-transform"] = transformString;
 			el.style["transform"] = transformString;
 		}
+
+		// deep extends and object, from: https://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
+		public static extendObject (destination: any, source: any) : any{
+			for (var property in source) {
+				if (source[property] && source[property].constructor &&
+					source[property].constructor === Object) {
+						destination[property] = destination[property] || {};
+						arguments.callee(destination[property], source[property]);
+				} else {
+					destination[property] = source[property];
+				}
+			}
+			return destination;
+		};
 	}
 }
