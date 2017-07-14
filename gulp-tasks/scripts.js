@@ -68,6 +68,8 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/logic/EventDispatcher.js",
 		global.buildFolder + "cf/parsing/TagsParser.js",
 
+		global.buildFolder + "cf/interfaces/IUserInterfaceOptions.js",
+
 		global.buildFolder + "cf/ui/BasicElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElements.js",

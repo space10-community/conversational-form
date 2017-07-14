@@ -10,6 +10,7 @@
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
 /// <reference path="interfaces/IUserInput.ts"/>
+/// <reference path="interfaces/IUserInterfaceOptions.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -67,6 +68,9 @@ namespace cf {
 
 		// optional, hide ÜserInputField when radio, checkbox, select input is active
 		hideUserInputOnNoneStandardInput?:boolean;
+
+		// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
+		userInterfaceOptions?:IUserInterfaceOptions;
 	}
 
 	// CUI formless options
@@ -107,6 +111,8 @@ namespace cf {
 
 		public dictionary: Dictionary;
 		public el: HTMLElement;
+		public chatList: ChatList;
+		public uiOptions: IUserInterfaceOptions;
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
@@ -115,13 +121,11 @@ namespace cf {
 		private flowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
-
-		public chatList: ChatList;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
-
+		
 		private userInput: UserTextInput;
 		private microphoneInputObj: IUserInput;
 
@@ -201,6 +205,10 @@ namespace cf {
 			}
 
 			this.microphoneInputObj = options.microphoneInput;
+			
+			// set the ui options
+			this.uiOptions = Helpers.extendObject(UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
+			console.log('this.uiOptions:', this.uiOptions);
 
 			this.init();
 		}
@@ -335,6 +343,7 @@ namespace cf {
 
 		public start(){
 			this.userInput.disabled = false;
+			console.log('option, disabled 3', );
 			this.userInput.visible = true;
 
 			this.flowManager.start();
@@ -429,7 +438,8 @@ namespace cf {
 
 			// Conversational Form UI
 			this.chatList = new ChatList({
-				eventTarget: this.eventTarget
+				eventTarget: this.eventTarget,
+				cfReference: this
 			});
 
 			innerWrap.appendChild(this.chatList.el);

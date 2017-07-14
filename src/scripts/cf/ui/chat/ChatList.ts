@@ -219,6 +219,7 @@ namespace cf {
 		public createResponse(isRobotResponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
+				cfReference: this.cfReference,
 				list: this,
 				tag: currentTag,
 				eventTarget: this.eventTarget,

@@ -45,6 +45,8 @@ namespace cf {
 
 		public set disabled(value: boolean){
 			const hasChanged: boolean = this._disabled != value;
+			console.log('option hasChanged', value);
+			
 			if(hasChanged){
 				this._disabled = value;
 				if(value){
@@ -72,6 +74,7 @@ namespace cf {
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0],
+				cfReference: this.cfReference,
 				infoEl: <HTMLElement> this.el.getElementsByTagName("cf-info")[0],
 				eventTarget: this.eventTarget
 			});
@@ -230,6 +233,7 @@ namespace cf {
 
 			this.errorTimer = setTimeout(() => {
 				this.disabled = false;
+				console.log('option, disabled 1', );
 				this.el.removeAttribute("error");
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
@@ -372,6 +376,7 @@ namespace cf {
 		private onControlElementProgressChange(event: CustomEvent){
 			const status: string = event.detail;
 			this.disabled = status == ControlElementProgressStates.BUSY;
+			console.log('option, disabled 2', );
 		}
 
 		private buildControlElements(tags: Array<ITag>){

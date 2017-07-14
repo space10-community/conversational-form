@@ -104,6 +104,11 @@
 
 		<script
 			type="text/javascript"
+			src="../build/cf/interfaces/IUserInterfaceOptions.js"
+		></script>
+
+		<script
+			type="text/javascript"
 			src="../build/cf/ui/BasicElement.js"
 		></script>
 
@@ -481,6 +486,18 @@
 					// add callback hooks..
 					json.options.submitCallback = onFormlessSubmitted.bind(window);
 					json.options.flowStepCallback = onStepCallback.bind(window);
+					
+					// add UI options
+					json.options.userInterfaceOptions = {
+						controlElementsInAnimationDelay: 250,
+						robot: {
+							chainedResponseTime: 400
+						},
+						user:{
+							showThinking: false,
+							showThumb: false
+						}
+					}
 					
 					// start one w. json
 					conversationalForm = window.cf.ConversationalForm.startTheConversation(json);

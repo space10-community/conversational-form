@@ -20,11 +20,13 @@ namespace cf {
 
 	export interface IControlElementsOptions{
 		el: HTMLElement;
+		cfReference: ConversationalForm;
 		infoEl: HTMLElement;
 		eventTarget: EventDispatcher;
 	}
 
 	export class ControlElements {
+		private cfReference: ConversationalForm;
 		private elements: Array<IControlElement | OptionsList>;
 		private eventTarget: EventDispatcher;
 		private el: HTMLElement;
@@ -101,6 +103,8 @@ namespace cf {
 		constructor(options: IControlElementsOptions){
 			this.el = options.el;
 			this.eventTarget = options.eventTarget;
+			this.cfReference = options.cfReference;
+
 			this.list = <HTMLElement> this.el.getElementsByTagName("cf-list")[0];
 			this.infoElement = options.infoEl;
 
@@ -174,9 +178,13 @@ namespace cf {
 
 		private onChatReponsesUpdated(event:CustomEvent){
 			clearTimeout(this.animateInFromReponseTimer);
-			this.animateInFromReponseTimer = setTimeout(() => {
-				this.animateElementsIn();
-			}, 250);
+
+			// only show when user response
+			if(!(<any> event.detail).currentResponse.isRobotResponse){
+				this.animateInFromReponseTimer = setTimeout(() => {
+					this.animateElementsIn();
+				}, this.cfReference.uiOptions.controlElementsInAnimationDelay);
+			}
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){

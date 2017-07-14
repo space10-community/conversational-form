@@ -53,7 +53,7 @@
 			background alpha($color-dark-blue, 10%)
 
 	&[selected="selected"], &[checked="checked"]
-		&:not(:focus):not(.highlight)
+		&:not(:focus)&:not(:hover):not(.highlight)
 			background alpha($color-dark-blue, 10%)
 	
 	&[disabled="disabled"]
