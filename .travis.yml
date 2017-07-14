@@ -4,6 +4,7 @@ node_js:
 branches:
   only:
     - develop
+    - master
 script: node_modules/karma/bin/karma start karma.conf.js --single-run
 before_install:
     - export DISPLAY=:99.0
