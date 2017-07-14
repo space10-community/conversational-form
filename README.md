@@ -113,9 +113,11 @@ new cf.ConversationalForm({
 	// optional, set microphone input, future, add other custom inputs, ex. VR, see voice (1, 2) examples in docs folder
 	microphoneInput,/*?:IUserInput;*/
 
-
 	// optional, hide ÜserInputField when radio, checkbox, select input is active
 	hideUserInputOnNoneStandardInput,/*?: boolean*/
+
+	// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
+	userInterfaceOptions,/*?:cf.UserInterfaceOptions*/
 });
 ```
 
@@ -154,9 +156,13 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 ### cf-questions
 * to map questions directly to a tag.
-* seperate by | to allow for more questions, app will shuffle.
+* seperate with || to allow for more questions, app will shuffle.
 ```html
-<input type="text" cf-questions="What is your name?|Please tell me your name." ..
+<input type="text" cf-questions="What is your name?||Please tell me your name." ..
+```
+* seperate with && to allow for chained questions.
+```html
+<input type="text" cf-questions="Hello?&&Please tell me your name." ..
 ```
 
 ### cf-input-placeholder
