@@ -11,7 +11,7 @@
 			"type": "text",
 			"id": "first-tag",
 			"value": "Prefilled value here",
-			"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
+			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		},
 		{
 			"tag": "fieldset",
