@@ -10,7 +10,9 @@ $thumbArea = 24px
 
 cf-chat-response
 	display table
-	max-width 50%
+	max-width 80%
+	+above($breakpoint-1)
+		max-width 50%
 	min-width 120px
 	width auto
 	position relative
@@ -107,6 +109,7 @@ cf-chat-response
 			padding 0px
 			background $color-chat-reponse-default-bg
 			padding 12px 24px 12px 24px
+			display table // wrap container around text
 
 			// border radius rules
 			border-radius 0px 20px 20px 20px
