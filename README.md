@@ -370,7 +370,10 @@ User previous versions. These versions are also available through bower, npm and
 When you are up and running, you can find a few form tests and examples in the /examples folder.
 
 ## Browser support
-Tested in latest Chrome, Firefox, Safari and Internet Explorer.
+Lowest common denominator of browser testing:
+Chrome | Firefox | IE | Opera | Safari | iOS | Android
+--- | --- | --- | --- | --- | --- | --- |
+xx ✔ | xx ✔ | 11+ ✔ | xx ✔ | 9.1+ ✔ | 9.1+ ✔ | 4.4+ ✔
 
 # Websites that use Conversational Form
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
