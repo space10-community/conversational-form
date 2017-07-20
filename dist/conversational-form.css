@@ -256,7 +256,9 @@ cf-list.disabled {
   filter: alpha(opacity=50);
 }
 .cf-button:active {
-  background: rgba(13,131,255,0.2);
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
 }
 .cf-button .cf-image {
   width: 100%;

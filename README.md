@@ -278,16 +278,6 @@ possible to ignore existing tags, to allow for the flow to just "happen"
 window.ConversationalForm.remapTagsAndStartFrom(index, setCurrentTagValue, ignoreExistingTags);
 ```
 
-# Overwrite styles
-You can overwrite the UI with your own styles. Please see the source styles/css files for more info. 
-
-
-# Contribute to ConversationalForm
-
-We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
-
-ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion), [RWATGG](http://rwatgg.com). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
-
 ## Include Conversational Form in your project
 
 #### bower
@@ -295,6 +285,25 @@ ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought t
 
 #### npm
 	$ npm install conversational-form --save
+
+#### Use with various ES6 module bundlers
+like [Webpack](https://github.com/webpack/webpack) and [Rollup](https://github.com/rollup/rollup)
+
+```javascript
+import cf from 'conversational-form';
+var cfInstance = cf.startTheConversation({
+    formEl: document.getElementById("form")
+});
+````
+
+# Overwrite styles
+You can overwrite the UI with your own styles. Please see how the [docs](https://space10-community.github.io/conversational-form/) site is overwritting the styles [here](https://github.com/space10-community/conversational-form/blob/master/docs/src/styles/cf/cf-theming.styl).
+
+# Contribute to ConversationalForm
+
+We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
+
+ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
 
 ## Build the source
 
@@ -334,7 +343,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 
 ### Version log
-User previous versions. These versions are also available through bower, npm and Github tags
+Previous versions. These versions are also available through bower, npm and Github tags.
 
 [v0.9.4](https://github.com/space10-community/conversational-form/tree/0.9.4)
 ```html
