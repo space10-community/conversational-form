@@ -371,9 +371,10 @@ When you are up and running, you can find a few form tests and examples in the /
 
 ## Browser support
 Lowest common denominator of browser testing:
-Chrome | Firefox | IE | Opera | Safari | iOS | Android
---- | --- | --- | --- | --- | --- | --- |
-40+ ✔ | 40+ ✔ | 10+ ✔ | 46+ ✔ | 9.1+ ✔ | 9.1+ ✔ | 4.4+ ✔
+
+| Chrome | Firefox | IE | Opera | Safari | iOS | Android |
+| --- | --- | --- | --- | --- | --- | --- |
+| 40+ ✔ | 40+ ✔ | 10+ ✔ | 46+ ✔ | 9.1+ ✔ | 9.1+ ✔ | 4.4+ ✔ |
 
 # Websites that use Conversational Form
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
