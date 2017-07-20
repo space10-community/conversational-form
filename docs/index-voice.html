@@ -29,19 +29,19 @@
 		<meta property="og:image:width" content="1200"/>
 		<meta property="og:image:height" content="630"/>
 
-		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css?v=1.0.0">
 		
 		<!-- file to overwrite Conversational Form styles -->
-		<link rel="stylesheet" href="build/styles/cf/cf-theming.css">
+		<link rel="stylesheet" href="build/styles/cf/cf-theming.css?v=1.0.0">
 
 		<link rel="icon" href="images/favicon.ico">
 	</head>
 
 	<body>
 		<!-- Load Conversational Form (v0.9.6) -->
-		 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6.x/conversational-form.min.js" crossorigin></script>   
+		 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6.x/conversational-form.min.js?v=1.0.0" crossorigin></script>   
 		<!-- Load docs -->
-		 <script src="build/conversational-form-docs.min.js"></script>   
+		 <script src="build/conversational-form-docs.min.js?v=1.0.0"></script>   
 
 		<!-- dev -> -->
 		<!-- <script src="build/cf/ConversationalFormDocs.js"></script>
@@ -160,11 +160,12 @@
 				<form id="cf-form" method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
 
 					<fieldset>
-						<label for="name">Name</label>
+						<label for="name">What's your name?</label>
 						<input required cf-questions="Hey there! It’s nice to meet you — what should I call you?" type="text" name="name" id="name">
 					</fieldset>
 
 					<fieldset cf-questions="That’s great, {name}! Can you believe it’s this easy to use your voice?">
+						<h3>Can you believe it’s this easy to use your voice?</h3>
 						<label for="believe-1">Yes</label>
 						<input type="radio" name="believe" id="believe-1" value="yes">
 
@@ -176,16 +177,17 @@
 					</fieldset>
 
 					<fieldset>
-						<label for="from">Country</label>
+						<label for="country">Where are you from?</label>
 						<input required cf-questions="And where are you from?" type="text" name="country" id="country">
 					</fieldset>
 
 					<fieldset>
-						<label for="from">Season</label>
+						<label for="season">Favourite season</label>
 						<input required cf-questions="Lovely, I always wanted to visit {country}. What’s your favorite season of the year there?" type="text" name="season" id="season">
 					</fieldset>
 
 					<fieldset cf-questions="Wow, that’s cool, I love {season} too, but spring is my favorite!&&What’s your favorite color?">
+						<h3>Favourite color</h3>
 						<label for="color-1">Red</label>
 						<input type="radio" name="color" id="color-1" value="red">
 
@@ -200,6 +202,7 @@
 					</fieldset>
 
 					<fieldset cf-questions="Oh, I like {color} too.&&I can’t believe we’re just talking... Do you think this is the future of web forms?">
+						<h3>Is this the future of webforms?</h3>
 						<label for="future-1">Yes</label>
 						<input type="radio" name="future" id="future-1" value="yes">
 
@@ -211,6 +214,7 @@
 					</fieldset>
 
 					<fieldset cf-questions="Shall we do that again? Just say yes!">
+						<h3>Shall we do that again?</h3>
 						<label for="repeat-1">Yes</label>
 						<input type="radio" name="repeat-voice" id="repeat-1" value="yes">
 
