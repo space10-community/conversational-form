@@ -367,7 +367,7 @@ User previous versions. These versions are also available through bower, npm and
 ```
 
 ## Examples and tests
-When you are up and running, you can find a few form tests and examples in the /examples folder.
+You can view some examples [here](https://space10-community.github.io/conversational-form/examples.html) and find many more code-wise [here](https://github.com/space10-community/conversational-form/tree/master/docs).
 
 ## Browser support
 Lowest common denominator of browser testing:
