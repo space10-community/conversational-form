@@ -131,6 +131,13 @@ main.content
 				margin-top responsivePXValue(11, 30)
 				margin-bottom responsivePXValue(22, 60)
 
+				+above($breakpoint-1)
+					span.below-768
+						display none
+				+below($breakpoint-1)
+					span.above-768
+						display none
+
 			.github-button__outer
 				height 28px
 
@@ -146,6 +153,7 @@ main.content
 				h3
 					font-weight $font-weight-bold
 					font-size responsivePXValue(11, 13)
+					padding-right 70px //prevent text overlapping logo
 
 				> a
 					position absolute
