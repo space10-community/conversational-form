@@ -46,12 +46,20 @@ main.content
 		form
 			align-self flex-end
 			width 100%
+		
+		form h3
+			margin-bottom 15px
+			margin-bottom 10px
+			font-size 16px
 
 		fieldset
 			margin-bottom 20px
 			max-width 400px
 
-			> *
+			> input[type="radio"]
+				margin-left 0px
+
+			> *:not([type="radio"])
 				display block
 				width 100%
 			
