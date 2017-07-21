@@ -208,7 +208,7 @@ namespace cf {
 			
 			// set the ui options
 			this.uiOptions = Helpers.extendObject(UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
-			console.log('this.uiOptions:', this.uiOptions);
+			// console.log('this.uiOptions:', this.uiOptions);
 
 			this.init();
 		}

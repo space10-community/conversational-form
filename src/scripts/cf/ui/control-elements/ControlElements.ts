@@ -187,6 +187,17 @@ namespace cf {
 			}
 		}
 
+		private onListChanged(){
+			// reflow
+			this.list.offsetHeight;
+
+			// set new height
+			setTimeout(() => {
+				this.list.style.height = "auto";
+				this.list.style.height = this.list.offsetHeight + "px";
+			}, 0);
+		}
+
 		private onUserInputKeyChange(event: CustomEvent){
 			if(this.ignoreKeyboardInput){
 				this.ignoreKeyboardInput = false;
@@ -574,6 +585,8 @@ namespace cf {
 					this.elements.pop().dealloc();
 				}
 			}
+
+			this.onListChanged();
 		}
 
 		public buildTags(tags: Array<ITag>){
@@ -642,6 +655,8 @@ namespace cf {
 				const controlElementsAddedDTO: ControlElementsDTO = {
 					height: h,
 				};
+
+				this.onListChanged();
 
 				ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
 				this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.CONTROL_ELEMENTS_ADDED, {
