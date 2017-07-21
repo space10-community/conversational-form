@@ -1984,11 +1984,11 @@ cf-chat-response.user.peak-thumb thumb {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.user.peak-thumb thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
+  -webkit-transition-delay: 0.2s, 0.2s, 0.2s;
+  -moz-transition-delay: 0.2s, 0.2s, 0.2s;
+  -o-transition-delay: 0.2s, 0.2s, 0.2s;
+  -ms-transition-delay: 0.2s, 0.2s, 0.2s;
+  transition-delay: 0.2s, 0.2s, 0.2s;
 }
 cf-chat-response.disabled {
   pointer-events: none;
@@ -2207,11 +2207,11 @@ cf-chat-response.show.robot thumb {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.show.robot thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
+  -webkit-transition-delay: 0.2s, 0.2s, 0.2s;
+  -moz-transition-delay: 0.2s, 0.2s, 0.2s;
+  -o-transition-delay: 0.2s, 0.2s, 0.2s;
+  -ms-transition-delay: 0.2s, 0.2s, 0.2s;
+  transition-delay: 0.2s, 0.2s, 0.2s;
 }
 @-moz-keyframes dot-fade {
   0% {
