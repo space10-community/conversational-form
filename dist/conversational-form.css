@@ -255,7 +255,7 @@ cf-list.disabled {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-.cf-button:active {
+.cf-button:active > div {
   opacity: 0.2;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
@@ -1306,10 +1306,8 @@ cf-list-button.active:after {
   -ms-filter: none;
   filter: none;
 }
-cf-list-button:active {
-  opacity: 0.2;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-  filter: alpha(opacity=20);
+cf-list-button:active:after {
+  visibility: hidden;
 }
 cf-list-button:nth-child(1) {
   left: 0px;
@@ -1951,6 +1949,8 @@ cf-chat-response.user text {
 cf-chat-response.user text > p {
   background: #e6f3fe;
   border-radius: 20px 0px 20px 20px;
+  margin-right: 0px;
+  margin-left: auto;
 }
 cf-chat-response.user text thinking span:nth-child(1) {
   -webkit-animation-delay: 0.666666666666667s;

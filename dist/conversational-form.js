@@ -881,6 +881,16 @@ var cf;
                 }, this.cfReference.uiOptions.controlElementsInAnimationDelay);
             }
         };
+        ControlElements.prototype.onListChanged = function () {
+            var _this = this;
+            // reflow
+            this.list.offsetHeight;
+            // set new height
+            setTimeout(function () {
+                _this.list.style.height = "auto";
+                _this.list.style.height = _this.list.offsetHeight + "px";
+            }, 0);
+        };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
                 this.ignoreKeyboardInput = false;
@@ -1218,6 +1228,7 @@ var cf;
                     this.elements.pop().dealloc();
                 }
             }
+            this.onListChanged();
         };
         ControlElements.prototype.buildTags = function (tags) {
             var _this = this;
@@ -1277,6 +1288,7 @@ var cf;
                 var controlElementsAddedDTO = {
                     height: h,
                 };
+                _this.onListChanged();
                 cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.CONTROL_ELEMENTS_ADDED, {
                     detail: controlElementsAddedDTO
@@ -5298,7 +5310,7 @@ var cf;
             this.microphoneInputObj = options.microphoneInput;
             // set the ui options
             this.uiOptions = cf_1.Helpers.extendObject(cf_1.UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
-            console.log('this.uiOptions:', this.uiOptions);
+            // console.log('this.uiOptions:', this.uiOptions);
             this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {

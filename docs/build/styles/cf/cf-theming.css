@@ -113,7 +113,7 @@ main.content .conversational-form cf-input-button cf-icon-audio-eq {
 main.content .conversational-form .cf-button {
   color: #222;
   border-color: #ddd;
-  transition: border-color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: opacity 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), border-color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1);
   background: none !important;
   font-weight: 900;
   line-height: 1.2;
