@@ -12,6 +12,7 @@ namespace cf {
 		list: ChatList;
 		isRobotResponse: boolean;
 		tag: ITag;
+		container: HTMLElement;
 	}
 
 	export const ChatResponseEvents = {
@@ -32,7 +33,9 @@ namespace cf {
 		private uiOptions: IUserInterfaceOptions;
 		private textEl: Element;
 		private image: string;
+		private container: HTMLElement;
 		private _tag: ITag;
+		private readyTimer: number = 0;
 		private responseLink: ChatResponse; // robot reference from use
 		private onReadyCallback: () => void;
 
@@ -40,6 +43,10 @@ namespace cf {
 
 		public get tag(): ITag{
 			return this._tag;
+		}
+
+		public get added() : boolean {
+			return !!this.el.parentNode.parentNode;
 		}
 
 		public get disabled() : boolean {
@@ -68,6 +75,7 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			this.container = options.container;
 			this.uiOptions = options.cfReference.uiOptions;
 			this._tag = options.tag;
 		}
@@ -201,12 +209,17 @@ namespace cf {
 							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 							p[p.length - 1].offsetWidth;
 							p[p.length - 1].classList.add("show");
+
+							this.scrollTo();
 						}, this.uiOptions.robot.chainedResponseTime + (i * this.uiOptions.robot.chainedResponseTime));
 					}
 
-					setTimeout(() => {
+					this.readyTimer = setTimeout(() => {
 						if(this.onReadyCallback)
 							this.onReadyCallback();
+
+						// reset, as it can be called again
+						this.onReadyCallback = null;
 					}, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
 				}else{
 					// user response, act normal
@@ -214,10 +227,15 @@ namespace cf {
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
+
+					this.scrollTo();
 				}
 
 				this.parsedResponse = innerResponse;
 			// }
+
+			// value set, so add element, if not added
+			this.addSelf();
 
 			// bounce
 			this.el.removeAttribute("thinking");
@@ -225,14 +243,21 @@ namespace cf {
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
 				this.el.classList.add("peak-thumb");
-			}, 0);
 
+				
+			}, 0);
 
 			this.checkForEditMode();
 
 			// update response
 			// remove the double ampersands if present
 			this.response = innerResponse.split("&&").join(" ");
+		}
+		
+		public scrollTo(){
+			const y: number = this.el.offsetTop;
+			const h: number = this.el.offsetHeight;
+			this.container.scrollTop = y + h + this.container.scrollTop;
 		}
 
 		private checkForEditMode(){
@@ -247,6 +272,20 @@ namespace cf {
 				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
 				this.el.classList.remove("can-edit");
 				this.el.setAttribute("thinking", "");
+			}
+
+			if(this.cfReference.uiOptions.user.showThinking || this.cfReference.uiOptions.user.showThumb){
+				this.addSelf();
+			}
+		}
+
+		/**
+		* @name addSelf
+		* add one self to the chat list
+		*/
+		private addSelf(): void {
+			if(this.el.parentNode != this.container){
+				this.container.appendChild(this.el);
 			}
 		}
 
@@ -273,8 +312,6 @@ namespace cf {
 		protected onElementCreated(){
 			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
 
-			this.setValue();
-
 			this.updateThumbnail(this.image);
 
 			if(this.isRobotResponse || this.response != null){
@@ -285,7 +322,6 @@ namespace cf {
 				}, 0);
 				//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 			}else{
-				// TODO: Auto completion insertion point
 				if(this.cfReference.uiOptions.user.showThumb){
 					this.el.classList.add("peak-thumb");
 				}
@@ -293,6 +329,8 @@ namespace cf {
 		}
 
 		public dealloc(){
+			clearTimeout(this.readyTimer);
+			this.container = null;
 			this.uiOptions = null;
 			this.onReadyCallback = null;
 
