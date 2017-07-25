@@ -14,6 +14,13 @@
 			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		},
 		{
+			"tag": "input",
+			"type": "text",
+			"id": "second-tag",
+			"value": "Prefilled value here",
+			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11"
+		},
+		{
 			"tag": "fieldset",
 			"type": "Radio buttons",
 			"cf-input-placeholder": "Choose one of the above",

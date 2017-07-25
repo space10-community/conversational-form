@@ -12,7 +12,8 @@
 // namespace
 namespace cf {
 	export const ControlElementsEvents = {
-		ON_RESIZE: "on-control-elements-resize"
+		ON_RESIZE: "cf-on-control-elements-resize",
+		CHANGED: "cf-on-control-elements-changed"
 	}
 	export interface ControlElementsDTO{
 		height: number;
@@ -191,11 +192,10 @@ namespace cf {
 			// reflow
 			this.list.offsetHeight;
 
-			// set new height
-			setTimeout(() => {
-				this.list.style.height = "auto";
-				this.list.style.height = this.list.offsetHeight + "px";
-			}, 0);
+			requestAnimationFrame(() => {
+				ConversationalForm.illustrateFlow(this, "dispatch", ControlElementsEvents.CHANGED);
+				this.eventTarget.dispatchEvent(new Event(ControlElementsEvents.CHANGED));
+			})
 		}
 
 		private onUserInputKeyChange(event: CustomEvent){
@@ -586,6 +586,8 @@ namespace cf {
 				}
 			}
 
+			this.list.innerHTML = "";
+
 			this.onListChanged();
 		}
 
@@ -650,7 +652,7 @@ namespace cf {
 			}
 
 			new Promise((resolve: any, reject: any) => this.resize(resolve, reject)).then(() => {
-				const h: number = this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
+				const h: number = this.list.offsetHeight;//this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
 
 				const controlElementsAddedDTO: ControlElementsDTO = {
 					height: h,

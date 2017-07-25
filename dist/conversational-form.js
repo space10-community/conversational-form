@@ -745,7 +745,8 @@ var cf;
 var cf;
 (function (cf) {
     cf.ControlElementsEvents = {
-        ON_RESIZE: "on-control-elements-resize"
+        ON_RESIZE: "cf-on-control-elements-resize",
+        CHANGED: "cf-on-control-elements-changed"
     };
     var ControlElements = (function () {
         function ControlElements(options) {
@@ -885,11 +886,10 @@ var cf;
             var _this = this;
             // reflow
             this.list.offsetHeight;
-            // set new height
-            setTimeout(function () {
-                _this.list.style.height = "auto";
-                _this.list.style.height = _this.list.offsetHeight + "px";
-            }, 0);
+            requestAnimationFrame(function () {
+                cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.ControlElementsEvents.CHANGED);
+                _this.eventTarget.dispatchEvent(new Event(cf.ControlElementsEvents.CHANGED));
+            });
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -1228,6 +1228,7 @@ var cf;
                     this.elements.pop().dealloc();
                 }
             }
+            this.list.innerHTML = "";
             this.onListChanged();
         };
         ControlElements.prototype.buildTags = function (tags) {
@@ -1284,7 +1285,7 @@ var cf;
                 this.filterListNumberOfVisible = tags.length;
             }
             new Promise(function (resolve, reject) { return _this.resize(resolve, reject); }).then(function () {
-                var h = _this.el.classList.contains("one-row") ? 52 : _this.el.classList.contains("two-row") ? 102 : 0;
+                var h = _this.list.offsetHeight; //this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
                 var controlElementsAddedDTO = {
                     height: h,
                 };
@@ -4448,6 +4449,8 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
+            _this.readyTimer = 0;
+            _this.container = options.container;
             _this.uiOptions = options.cfReference.uiOptions;
             _this._tag = options.tag;
             return _this;
@@ -4455,6 +4458,13 @@ var cf;
         Object.defineProperty(ChatResponse.prototype, "tag", {
             get: function () {
                 return this._tag;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ChatResponse.prototype, "added", {
+            get: function () {
+                return !!this.el.parentNode.parentNode;
             },
             enumerable: true,
             configurable: true
@@ -4604,15 +4614,18 @@ var cf;
                         var p = _this.textEl.getElementsByTagName("p");
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
+                        _this.scrollTo();
                     }, this_1.uiOptions.robot.chainedResponseTime + (i_2 * this_1.uiOptions.robot.chainedResponseTime));
                 };
                 var this_1 = this;
                 for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
                     _loop_1(i_2);
                 }
-                setTimeout(function () {
+                this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
                         _this.onReadyCallback();
+                    // reset, as it can be called again
+                    _this.onReadyCallback = null;
                 }, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
             }
             else {
@@ -4621,9 +4634,12 @@ var cf;
                 var p = this.textEl.getElementsByTagName("p");
                 p[p.length - 1].offsetWidth;
                 p[p.length - 1].classList.add("show");
+                this.scrollTo();
             }
             this.parsedResponse = innerResponse;
             // }
+            // value set, so add element, if not added
+            this.addSelf();
             // bounce
             this.el.removeAttribute("thinking");
             this.textEl.removeAttribute("value-added");
@@ -4636,6 +4652,11 @@ var cf;
             // remove the double ampersands if present
             this.response = innerResponse.split("&&").join(" ");
         };
+        ChatResponse.prototype.scrollTo = function () {
+            var y = this.el.offsetTop;
+            var h = this.el.offsetHeight;
+            this.container.scrollTop = y + h + this.container.scrollTop;
+        };
         ChatResponse.prototype.checkForEditMode = function () {
             if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
                 this.el.classList.add("can-edit");
@@ -4647,6 +4668,18 @@ var cf;
                 this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
                 this.el.classList.remove("can-edit");
                 this.el.setAttribute("thinking", "");
+            }
+            if (this.cfReference.uiOptions.user.showThinking || this.cfReference.uiOptions.user.showThumb) {
+                this.addSelf();
+            }
+        };
+        /**
+        * @name addSelf
+        * add one self to the chat list
+        */
+        ChatResponse.prototype.addSelf = function () {
+            if (this.el.parentNode != this.container) {
+                this.container.appendChild(this.el);
             }
         };
         /**
@@ -4669,7 +4702,6 @@ var cf;
         ChatResponse.prototype.onElementCreated = function () {
             var _this = this;
             this.textEl = this.el.getElementsByTagName("text")[0];
-            this.setValue();
             this.updateThumbnail(this.image);
             if (this.isRobotResponse || this.response != null) {
                 // Robot is pseudo thinking, can also be user -->
@@ -4680,13 +4712,14 @@ var cf;
                 //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
             }
             else {
-                // TODO: Auto completion insertion point
                 if (this.cfReference.uiOptions.user.showThumb) {
                     this.el.classList.add("peak-thumb");
                 }
             }
         };
         ChatResponse.prototype.dealloc = function () {
+            clearTimeout(this.readyTimer);
+            this.container = null;
             this.uiOptions = null;
             this.onReadyCallback = null;
             if (this.onClickCallback) {
@@ -4745,12 +4778,14 @@ var cf;
             // user input height change
             _this.onInputHeightChangeCallback = _this.onInputHeightChange.bind(_this);
             _this.eventTarget.addEventListener(cf.UserInputEvents.HEIGHT_CHANGE, _this.onInputHeightChangeCallback, false);
+            // on control elements changed
+            _this.onControlElementsResizedCallback = _this.onControlElementsResized.bind(_this);
+            _this.eventTarget.addEventListener(cf.ControlElementsEvents.ON_RESIZE, _this.onControlElementsResizedCallback, false);
             return _this;
         }
         ChatList.prototype.onInputHeightChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
-            this.scrollListTo();
         };
         ChatList.prototype.onInputKeyChange = function (event) {
             var dto = event.detail.dto;
@@ -4766,6 +4801,25 @@ var cf;
                 // this should never happen..
                 throw new Error("No current response ..?");
             }
+        };
+        /**
+        * @name onControlElementsResized
+        * on control elements change
+        */
+        ChatList.prototype.onControlElementsResized = function (event) {
+            cf.ConversationalForm.illustrateFlow(this, "receive", cf.ControlElementsEvents.ON_RESIZE);
+            var responseToScrollTo = this.currentResponse;
+            if (!responseToScrollTo.added) {
+                // element not added yet, so find closest
+                for (var i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
+                    var element = this.responses[i];
+                    if (element.added) {
+                        responseToScrollTo = element;
+                        break;
+                    }
+                }
+            }
+            responseToScrollTo.scrollTo();
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -4785,16 +4839,13 @@ var cf;
                     robot.whenReady(function () {
                         // create user response
                         _this.currentUserResponse = _this.createResponse(false, currentTag);
+                        robot.scrollTo();
                     });
                     if (_this.currentUserResponse) {
                         // linked, but only if we should not ignore existing tag
                         _this.currentUserResponse.setLinkToOtherReponse(robot);
                         robot.setLinkToOtherReponse(_this.currentUserResponse);
                     }
-                    // user response, create the waiting response
-                    // setTimeout(() => {
-                    // 	this.currentUserResponse = this.createResponse(false, currentTag);
-                    // }, 200);
                 }, this.responses.length === 0 ? 500 : 0);
             }
         };
@@ -4817,23 +4868,26 @@ var cf;
         * on user ChatReponse clicked
         */
         ChatList.prototype.onUserWantsToEditTag = function (tagToChange) {
-            var oldReponse;
+            var responseUserWantsToEdit;
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
                 if (!element.isRobotResponse && element.tag == tagToChange) {
                     // update element thhat user wants to edit
-                    oldReponse = element;
+                    responseUserWantsToEdit = element;
                     break;
                 }
             }
             // reset the current user response
             this.currentUserResponse.processResponseAndSetText();
-            if (oldReponse) {
-                // only disable latest tag when we jump back
-                if (this.currentUserResponse == this.responses[this.responses.length - 1]) {
-                    this.currentUserResponse.dealloc();
+            if (responseUserWantsToEdit) {
+                // remove latest user response, if it is there
+                if (!this.responses[this.responses.length - 1].isRobotResponse) {
+                    this.responses.pop().dealloc();
                 }
-                this.currentUserResponse = oldReponse;
+                // remove latest robot response, it should always be a robot response
+                this.responses.pop().dealloc();
+                this.currentUserResponse = responseUserWantsToEdit;
+                this.currentResponse = this.responses[this.responses.length - 1];
                 this.onListUpdate(this.currentUserResponse);
             }
         };
@@ -4845,8 +4899,7 @@ var cf;
                     detail: _this
                 }));
                 chatResponse.show();
-                _this.scrollListTo(chatResponse);
-            }, 500);
+            }, 0);
         };
         /**
         * @name clearFrom
@@ -4856,8 +4909,7 @@ var cf;
             index = index * 2; // double up because of robot responses
             index += index % 2; // round up so we dont remove the user response element
             while (this.responses.length > index) {
-                var element = this.responses.pop();
-                element.dealloc();
+                this.responses.pop().dealloc();
             }
         };
         /**
@@ -4876,7 +4928,6 @@ var cf;
                 }
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-            this.scrollListTo(this.currentUserResponse);
         };
         /**
         * @name getResponses
@@ -4900,6 +4951,7 @@ var cf;
         };
         ChatList.prototype.createResponse = function (isRobotResponse, currentTag, value) {
             if (value === void 0) { value = null; }
+            var scrollable = this.el.querySelector("scrollable");
             var response = new cf.ChatResponse({
                 // image: null,
                 cfReference: this.cfReference,
@@ -4909,25 +4961,12 @@ var cf;
                 isRobotResponse: isRobotResponse,
                 response: value,
                 image: isRobotResponse ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image"),
+                container: scrollable
             });
             this.responses.push(response);
             this.currentResponse = response;
-            var scrollable = this.el.querySelector("scrollable");
-            scrollable.appendChild(this.currentResponse.el);
             this.onListUpdate(response);
             return response;
-        };
-        ChatList.prototype.scrollListTo = function (response) {
-            if (response === void 0) { response = null; }
-            try {
-                var scrollable_1 = this.el.querySelector("scrollable");
-                var y_1 = response ? response.el.offsetTop - 50 : 1000000000;
-                scrollable_1.scrollTop = y_1;
-                setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
-            }
-            catch (error) {
-                // catch errors where CF have been removed
-            }
         };
         ChatList.prototype.getTemplate = function () {
             return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";
