@@ -57,6 +57,21 @@ namespace cf {
 			return this._disabled
 		}
 
+		public get height():number{
+			let elHeight: number = 0
+			let elMargin: number = 0;
+			const el: any = <any>this.el;
+			if(Helpers.isInternetExlorer()) {// IE
+				elHeight = (<any>el).offsetHeight;
+				elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10);
+				elMargin *= 2;
+			} else {
+				elHeight = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('height'), 10);
+				elMargin = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-bottom'));
+			}
+			return (elHeight + elMargin);
+		}
+
 		constructor(options: IUserInputOptions){
 			super(options);
 

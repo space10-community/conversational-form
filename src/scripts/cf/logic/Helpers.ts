@@ -53,6 +53,12 @@ namespace cf {
 			return <string> mappings[eventString];
 		}
 
+		public static isInternetExlorer(){
+			var ua = window.navigator.userAgent;
+			var msie = ua.indexOf("MSIE ");
+			return msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
+		}
+
 		public static caniuse = {
 			fileReader: () => {
 				if((<any>window).File && (<any>window).FileReader && (<any>window).FileList && window.Blob)

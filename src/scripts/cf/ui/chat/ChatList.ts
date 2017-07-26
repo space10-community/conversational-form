@@ -16,10 +16,12 @@ namespace cf {
 		private onInputKeyChangeCallback: () => void;
 		private onInputHeightChangeCallback: () => void;
 		private onControlElementsResizedCallback: () => void;
+		private onControlElementsChangedCallback: () => void;
 		private currentResponse: ChatResponse;
 		private currentUserResponse: ChatResponse;
 		private flowDTOFromUserInputUpdate: FlowDTO;
 		private responses: Array<ChatResponse>;
+		private input: UserInputElement;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -47,11 +49,16 @@ namespace cf {
 			// on control elements changed
 			this.onControlElementsResizedCallback = this.onControlElementsResized.bind(this);
 			this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, this.onControlElementsResizedCallback, false);
+
+			this.onControlElementsChangedCallback = this.onControlElementsChanged.bind(this);
+			this.eventTarget.addEventListener(ControlElementsEvents.CHANGED, this.onControlElementsChangedCallback, false);
 		}
 
 		private onInputHeightChange(event: CustomEvent){
 			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+
+			this.onInputElementChanged();
 		}
 
 		private onInputKeyChange(event: CustomEvent){
@@ -72,9 +79,21 @@ namespace cf {
 			}
 		}
 
+		public addInput(input: UserInputElement){
+			this.input = input;
+		}
+
+		/**
+		* @name onControlElementsChanged
+		* on control elements change
+		*/
+		private onControlElementsChanged(event: Event): void {
+			this.onInputElementChanged();
+		}
+
 		/**
 		* @name onControlElementsResized
-		* on control elements change
+		* on control elements resize
 		*/
 		private onControlElementsResized(event: Event): void {
 			ConversationalForm.illustrateFlow(this, "receive", ControlElementsEvents.ON_RESIZE);
@@ -91,6 +110,16 @@ namespace cf {
 			}
 
 			responseToScrollTo.scrollTo();
+
+			this.onInputElementChanged();
+		}
+
+		private onInputElementChanged(){
+			const cfHeight: number = this.cfReference.el.offsetHeight;
+			const inputHeight: number = this.input.height;
+			const listHeight: number = cfHeight - inputHeight;
+			console.log("onInputElementChanged", cfHeight, inputHeight, listHeight);
+			this.el.style.height = listHeight + "px";
 		}
 
 		private onFlowUpdate(event: CustomEvent){
