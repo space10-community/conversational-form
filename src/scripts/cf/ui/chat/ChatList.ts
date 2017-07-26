@@ -98,18 +98,20 @@ namespace cf {
 		private onControlElementsResized(event: Event): void {
 			ConversationalForm.illustrateFlow(this, "receive", ControlElementsEvents.ON_RESIZE);
 			let responseToScrollTo: ChatResponse = this.currentResponse;
-			if(!responseToScrollTo.added){
-				// element not added yet, so find closest
-				for (let i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
-					let element: ChatResponse = <ChatResponse>this.responses[i];
-					if(element.added){
-						responseToScrollTo = element;
-						break;
+			if(responseToScrollTo){
+				if(!responseToScrollTo.added){
+					// element not added yet, so find closest
+					for (let i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
+						let element: ChatResponse = <ChatResponse>this.responses[i];
+						if(element.added){
+							responseToScrollTo = element;
+							break;
+						}
 					}
 				}
+				
+				responseToScrollTo.scrollTo();
 			}
-
-			responseToScrollTo.scrollTo();
 
 			this.onInputElementChanged();
 		}

@@ -265,15 +265,15 @@
 				return error();
 			};
 
-			var conversationalForm;
+			var cfInstance;
 
 			// check formless.json
 			var onFormlessSubmitted = function(cf){
-				var formData = conversationalForm.getFormData();
-				var formDataSerialized = conversationalForm.getFormData(true);
+				var formData = cfInstance.getFormData();
+				var formDataSerialized = cfInstance.getFormData(true);
 				console.log("Formdata:", formData);
 				console.log("Formdata, obj:", formDataSerialized);
-				conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.")
+				cfInstance.addRobotChatResponse("Check the dev console for FormatData output.")
 
 			}
 
@@ -457,7 +457,7 @@
 
 						// add tag
 						// add tag at index
-						conversationalForm.addTags(tags, true);
+						cfInstance.addTags(tags, true);
 					}
 
 					setTimeout(function(){
@@ -484,7 +484,7 @@
 					console.log("JSON to parse as form:", json)
 
 					// start one w. string
-					// window.cf.ConversationalForm.startTheConversation(str);
+					// window.cf.cfInstance.startTheConversation(str);
 
 					// add callback hooks..
 					json.options.submitCallback = onFormlessSubmitted.bind(window);
@@ -494,20 +494,21 @@
 					json.options.userInterfaceOptions = {
 						controlElementsInAnimationDelay: 250,
 						robot: {
+							robotResponseTime: 1000,
 							chainedResponseTime: 400
 						},
 						user:{
-							showThinking: false,
+							showThinking: true,
 							showThumb: false
 						}
 					}
 					
 					// start one w. json
-					conversationalForm = window.cf.ConversationalForm.startTheConversation(json);
-					document.getElementById("context").appendChild(conversationalForm.el);
+					cfInstance = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("context").appendChild(cfInstance.el);
 
 					// in-document form
-					// window.cf.ConversationalForm.startTheConversation({
+					// window.cf.cfInstance.startTheConversation({
 					// 	formEl: document.getElementById("empty-form")
 					// });
 				}
