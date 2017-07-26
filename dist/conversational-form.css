@@ -1952,27 +1952,6 @@ cf-chat-response.user text > p {
   margin-right: 0px;
   margin-left: auto;
 }
-cf-chat-response.user text thinking span:nth-child(1) {
-  -webkit-animation-delay: 0.666666666666667s;
-  -moz-animation-delay: 0.666666666666667s;
-  -o-animation-delay: 0.666666666666667s;
-  -ms-animation-delay: 0.666666666666667s;
-  animation-delay: 0.666666666666667s;
-}
-cf-chat-response.user text thinking span:nth-child(2) {
-  -webkit-animation-delay: 1.333333333333333s;
-  -moz-animation-delay: 1.333333333333333s;
-  -o-animation-delay: 1.333333333333333s;
-  -ms-animation-delay: 1.333333333333333s;
-  animation-delay: 1.333333333333333s;
-}
-cf-chat-response.user text thinking span:nth-child(3) {
-  -webkit-animation-delay: 2s;
-  -moz-animation-delay: 2s;
-  -o-animation-delay: 2s;
-  -ms-animation-delay: 2s;
-  animation-delay: 2s;
-}
 cf-chat-response.user.peak-thumb thumb {
   -webkit-transform: scale(1, 1) translateY(0px);
   -moz-transform: scale(1, 1) translateY(0px);
@@ -1997,7 +1976,7 @@ cf-chat-response.disabled {
 cf-chat-response.disabled text {
   background: #f2f9fe;
 }
-cf-chat-response[thinking] thinking {
+cf-chat-response[thinking] text thinking {
   display: block;
 }
 cf-chat-response text {
@@ -2033,6 +2012,27 @@ cf-chat-response text {
 }
 cf-chat-response text > div {
   display: inline-block;
+}
+cf-chat-response text thinking span:nth-child(1) {
+  -webkit-animation-delay: 0.666666666666667s;
+  -moz-animation-delay: 0.666666666666667s;
+  -o-animation-delay: 0.666666666666667s;
+  -ms-animation-delay: 0.666666666666667s;
+  animation-delay: 0.666666666666667s;
+}
+cf-chat-response text thinking span:nth-child(2) {
+  -webkit-animation-delay: 1.333333333333333s;
+  -moz-animation-delay: 1.333333333333333s;
+  -o-animation-delay: 1.333333333333333s;
+  -ms-animation-delay: 1.333333333333333s;
+  animation-delay: 1.333333333333333s;
+}
+cf-chat-response text thinking span:nth-child(3) {
+  -webkit-animation-delay: 2s;
+  -moz-animation-delay: 2s;
+  -o-animation-delay: 2s;
+  -ms-animation-delay: 2s;
+  animation-delay: 2s;
 }
 cf-chat-response text strong {
   font-weight: 900;

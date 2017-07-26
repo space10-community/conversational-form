@@ -14,31 +14,33 @@
 			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		},
 		{
-			"tag": "input",
-			"type": "text",
-			"id": "second-tag",
-			"value": "Prefilled value here",
-			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11"
-		},
-		{
 			"tag": "fieldset",
-			"type": "Radio buttons",
+			"type": "Checkboxes buttons",
+			"id": "second-tag",
 			"cf-input-placeholder": "Choose one of the above",
 			"cf-questions": "Choose one of the radios&&Step 2&&step 3&&step 4",
 			"children":[
 				{
 					"tag": "input",
-					"type": "radio",
-					"name": "radio-buttons-1",
-					"cf-label": "radio-1"
+					"type": "checkbox",
+					"required": "required",
+					"name": "checkbox-buttons-1",
+					"cf-label": "checkbox-1"
 				},
 				{
 					"tag": "input",
-					"type": "radio",
-					"name": "radio-buttons-1",
-					"cf-label": "radio-2"
+					"type": "checkbox",
+					"required": "required",
+					"name": "checkbox-buttons-1",
+					"cf-label": "checkbox-2"
 				}
 			]
+		},
+		{
+			"tag": "input",
+			"type": "text",
+			"value": "Prefilled value here",
+			"cf-questions": "{first-tag} + {second-tag} &&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11"
 		},
 		{
 			"tag": "select",

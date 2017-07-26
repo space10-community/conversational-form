@@ -4,6 +4,7 @@ namespace cf {
 	export const UserInterfaceDefaultOptions: IUserInterfaceOptions = {
 		controlElementsInAnimationDelay: 250,
 		robot: {
+			robotResponseTime: 0,
 			chainedResponseTime: 500
 		},
 		user: {
@@ -19,6 +20,9 @@ namespace cf {
 		
 		// robot bobble
 		robot?:{
+			// show thinking dots for robot, defaults to 0
+			robotResponseTime?: number;
+
 			// the delay inbetween chained robot responses
 			chainedResponseTime?: number;
 		},

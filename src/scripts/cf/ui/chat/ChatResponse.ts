@@ -22,7 +22,7 @@ namespace cf {
 	// class
 	export class ChatResponse extends BasicElement {
 		public static list: ChatList;
-		private static THINKING_MARKUP: string = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
+		private static THINKING_MARKUP: string = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
 
 		public isRobotResponse: boolean;
 
@@ -200,18 +200,26 @@ namespace cf {
 				// now set it
 				if(this.isRobotResponse){
 					this.textEl.innerHTML = "";
+
+					let robotInitResponseTime: number = this.uiOptions.robot.robotResponseTime;
+					if(robotInitResponseTime != 0){
+						this.setToThinking();
+					}
+
 					// robot response, allow for && for multiple responses
 					var chainedResponses: Array<string> = innerResponse.split("&&");
 					for (let i = 0; i < chainedResponses.length; i++) {
 						let str: string = <string>chainedResponses[i];
 						setTimeout(() =>{
+							this.tryClearThinking();
+
 							this.textEl.innerHTML += "<p>" + str + "</p>";
 							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 							p[p.length - 1].offsetWidth;
 							p[p.length - 1].classList.add("show");
 
 							this.scrollTo();
-						}, this.uiOptions.robot.chainedResponseTime + (i * this.uiOptions.robot.chainedResponseTime));
+						}, robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
 					}
 
 					this.readyTimer = setTimeout(() => {
@@ -220,9 +228,11 @@ namespace cf {
 
 						// reset, as it can be called again
 						this.onReadyCallback = null;
-					}, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
+					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
 				}else{
 					// user response, act normal
+					this.tryClearThinking();
+
 					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
@@ -238,13 +248,10 @@ namespace cf {
 			this.addSelf();
 
 			// bounce
-			this.el.removeAttribute("thinking");
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
 				this.el.classList.add("peak-thumb");
-
-				
 			}, 0);
 
 			this.checkForEditMode();
@@ -267,8 +274,16 @@ namespace cf {
 			}
 		}
 
+		private tryClearThinking(){
+			if(this.el.hasAttribute("thinking")){
+				this.textEl.innerHTML = "";
+				this.el.removeAttribute("thinking");
+			}
+		}
+
 		private setToThinking(){
-			if(this.cfReference.uiOptions.user.showThinking){
+			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+			if(canShowThinking){
 				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
 				this.el.classList.remove("can-edit");
 				this.el.setAttribute("thinking", "");

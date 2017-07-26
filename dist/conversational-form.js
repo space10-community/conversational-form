@@ -489,6 +489,7 @@ var cf;
     cf.UserInterfaceDefaultOptions = {
         controlElementsInAnimationDelay: 250,
         robot: {
+            robotResponseTime: 0,
             chainedResponseTime: 500
         },
         user: {
@@ -2437,6 +2438,10 @@ var cf;
                             }
                         }
                     }
+                    if (this.required && this._activeElements.length == 0) {
+                        // checkbox can be required
+                        isValid = false;
+                    }
                     break;
             }
             return isValid;
@@ -3830,11 +3835,13 @@ var cf;
                 var elMargin = 0;
                 var el = this.el;
                 if (cf.Helpers.isInternetExlorer()) {
+                    // IE
                     elHeight = el.offsetHeight;
                     elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10);
                     elMargin *= 2;
                 }
                 else {
+                    // none-IE
                     elHeight = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('height'), 10);
                     elMargin = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-bottom'));
                 }
@@ -4629,17 +4636,22 @@ var cf;
             // now set it
             if (this.isRobotResponse) {
                 this.textEl.innerHTML = "";
+                var robotInitResponseTime = this.uiOptions.robot.robotResponseTime;
+                if (robotInitResponseTime != 0) {
+                    this.setToThinking();
+                }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
                 var _loop_1 = function (i_2) {
                     var str = chainedResponses[i_2];
                     setTimeout(function () {
+                        _this.tryClearThinking();
                         _this.textEl.innerHTML += "<p>" + str + "</p>";
                         var p = _this.textEl.getElementsByTagName("p");
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
                         _this.scrollTo();
-                    }, this_1.uiOptions.robot.chainedResponseTime + (i_2 * this_1.uiOptions.robot.chainedResponseTime));
+                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
                 };
                 var this_1 = this;
                 for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
@@ -4650,10 +4662,11 @@ var cf;
                         _this.onReadyCallback();
                     // reset, as it can be called again
                     _this.onReadyCallback = null;
-                }, chainedResponses.length * this.uiOptions.robot.chainedResponseTime);
+                }, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
             }
             else {
                 // user response, act normal
+                this.tryClearThinking();
                 this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
                 var p = this.textEl.getElementsByTagName("p");
                 p[p.length - 1].offsetWidth;
@@ -4665,7 +4678,6 @@ var cf;
             // value set, so add element, if not added
             this.addSelf();
             // bounce
-            this.el.removeAttribute("thinking");
             this.textEl.removeAttribute("value-added");
             setTimeout(function () {
                 _this.textEl.setAttribute("value-added", "");
@@ -4687,8 +4699,15 @@ var cf;
                 this.disabled = false;
             }
         };
+        ChatResponse.prototype.tryClearThinking = function () {
+            if (this.el.hasAttribute("thinking")) {
+                this.textEl.innerHTML = "";
+                this.el.removeAttribute("thinking");
+            }
+        };
         ChatResponse.prototype.setToThinking = function () {
-            if (this.cfReference.uiOptions.user.showThinking) {
+            var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+            if (canShowThinking) {
                 this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
                 this.el.classList.remove("can-edit");
                 this.el.setAttribute("thinking", "");
@@ -4758,7 +4777,7 @@ var cf;
         };
         return ChatResponse;
     }(cf.BasicElement));
-    ChatResponse.THINKING_MARKUP = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
+    ChatResponse.THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
     cf.ChatResponse = ChatResponse;
 })(cf || (cf = {}));
 
@@ -4846,17 +4865,19 @@ var cf;
         ChatList.prototype.onControlElementsResized = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", cf.ControlElementsEvents.ON_RESIZE);
             var responseToScrollTo = this.currentResponse;
-            if (!responseToScrollTo.added) {
-                // element not added yet, so find closest
-                for (var i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
-                    var element = this.responses[i];
-                    if (element.added) {
-                        responseToScrollTo = element;
-                        break;
+            if (responseToScrollTo) {
+                if (!responseToScrollTo.added) {
+                    // element not added yet, so find closest
+                    for (var i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
+                        var element = this.responses[i];
+                        if (element.added) {
+                            responseToScrollTo = element;
+                            break;
+                        }
                     }
                 }
+                responseToScrollTo.scrollTo();
             }
-            responseToScrollTo.scrollTo();
             this.onInputElementChanged();
         };
         ChatList.prototype.onInputElementChanged = function () {
