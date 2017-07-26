@@ -450,6 +450,8 @@ namespace cf {
 				cfReference: this
 			});
 
+			this.chatList.addInput(this.userInput);
+
 			innerWrap.appendChild(this.userInput.el);
 
 			this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);

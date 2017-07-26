@@ -321,6 +321,11 @@ var cf;
             mappings["mousemove"] = "ontouchstart" in window ? "touchmove" : "mousemove";
             return mappings[eventString];
         };
+        Helpers.isInternetExlorer = function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            return msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
+        };
         Helpers.setEmojiLib = function (lib, scriptSrc) {
             if (lib === void 0) { lib = "emojify"; }
             if (scriptSrc === void 0) { scriptSrc = "//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"; }
@@ -888,7 +893,7 @@ var cf;
             this.list.offsetHeight;
             requestAnimationFrame(function () {
                 cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.ControlElementsEvents.CHANGED);
-                _this.eventTarget.dispatchEvent(new Event(cf.ControlElementsEvents.CHANGED));
+                _this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.CHANGED));
             });
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
@@ -3819,6 +3824,25 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(UserInputElement.prototype, "height", {
+            get: function () {
+                var elHeight = 0;
+                var elMargin = 0;
+                var el = this.el;
+                if (cf.Helpers.isInternetExlorer()) {
+                    elHeight = el.offsetHeight;
+                    elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10);
+                    elMargin *= 2;
+                }
+                else {
+                    elHeight = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('height'), 10);
+                    elMargin = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-bottom'));
+                }
+                return (elHeight + elMargin);
+            },
+            enumerable: true,
+            configurable: true
+        });
         UserInputElement.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
         };
@@ -4781,11 +4805,14 @@ var cf;
             // on control elements changed
             _this.onControlElementsResizedCallback = _this.onControlElementsResized.bind(_this);
             _this.eventTarget.addEventListener(cf.ControlElementsEvents.ON_RESIZE, _this.onControlElementsResizedCallback, false);
+            _this.onControlElementsChangedCallback = _this.onControlElementsChanged.bind(_this);
+            _this.eventTarget.addEventListener(cf.ControlElementsEvents.CHANGED, _this.onControlElementsChangedCallback, false);
             return _this;
         }
         ChatList.prototype.onInputHeightChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+            this.onInputElementChanged();
         };
         ChatList.prototype.onInputKeyChange = function (event) {
             var dto = event.detail.dto;
@@ -4802,9 +4829,19 @@ var cf;
                 throw new Error("No current response ..?");
             }
         };
+        ChatList.prototype.addInput = function (input) {
+            this.input = input;
+        };
+        /**
+        * @name onControlElementsChanged
+        * on control elements change
+        */
+        ChatList.prototype.onControlElementsChanged = function (event) {
+            this.onInputElementChanged();
+        };
         /**
         * @name onControlElementsResized
-        * on control elements change
+        * on control elements resize
         */
         ChatList.prototype.onControlElementsResized = function (event) {
             cf.ConversationalForm.illustrateFlow(this, "receive", cf.ControlElementsEvents.ON_RESIZE);
@@ -4820,6 +4857,14 @@ var cf;
                 }
             }
             responseToScrollTo.scrollTo();
+            this.onInputElementChanged();
+        };
+        ChatList.prototype.onInputElementChanged = function () {
+            var cfHeight = this.cfReference.el.offsetHeight;
+            var inputHeight = this.input.height;
+            var listHeight = cfHeight - inputHeight;
+            console.log("onInputElementChanged", cfHeight, inputHeight, listHeight);
+            this.el.style.height = listHeight + "px";
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -5562,6 +5607,7 @@ var cf;
                 eventTarget: this.eventTarget,
                 cfReference: this
             });
+            this.chatList.addInput(this.userInput);
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
             this.eventTarget.addEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);
