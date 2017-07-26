@@ -194,7 +194,7 @@ namespace cf {
 
 			requestAnimationFrame(() => {
 				ConversationalForm.illustrateFlow(this, "dispatch", ControlElementsEvents.CHANGED);
-				this.eventTarget.dispatchEvent(new Event(ControlElementsEvents.CHANGED));
+				this.eventTarget.dispatchEvent(new CustomEvent(ControlElementsEvents.CHANGED));
 			})
 		}
 
