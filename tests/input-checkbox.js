@@ -49,6 +49,10 @@ describe('Check input type=text', function() {
 		// could also tap into event system..
 		// UserInputEvents.CONTROL_ELEMENTS_ADDED
 
+		// test default values
+		expect(checkboxInstance.tags[0].elements[0].domElement.checked).toBe(true);
+		expect(checkboxInstance.tags[0].elements[1].domElement.checked).toBe(false);
+
 		setTimeout(function(){
 			// shift check values on check
 			checkboxInstance.userInput.controlElements.elements[0].onClick();
