@@ -10,7 +10,8 @@
 			"tag": "input",
 			"type": "text",
 			"id": "first-tag",
-			"value": "Prefilled value here",
+			"name": "first-tag",
+			"value": "Just do it",
 			"cf-questions": "Prefilled1&&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		},
 		{
@@ -24,6 +25,7 @@
 					"tag": "input",
 					"type": "checkbox",
 					"required": "required",
+					"value": "checkbox-1",
 					"name": "checkbox-buttons-1",
 					"cf-label": "checkbox-1"
 				},
@@ -31,6 +33,7 @@
 					"tag": "input",
 					"type": "checkbox",
 					"required": "required",
+					"value": "checkbox-2",
 					"name": "checkbox-buttons-1",
 					"cf-label": "checkbox-2"
 				}
@@ -40,6 +43,8 @@
 			"tag": "input",
 			"type": "text",
 			"value": "Prefilled value here",
+			"cf-conditional-first-tag": "Just do it",
+			"cf-conditional-checkbox-buttons-1": "checkbox-2",
 			"cf-questions": "{first-tag} + {second-tag} &&with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1with follow-up1&&with follow-up11"
 		},
 		{

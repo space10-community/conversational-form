@@ -283,7 +283,7 @@
 				// fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
 				var xhr = new XMLHttpRequest()
 				xhr.onload = function(event){
-					if(step++ == 1){
+					if(step++ == 2){
 						// add tags that are received from pseudo webservice ..
 						var tags = [
 							{
@@ -476,7 +476,7 @@
 
 			// load json file with formless data (files/formless.json)
 			window.onload = function(){
-				var xhr = new XMLHttpRequest()
+				var xhr = new XMLHttpRequest();
 				xhr.onload = function(event){
 					var str = xhr.response;
 					var json = JSON.parse(str);
