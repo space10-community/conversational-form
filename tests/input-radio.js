@@ -6,26 +6,24 @@ describe('Check input type=text', function() {
 		"tags": [
 			{
 				"tag": "fieldset",
-				"id": "checkboxes",
+				"id": "radios",
 				"cf-input-placeholder": "...",
-				"cf-questions": "A checkbox for every taste",
+				"cf-questions": "A radio for every navel for every taste",
 				"children":[
 					{
 						"tag": "input",
-						"type": "checkbox",
-						"required": "required",
+						"type": "radio",
 						"checked": "checked",
-						"value":"check-wrong",
-						"name": "checkbox-buttons-1",
-						"cf-label": "checkbox-1"
+						"value":"radio-wrong",
+						"name": "radio-buttons-1",
+						"cf-label": "radio-1"
 					},
 					{
 						"tag": "input",
-						"type": "checkbox",
-						"required": "required",
-						"name": "checkbox-buttons-1",
-						"value":"check-right",
-						"cf-label": "checkbox-2"
+						"type": "radio",
+						"name": "radio-buttons-1",
+						"value":"radio-right",
+						"cf-label": "radio-2"
 					}
 				]
 			},
@@ -43,7 +41,6 @@ describe('Check input type=text', function() {
 		expect(instance.tags).not.toBeNull();
 		expect(instance.tags.length).toBe(2);
 		expect(instance.tags[0].type).toBe("group");
-		expect(instance.tags[0].id).toBe("checkboxes");
 		expect(instance.tags[0].domElement).not.toBeNull();
 
 		// could also tap into event system..
@@ -59,12 +56,13 @@ describe('Check input type=text', function() {
 			instance.userInput.controlElements.elements[1].onClick();
 
 			// submit values
-			instance.userInput.doSubmit();
+			// instance.userInput.doSubmit();
 
 			// check submitted values
 			expect(instance.tags[0].elements[0].domElement.checked).toBe(false);
 			expect(instance.tags[0].elements[1].domElement.checked).toBe(true);
-			expect(instance.getFormData(true)["checkbox-buttons-1"][0]).toBe("check-right");
+
+			expect(instance.getFormData(true)["radio-buttons-1"][0]).toBe("radio-right");
 
 			done();
 		}, 500);
