@@ -200,6 +200,9 @@ namespace cf {
 
 				this.currentUserResponse = responseUserWantsToEdit;
 
+				// TODO: Set user field to thinking?
+				// this.currentUserResponse.setToThinking??
+
 				this.currentResponse = this.responses[this.responses.length - 1];
 
 				this.onListUpdate(this.currentUserResponse);

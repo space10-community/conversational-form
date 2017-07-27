@@ -122,6 +122,7 @@ namespace cf {
 		}
 
 		public get disabled (): boolean{
+			// a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
 			return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
 		}
 

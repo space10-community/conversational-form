@@ -214,6 +214,9 @@ namespace cf {
 				return;
 
 			if(this.savedStep != -1){
+				// if you are looking for where the none EDIT tag conditionsl check is done
+				// then look at a tags disabled getter
+
 				let foundConditionsToCurrentTag: boolean = false;
 				// this happens when editing a tag..
 
