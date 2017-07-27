@@ -341,6 +341,8 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 	# compiles build files, to run locally, runs docs, examples and form scripts and styles
 	$ gulp dist
 
+please see [Unit testing]() below for more info.
+
 
 ### Version log
 Previous versions. These versions are also available through bower, npm and Github tags.
@@ -375,7 +377,14 @@ Previous versions. These versions are also available through bower, npm and Gith
 <script type="text/javascript" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
-## Examples and tests
+## Tests / Unit tests
+We are using [Travis](https://travis-ci.org/) and [Karma](http://karma-runner.github.io/) to run tests.
+	
+	$ karma start
+
+this will run through the tests defined in `.`tests`, after starting karma, you can access http://localhost:9876 to view and modify the tests-cases.
+
+## Examples
 You can view some examples [here](https://space10-community.github.io/conversational-form/examples.html) and find many more code-wise [here](https://github.com/space10-community/conversational-form/tree/master/docs).
 
 ## Browser support

@@ -73,10 +73,6 @@ namespace cf {
 				const response: FlowDTO = event.detail;
 				this.setCurrentUserResponse(response);
 			}
-			else{
-				// this should never happen..
-				throw new Error("No current response ..?")
-			}
 		}
 
 		public addInput(input: UserInputElement){
