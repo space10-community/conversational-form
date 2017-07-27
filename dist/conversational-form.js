@@ -1739,7 +1739,7 @@ var cf;
     var Tag = (function () {
         function Tag(options) {
             this.domElement = options.domElement;
-            this.initialDefaultValue = this.domElement.value;
+            this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
             this.changeCallback = this.onDomElementChange.bind(this);
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
@@ -1808,7 +1808,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "value", {
             get: function () {
-                return this.domElement.value;
+                return this.domElement.value || this.initialDefaultValue;
             },
             enumerable: true,
             configurable: true
@@ -1936,10 +1936,13 @@ var cf;
             // ignore buttons, we submit the form automatially
             if (element.getAttribute("type") == "button")
                 return false;
-            if (element.style.display === "none")
-                return false;
-            if (element.style.visibility === "hidden")
-                return false;
+            if (element.style) {
+                // element style can be null if markup is created from DOMParser
+                if (element.style.display === "none")
+                    return false;
+                if (element.style.visibility === "hidden")
+                    return false;
+            }
             var isTagFormless = cf.TagsParser.isElementFormless(element);
             var innerText = cf.Helpers.getInnerTextOfElement(element);
             if (element.tagName.toLowerCase() == "option" && (!isTagFormless && innerText == "" || innerText == " ")) {
@@ -1998,7 +2001,7 @@ var cf;
         };
         Tag.prototype.refresh = function () {
             // default value of Tag, check every refresh
-            this.defaultValue = this.domElement.value;
+            this.defaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
             this.questions = null;
             this.findAndSetQuestions();
             this.findConditionalAttributes();

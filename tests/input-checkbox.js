@@ -1,7 +1,7 @@
 describe('Check input type=text', function() {
 	var instance = window.cf.ConversationalForm.startTheConversation({
 		"options": {
-			
+			formEl: document.createElement("form")
 		},
 		"tags": [
 			{
@@ -54,7 +54,7 @@ describe('Check input type=text', function() {
 		expect(instance.tags[0].elements[1].domElement.checked).toBe(false);
 
 		setTimeout(function(){
-			// shift check values on check
+			// shift check values on$ check
 			instance.userInput.controlElements.elements[0].onClick();
 			instance.userInput.controlElements.elements[1].onClick();
 
