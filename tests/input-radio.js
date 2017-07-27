@@ -1,7 +1,7 @@
 describe('Check input type=text', function() {
 	var instance = window.cf.ConversationalForm.startTheConversation({
 		"options": {
-			
+			formEl: document.createElement("form")
 		},
 		"tags": [
 			{

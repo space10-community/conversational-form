@@ -22,7 +22,6 @@ module.exports = function(config) {
       // {pattern: 'tests/html-test.html', included: false},
       'dist/conversational-form.js' ,
       'tests/*.js'
-      // 'tests/input-text.js'
     ],
 
 
