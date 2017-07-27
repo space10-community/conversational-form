@@ -1822,6 +1822,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "disabled", {
             get: function () {
+                // a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
                 return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
             },
             enumerable: true,
@@ -4884,7 +4885,6 @@ var cf;
             var cfHeight = this.cfReference.el.offsetHeight;
             var inputHeight = this.input.height;
             var listHeight = cfHeight - inputHeight;
-            console.log("onInputElementChanged", cfHeight, inputHeight, listHeight);
             this.el.style.height = listHeight + "px";
         };
         ChatList.prototype.onFlowUpdate = function (event) {
@@ -4946,13 +4946,17 @@ var cf;
             // reset the current user response
             this.currentUserResponse.processResponseAndSetText();
             if (responseUserWantsToEdit) {
-                // remove latest user response, if it is there
-                if (!this.responses[this.responses.length - 1].isRobotResponse) {
+                // remove latest user response, if it is there any, also make sure we don't remove the first one
+                if (this.responses.length > 2) {
+                    if (!this.responses[this.responses.length - 1].isRobotResponse) {
+                        this.responses.pop().dealloc();
+                    }
+                    // remove latest robot response, it should always be a robot response
                     this.responses.pop().dealloc();
                 }
-                // remove latest robot response, it should always be a robot response
-                this.responses.pop().dealloc();
                 this.currentUserResponse = responseUserWantsToEdit;
+                // TODO: Set user field to thinking?
+                // this.currentUserResponse.setToThinking??
                 this.currentResponse = this.responses[this.responses.length - 1];
                 this.onListUpdate(this.currentUserResponse);
             }
@@ -5215,6 +5219,8 @@ var cf;
             if (this.stopped)
                 return;
             if (this.savedStep != -1) {
+                // if you are looking for where the none EDIT tag conditionsl check is done
+                // then look at a tags disabled getter
                 var foundConditionsToCurrentTag = false;
                 // this happens when editing a tag..
                 // check if any tags has a conditional check for this.currentTag.name
