@@ -7,6 +7,29 @@
 	},
 	"tags": [
 		{
+			"tag": "fieldset",
+			"type": "Checkboxes buttons",
+			"cf-input-placeholder": "Choose one of the above",
+			"cf-questions": "Choose one of the checkboxss",
+			"children":[
+				{
+					"tag": "input",
+					"type": "checkbox",
+					"required": "required",
+					"name": "checkcheck-buttons-1",
+					"cf-label": "checkcheck-1",
+					"checked": "checked"
+				},
+				{
+					"tag": "input",
+					"type": "checkbox",
+					"required": "required",
+					"name": "checkcheck-buttons-1",
+					"cf-label": "checkcheck-2"
+				}
+			]
+		},
+		{
 			"tag": "input",
 			"type": "text",
 			"id": "first-tag",
