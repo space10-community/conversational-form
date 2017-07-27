@@ -1,4 +1,4 @@
-var formless = {
+var textInstance = window.cf.ConversationalForm.startTheConversation({
 	"options": {
 		
 	},
@@ -19,29 +19,27 @@ var formless = {
 			"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
 		}
 	]
-};
-
-var instance = window.cf.ConversationalForm.startTheConversation(formless);
+});
 
 describe('Check input type=text', function() {
 	it('Should be able to through all', function() {
-		expect(instance.tags).not.toBeNull();
-		expect(instance.tags.length).toBe(2);
-		expect(instance.tags[0].id).toBe("first-tag");
-		expect(instance.tags[0].domElement).not.toBeNull();
+		expect(textInstance.tags).not.toBeNull();
+		expect(textInstance.tags.length).toBe(2);
+		expect(textInstance.tags[0].id).toBe("first-tag");
+		expect(textInstance.tags[0].domElement).not.toBeNull();
 
-		expect(instance.tags[0].value).toBe("test");
+		expect(textInstance.tags[0].value).toBe("test");
 		// add value and submit
-		instance.userInput.inputElement.value = "Hello world";
-		instance.userInput.doSubmit();
+		textInstance.userInput.inputElement.value = "Hello world";
+		textInstance.userInput.doSubmit();
 
 		// testing tag value
-		expect(instance.tags[0].value).toBe("Hello world");
+		expect(textInstance.tags[0].value).toBe("Hello world");
 		
 		// testing original tag (dom element) value
-		expect(instance.tags[0].domElement.value).toBe("Hello world");
+		expect(textInstance.tags[0].domElement.value).toBe("Hello world");
 
 		// testing getFormData
-		expect(instance.getFormData(true)["first-tag"]).toBe("Hello world");
+		expect(textInstance.getFormData(true)["first-tag"]).toBe("Hello world");
 	});
 });
