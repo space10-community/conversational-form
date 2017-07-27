@@ -120,7 +120,6 @@ namespace cf {
 			const cfHeight: number = this.cfReference.el.offsetHeight;
 			const inputHeight: number = this.input.height;
 			const listHeight: number = cfHeight - inputHeight;
-			console.log("onInputElementChanged", cfHeight, inputHeight, listHeight);
 			this.el.style.height = listHeight + "px";
 		}
 
@@ -189,15 +188,18 @@ namespace cf {
 			this.currentUserResponse.processResponseAndSetText();
 
 			if(responseUserWantsToEdit){
-				// remove latest user response, if it is there
-				if(!this.responses[this.responses.length - 1].isRobotResponse){
+				// remove latest user response, if it is there any, also make sure we don't remove the first one
+				if(this.responses.length > 2){
+					if(!this.responses[this.responses.length - 1].isRobotResponse){
+						this.responses.pop().dealloc();
+					}
+					
+					// remove latest robot response, it should always be a robot response
 					this.responses.pop().dealloc();
 				}
-				
-				// remove latest robot response, it should always be a robot response
-				this.responses.pop().dealloc();
 
 				this.currentUserResponse = responseUserWantsToEdit;
+
 				this.currentResponse = this.responses[this.responses.length - 1];
 
 				this.onListUpdate(this.currentUserResponse);
@@ -207,6 +209,7 @@ namespace cf {
 		private updateTimer: number = 0;
 		private onListUpdate(chatResponse: ChatResponse){
 			clearTimeout(this.updateTimer);
+
 			this.updateTimer = setTimeout(() => {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
