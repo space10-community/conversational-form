@@ -5357,7 +5357,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.6.x";
+            this.version = "0.9.6";
             this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;

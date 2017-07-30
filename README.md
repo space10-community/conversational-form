@@ -17,7 +17,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
@@ -338,7 +338,7 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 #### distribution
 
-	# compiles build files, to run locally, runs docs, examples and form scripts and styles
+	# compiles build files, to run locally, runs docs, examples, conversational form scripts and styles and finally runs through Karma tests.
 	$ gulp dist
 
 please see [Unit testing]() below for more info.
@@ -346,6 +346,12 @@ please see [Unit testing]() below for more info.
 
 ### Version log
 Previous versions. These versions are also available through bower, npm and Github tags.
+
+[v0.9.5](https://github.com/space10-community/conversational-form/tree/0.9.5)
+```html
+<!-- v0.9.5 -->
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
+```
 
 [v0.9.4](https://github.com/space10-community/conversational-form/tree/0.9.4)
 ```html
