@@ -2,6 +2,7 @@ global.gulp = require('gulp');
 var fs = require('fs');
 var livereload = require('./gulp-tasks/node_modules/gulp-livereload');
 var gulpsync = require('./gulp-tasks/node_modules/gulp-sync')(global.gulp);
+var Server = require('karma').Server;
 
 var package = JSON.parse(fs.readFileSync('gulp-tasks/package.json'));
 
@@ -24,6 +25,7 @@ var distFolder = rootPath + 'dist/';
 global.distFolder = distFolder;
 
 var tasks = ['bower', 'scripts-docs-build', 'scripts-examples-build', 'scripts-form-build', 'styles-docs-build', 'styles-form-build', 'copy-images'];
+var distTasks = tasks.concat(['karma-tests']);
 
 // Watch Files For Changes
 global.gulp.task('watch', tasks, function() {
@@ -45,4 +47,11 @@ global.gulp.task('watch', tasks, function() {
 // Default tasks
 global.gulp.task('default', ['watch']);
 global.gulp.task('build', gulpsync.sync(tasks));
-global.gulp.task('dist', gulpsync.sync(tasks));
+global.gulp.task('dist', gulpsync.sync(distTasks));
+
+gulp.task('karma-tests', function (done) {
+	new Server({
+	  configFile: __dirname + '/karma.conf.js',
+	  singleRun: true
+	}, done).start();
+  });

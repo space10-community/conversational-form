@@ -321,6 +321,11 @@ var cf;
             mappings["mousemove"] = "ontouchstart" in window ? "touchmove" : "mousemove";
             return mappings[eventString];
         };
+        Helpers.isInternetExlorer = function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            return msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
+        };
         Helpers.setEmojiLib = function (lib, scriptSrc) {
             if (lib === void 0) { lib = "emojify"; }
             if (scriptSrc === void 0) { scriptSrc = "//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"; }
@@ -361,6 +366,21 @@ var cf;
             el.style["-ms-transform"] = transformString;
             el.style["transform"] = transformString;
         };
+        // deep extends and object, from: https://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
+        Helpers.extendObject = function (destination, source) {
+            for (var property in source) {
+                if (source[property] && source[property].constructor &&
+                    source[property].constructor === Object) {
+                    destination[property] = destination[property] || {};
+                    arguments.callee(destination[property], source[property]);
+                }
+                else {
+                    destination[property] = source[property];
+                }
+            }
+            return destination;
+        };
+        ;
         return Helpers;
     }());
     Helpers.caniuse = {
@@ -462,6 +482,23 @@ var cf;
     cf.TagsParser = TagsParser;
 })(cf || (cf = {}));
 
+// namespace
+var cf;
+(function (cf) {
+    // default options interface for optional parameters for the UI of Conversational Form
+    cf.UserInterfaceDefaultOptions = {
+        controlElementsInAnimationDelay: 250,
+        robot: {
+            robotResponseTime: 0,
+            chainedResponseTime: 500
+        },
+        user: {
+            showThinking: false,
+            showThumb: false
+        }
+    };
+})(cf || (cf = {}));
+
 /// <reference path="../logic/EventDispatcher.ts"/>
 // namespace
 var cf;
@@ -470,6 +507,7 @@ var cf;
     var BasicElement = (function () {
         function BasicElement(options) {
             this.eventTarget = options.eventTarget;
+            this.cfReference = options.cfReference;
             if (options.customTemplate)
                 this.customTemplate = options.customTemplate;
             // TODO: remove
@@ -713,7 +751,8 @@ var cf;
 var cf;
 (function (cf) {
     cf.ControlElementsEvents = {
-        ON_RESIZE: "on-control-elements-resize"
+        ON_RESIZE: "cf-on-control-elements-resize",
+        CHANGED: "cf-on-control-elements-changed"
     };
     var ControlElements = (function () {
         function ControlElements(options) {
@@ -726,6 +765,7 @@ var cf;
             this.listWidth = 0;
             this.el = options.el;
             this.eventTarget = options.eventTarget;
+            this.cfReference = options.cfReference;
             this.list = this.el.getElementsByTagName("cf-list")[0];
             this.infoElement = options.infoEl;
             this.onScrollCallback = this.onScroll.bind(this);
@@ -841,9 +881,21 @@ var cf;
         ControlElements.prototype.onChatReponsesUpdated = function (event) {
             var _this = this;
             clearTimeout(this.animateInFromReponseTimer);
-            this.animateInFromReponseTimer = setTimeout(function () {
-                _this.animateElementsIn();
-            }, 500);
+            // only show when user response
+            if (!event.detail.currentResponse.isRobotResponse) {
+                this.animateInFromReponseTimer = setTimeout(function () {
+                    _this.animateElementsIn();
+                }, this.cfReference.uiOptions.controlElementsInAnimationDelay);
+            }
+        };
+        ControlElements.prototype.onListChanged = function () {
+            var _this = this;
+            // reflow
+            this.list.offsetHeight;
+            requestAnimationFrame(function () {
+                cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.ControlElementsEvents.CHANGED);
+                _this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.CHANGED));
+            });
         };
         ControlElements.prototype.onUserInputKeyChange = function (event) {
             if (this.ignoreKeyboardInput) {
@@ -1182,6 +1234,8 @@ var cf;
                     this.elements.pop().dealloc();
                 }
             }
+            this.list.innerHTML = "";
+            this.onListChanged();
         };
         ControlElements.prototype.buildTags = function (tags) {
             var _this = this;
@@ -1237,10 +1291,11 @@ var cf;
                 this.filterListNumberOfVisible = tags.length;
             }
             new Promise(function (resolve, reject) { return _this.resize(resolve, reject); }).then(function () {
-                var h = _this.el.classList.contains("one-row") ? 52 : _this.el.classList.contains("two-row") ? 102 : 0;
+                var h = _this.list.offsetHeight; //this.el.classList.contains("one-row") ? 52 : this.el.classList.contains("two-row") ? 102 : 0;
                 var controlElementsAddedDTO = {
                     height: h,
                 };
+                _this.onListChanged();
                 cf.ConversationalForm.illustrateFlow(_this, "dispatch", cf.UserInputEvents.CONTROL_ELEMENTS_ADDED, controlElementsAddedDTO);
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.CONTROL_ELEMENTS_ADDED, {
                     detail: controlElementsAddedDTO
@@ -1258,7 +1313,6 @@ var cf;
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
             this.elementWidth = 0;
-            // setTimeout(() => {
             this.listWidth = 0;
             var elements = this.getElements();
             if (elements && elements.length > 0) {
@@ -1286,7 +1340,6 @@ var cf;
                 else {
                     this.el.classList.add("one-row");
                 }
-                // setTimeout(() => {
                 // recalc after LIST classes has been added
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
@@ -1324,14 +1377,14 @@ var cf;
                 this.elementWidth = elOffsetWidth;
                 // resize scroll
                 this.listScrollController.resize(this.listWidth, this.elementWidth);
-                this.buildTabableRows();
                 this.el.classList.add("resized");
                 this.eventTarget.dispatchEvent(new CustomEvent(cf.ControlElementsEvents.ON_RESIZE));
-                if (resolve)
+                if (resolve) {
+                    // only build when there is something to resolve
+                    this.buildTabableRows();
                     resolve();
-                // }, 0);
+                }
             }
-            // }, 0);
         };
         ControlElements.prototype.dealloc = function () {
             this.currentControlElement = null;
@@ -1686,7 +1739,7 @@ var cf;
     var Tag = (function () {
         function Tag(options) {
             this.domElement = options.domElement;
-            this.initialDefaultValue = this.domElement.value;
+            this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
             this.changeCallback = this.onDomElementChange.bind(this);
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
@@ -1755,7 +1808,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "value", {
             get: function () {
-                return this.domElement.value;
+                return this.domElement.value || this.initialDefaultValue;
             },
             enumerable: true,
             configurable: true
@@ -1769,6 +1822,7 @@ var cf;
         });
         Object.defineProperty(Tag.prototype, "disabled", {
             get: function () {
+                // a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
                 return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
             },
             enumerable: true,
@@ -1882,10 +1936,13 @@ var cf;
             // ignore buttons, we submit the form automatially
             if (element.getAttribute("type") == "button")
                 return false;
-            if (element.style.display === "none")
-                return false;
-            if (element.style.visibility === "hidden")
-                return false;
+            if (element.style) {
+                // element style can be null if markup is created from DOMParser
+                if (element.style.display === "none")
+                    return false;
+                if (element.style.visibility === "hidden")
+                    return false;
+            }
             var isTagFormless = cf.TagsParser.isElementFormless(element);
             var innerText = cf.Helpers.getInnerTextOfElement(element);
             if (element.tagName.toLowerCase() == "option" && (!isTagFormless && innerText == "" || innerText == " ")) {
@@ -1944,7 +2001,7 @@ var cf;
         };
         Tag.prototype.refresh = function () {
             // default value of Tag, check every refresh
-            this.defaultValue = this.domElement.value;
+            this.defaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
             this.questions = null;
             this.findAndSetQuestions();
             this.findConditionalAttributes();
@@ -2384,6 +2441,10 @@ var cf;
                                 this._activeElements.push(tag);
                             }
                         }
+                    }
+                    if (this.required && this._activeElements.length == 0) {
+                        // checkbox can be required
+                        isValid = false;
                     }
                     break;
             }
@@ -3719,6 +3780,8 @@ var cf;
             var _this = _super.call(this, options) || this;
             _this._disabled = false;
             _this._visible = false;
+            _this.onChatReponsesUpdatedCallback = _this.onChatReponsesUpdated.bind(_this);
+            _this.eventTarget.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, _this.onChatReponsesUpdatedCallback, false);
             _this.windowFocusCallback = _this.windowFocus.bind(_this);
             window.addEventListener('focus', _this.windowFocusCallback, false);
             _this.inputInvalidCallback = _this.inputInvalid.bind(_this);
@@ -3770,6 +3833,27 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(UserInputElement.prototype, "height", {
+            get: function () {
+                var elHeight = 0;
+                var elMargin = 0;
+                var el = this.el;
+                if (cf.Helpers.isInternetExlorer()) {
+                    // IE
+                    elHeight = el.offsetHeight;
+                    elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10);
+                    elMargin *= 2;
+                }
+                else {
+                    // none-IE
+                    elHeight = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('height'), 10);
+                    elMargin = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-bottom'));
+                }
+                return (elHeight + elMargin);
+            },
+            enumerable: true,
+            configurable: true
+        });
         UserInputElement.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
         };
@@ -3800,6 +3884,8 @@ var cf;
         UserInputElement.prototype.reset = function () {
         };
         UserInputElement.prototype.dealloc = function () {
+            this.eventTarget.removeEventListener(cf.ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
+            this.onChatReponsesUpdatedCallback = null;
             this.eventTarget.removeEventListener(cf.FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
             this.inputInvalidCallback = null;
             window.removeEventListener('focus', this.windowFocusCallback, false);
@@ -3809,20 +3895,24 @@ var cf;
             _super.prototype.dealloc.call(this);
         };
         UserInputElement.prototype.onFlowUpdate = function (event) {
-            var _this = this;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
             this._currentTag = event.detail.tag;
-            setTimeout(function () {
-                _this.visible = true;
-                _this.disabled = false;
-            }, 150);
         };
         UserInputElement.prototype.windowFocus = function (event) {
+        };
+        UserInputElement.prototype.onChatReponsesUpdated = function (event) {
+            // only show when user response
+            if (!event.detail.currentResponse.isRobotResponse) {
+                this.visible = true;
+                this.disabled = false;
+                this.setFocusOnInput();
+            }
         };
         return UserInputElement;
     }(cf.BasicElement));
     UserInputElement.ERROR_TIME = 2000;
     UserInputElement.preventAutoFocus = false;
+    UserInputElement.hideUserInputOnNoneStandardInput = false;
     cf.UserInputElement = UserInputElement;
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
@@ -3874,6 +3964,7 @@ var cf;
             //<cf-input-control-elements> is defined in the ChatList.ts
             _this.controlElements = new cf.ControlElements({
                 el: _this.el.getElementsByTagName("cf-input-control-elements")[0],
+                cfReference: _this.cfReference,
                 infoEl: _this.el.getElementsByTagName("cf-info")[0],
                 eventTarget: _this.eventTarget
             });
@@ -3916,6 +4007,7 @@ var cf;
         Object.defineProperty(UserTextInput.prototype, "disabled", {
             set: function (value) {
                 var hasChanged = this._disabled != value;
+                console.log('option hasChanged', value);
                 if (hasChanged) {
                     this._disabled = value;
                     if (value) {
@@ -4024,6 +4116,7 @@ var cf;
             this.submitButton.loading = false;
             this.errorTimer = setTimeout(function () {
                 _this.disabled = false;
+                console.log('option, disabled 1');
                 _this.el.removeAttribute("error");
                 _this.inputElement.value = _this.inputElement.getAttribute("data-value");
                 _this.inputElement.setAttribute("data-value", "");
@@ -4125,6 +4218,17 @@ var cf;
             if (this._currentTag.type == "text" || this._currentTag.type == "email") {
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
+            if (cf.UserInputElement.hideUserInputOnNoneStandardInput) {
+                // toggle userinput hide
+                if (this.controlElements.active) {
+                    this.el.classList.add("hide-input");
+                    // set focus on first control element
+                    this.controlElements.focusFrom("bottom");
+                }
+                else {
+                    this.el.classList.remove("hide-input");
+                }
+            }
             setTimeout(function () {
                 _this.onInputChange();
             }, 150);
@@ -4132,6 +4236,7 @@ var cf;
         UserTextInput.prototype.onControlElementProgressChange = function (event) {
             var status = event.detail;
             this.disabled = status == cf.ControlElementProgressStates.BUSY;
+            console.log('option, disabled 2');
         };
         UserTextInput.prototype.buildControlElements = function (tags) {
             this.controlElements.buildTags(tags);
@@ -4154,6 +4259,8 @@ var cf;
         UserTextInput.prototype.onKeyDown = function (event) {
             if (!this.active && !this.controlElements.focus)
                 return;
+            if (this.isControlElementsActiveAndUserInputHidden())
+                return;
             if (this.isMetaKeyPressed(event))
                 return;
             // if any meta keys, then ignore
@@ -4164,8 +4271,11 @@ var cf;
                 event.preventDefault();
             }
         };
+        UserTextInput.prototype.isControlElementsActiveAndUserInputHidden = function () {
+            return this.controlElements && this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+        };
         UserTextInput.prototype.onKeyUp = function (event) {
-            if (!this.active && !this.controlElements.focus)
+            if ((!this.active && !this.isControlElementsActiveAndUserInputHidden()) && !this.controlElements.focus)
                 return;
             if (this.isMetaKeyPressed(event))
                 return;
@@ -4217,13 +4327,13 @@ var cf;
                             var mutiTag = this._currentTag;
                             // if select or checkbox then check for multi select item
                             if (tagType == "checkbox" || mutiTag.multipleChoice) {
-                                if (this.active && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
+                                if ((this.active || this.isControlElementsActiveAndUserInputHidden()) && event.keyCode == cf.Dictionary.keyCodes["enter"]) {
                                     // click on UserTextInput submit button, only ENTER allowed
                                     this.submitButton.click();
                                 }
                                 else {
                                     // let UI know that we changed the key
-                                    if (!this.active) {
+                                    if (!this.active && !this.controlElements.active && !this.isControlElementsActiveAndUserInputHidden()) {
                                         // after ui has been selected we RESET the input/filter
                                         this.resetValue();
                                         this.setFocusOnInput();
@@ -4278,13 +4388,14 @@ var cf;
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.FOCUS));
         };
         UserTextInput.prototype.setFocusOnInput = function () {
-            if (!cf.UserInputElement.preventAutoFocus) {
+            if (!cf.UserInputElement.preventAutoFocus && !this.el.classList.contains("hide-input")) {
                 this.inputElement.focus();
             }
         };
         UserTextInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
-            if (this.active && this.controlElements.highlighted) {
+            var isControlElementsActiveAndUserInputHidden = this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+            if ((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted) {
                 // active input field and focus on control elements happens when a control element is highlighted
                 this.controlElements.clickOnHighlighted();
             }
@@ -4351,6 +4462,7 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
+/// <reference path="../../interfaces/IUserInterfaceOptions.ts"/>
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -4372,12 +4484,22 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
+            _this.readyTimer = 0;
+            _this.container = options.container;
+            _this.uiOptions = options.cfReference.uiOptions;
             _this._tag = options.tag;
             return _this;
         }
         Object.defineProperty(ChatResponse.prototype, "tag", {
             get: function () {
                 return this._tag;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ChatResponse.prototype, "added", {
+            get: function () {
+                return !!this.el.parentNode.parentNode;
             },
             enumerable: true,
             configurable: true
@@ -4518,44 +4640,62 @@ var cf;
             // now set it
             if (this.isRobotResponse) {
                 this.textEl.innerHTML = "";
+                var robotInitResponseTime = this.uiOptions.robot.robotResponseTime;
+                if (robotInitResponseTime != 0) {
+                    this.setToThinking();
+                }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
                 var _loop_1 = function (i_2) {
                     var str = chainedResponses[i_2];
                     setTimeout(function () {
+                        _this.tryClearThinking();
                         _this.textEl.innerHTML += "<p>" + str + "</p>";
                         var p = _this.textEl.getElementsByTagName("p");
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
-                    }, 500 + (i_2 * 500));
+                        _this.scrollTo();
+                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
                 };
+                var this_1 = this;
                 for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
                     _loop_1(i_2);
                 }
-                setTimeout(function () {
+                this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
                         _this.onReadyCallback();
-                }, chainedResponses.length * 500);
+                    // reset, as it can be called again
+                    _this.onReadyCallback = null;
+                }, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
             }
             else {
                 // user response, act normal
+                this.tryClearThinking();
                 this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
                 var p = this.textEl.getElementsByTagName("p");
                 p[p.length - 1].offsetWidth;
                 p[p.length - 1].classList.add("show");
+                this.scrollTo();
             }
             this.parsedResponse = innerResponse;
             // }
+            // value set, so add element, if not added
+            this.addSelf();
             // bounce
-            this.el.removeAttribute("thinking");
             this.textEl.removeAttribute("value-added");
             setTimeout(function () {
                 _this.textEl.setAttribute("value-added", "");
+                _this.el.classList.add("peak-thumb");
             }, 0);
             this.checkForEditMode();
             // update response
             // remove the double ampersands if present
             this.response = innerResponse.split("&&").join(" ");
+        };
+        ChatResponse.prototype.scrollTo = function () {
+            var y = this.el.offsetTop;
+            var h = this.el.offsetHeight;
+            this.container.scrollTop = y + h + this.container.scrollTop;
         };
         ChatResponse.prototype.checkForEditMode = function () {
             if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
@@ -4563,10 +4703,31 @@ var cf;
                 this.disabled = false;
             }
         };
+        ChatResponse.prototype.tryClearThinking = function () {
+            if (this.el.hasAttribute("thinking")) {
+                this.textEl.innerHTML = "";
+                this.el.removeAttribute("thinking");
+            }
+        };
         ChatResponse.prototype.setToThinking = function () {
-            this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-            this.el.classList.remove("can-edit");
-            this.el.setAttribute("thinking", "");
+            var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+            if (canShowThinking) {
+                this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+                this.el.classList.remove("can-edit");
+                this.el.setAttribute("thinking", "");
+            }
+            if (this.cfReference.uiOptions.user.showThinking || this.cfReference.uiOptions.user.showThumb) {
+                this.addSelf();
+            }
+        };
+        /**
+        * @name addSelf
+        * add one self to the chat list
+        */
+        ChatResponse.prototype.addSelf = function () {
+            if (this.el.parentNode != this.container) {
+                this.container.appendChild(this.el);
+            }
         };
         /**
         * @name onClickCallback
@@ -4588,7 +4749,6 @@ var cf;
         ChatResponse.prototype.onElementCreated = function () {
             var _this = this;
             this.textEl = this.el.getElementsByTagName("text")[0];
-            this.setValue();
             this.updateThumbnail(this.image);
             if (this.isRobotResponse || this.response != null) {
                 // Robot is pseudo thinking, can also be user -->
@@ -4599,14 +4759,15 @@ var cf;
                 //ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
             }
             else {
-                // shows the 3 dots automatically, we expect the reponse to be empty upon creation
-                // TODO: Auto completion insertion point
-                setTimeout(function () {
-                    _this.el.classList.add("peak-thumb");
-                }, cf.ConversationalForm.animationsEnabled ? 1400 : 0);
+                if (this.cfReference.uiOptions.user.showThumb) {
+                    this.el.classList.add("peak-thumb");
+                }
             }
         };
         ChatResponse.prototype.dealloc = function () {
+            clearTimeout(this.readyTimer);
+            this.container = null;
+            this.uiOptions = null;
             this.onReadyCallback = null;
             if (this.onClickCallback) {
                 this.el.removeEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
@@ -4620,7 +4781,7 @@ var cf;
         };
         return ChatResponse;
     }(cf.BasicElement));
-    ChatResponse.THINKING_MARKUP = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
+    ChatResponse.THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
     cf.ChatResponse = ChatResponse;
 })(cf || (cf = {}));
 
@@ -4664,12 +4825,17 @@ var cf;
             // user input height change
             _this.onInputHeightChangeCallback = _this.onInputHeightChange.bind(_this);
             _this.eventTarget.addEventListener(cf.UserInputEvents.HEIGHT_CHANGE, _this.onInputHeightChangeCallback, false);
+            // on control elements changed
+            _this.onControlElementsResizedCallback = _this.onControlElementsResized.bind(_this);
+            _this.eventTarget.addEventListener(cf.ControlElementsEvents.ON_RESIZE, _this.onControlElementsResizedCallback, false);
+            _this.onControlElementsChangedCallback = _this.onControlElementsChanged.bind(_this);
+            _this.eventTarget.addEventListener(cf.ControlElementsEvents.CHANGED, _this.onControlElementsChangedCallback, false);
             return _this;
         }
         ChatList.prototype.onInputHeightChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
-            this.scrollListTo();
+            this.onInputElementChanged();
         };
         ChatList.prototype.onInputKeyChange = function (event) {
             var dto = event.detail.dto;
@@ -4681,10 +4847,44 @@ var cf;
                 var response = event.detail;
                 this.setCurrentUserResponse(response);
             }
-            else {
-                // this should never happen..
-                throw new Error("No current response ..?");
+        };
+        ChatList.prototype.addInput = function (input) {
+            this.input = input;
+        };
+        /**
+        * @name onControlElementsChanged
+        * on control elements change
+        */
+        ChatList.prototype.onControlElementsChanged = function (event) {
+            this.onInputElementChanged();
+        };
+        /**
+        * @name onControlElementsResized
+        * on control elements resize
+        */
+        ChatList.prototype.onControlElementsResized = function (event) {
+            cf.ConversationalForm.illustrateFlow(this, "receive", cf.ControlElementsEvents.ON_RESIZE);
+            var responseToScrollTo = this.currentResponse;
+            if (responseToScrollTo) {
+                if (!responseToScrollTo.added) {
+                    // element not added yet, so find closest
+                    for (var i = this.responses.indexOf(responseToScrollTo); i >= 0; i--) {
+                        var element = this.responses[i];
+                        if (element.added) {
+                            responseToScrollTo = element;
+                            break;
+                        }
+                    }
+                }
+                responseToScrollTo.scrollTo();
             }
+            this.onInputElementChanged();
+        };
+        ChatList.prototype.onInputElementChanged = function () {
+            var cfHeight = this.cfReference.el.offsetHeight;
+            var inputHeight = this.input.height;
+            var listHeight = cfHeight - inputHeight;
+            this.el.style.height = listHeight + "px";
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -4704,16 +4904,13 @@ var cf;
                     robot.whenReady(function () {
                         // create user response
                         _this.currentUserResponse = _this.createResponse(false, currentTag);
+                        robot.scrollTo();
                     });
                     if (_this.currentUserResponse) {
                         // linked, but only if we should not ignore existing tag
                         _this.currentUserResponse.setLinkToOtherReponse(robot);
                         robot.setLinkToOtherReponse(_this.currentUserResponse);
                     }
-                    // user response, create the waiting response
-                    // setTimeout(() => {
-                    // 	this.currentUserResponse = this.createResponse(false, currentTag);
-                    // }, 200);
                 }, this.responses.length === 0 ? 500 : 0);
             }
         };
@@ -4736,23 +4933,30 @@ var cf;
         * on user ChatReponse clicked
         */
         ChatList.prototype.onUserWantsToEditTag = function (tagToChange) {
-            var oldReponse;
+            var responseUserWantsToEdit;
             for (var i = 0; i < this.responses.length; i++) {
                 var element = this.responses[i];
                 if (!element.isRobotResponse && element.tag == tagToChange) {
                     // update element thhat user wants to edit
-                    oldReponse = element;
+                    responseUserWantsToEdit = element;
                     break;
                 }
             }
             // reset the current user response
             this.currentUserResponse.processResponseAndSetText();
-            if (oldReponse) {
-                // only disable latest tag when we jump back
-                if (this.currentUserResponse == this.responses[this.responses.length - 1]) {
-                    this.currentUserResponse.dealloc();
+            if (responseUserWantsToEdit) {
+                // remove latest user response, if it is there any, also make sure we don't remove the first one
+                if (this.responses.length > 2) {
+                    if (!this.responses[this.responses.length - 1].isRobotResponse) {
+                        this.responses.pop().dealloc();
+                    }
+                    // remove latest robot response, it should always be a robot response
+                    this.responses.pop().dealloc();
                 }
-                this.currentUserResponse = oldReponse;
+                this.currentUserResponse = responseUserWantsToEdit;
+                // TODO: Set user field to thinking?
+                // this.currentUserResponse.setToThinking??
+                this.currentResponse = this.responses[this.responses.length - 1];
                 this.onListUpdate(this.currentUserResponse);
             }
         };
@@ -4764,8 +4968,7 @@ var cf;
                     detail: _this
                 }));
                 chatResponse.show();
-                _this.scrollListTo(chatResponse);
-            }, 500);
+            }, 0);
         };
         /**
         * @name clearFrom
@@ -4775,8 +4978,7 @@ var cf;
             index = index * 2; // double up because of robot responses
             index += index % 2; // round up so we dont remove the user response element
             while (this.responses.length > index) {
-                var element = this.responses.pop();
-                element.dealloc();
+                this.responses.pop().dealloc();
             }
         };
         /**
@@ -4795,7 +4997,6 @@ var cf;
                 }
             }
             this.currentUserResponse.setValue(this.flowDTOFromUserInputUpdate);
-            this.scrollListTo(this.currentUserResponse);
         };
         /**
         * @name getResponses
@@ -4819,33 +5020,22 @@ var cf;
         };
         ChatList.prototype.createResponse = function (isRobotResponse, currentTag, value) {
             if (value === void 0) { value = null; }
+            var scrollable = this.el.querySelector("scrollable");
             var response = new cf.ChatResponse({
                 // image: null,
+                cfReference: this.cfReference,
                 list: this,
                 tag: currentTag,
                 eventTarget: this.eventTarget,
                 isRobotResponse: isRobotResponse,
                 response: value,
                 image: isRobotResponse ? cf.Dictionary.getRobotResponse("robot-image") : cf.Dictionary.get("user-image"),
+                container: scrollable
             });
             this.responses.push(response);
             this.currentResponse = response;
-            var scrollable = this.el.querySelector("scrollable");
-            scrollable.appendChild(this.currentResponse.el);
             this.onListUpdate(response);
             return response;
-        };
-        ChatList.prototype.scrollListTo = function (response) {
-            if (response === void 0) { response = null; }
-            try {
-                var scrollable_1 = this.el.querySelector("scrollable");
-                var y_1 = response ? response.el.offsetTop - 50 : 1000000000;
-                scrollable_1.scrollTop = y_1;
-                setTimeout(function () { return scrollable_1.scrollTop = y_1; }, 100);
-            }
-            catch (error) {
-                // catch errors where CF have been removed
-            }
         };
         ChatList.prototype.getTemplate = function () {
             return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";
@@ -5028,6 +5218,8 @@ var cf;
             if (this.stopped)
                 return;
             if (this.savedStep != -1) {
+                // if you are looking for where the none EDIT tag conditionsl check is done
+                // then look at a tags disabled getter
                 var foundConditionsToCurrentTag = false;
                 // this happens when editing a tag..
                 // check if any tags has a conditional check for this.currentTag.name
@@ -5160,11 +5352,12 @@ var cf;
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
 /// <reference path="interfaces/IUserInput.ts"/>
+/// <reference path="interfaces/IUserInterfaceOptions.ts"/>
 var cf;
 (function (cf_1) {
     var ConversationalForm = (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.6.x";
+            this.version = "0.9.6";
             this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
@@ -5173,6 +5366,7 @@ var cf;
             window.ConversationalForm = this;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             console.log('Conversational Form > version:', this.version);
+            console.log('Conversational Form > options:', options);
             window.ConversationalForm[this.createId] = this;
             // possible to create your own event dispatcher, so you can tap into the events of the app
             if (options.eventDispatcher)
@@ -5194,6 +5388,9 @@ var cf;
                 throw new Error("Conversational Form error, the formEl needs to be defined.");
             this.formEl = options.formEl;
             this.formEl.setAttribute("cf-create-id", this.createId);
+            if (options.hideUserInputOnNoneStandardInput === true) {
+                cf_1.UserInputElement.hideUserInputOnNoneStandardInput = true;
+            }
             // TODO: can be a string when added as formless..
             // this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
             this.submitCallback = options.submitCallback;
@@ -5221,6 +5418,9 @@ var cf;
                 }
             }
             this.microphoneInputObj = options.microphoneInput;
+            // set the ui options
+            this.uiOptions = cf_1.Helpers.extendObject(cf_1.UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
+            // console.log('this.uiOptions:', this.uiOptions);
             this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {
@@ -5345,6 +5545,7 @@ var cf;
         };
         ConversationalForm.prototype.start = function () {
             this.userInput.disabled = false;
+            console.log('option, disabled 3');
             this.userInput.visible = true;
             this.flowManager.start();
         };
@@ -5423,7 +5624,8 @@ var cf;
             this.el.appendChild(innerWrap);
             // Conversational Form UI
             this.chatList = new cf_1.ChatList({
-                eventTarget: this.eventTarget
+                eventTarget: this.eventTarget,
+                cfReference: this
             });
             innerWrap.appendChild(this.chatList.el);
             this.userInput = new cf_1.UserTextInput({
@@ -5431,6 +5633,7 @@ var cf;
                 eventTarget: this.eventTarget,
                 cfReference: this
             });
+            this.chatList.addInput(this.userInput);
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
             this.eventTarget.addEventListener(cf_1.ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback, false);

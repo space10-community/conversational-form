@@ -53,6 +53,12 @@ namespace cf {
 			return <string> mappings[eventString];
 		}
 
+		public static isInternetExlorer(){
+			var ua = window.navigator.userAgent;
+			var msie = ua.indexOf("MSIE ");
+			return msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
+		}
+
 		public static caniuse = {
 			fileReader: () => {
 				if((<any>window).File && (<any>window).FileReader && (<any>window).FileList && window.Blob)
@@ -109,5 +115,19 @@ namespace cf {
 			el.style["-ms-transform"] = transformString;
 			el.style["transform"] = transformString;
 		}
+
+		// deep extends and object, from: https://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
+		public static extendObject (destination: any, source: any) : any{
+			for (var property in source) {
+				if (source[property] && source[property].constructor &&
+					source[property].constructor === Object) {
+						destination[property] = destination[property] || {};
+						arguments.callee(destination[property], source[property]);
+				} else {
+					destination[property] = source[property];
+				}
+			}
+			return destination;
+		};
 	}
 }

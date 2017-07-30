@@ -279,6 +279,11 @@ namespace cf {
 						}
 					}
 
+					if(this.required && this._activeElements.length == 0){
+						// checkbox can be required
+						isValid = false;
+					}
+
 					break;
 			}
 

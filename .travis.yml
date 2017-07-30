@@ -3,7 +3,8 @@ node_js:
     - "0.10"
 branches:
   only:
-    - travis
+    - develop
+    - master
 script: node_modules/karma/bin/karma start karma.conf.js --single-run
 before_install:
     - export DISPLAY=:99.0

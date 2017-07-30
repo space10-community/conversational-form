@@ -11,9 +11,9 @@
   z-index: 999;
   margin: auto;
   background: #fff;
+  overflow: hidden;
   opacity: 0;
   will-change: opacity;
-  padding: 20px 0px;
 }
 .conversational-form *,
 .conversational-form *:before,
@@ -239,10 +239,12 @@ cf-list.disabled {
 .cf-button:not(:last-child) {
   margin-right: 10px;
 }
-.cf-button:hover,
-.cf-button:focus,
-.cf-button[selected="selected"],
-.cf-button[checked="checked"] {
+:not(.cf-button:hover[selected="selected"]):not([checked="checked"])),
+:not(.cf-button:focus[selected="selected"]):not([checked="checked"])) {
+  background: rgba(13,131,255,0.1);
+}
+.cf-button[selected="selected"]:not(:focus).cf-button[selected="selected"]:not(:hover):not(.highlight),
+.cf-button[checked="checked"]:not(:focus).cf-button[checked="checked"]:not(:hover):not(.highlight) {
   background: rgba(13,131,255,0.1);
 }
 .cf-button[disabled="disabled"] {
@@ -253,8 +255,10 @@ cf-list.disabled {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-.cf-button:active {
-  background: rgba(13,131,255,0.2);
+.cf-button:active > div {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
 }
 .cf-button .cf-image {
   width: 100%;
@@ -516,6 +520,13 @@ cf-input {
   height: auto;
   margin-bottom: 20px;
   margin-top: 0px;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 cf-input.animate-in input,
 cf-input.animate-in textarea {
@@ -643,6 +654,13 @@ cf-input input:-ms-input-placeholder,
 cf-input textarea:-ms-input-placeholder {
   color: currentColor;
 }
+cf-input.hide-input input,
+cf-input.hide-input textarea {
+  display: none;
+}
+cf-input.hide-input cf-input-button {
+  display: none;
+}
 cf-input[disabled="disabled"] {
   pointer-events: none;
 }
@@ -739,7 +757,6 @@ cf-input-button.cf-input-button {
   width: 29px;
   height: 29px;
   background: #fff;
-  border: 1px solid #fff;
   position: absolute;
   overflow: hidden;
   right: 8px;
@@ -906,17 +923,10 @@ cf-input-button.cf-input-button div.cf-icon-audio {
   -moz-background-size: 9.600000000000001px 15.200000000000001px;
   background-size: 9.600000000000001px 15.200000000000001px;
 }
-cf-input-button.cf-input-button:active:after {
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-}
-cf-input-button.cf-input-button:active div {
-  -webkit-transform: scale(0.75, 0.75);
-  -moz-transform: scale(0.75, 0.75);
-  -o-transform: scale(0.75, 0.75);
-  -ms-transform: scale(0.75, 0.75);
-  transform: scale(0.75, 0.75);
+cf-input-button.cf-input-button:active {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
 }
 cf-input-button.cf-input-button:hover,
 cf-input-button.cf-input-button:focus {
@@ -929,13 +939,15 @@ cf-input-button.cf-input-button:focus:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
-cf-input-button.cf-input-button:hover .cf-icon-progress,
-cf-input-button.cf-input-button:focus .cf-icon-progress {
-  -webkit-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
-  -moz-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
-  -o-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
-  -ms-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
-  animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+@media only screen and (min-width: 768px) {
+  cf-input-button.cf-input-button:hover .cf-icon-progress,
+  cf-input-button.cf-input-button:focus .cf-icon-progress {
+    -webkit-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -moz-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -o-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -ms-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+    animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
 }
 @-moz-keyframes cf-spin {
   0% {
@@ -1295,11 +1307,7 @@ cf-list-button.active:after {
   filter: none;
 }
 cf-list-button:active:after {
-  -webkit-transform: scale(0.75, 0.75);
-  -moz-transform: scale(0.75, 0.75);
-  -o-transform: scale(0.75, 0.75);
-  -ms-transform: scale(0.75, 0.75);
-  transform: scale(0.75, 0.75);
+  visibility: hidden;
 }
 cf-list-button:nth-child(1) {
   left: 0px;
@@ -1870,7 +1878,7 @@ cf-list-button:after {
 }
 cf-chat-response {
   display: table;
-  max-width: 50%;
+  max-width: 80%;
   min-width: 120px;
   width: auto;
   position: relative;
@@ -1885,13 +1893,18 @@ cf-chat-response {
   margin-right: auto;
   word-break: break-all;
 }
+@media only screen and (min-width: 768px) {
+  cf-chat-response {
+    max-width: 50%;
+  }
+}
 cf-chat-response.can-edit {
   cursor: pointer;
 }
 cf-chat-response.can-edit:hover {
   color: #7d8586;
 }
-cf-chat-response.can-edit:hover text {
+cf-chat-response.can-edit:hover text > p {
   background: #f2f9fe;
 }
 cf-chat-response.robot text > p {
@@ -1936,27 +1949,8 @@ cf-chat-response.user text {
 cf-chat-response.user text > p {
   background: #e6f3fe;
   border-radius: 20px 0px 20px 20px;
-}
-cf-chat-response.user text thinking span:nth-child(1) {
-  -webkit-animation-delay: 0.666666666666667s;
-  -moz-animation-delay: 0.666666666666667s;
-  -o-animation-delay: 0.666666666666667s;
-  -ms-animation-delay: 0.666666666666667s;
-  animation-delay: 0.666666666666667s;
-}
-cf-chat-response.user text thinking span:nth-child(2) {
-  -webkit-animation-delay: 1.333333333333333s;
-  -moz-animation-delay: 1.333333333333333s;
-  -o-animation-delay: 1.333333333333333s;
-  -ms-animation-delay: 1.333333333333333s;
-  animation-delay: 1.333333333333333s;
-}
-cf-chat-response.user text thinking span:nth-child(3) {
-  -webkit-animation-delay: 2s;
-  -moz-animation-delay: 2s;
-  -o-animation-delay: 2s;
-  -ms-animation-delay: 2s;
-  animation-delay: 2s;
+  margin-right: 0px;
+  margin-left: auto;
 }
 cf-chat-response.user.peak-thumb thumb {
   -webkit-transform: scale(1, 1) translateY(0px);
@@ -1969,11 +1963,11 @@ cf-chat-response.user.peak-thumb thumb {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.user.peak-thumb thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
+  -webkit-transition-delay: 0.2s, 0.2s, 0.2s;
+  -moz-transition-delay: 0.2s, 0.2s, 0.2s;
+  -o-transition-delay: 0.2s, 0.2s, 0.2s;
+  -ms-transition-delay: 0.2s, 0.2s, 0.2s;
+  transition-delay: 0.2s, 0.2s, 0.2s;
 }
 cf-chat-response.disabled {
   pointer-events: none;
@@ -1982,7 +1976,7 @@ cf-chat-response.disabled {
 cf-chat-response.disabled text {
   background: #f2f9fe;
 }
-cf-chat-response[thinking] thinking {
+cf-chat-response[thinking] text thinking {
   display: block;
 }
 cf-chat-response text {
@@ -2019,6 +2013,27 @@ cf-chat-response text {
 cf-chat-response text > div {
   display: inline-block;
 }
+cf-chat-response text thinking span:nth-child(1) {
+  -webkit-animation-delay: 0.666666666666667s;
+  -moz-animation-delay: 0.666666666666667s;
+  -o-animation-delay: 0.666666666666667s;
+  -ms-animation-delay: 0.666666666666667s;
+  animation-delay: 0.666666666666667s;
+}
+cf-chat-response text thinking span:nth-child(2) {
+  -webkit-animation-delay: 1.333333333333333s;
+  -moz-animation-delay: 1.333333333333333s;
+  -o-animation-delay: 1.333333333333333s;
+  -ms-animation-delay: 1.333333333333333s;
+  animation-delay: 1.333333333333333s;
+}
+cf-chat-response text thinking span:nth-child(3) {
+  -webkit-animation-delay: 2s;
+  -moz-animation-delay: 2s;
+  -o-animation-delay: 2s;
+  -ms-animation-delay: 2s;
+  animation-delay: 2s;
+}
 cf-chat-response text strong {
   font-weight: 900;
 }
@@ -2027,7 +2042,13 @@ cf-chat-response text > p {
   padding: 0px;
   background: #f8f8f8;
   padding: 12px 24px 12px 24px;
+  display: table;
   border-radius: 0px 20px 20px 20px;
+  -webkit-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 cf-chat-response text > p:not(:only-child) {
   border-radius: 0px 20px 20px 0px;
@@ -2154,11 +2175,11 @@ cf-chat-response.show text {
   filter: none;
 }
 .conversational-form--enable-animation cf-chat-response.show text {
-  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -moz-transition: -moz-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -o-transition: -o-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  -ms-transition: -ms-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 }
 .conversational-form--enable-animation cf-chat-response.show text {
   -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -2175,7 +2196,7 @@ cf-chat-response.show text {
 cf-chat-response.show text[value-added] {
   will-change: auto;
 }
-cf-chat-response.show thumb {
+cf-chat-response.show.robot thumb {
   -webkit-transform: scale(1, 1) translateY(0px);
   -moz-transform: scale(1, 1) translateY(0px);
   -o-transform: scale(1, 1) translateY(0px);
@@ -2185,12 +2206,12 @@ cf-chat-response.show thumb {
   -ms-filter: none;
   filter: none;
 }
-.conversational-form--enable-animation cf-chat-response.show thumb {
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  -ms-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
+.conversational-form--enable-animation cf-chat-response.show.robot thumb {
+  -webkit-transition-delay: 0.2s, 0.2s, 0.2s;
+  -moz-transition-delay: 0.2s, 0.2s, 0.2s;
+  -o-transition-delay: 0.2s, 0.2s, 0.2s;
+  -ms-transition-delay: 0.2s, 0.2s, 0.2s;
+  transition-delay: 0.2s, 0.2s, 0.2s;
 }
 @-moz-keyframes dot-fade {
   0% {
