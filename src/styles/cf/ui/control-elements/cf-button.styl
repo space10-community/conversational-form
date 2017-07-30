@@ -48,8 +48,13 @@
 	&:not(:last-child)
 		margin-right 10px
 
-	&:hover, &:focus, &[selected="selected"], &[checked="checked"]
-		background alpha($color-dark-blue, 10%)
+	&:hover, &:focus
+		:not(&[selected="selected"]):not([checked="checked"]))
+			background alpha($color-dark-blue, 10%)
+
+	&[selected="selected"], &[checked="checked"]
+		&:not(:focus)&:not(:hover):not(.highlight)
+			background alpha($color-dark-blue, 10%)
 	
 	&[disabled="disabled"]
 		pointer-events none
@@ -61,8 +66,8 @@
 	// 		...
 
 	&:active
-		background alpha($color-dark-blue, 20%)
-	
+		> div
+			opacity 0.2
 
 	.cf-image
 		width 100%

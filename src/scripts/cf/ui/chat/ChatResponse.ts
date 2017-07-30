@@ -1,6 +1,7 @@
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 /// <reference path="../../ConversationalForm.ts"/>
+/// <reference path="../../interfaces/IUserInterfaceOptions.ts"/>
 
 // namespace
 namespace cf {
@@ -11,6 +12,7 @@ namespace cf {
 		list: ChatList;
 		isRobotResponse: boolean;
 		tag: ITag;
+		container: HTMLElement;
 	}
 
 	export const ChatResponseEvents = {
@@ -20,16 +22,20 @@ namespace cf {
 	// class
 	export class ChatResponse extends BasicElement {
 		public static list: ChatList;
-		private static THINKING_MARKUP: string = "<p><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
+		private static THINKING_MARKUP: string = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
 
 		public isRobotResponse: boolean;
 
 		public response: string;
 		public originalResponse: string; // keep track of original response with id pipings
 		public parsedResponse: string;
+		
+		private uiOptions: IUserInterfaceOptions;
 		private textEl: Element;
 		private image: string;
+		private container: HTMLElement;
 		private _tag: ITag;
+		private readyTimer: number = 0;
 		private responseLink: ChatResponse; // robot reference from use
 		private onReadyCallback: () => void;
 
@@ -37,6 +43,10 @@ namespace cf {
 
 		public get tag(): ITag{
 			return this._tag;
+		}
+
+		public get added() : boolean {
+			return !!this.el.parentNode.parentNode;
 		}
 
 		public get disabled() : boolean {
@@ -65,6 +75,8 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			this.container = options.container;
+			this.uiOptions = options.cfReference.uiOptions;
 			this._tag = options.tag;
 		}
 
@@ -188,38 +200,58 @@ namespace cf {
 				// now set it
 				if(this.isRobotResponse){
 					this.textEl.innerHTML = "";
+
+					let robotInitResponseTime: number = this.uiOptions.robot.robotResponseTime;
+					if(robotInitResponseTime != 0){
+						this.setToThinking();
+					}
+
 					// robot response, allow for && for multiple responses
 					var chainedResponses: Array<string> = innerResponse.split("&&");
 					for (let i = 0; i < chainedResponses.length; i++) {
 						let str: string = <string>chainedResponses[i];
 						setTimeout(() =>{
+							this.tryClearThinking();
+
 							this.textEl.innerHTML += "<p>" + str + "</p>";
 							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 							p[p.length - 1].offsetWidth;
 							p[p.length - 1].classList.add("show");
-						}, 500 + (i * 500));
+
+							this.scrollTo();
+						}, robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
 					}
 
-					setTimeout(() => {
+					this.readyTimer = setTimeout(() => {
 						if(this.onReadyCallback)
 							this.onReadyCallback();
-					}, chainedResponses.length * 500);
+
+						// reset, as it can be called again
+						this.onReadyCallback = null;
+					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
 				}else{
 					// user response, act normal
+					this.tryClearThinking();
+
 					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
+
+					this.scrollTo();
 				}
 
 				this.parsedResponse = innerResponse;
 			// }
 
+			// value set, so add element, if not added
+			this.addSelf();
+
 			// bounce
-			this.el.removeAttribute("thinking");
 			this.textEl.removeAttribute("value-added");
 			setTimeout(() => {
 				this.textEl.setAttribute("value-added", "");
+				this.el.classList.add("peak-thumb");
 			}, 0);
 
 			this.checkForEditMode();
@@ -227,6 +259,12 @@ namespace cf {
 			// update response
 			// remove the double ampersands if present
 			this.response = innerResponse.split("&&").join(" ");
+		}
+		
+		public scrollTo(){
+			const y: number = this.el.offsetTop;
+			const h: number = this.el.offsetHeight;
+			this.container.scrollTop = y + h + this.container.scrollTop;
 		}
 
 		private checkForEditMode(){
@@ -236,10 +274,34 @@ namespace cf {
 			}
 		}
 
+		private tryClearThinking(){
+			if(this.el.hasAttribute("thinking")){
+				this.textEl.innerHTML = "";
+				this.el.removeAttribute("thinking");
+			}
+		}
+
 		private setToThinking(){
-			this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
-			this.el.classList.remove("can-edit");
-			this.el.setAttribute("thinking", "");
+			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+			if(canShowThinking){
+				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
+				this.el.classList.remove("can-edit");
+				this.el.setAttribute("thinking", "");
+			}
+
+			if(this.cfReference.uiOptions.user.showThinking || this.cfReference.uiOptions.user.showThumb){
+				this.addSelf();
+			}
+		}
+
+		/**
+		* @name addSelf
+		* add one self to the chat list
+		*/
+		private addSelf(): void {
+			if(this.el.parentNode != this.container){
+				this.container.appendChild(this.el);
+			}
 		}
 
 		/**
@@ -265,8 +327,6 @@ namespace cf {
 		protected onElementCreated(){
 			this.textEl = <Element> this.el.getElementsByTagName("text")[0];
 
-			this.setValue();
-
 			this.updateThumbnail(this.image);
 
 			if(this.isRobotResponse || this.response != null){
@@ -277,15 +337,16 @@ namespace cf {
 				}, 0);
 				//ConversationalForm.animationsEnabled ? Helpers.lerp(Math.random(), 500, 900) : 0);
 			}else{
-				// shows the 3 dots automatically, we expect the reponse to be empty upon creation
-				// TODO: Auto completion insertion point
-				setTimeout(() =>{
-					this.el.classList.add("peak-thumb")
-				}, ConversationalForm.animationsEnabled ? 1400 : 0);
+				if(this.cfReference.uiOptions.user.showThumb){
+					this.el.classList.add("peak-thumb");
+				}
 			}
 		}
 
 		public dealloc(){
+			clearTimeout(this.readyTimer);
+			this.container = null;
+			this.uiOptions = null;
 			this.onReadyCallback = null;
 
 			if(this.onClickCallback){

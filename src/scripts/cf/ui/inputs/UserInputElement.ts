@@ -11,9 +11,12 @@ namespace cf {
 	export class UserInputElement extends BasicElement implements IUserInputElement {
 		public static ERROR_TIME: number = 2000;
 		public static preventAutoFocus: boolean = false;
+		public static hideUserInputOnNoneStandardInput: boolean = false;
+
 		public el: HTMLElement;
 
 		protected cfReference: ConversationalForm;
+		private onChatReponsesUpdatedCallback: () => void;
 		private windowFocusCallback: () => void;
 		private inputInvalidCallback: () => void;
 		private flowUpdateCallback: () => void;
@@ -54,8 +57,28 @@ namespace cf {
 			return this._disabled
 		}
 
+		public get height():number{
+			let elHeight: number = 0
+			let elMargin: number = 0;
+			const el: any = <any>this.el;
+			if(Helpers.isInternetExlorer()) {
+				// IE
+				elHeight = (<any>el).offsetHeight;
+				elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10);
+				elMargin *= 2;
+			} else {
+				// none-IE
+				elHeight = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('height'), 10);
+				elMargin = parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(el, '').getPropertyValue('margin-bottom'));
+			}
+			return (elHeight + elMargin);
+		}
+
 		constructor(options: IUserInputOptions){
 			super(options);
+
+			this.onChatReponsesUpdatedCallback = this.onChatReponsesUpdated.bind(this);
+			this.eventTarget.addEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
 
 			this.windowFocusCallback = this.windowFocus.bind(this);
 			window.addEventListener('focus', this.windowFocusCallback, false);
@@ -101,6 +124,9 @@ namespace cf {
 		}
 		
 		public dealloc(){
+			this.eventTarget.removeEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false);
+			this.onChatReponsesUpdatedCallback = null;
+
 			this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false);
 			this.inputInvalidCallback = null;
 
@@ -116,14 +142,19 @@ namespace cf {
 		protected onFlowUpdate(event: CustomEvent){
 			ConversationalForm.illustrateFlow(this, "receive", event.type, event.detail);
 			this._currentTag = <ITag | ITagGroup> event.detail.tag;
-
-			setTimeout(() => {
-				this.visible = true;
-				this.disabled = false;
-			}, 150);
 		}
+
 		protected windowFocus(event: Event){
 
+		}
+
+		private onChatReponsesUpdated(event:CustomEvent){
+			// only show when user response
+			if(!(<any> event.detail).currentResponse.isRobotResponse){
+				this.visible = true;
+				this.disabled = false;
+				this.setFocusOnInput();
+			}
 		}
 	}
 

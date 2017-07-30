@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 	</head>
 	<body>
 
 		<style>
+			body{
+				margin: 0px;
+				padding: 0px;
+			}
+
 			.form-outer{
 				background: lightgrey;
 				width: 100%;
-				height: 100vh;
+				height: 90vh;
 			}
+
 			#conversational-form{
-				width: 50vw;
+				width: 90vw;
 				left: auto;
 				right: 0px;
 			}
@@ -94,6 +103,11 @@
 		<script
 			type="text/javascript"
 			src="../build/cf/logic/EventDispatcher.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInterfaceOptions.js"
 		></script>
 
 		<script
@@ -251,15 +265,15 @@
 				return error();
 			};
 
-			var conversationalForm;
+			var cfInstance;
 
 			// check formless.json
 			var onFormlessSubmitted = function(cf){
-				var formData = conversationalForm.getFormData();
-				var formDataSerialized = conversationalForm.getFormData(true);
+				var formData = cfInstance.getFormData();
+				var formDataSerialized = cfInstance.getFormData(true);
 				console.log("Formdata:", formData);
 				console.log("Formdata, obj:", formDataSerialized);
-				conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.")
+				cfInstance.addRobotChatResponse("Check the dev console for FormatData output.")
 
 			}
 
@@ -269,14 +283,14 @@
 				// fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
 				var xhr = new XMLHttpRequest()
 				xhr.onload = function(event){
-					if(step++ == 0){
+					if(step++ == 2){
 						// add tags that are received from pseudo webservice ..
 						var tags = [
 							{
 								// select group
 								"tag": "select",
 								"name": "country",
-								"cf-questions": "First tag value: {first-tag}&& + follow-up",
+								"cf-questions": "Runtime injected tags, first tag value: {first-tag}&& + follow-up",
 								"cf-input-placeholder": "Some copy",
 								"multiple": false,
 								"children":[
@@ -443,7 +457,7 @@
 
 						// add tag
 						// add tag at index
-						conversationalForm.addTags(tags, true);
+						cfInstance.addTags(tags, true);
 					}
 
 					setTimeout(function(){
@@ -462,7 +476,7 @@
 
 			// load json file with formless data (files/formless.json)
 			window.onload = function(){
-				var xhr = new XMLHttpRequest()
+				var xhr = new XMLHttpRequest();
 				xhr.onload = function(event){
 					var str = xhr.response;
 					var json = JSON.parse(str);
@@ -470,22 +484,35 @@
 					console.log("JSON to parse as form:", json)
 
 					// start one w. string
-					// window.cf.ConversationalForm.startTheConversation(str);
+					// window.cf.cfInstance.startTheConversation(str);
 
 					// add callback hooks..
 					json.options.submitCallback = onFormlessSubmitted.bind(window);
 					json.options.flowStepCallback = onStepCallback.bind(window);
 					
+					// add UI options
+					json.options.userInterfaceOptions = {
+						controlElementsInAnimationDelay: 250,
+						robot: {
+							robotResponseTime: 1000,
+							chainedResponseTime: 400
+						},
+						user:{
+							showThinking: true,
+							showThumb: false
+						}
+					}
+					
 					// start one w. json
-					conversationalForm = window.cf.ConversationalForm.startTheConversation(json);
-					document.getElementById("context").appendChild(conversationalForm.el);
+					cfInstance = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("context").appendChild(cfInstance.el);
 
 					// in-document form
-					// window.cf.ConversationalForm.startTheConversation({
+					// window.cf.cfInstance.startTheConversation({
 					// 	formEl: document.getElementById("empty-form")
 					// });
 				}
-				xhr.open("GET", "../docs/files/formless.json");
+				xhr.open("GET", "files/formless-test-data.json");
 				xhr.send();
 			};
 		</script>

@@ -10,6 +10,7 @@
 /// <reference path="data/Dictionary.ts"/>
 /// <reference path="parsing/TagsParser.ts"/>
 /// <reference path="interfaces/IUserInput.ts"/>
+/// <reference path="interfaces/IUserInterfaceOptions.ts"/>
 
 interface Window { ConversationalForm: any; }
 
@@ -64,6 +65,12 @@ namespace cf {
 
 		// optional, set microphone nput, future, add other custom inputs, ex. VR
 		microphoneInput?:IUserInput;
+
+		// optional, hide ÜserInputField when radio, checkbox, select input is active
+		hideUserInputOnNoneStandardInput?:boolean;
+
+		// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
+		userInterfaceOptions?:IUserInterfaceOptions;
 	}
 
 	// CUI formless options
@@ -73,7 +80,7 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		public version: string = "0.9.6.x";
+		public version: string = "0.9.6";
 
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
@@ -104,6 +111,8 @@ namespace cf {
 
 		public dictionary: Dictionary;
 		public el: HTMLElement;
+		public chatList: ChatList;
+		public uiOptions: IUserInterfaceOptions;
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
@@ -112,13 +121,11 @@ namespace cf {
 		private flowStepCallback: (dto: FlowDTO, success: () => void, error: () => void) => void;
 		private tags: Array<ITag | ITagGroup>;
 		private flowManager: FlowManager;
-
-		public chatList: ChatList;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
-
+		
 		private userInput: UserTextInput;
 		private microphoneInputObj: IUserInput;
 
@@ -128,6 +135,7 @@ namespace cf {
 			this.cdnPath = this.cdnPath.split("{version}").join(this.version);
 
 			console.log('Conversational Form > version:', this.version);
+			console.log('Conversational Form > options:', options);
 
 			window.ConversationalForm[this.createId] = this;
 
@@ -159,6 +167,10 @@ namespace cf {
 
 			this.formEl = options.formEl;
 			this.formEl.setAttribute("cf-create-id", this.createId);
+
+			if(options.hideUserInputOnNoneStandardInput === true){
+				UserInputElement.hideUserInputOnNoneStandardInput = true;
+			}
 
 			// TODO: can be a string when added as formless..
 			// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
@@ -193,6 +205,10 @@ namespace cf {
 			}
 
 			this.microphoneInputObj = options.microphoneInput;
+			
+			// set the ui options
+			this.uiOptions = Helpers.extendObject(UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
+			// console.log('this.uiOptions:', this.uiOptions);
 
 			this.init();
 		}
@@ -327,6 +343,7 @@ namespace cf {
 
 		public start(){
 			this.userInput.disabled = false;
+			console.log('option, disabled 3', );
 			this.userInput.visible = true;
 
 			this.flowManager.start();
@@ -421,7 +438,8 @@ namespace cf {
 
 			// Conversational Form UI
 			this.chatList = new ChatList({
-				eventTarget: this.eventTarget
+				eventTarget: this.eventTarget,
+				cfReference: this
 			});
 
 			innerWrap.appendChild(this.chatList.el);
@@ -431,6 +449,8 @@ namespace cf {
 				eventTarget: this.eventTarget,
 				cfReference: this
 			});
+
+			this.chatList.addInput(this.userInput);
 
 			innerWrap.appendChild(this.userInput.el);
 

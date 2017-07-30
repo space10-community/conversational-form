@@ -114,7 +114,7 @@ namespace cf {
 		}
 
 		public get value (): string | Array<string> {
-			return this.domElement.value;
+			return this.domElement.value || <string> this.initialDefaultValue;
 		}
 
 		public get hasImage (): boolean{
@@ -122,6 +122,7 @@ namespace cf {
 		}
 
 		public get disabled (): boolean{
+			// a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
 			return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
 		}
 
@@ -165,7 +166,7 @@ namespace cf {
 
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
-			this.initialDefaultValue = this.domElement.value;
+			this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
 
 			this.changeCallback = this.onDomElementChange.bind(this);
 			this.domElement.addEventListener("change", this.changeCallback, false);
@@ -251,21 +252,23 @@ namespace cf {
 		public static isTagValid(element: HTMLElement):boolean{
 			if(element.getAttribute("type") === "hidden")
 				return false;
-			
+
 			if(element.getAttribute("type") === "submit")
 				return false;
-			
+
 			// ignore buttons, we submit the form automatially
 			if(element.getAttribute("type") == "button")
 				return false;
 
+			if(element.style){
+				// element style can be null if markup is created from DOMParser
+				if(element.style.display === "none")
+					return false;
 
-			if(element.style.display === "none")
-				return false;
-			
-			if(element.style.visibility === "hidden")
-				return false;
-			
+				if(element.style.visibility === "hidden")
+					return false;
+			}
+
 			const isTagFormless: boolean = TagsParser.isElementFormless(element);
 
 			const innerText: string = Helpers.getInnerTextOfElement(element);
@@ -326,7 +329,7 @@ namespace cf {
 
 		public refresh(){
 			// default value of Tag, check every refresh
-			this.defaultValue = this.domElement.value;
+			this.defaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
 
 			this.questions = null;
 			this.findAndSetQuestions();

@@ -1,6 +1,7 @@
 # Conversational Form
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://github.com/space10-community/conversational-form/blob/master/LICENSE.md)
 [![npm version](https://img.shields.io/npm/v/conversational-form.svg)](https://www.npmjs.com/package/conversational-form)
+[![Build Status](https://travis-ci.org/space10-community/conversational-form.svg?branch=develop)](https://travis-ci.org/space10-community/conversational-form)
 
 **Turning web forms into conversations.** Conversational Form is an open-source concept by <a href="https://www.space10.io">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
 
@@ -16,7 +17,7 @@ Below you will find guides to inlcude the ConversationalForm into a page contain
 Include ConversationalForm in your page
 
 ```html
-<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
 ```
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
@@ -110,7 +111,13 @@ new cf.ConversationalForm({
 	eventDispatcher,/*?: cf.EventDispatcher;*/
 
 	// optional, set microphone input, future, add other custom inputs, ex. VR, see voice (1, 2) examples in docs folder
-	microphoneInput?:IUserInput;
+	microphoneInput,/*?:IUserInput;*/
+
+	// optional, hide ÜserInputField when radio, checkbox, select input is active
+	hideUserInputOnNoneStandardInput,/*?: boolean*/
+
+	// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
+	userInterfaceOptions,/*?:cf.UserInterfaceOptions*/
 });
 ```
 
@@ -149,9 +156,13 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 ### cf-questions
 * to map questions directly to a tag.
-* seperate by | to allow for more questions, app will shuffle.
+* seperate with || to allow for more questions, app will shuffle.
 ```html
-<input type="text" cf-questions="What is your name?|Please tell me your name." ..
+<input type="text" cf-questions="What is your name?||Please tell me your name." ..
+```
+* seperate with && to allow for chained questions.
+```html
+<input type="text" cf-questions="Hello?&&Please tell me your name." ..
 ```
 
 ### cf-input-placeholder
@@ -267,16 +278,6 @@ possible to ignore existing tags, to allow for the flow to just "happen"
 window.ConversationalForm.remapTagsAndStartFrom(index, setCurrentTagValue, ignoreExistingTags);
 ```
 
-# Overwrite styles
-You can overwrite the UI with your own styles. Please see the source styles/css files for more info. 
-
-
-# Contribute to ConversationalForm
-
-We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
-
-ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
-
 ## Include Conversational Form in your project
 
 #### bower
@@ -284,6 +285,25 @@ ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought t
 
 #### npm
 	$ npm install conversational-form --save
+
+#### Use with various ES6 module bundlers
+like [Webpack](https://github.com/webpack/webpack) and [Rollup](https://github.com/rollup/rollup)
+
+```javascript
+import cf from 'conversational-form';
+var cfInstance = cf.startTheConversation({
+    formEl: document.getElementById("form")
+});
+````
+
+# Overwrite styles
+You can overwrite the UI with your own styles. Please see how the [docs](https://space10-community.github.io/conversational-form/) site is overwritting the styles [here](https://github.com/space10-community/conversational-form/blob/master/docs/src/styles/cf/cf-theming.styl).
+
+# Contribute to ConversationalForm
+
+We welcome contributions in the form of bug reports, pull requests, or thoughtful discussions in the [GitHub issue tracker](https://github.com/space10-community/conversational-form/issues).
+
+ConversationalForm is a concept by [SPACE10](https://www.space10.io/). Brought to life by [Felix Nielsen](http://twitter.com/flexmotion). Designed by [Charlie Isslander](https://twitter.com/charlieissland).
 
 ## Build the source
 
@@ -318,12 +338,20 @@ watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build
 
 #### distribution
 
-	# compiles build files, to run locally, runs docs, examples and form scripts and styles
+	# compiles build files, to run locally, runs docs, examples, conversational form scripts and styles and finally runs through Karma tests.
 	$ gulp dist
+
+please see [Unit testing]() below for more info.
 
 
 ### Version log
-User previous versions. These versions are also available through bower, npm and Github tags
+Previous versions. These versions are also available through bower, npm and Github tags.
+
+[v0.9.5](https://github.com/space10-community/conversational-form/tree/0.9.5)
+```html
+<!-- v0.9.5 -->
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.5/conversational-form.min.js" crossorigin></script>
+```
 
 [v0.9.4](https://github.com/space10-community/conversational-form/tree/0.9.4)
 ```html
@@ -355,11 +383,22 @@ User previous versions. These versions are also available through bower, npm and
 <script type="text/javascript" src="https://conversational-form-0iznjsw.stackpathdns.com/conversational-form.min.js" crossorigin></script>
 ```
 
-## Examples and tests
-When you are up and running, you can find a few form tests and examples in the /examples folder.
+## Tests / Unit tests
+We are using [Travis](https://travis-ci.org/) and [Karma](http://karma-runner.github.io/) to run tests.
+	
+	$ karma start
+
+this will run through the tests defined in `.`tests`, after starting karma, you can access http://localhost:9876 to view and modify the tests-cases.
+
+## Examples
+You can view some examples [here](https://space10-community.github.io/conversational-form/examples.html) and find many more code-wise [here](https://github.com/space10-community/conversational-form/tree/master/docs).
 
 ## Browser support
-Tested in latest Chrome, Firefox, Safari and Internet Explorer.
+Lowest common denominator of browser testing:
+
+| Chrome | Firefox | IE | Opera | Safari | iOS | Android |
+| --- | --- | --- | --- | --- | --- | --- |
+| 40+ ✔ | 40+ ✔ | 10+ ✔ | 46+ ✔ | 9.1+ ✔ | 9.1+ ✔ | 4.4+ ✔ |
 
 # Websites that use Conversational Form
 If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
