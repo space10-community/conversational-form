@@ -357,7 +357,7 @@ namespace cf {
 				this.inputElement.value = this._currentTag.defaultValue.toString();
 			}
 
-			if(UserInputElement.hideUserInputOnNoneStandardInput){
+			if(UserInputElement.hideUserInputOnNoneTextInput){
 				// toggle userinput hide
 				if(this.controlElements.active){
 					this.el.classList.add("hide-input");
@@ -425,7 +425,7 @@ namespace cf {
 		}
 
 		private isControlElementsActiveAndUserInputHidden():boolean{
-			return this.controlElements && this.controlElements.active && UserInputElement.hideUserInputOnNoneStandardInput
+			return this.controlElements && this.controlElements.active && UserInputElement.hideUserInputOnNoneTextInput
 		}
 
 		private onKeyUp(event: KeyboardEvent){
@@ -559,7 +559,7 @@ namespace cf {
 		}
 
 		protected onEnterOrSubmitButtonSubmit(event: CustomEvent = null){
-			const isControlElementsActiveAndUserInputHidden: boolean = this.controlElements.active && UserInputElement.hideUserInputOnNoneStandardInput;
+			const isControlElementsActiveAndUserInputHidden: boolean = this.controlElements.active && UserInputElement.hideUserInputOnNoneTextInput;
 			if((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted){
 				// active input field and focus on control elements happens when a control element is highlighted
 				this.controlElements.clickOnHighlighted();

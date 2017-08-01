@@ -113,8 +113,8 @@ new cf.ConversationalForm({
 	// optional, set microphone input, future, add other custom inputs, ex. VR, see voice (1, 2) examples in docs folder
 	microphoneInput,/*?:IUserInput;*/
 
-	// optional, hide ÜserInputField when radio, checkbox, select input is active
-	hideUserInputOnNoneStandardInput,/*?: boolean*/
+	// optional, hide UserInputField when radio, checkbox, select input is active
+	hideUserInputOnNoneTextInput,/*?: boolean*/
 
 	// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
 	userInterfaceOptions,/*?:cf.UserInterfaceOptions*/
