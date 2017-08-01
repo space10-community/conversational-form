@@ -67,7 +67,7 @@ namespace cf {
 		microphoneInput?:IUserInput;
 
 		// optional, hide ÜserInputField when radio, checkbox, select input is active
-		hideUserInputOnNoneStandardInput?:boolean;
+		hideUserInputOnNoneTextInput?:boolean;
 
 		// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
 		userInterfaceOptions?:IUserInterfaceOptions;
@@ -168,8 +168,8 @@ namespace cf {
 			this.formEl = options.formEl;
 			this.formEl.setAttribute("cf-create-id", this.createId);
 
-			if(options.hideUserInputOnNoneStandardInput === true){
-				UserInputElement.hideUserInputOnNoneStandardInput = true;
+			if(options.hideUserInputOnNoneTextInput === true){
+				UserInputElement.hideUserInputOnNoneTextInput = true;
 			}
 
 			// TODO: can be a string when added as formless..

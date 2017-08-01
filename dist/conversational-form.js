@@ -3912,7 +3912,7 @@ var cf;
     }(cf.BasicElement));
     UserInputElement.ERROR_TIME = 2000;
     UserInputElement.preventAutoFocus = false;
-    UserInputElement.hideUserInputOnNoneStandardInput = false;
+    UserInputElement.hideUserInputOnNoneTextInput = false;
     cf.UserInputElement = UserInputElement;
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
@@ -4218,7 +4218,7 @@ var cf;
             if (this._currentTag.type == "text" || this._currentTag.type == "email") {
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
-            if (cf.UserInputElement.hideUserInputOnNoneStandardInput) {
+            if (cf.UserInputElement.hideUserInputOnNoneTextInput) {
                 // toggle userinput hide
                 if (this.controlElements.active) {
                     this.el.classList.add("hide-input");
@@ -4272,7 +4272,7 @@ var cf;
             }
         };
         UserTextInput.prototype.isControlElementsActiveAndUserInputHidden = function () {
-            return this.controlElements && this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+            return this.controlElements && this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneTextInput;
         };
         UserTextInput.prototype.onKeyUp = function (event) {
             if ((!this.active && !this.isControlElementsActiveAndUserInputHidden()) && !this.controlElements.focus)
@@ -4394,7 +4394,7 @@ var cf;
         };
         UserTextInput.prototype.onEnterOrSubmitButtonSubmit = function (event) {
             if (event === void 0) { event = null; }
-            var isControlElementsActiveAndUserInputHidden = this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneStandardInput;
+            var isControlElementsActiveAndUserInputHidden = this.controlElements.active && cf.UserInputElement.hideUserInputOnNoneTextInput;
             if ((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted) {
                 // active input field and focus on control elements happens when a control element is highlighted
                 this.controlElements.clickOnHighlighted();
@@ -5388,8 +5388,8 @@ var cf;
                 throw new Error("Conversational Form error, the formEl needs to be defined.");
             this.formEl = options.formEl;
             this.formEl.setAttribute("cf-create-id", this.createId);
-            if (options.hideUserInputOnNoneStandardInput === true) {
-                cf_1.UserInputElement.hideUserInputOnNoneStandardInput = true;
+            if (options.hideUserInputOnNoneTextInput === true) {
+                cf_1.UserInputElement.hideUserInputOnNoneTextInput = true;
             }
             // TODO: can be a string when added as formless..
             // this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
