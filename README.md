@@ -22,30 +22,40 @@ Include ConversationalForm in your page
 
 ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
 ```html
-<form id="my-form-element" cf-form ...>
+<form id="my-form-element" cf-form>
+...
+</form>
 ```
 
-That's it! Your form is now conversational :thumbsup:  
+[jsbin](https://jsbin.com/vopuxukaze/edit?html,js,output)
+
+That's it! Your form is now conversational :thumbsup:
 
 ## Optional attributes
 
 **cf-context**  
 If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute `cf-context` to an element, otherwise the ConversationalForm will be appended to the body element.
 ```html
-<div cf-context ...>
+<div cf-context></div>
 ```
+
+[jsbin](https://jsbin.com/ditilihijo/edit?html,js,output)
 
 **cf-prevent-autofocus**  
 If you don't want to have the UserTextInput to auto focus.
 ```html
 <form id="my-form-element" cf-form cf-prevent-autofocus>
+...
+</form>
 ```
 
 **cf-no-animation**  
-Add this to `<form> tag to disable animations completly.
+Add this to `<form>` tag to disable animations completely.
 
 ```html
 <form id="my-form-element" cf-form cf-no-animation>
+...
+</form>
 ```
 
 ## Customization
