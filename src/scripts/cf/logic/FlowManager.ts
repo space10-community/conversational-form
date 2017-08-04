@@ -262,7 +262,7 @@ namespace cf {
 				const post: Array<ITag | ITagGroup> = this.tags.slice(atIndex, this.tags.length)
 				this.tags = this.tags.slice(0, atIndex).concat(tags).concat(post);
 			}else{
-				this.tags.concat(tags);
+				this.tags = this.tags.concat(tags);
 			}
 
 			this.setTags(this.tags);
