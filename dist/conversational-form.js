@@ -2046,8 +2046,10 @@ var cf;
             if (valueText == "" && this.required) {
                 isValid = false;
             }
-            var min = parseInt(this.domElement.getAttribute("min"), 10) || -1;
-            var max = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-minlength
+            var min = parseInt(this.domElement.getAttribute("minlength"), 10) || -1;
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-maxlength
+            var max = parseInt(this.domElement.getAttribute("maxlength"), 10) || -1;
             if (min != -1 && valueText.length < min) {
                 isValid = false;
             }
@@ -4110,7 +4112,7 @@ var cf;
             this.el.setAttribute("error", "");
             this.disabled = true;
             // cf-error
-            this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
+            this.inputElement.setAttribute("placeholder", dto.errorText || (this._currentTag ? this._currentTag.errorMessage : ""));
             clearTimeout(this.errorTimer);
             // remove loading class
             this.submitButton.loading = false;

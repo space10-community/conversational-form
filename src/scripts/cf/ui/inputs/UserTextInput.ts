@@ -225,7 +225,7 @@ namespace cf {
 			this.el.setAttribute("error", "");
 			this.disabled = true;
 			// cf-error
-			this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
+			this.inputElement.setAttribute("placeholder", dto.errorText || (this._currentTag ? this._currentTag.errorMessage : ""));
 			clearTimeout(this.errorTimer);
 
 			// remove loading class
