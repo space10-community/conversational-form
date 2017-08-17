@@ -213,19 +213,23 @@ namespace cf {
 		}
 
 		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
+			const testValue = (value: string, conditional: string | RegExp) : boolean => {
+				if(typeof conditional === "object"){
+					// regex
+					return (<RegExp> conditional).test(value);
+				}
+
+				// string comparisson
+				return <string>tagValue === conditional;
+			}
+
 			if(typeof tagValue === "string"){
 				// tag value is a string
 				const value: string = <string> tagValue;
 				let isValid: boolean = false;
 				for (var i = 0; i < condition.conditionals.length; i++) {
 					var conditional: string | RegExp = condition.conditionals[i];
-					if(typeof conditional === "object"){
-						// regex
-						isValid = (<RegExp> conditional).test(value);
-					}else{
-						// string comparisson
-						isValid = <string>tagValue === conditional;
-					}
+					isValid = testValue(value, conditional);
 
 					if(isValid) break;
 				}
@@ -238,7 +242,15 @@ namespace cf {
 					let isValid: boolean = false;
 					for (var i = 0; i < condition.conditionals.length; i++) {
 						var conditional: string | RegExp = condition.conditionals[i];
-						isValid = (<string[]>tagValue).toString() == conditional.toString();
+						if(typeof tagValue !== "string"){
+							for (var j = 0; j < tagValue.length; j++) {
+								isValid = testValue(<string>tagValue[j], conditional);
+								if(isValid) break;
+							}
+						}else{
+							// string comparisson
+							isValid = testValue((<string[]>tagValue).toString(), conditional);
+						}
 
 						if(isValid) break;
 					}
@@ -436,7 +448,9 @@ namespace cf {
 						if(attr && attr.name && attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
 							let _conditionals: Array<string | RegExp> = [];
-							let conditionalsFromAttribute: Array<string> = attr.value.split("||");
+							
+							// TODO: when && use to combine multiple values to complete condition.
+							let conditionalsFromAttribute: Array<string> = attr.value.indexOf("||") !== -1 ? attr.value.split("||") : attr.value.split("&&");
 
 							for (var i = 0; i < conditionalsFromAttribute.length; i++) {
 								var _conditional: string = conditionalsFromAttribute[i];

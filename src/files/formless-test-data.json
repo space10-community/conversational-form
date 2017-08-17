@@ -7,10 +7,38 @@
 	},
 	"tags": [
 		{
+			"tag": "select",
+			"cf-input-placeholder": "Choose one of the above..",
+			"multiple": "multiple",
+			"cf-questions": "Choose multiple of the elements from the list..",
+			"children":[
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-1",
+					"value": "-1"
+				},
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-2",
+					"selected": "selected",
+					"value": "-2"
+				},
+				{
+					"tag": "option",
+					"name": "option-dropdown-1",
+					"cf-label": "option-3",
+					"selected": "selected",
+					"value": "-3"
+				}
+			]
+		},
+		{
 			"tag": "fieldset",
 			"type": "Checkboxes buttons",
 			"cf-input-placeholder": "Choose one of the above",
-			"cf-questions": "Choose one of the checkboxss",
+			"cf-questions": "Choose one of the checkboxss...",
 			"children":[
 				{
 					"tag": "input",
@@ -18,6 +46,7 @@
 					"required": "required",
 					"name": "checkcheck-buttons-1",
 					"cf-label": "checkcheck-1",
+					"cf-conditional-option-dropdown-1": "-1",
 					"checked": "checked"
 				},
 				{
@@ -25,7 +54,17 @@
 					"type": "checkbox",
 					"required": "required",
 					"name": "checkcheck-buttons-1",
-					"cf-label": "checkcheck-2"
+					"cf-label": "checkcheck-2",
+					"cf-conditional-option-dropdown-1": "-3&&-2",
+					"checked": "checked"
+				},
+				{
+					"tag": "input",
+					"type": "checkbox",
+					"required": "required",
+					"name": "checkcheck-buttons-1",
+					"cf-label": "checkcheck-3",
+					"cf-conditional-option-dropdown-1": "-3"
 				}
 			]
 		},
