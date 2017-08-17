@@ -1891,20 +1891,21 @@ var cf;
             this.questions = null;
         };
         Tag.testConditions = function (tagValue, condition) {
+            var testValue = function (value, conditional) {
+                if (typeof conditional === "object") {
+                    // regex
+                    return conditional.test(value);
+                }
+                // string comparisson
+                return tagValue === conditional;
+            };
             if (typeof tagValue === "string") {
                 // tag value is a string
                 var value = tagValue;
                 var isValid = false;
                 for (var i = 0; i < condition.conditionals.length; i++) {
                     var conditional = condition.conditionals[i];
-                    if (typeof conditional === "object") {
-                        // regex
-                        isValid = conditional.test(value);
-                    }
-                    else {
-                        // string comparisson
-                        isValid = tagValue === conditional;
-                    }
+                    isValid = testValue(value, conditional);
                     if (isValid)
                         break;
                 }
@@ -1919,7 +1920,17 @@ var cf;
                     var isValid = false;
                     for (var i = 0; i < condition.conditionals.length; i++) {
                         var conditional = condition.conditionals[i];
-                        isValid = tagValue.toString() == conditional.toString();
+                        if (typeof tagValue !== "string") {
+                            for (var j = 0; j < tagValue.length; j++) {
+                                isValid = testValue(tagValue[j], conditional);
+                                if (isValid)
+                                    break;
+                            }
+                        }
+                        else {
+                            // string comparisson
+                            isValid = testValue(tagValue.toString(), conditional);
+                        }
                         if (isValid)
                             break;
                     }
@@ -2087,7 +2098,8 @@ var cf;
                         if (attr && attr.name && attr.name.indexOf("cf-conditional") !== -1) {
                             // conditional found
                             var _conditionals = [];
-                            var conditionalsFromAttribute = attr.value.split("||");
+                            // TODO: when && use to combine multiple values to complete condition.
+                            var conditionalsFromAttribute = attr.value.indexOf("||") !== -1 ? attr.value.split("||") : attr.value.split("&&");
                             for (var i = 0; i < conditionalsFromAttribute.length; i++) {
                                 var _conditional = conditionalsFromAttribute[i];
                                 try {
@@ -2559,6 +2571,13 @@ var cf;
         Object.defineProperty(SelectTag.prototype, "type", {
             get: function () {
                 return "select";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SelectTag.prototype, "name", {
+            get: function () {
+                return this.domElement && this.domElement.hasAttribute("name") ? this.domElement.getAttribute("name") : this.optionTags[0].name;
             },
             enumerable: true,
             configurable: true
