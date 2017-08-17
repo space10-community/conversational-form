@@ -386,8 +386,11 @@ namespace cf {
 				isValid = false;
 			}
 
-			const min: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
-			const max: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-minlength
+			const min: number = parseInt(this.domElement.getAttribute("minlength"), 10) || -1;
+
+			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-maxlength
+			const max: number = parseInt(this.domElement.getAttribute("maxlength"), 10) || -1;
 
 			if(min != -1 && valueText.length < min){
 				isValid = false;
