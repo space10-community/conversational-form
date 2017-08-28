@@ -5211,13 +5211,14 @@ var cf;
                     // check if tags are fullfilled
                     for (var j = 0; j < tagConditions.length; j++) {
                         var tagCondition = tagConditions[j];
-                        var tagName = tag.name.toLowerCase();
-                        if ("cf-conditional-" + tagName === tagCondition.key.toLowerCase()) {
+                        // only check tags where tag id or name is defined
+                        var tagName = (tag.name || tag.id || "").toLowerCase();
+                        if (tagName !== "" && "cf-conditional-" + tagName === tagCondition.key.toLowerCase()) {
                             // key found, so check condition
                             var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
                             var areConditionsMeet = cf.Tag.testConditions(flowTagValue, tagCondition);
                             if (areConditionsMeet) {
-                                this.activeConditions[tag.id || tagName] = tagConditions;
+                                this.activeConditions[tagName] = tagConditions;
                                 // conditions are meet
                                 if (++numConditionsFound == tagConditions.length) {
                                     return true;

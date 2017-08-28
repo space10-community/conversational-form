@@ -181,13 +181,14 @@ namespace cf {
 					// check if tags are fullfilled
 					for (var j = 0; j < tagConditions.length; j++) {
 						let tagCondition: ConditionalValue = tagConditions[j];
-						const tagName: string = tag.name.toLowerCase();
-						if("cf-conditional-"+tagName === tagCondition.key.toLowerCase()){
+						// only check tags where tag id or name is defined
+						const tagName: string = (tag.name || tag.id || "").toLowerCase();
+						if(tagName !== "" && "cf-conditional-"+tagName === tagCondition.key.toLowerCase()){
 							// key found, so check condition
 							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
 							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, tagCondition);
 							if(areConditionsMeet){
-								this.activeConditions[tag.id || tagName] = tagConditions;
+								this.activeConditions[tagName] = tagConditions;
 								// conditions are meet
 								if(++numConditionsFound == tagConditions.length){
 									return true;
