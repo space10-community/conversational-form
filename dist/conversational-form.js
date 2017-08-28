@@ -604,7 +604,8 @@ var cf;
                 var hasTagImage = this.referenceTag.hasImage;
                 var str;
                 if (hasTagImage && !this.partOfSeveralChoices) {
-                    var image = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+                    // const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+                    var image = hasTagImage ? "<img src=\"" + this.referenceTag.domElement.getAttribute("cf-image") + "\"/>" : "";
                     // str = "<div class='contains-image'>"
                     // str += image;
                     // str += "<span>" + Helpers.getInnerTextOfElement(this.el) + "</span>";

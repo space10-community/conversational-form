@@ -76,7 +76,8 @@ namespace cf {
 			const hasTagImage: boolean = (<Tag> this.referenceTag).hasImage;
 			let str: string;
 			if(hasTagImage && !this.partOfSeveralChoices){
-				const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+				// const image: string = hasTagImage ? "<img src='" + this.referenceTag.domElement.getAttribute("cf-image") + "'/>" : "";
+				const image = hasTagImage ? "<img src=\"" + this.referenceTag.domElement.getAttribute("cf-image") + "\"/>" : "";
 				// str = "<div class='contains-image'>"
 				// str += image;
 				// str += "<span>" + Helpers.getInnerTextOfElement(this.el) + "</span>";
