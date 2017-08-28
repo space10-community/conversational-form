@@ -355,7 +355,7 @@ namespace cf {
 
 			for (var i = 0; i < this.conditionalTags.length; i++) {
 				var condition: ConditionalValue = this.conditionalTags[i];
-				if("cf-conditional-"+tagName === condition.key){
+				if("cf-conditional-"+tagName.toLowerCase() === condition.key.toLowerCase()){
 					return true;
 				}
 				

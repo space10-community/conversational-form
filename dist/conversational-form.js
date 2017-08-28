@@ -2023,7 +2023,7 @@ var cf;
             }
             for (var i = 0; i < this.conditionalTags.length; i++) {
                 var condition = this.conditionalTags[i];
-                if ("cf-conditional-" + tagName === condition.key) {
+                if ("cf-conditional-" + tagName.toLowerCase() === condition.key.toLowerCase()) {
                     return true;
                 }
             }
@@ -5211,12 +5211,13 @@ var cf;
                     // check if tags are fullfilled
                     for (var j = 0; j < tagConditions.length; j++) {
                         var tagCondition = tagConditions[j];
-                        if ("cf-conditional-" + tag.name === tagCondition.key) {
+                        var tagName = tag.name.toLowerCase();
+                        if ("cf-conditional-" + tagName === tagCondition.key.toLowerCase()) {
                             // key found, so check condition
                             var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
                             var areConditionsMeet = cf.Tag.testConditions(flowTagValue, tagCondition);
                             if (areConditionsMeet) {
-                                this.activeConditions[tag.id || tag.name] = tagConditions;
+                                this.activeConditions[tag.id || tagName] = tagConditions;
                                 // conditions are meet
                                 if (++numConditionsFound == tagConditions.length) {
                                     return true;
