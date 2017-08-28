@@ -39,7 +39,7 @@ namespace cf {
 			return `<cf-radio-button class="cf-button" `+(isChecked ? "checked=checked" : "")+`>
 				<div>
 					<cf-radio></cf-radio>
-					` + this.referenceTag.label + `
+					<span>` + this.referenceTag.label + `</span>
 				</div>
 			</cf-radio-button>
 			`;
