@@ -29,11 +29,12 @@ namespace cf {
 		public response: string;
 		public originalResponse: string; // keep track of original response with id pipings
 		public parsedResponse: string;
-		
+
 		private uiOptions: IUserInterfaceOptions;
 		private textEl: Element;
 		private image: string;
 		private container: HTMLElement;
+
 		private _tag: ITag;
 		private readyTimer: number = 0;
 		private responseLink: ChatResponse; // robot reference from use
@@ -46,7 +47,11 @@ namespace cf {
 		}
 
 		public get added() : boolean {
-			return !!this.el.parentNode.parentNode;
+			if (!this.el) return false;
+
+			const { parentNode } = this.el;
+
+			return Boolean(parentNode && parentNode.parentNode);
 		}
 
 		public get disabled() : boolean {
@@ -96,7 +101,7 @@ namespace cf {
 			}else{
 				// same same
 				this.response = this.originalResponse = dto.text;
-				
+
 				this.processResponseAndSetText();
 
 				if(this.responseLink && !this.isRobotResponse){
@@ -142,12 +147,16 @@ namespace cf {
 			this.responseLink = response;
 		}
 
+		public removeLinkToOtherResponse(){
+			this.responseLink = null;
+		}
+
 		public processResponseAndSetText(){
 			if(!this.originalResponse)
 				return;
 
 			var innerResponse: string = this.originalResponse;
-			
+
 			if(this._tag && this._tag.type == "password" && !this.isRobotResponse){
 				var newStr: string = "";
 				for (let i = 0; i < innerResponse.length; i++) {
@@ -161,7 +170,7 @@ namespace cf {
 
 			if(this.responseLink && this.isRobotResponse){
 				// if robot, then check linked response for binding values
-				
+
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
 
@@ -260,8 +269,10 @@ namespace cf {
 			// remove the double ampersands if present
 			this.response = innerResponse.split("&&").join(" ");
 		}
-		
+
 		public scrollTo(){
+			if (!this.container) return;
+
 			const y: number = this.el.offsetTop;
 			const h: number = this.el.offsetHeight;
 			this.container.scrollTop = y + h + this.container.scrollTop;
@@ -299,7 +310,7 @@ namespace cf {
 		* add one self to the chat list
 		*/
 		private addSelf(): void {
-			if(this.el.parentNode != this.container){
+			if(Boolean(this.container) && this.el.parentNode != this.container){
 				this.container.appendChild(this.el);
 			}
 		}
@@ -321,7 +332,7 @@ namespace cf {
 			this.image = options.image;
 			this.response = this.originalResponse = options.response;
 			this.isRobotResponse = options.isRobotResponse;
-			
+
 			super.setData(options);
 		}
 		protected onElementCreated(){
@@ -348,6 +359,11 @@ namespace cf {
 			this.container = null;
 			this.uiOptions = null;
 			this.onReadyCallback = null;
+
+			if (this.responseLink) {
+				this.responseLink.removeLinkToOtherResponse();
+				this.removeLinkToOtherResponse();
+			}
 
 			if(this.onClickCallback){
 				this.el.removeEventListener(Helpers.getMouseEvent("click"), this.onClickCallback, false);
