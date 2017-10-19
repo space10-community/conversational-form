@@ -6,6 +6,11 @@
   "directories": {
     "dist": "distribution"
   },
+  "scripts": {
+    "start": "gulp",
+    "dist": "gulp dist",
+    "test": "karma start"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/space10-community/conversational-form"
@@ -24,6 +29,7 @@
     "build"
   ],
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jasmine-core": "^2.6.2",
     "karma": "^1.7.0",
     "karma-jasmine": "^1.1.0",
