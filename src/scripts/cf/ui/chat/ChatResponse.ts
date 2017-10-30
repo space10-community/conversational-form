@@ -65,8 +65,11 @@ namespace cf {
 				this.el.classList.remove("disabled");
 		}
 
+		public get visible():boolean {
+			return this.el.classList.contains("show");
+		}
+
 		public set visible(value: boolean){
-			this.el.offsetWidth;
 			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
 		}
 
@@ -151,6 +154,18 @@ namespace cf {
 			this.responseLink = null;
 		}
 
+		private interpolate(str: string, context: TagContext) {
+			let result:string = str;
+
+			for (const key in context) {
+				if (!context.hasOwnProperty(key)) continue;
+
+				result = result.replace(new RegExp(`{${key}}`, 'g'), <string>context[key]);
+			}
+
+			return result;
+		}
+
 		public processResponseAndSetText(){
 			if(!this.originalResponse)
 				return;
@@ -168,36 +183,44 @@ namespace cf {
 				innerResponse = Helpers.emojify(innerResponse)
 			}
 
-			if(this.responseLink && this.isRobotResponse){
-				// if robot, then check linked response for binding values
-
-				// one way data binding values:
-				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-
-			}
-
 			if(this.isRobotResponse){
+				const interpolationContext = <TagContext>{};
+
+                if(this.responseLink){
+                    // if robot, then check linked response for binding values
+
+                    // one way data binding values:
+					interpolationContext['previous-answer'] = <string>this.responseLink.parsedResponse;
+                }
+
 				// Piping, look through IDs, and map values to dynamics
 				const reponses: Array<ChatResponse> = ChatResponse.list.getResponses();
-				for (var i = 0; i < reponses.length; i++) {
-					var response: ChatResponse = reponses[i];
-					if(response !== this){
-						if(response.tag){
-							// check for id, standard
-							if(response.tag.id){
-								innerResponse = innerResponse.split("{" + response.tag.id + "}").join(<string> response.tag.value);
-							}
 
-							//fallback check for name
-							if(response.tag.name){
-								innerResponse = innerResponse.split("{" + response.tag.name + "}").join(<string> response.tag.value);
-							}
+				for (let i = 0; i < reponses.length; i++) {
+					const response: ChatResponse = reponses[i];
+
+					if(response !== this && response.tag){
+                        // check for id, standard
+                        if(response.tag.id){
+                            interpolationContext[response.tag.id] = <string>response.tag.value;
+                        }
+
+                        // fallback check for name
+                        if(response.tag.name){
+                            interpolationContext[response.tag.name] = <string>response.tag.value;
+                        }
+
+                        if(response.tag.context) {
+                            for (const key in response.tag.context) {
+                                if (!response.tag.context.hasOwnProperty(key)) continue;
+
+                                interpolationContext[key] = response.tag.context[key];
+                            }
 						}
-					}
+                    }
 				}
 
-				// add more..
-				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
+				innerResponse = this.interpolate(innerResponse, interpolationContext);
 			}
 
 			// check if response contains an image as answer

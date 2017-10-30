@@ -22,6 +22,7 @@
 
 // namespace
 namespace cf {
+	export type TagContext = { [key: string]: string|number };
 	// interface
 	export interface ITag{
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
@@ -45,7 +46,9 @@ namespace cf {
 		hasConditions():boolean;
 		hasConditionsFor(tagName: string):boolean;
 		checkConditionalAndIsValid():boolean;
-
+		readonly context: TagContext;
+		addContext(key: string, value: string|number):void;
+		removeContext(key: string):void;
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
 
@@ -64,6 +67,7 @@ namespace cf {
 	}
 
 	export interface ITagOptions{
+		context?: TagContext,
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
@@ -82,8 +86,9 @@ namespace cf {
 		protected _eventTarget: EventDispatcher;
 		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
+		protected _context: { [key: string]: string | number };
 
-		public flowManager: FlowManager
+		public flowManager: FlowManager;
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		public defaultValue: string | number;
 		public initialDefaultValue: string | number;
@@ -164,6 +169,10 @@ namespace cf {
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
 
+		public get context() {
+			return this._context;
+		}
+
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
 			this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
@@ -173,6 +182,15 @@ namespace cf {
 
 			// remove tabIndex from the dom element.. danger zone... should we or should we not...
 			this.domElement.tabIndex = -1;
+
+			this._context = <TagContext>{};
+			if (options.context) {
+                for (const key in options.context) {
+                    if (!options.context.hasOwnProperty(key)) continue;
+
+                    this._context[key] = options.context[key];
+                }
+			}
 
 			// questions array
 			if(options.questions)
@@ -305,6 +323,14 @@ namespace cf {
 				// console.warn("Tag is not valid!: "+ element);
 				return null;
 			}
+		}
+
+        addContext(key: string, value: string|number):void {
+			this._context[key] = value;
+		}
+
+        removeContext(key: string):void {
+			delete this._context[key];
 		}
 
 		public reset(){

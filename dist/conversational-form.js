@@ -1744,6 +1744,14 @@ var cf;
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
             this.domElement.tabIndex = -1;
+            this._context = {};
+            if (options.context) {
+                for (var key in options.context) {
+                    if (!options.context.hasOwnProperty(key))
+                        continue;
+                    this._context[key] = options.context[key];
+                }
+            }
             // questions array
             if (options.questions)
                 this.questions = options.questions;
@@ -1879,6 +1887,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Tag.prototype, "context", {
+            get: function () {
+                return this._context;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Tag.prototype.dealloc = function () {
             this.domElement.removeEventListener("change", this.changeCallback, false);
             this.changeCallback = null;
@@ -1971,6 +1986,12 @@ var cf;
                 // console.warn("Tag is not valid!: "+ element);
                 return null;
             }
+        };
+        Tag.prototype.addContext = function (key, value) {
+            this._context[key] = value;
+        };
+        Tag.prototype.removeContext = function (key) {
+            delete this._context[key];
         };
         Tag.prototype.reset = function () {
             this.refresh();
@@ -2182,6 +2203,14 @@ var cf;
             if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
                 this.questions = cf.Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
             }
+            this._context = {};
+            if (options.context) {
+                for (var key in options.context) {
+                    if (!options.context.hasOwnProperty(key))
+                        continue;
+                    this._context[key] = options.context[key];
+                }
+            }
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
         }
@@ -2307,6 +2336,19 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "context", {
+            get: function () {
+                return this._context;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TagGroup.prototype.addContext = function (key, value) {
+            this._context[key] = value;
+        };
+        TagGroup.prototype.removeContext = function (key) {
+            delete this._context[key];
+        };
         TagGroup.prototype.dealloc = function () {
             for (var i = 0; i < this.elements.length; i++) {
                 var element = this.elements[i];
@@ -4500,9 +4542,11 @@ var cf;
             configurable: true
         });
         Object.defineProperty(ChatResponse.prototype, "visible", {
+            get: function () {
+                return this.el.classList.contains("show");
+            },
             set: function (value) {
                 var _this = this;
-                this.el.offsetWidth;
                 setTimeout(function () { return value ? _this.el.classList.add("show") : _this.el.classList.remove("show"); }, 100);
             },
             enumerable: true,
@@ -4576,6 +4620,15 @@ var cf;
         ChatResponse.prototype.removeLinkToOtherResponse = function () {
             this.responseLink = null;
         };
+        ChatResponse.prototype.interpolate = function (str, context) {
+            var result = str;
+            for (var key in context) {
+                if (!context.hasOwnProperty(key))
+                    continue;
+                result = result.replace(new RegExp("{" + key + "}", 'g'), context[key]);
+            }
+            return result;
+        };
         ChatResponse.prototype.processResponseAndSetText = function () {
             var _this = this;
             if (!this.originalResponse)
@@ -4583,7 +4636,7 @@ var cf;
             var innerResponse = this.originalResponse;
             if (this._tag && this._tag.type == "password" && !this.isRobotResponse) {
                 var newStr = "";
-                for (var i_1 = 0; i_1 < innerResponse.length; i_1++) {
+                for (var i = 0; i < innerResponse.length; i++) {
                     newStr += "*";
                 }
                 innerResponse = newStr;
@@ -4591,31 +4644,36 @@ var cf;
             else {
                 innerResponse = cf.Helpers.emojify(innerResponse);
             }
-            if (this.responseLink && this.isRobotResponse) {
-                // if robot, then check linked response for binding values
-                // one way data binding values:
-                innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-            }
             if (this.isRobotResponse) {
+                var interpolationContext = {};
+                if (this.responseLink) {
+                    // if robot, then check linked response for binding values
+                    // one way data binding values:
+                    interpolationContext['previous-answer'] = this.responseLink.parsedResponse;
+                }
                 // Piping, look through IDs, and map values to dynamics
                 var reponses = ChatResponse.list.getResponses();
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
-                    if (response !== this) {
-                        if (response.tag) {
-                            // check for id, standard
-                            if (response.tag.id) {
-                                innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
-                            }
-                            //fallback check for name
-                            if (response.tag.name) {
-                                innerResponse = innerResponse.split("{" + response.tag.name + "}").join(response.tag.value);
+                    if (response !== this && response.tag) {
+                        // check for id, standard
+                        if (response.tag.id) {
+                            interpolationContext[response.tag.id] = response.tag.value;
+                        }
+                        // fallback check for name
+                        if (response.tag.name) {
+                            interpolationContext[response.tag.name] = response.tag.value;
+                        }
+                        if (response.tag.context) {
+                            for (var key in response.tag.context) {
+                                if (!response.tag.context.hasOwnProperty(key))
+                                    continue;
+                                interpolationContext[key] = response.tag.context[key];
                             }
                         }
                     }
                 }
-                // add more..
-                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
+                innerResponse = this.interpolate(innerResponse, interpolationContext);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
@@ -4631,8 +4689,8 @@ var cf;
                 }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
-                var _loop_1 = function (i_2) {
-                    var str = chainedResponses[i_2];
+                var _loop_1 = function (i) {
+                    var str = chainedResponses[i];
                     setTimeout(function () {
                         _this.tryClearThinking();
                         _this.textEl.innerHTML += "<p>" + str + "</p>";
@@ -4640,11 +4698,11 @@ var cf;
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
                         _this.scrollTo();
-                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
+                    }, robotInitResponseTime + ((i + 1) * this_1.uiOptions.robot.chainedResponseTime));
                 };
                 var this_1 = this;
-                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
-                    _loop_1(i_2);
+                for (var i = 0; i < chainedResponses.length; i++) {
+                    _loop_1(i);
                 }
                 this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
