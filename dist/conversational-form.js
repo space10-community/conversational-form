@@ -282,7 +282,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var Helpers = (function () {
+    var Helpers = /** @class */ (function () {
         function Helpers() {
         }
         Helpers.lerp = function (norm, min, max) {
@@ -381,16 +381,16 @@ var cf;
             return destination;
         };
         ;
+        Helpers.caniuse = {
+            fileReader: function () {
+                if (window.File && window.FileReader && window.FileList && window.Blob)
+                    return true;
+                return false;
+            }
+        };
+        Helpers.emojilib = null;
         return Helpers;
     }());
-    Helpers.caniuse = {
-        fileReader: function () {
-            if (window.File && window.FileReader && window.FileList && window.Blob)
-                return true;
-            return false;
-        }
-    };
-    Helpers.emojilib = null;
     cf.Helpers = Helpers;
 })(cf || (cf = {}));
 
@@ -398,7 +398,7 @@ var cf;
 var cf;
 (function (cf) {
     // interface
-    var EventDispatcher = (function () {
+    var EventDispatcher = /** @class */ (function () {
         function EventDispatcher(cfRef) {
             if (cfRef === void 0) { cfRef = null; }
             this._cf = cfRef;
@@ -432,7 +432,7 @@ var cf;
 var cf;
 (function (cf) {
     // interface
-    var TagsParser = (function () {
+    var TagsParser = /** @class */ (function () {
         function TagsParser() {
         }
         TagsParser.parseTag = function (element) {
@@ -504,7 +504,7 @@ var cf;
 var cf;
 (function (cf) {
     // class
-    var BasicElement = (function () {
+    var BasicElement = /** @class */ (function () {
         function BasicElement(options) {
             this.eventTarget = options.eventTarget;
             this.cfReference = options.cfReference;
@@ -565,7 +565,7 @@ var cf;
         READY: "cf-control-element-progress-READY",
     };
     // class
-    var ControlElement = (function (_super) {
+    var ControlElement = /** @class */ (function (_super) {
         __extends(ControlElement, _super);
         function ControlElement(options) {
             var _this = _super.call(this, options) || this;
@@ -754,7 +754,7 @@ var cf;
         ON_RESIZE: "cf-on-control-elements-resize",
         CHANGED: "cf-on-control-elements-changed"
     };
-    var ControlElements = (function () {
+    var ControlElements = /** @class */ (function () {
         function ControlElements(options) {
             this.animateInFromReponseTimer = 0;
             this.ignoreKeyboardInput = false;
@@ -1415,7 +1415,7 @@ var cf;
 // namespace
 var cf;
 (function (cf) {
-    var ScrollController = (function () {
+    var ScrollController = /** @class */ (function () {
         function ScrollController(options) {
             this.listWidth = 0;
             this.visibleAreaWidth = 0;
@@ -1576,9 +1576,9 @@ var cf;
             this.max = (this.listWidth - this.visibleAreaWidth) * -1;
             this.render();
         };
+        ScrollController.accerlation = 0.1;
         return ScrollController;
     }());
-    ScrollController.accerlation = 0.1;
     cf.ScrollController = ScrollController;
 })(cf || (cf = {}));
 
@@ -1586,7 +1586,7 @@ var cf;
 var cf;
 (function (cf) {
     // class
-    var Dictionary = (function () {
+    var Dictionary = /** @class */ (function () {
         function Dictionary(options) {
             // can be overwrittenMicrophone error
             this.data = {
@@ -1694,19 +1694,19 @@ var cf;
             }
             return newData;
         };
+        Dictionary.keyCodes = {
+            "left": 37,
+            "right": 39,
+            "down": 40,
+            "up": 38,
+            "backspace": 8,
+            "enter": 13,
+            "space": 32,
+            "shift": 16,
+            "tab": 9,
+        };
         return Dictionary;
     }());
-    Dictionary.keyCodes = {
-        "left": 37,
-        "right": 39,
-        "down": 40,
-        "up": 38,
-        "backspace": 8,
-        "enter": 13,
-        "space": 32,
-        "shift": 16,
-        "tab": 9,
-    };
     cf.Dictionary = Dictionary;
 })(cf || (cf = {}));
 
@@ -1736,7 +1736,7 @@ var cf;
         ORIGINAL_ELEMENT_CHANGED: "cf-tag-dom-element-changed"
     };
     // class
-    var Tag = (function () {
+    var Tag = /** @class */ (function () {
         function Tag(options) {
             this.domElement = options.domElement;
             this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
@@ -1744,6 +1744,14 @@ var cf;
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
             this.domElement.tabIndex = -1;
+            this._context = {};
+            if (options.context) {
+                for (var key in options.context) {
+                    if (!options.context.hasOwnProperty(key))
+                        continue;
+                    this._context[key] = options.context[key];
+                }
+            }
             // questions array
             if (options.questions)
                 this.questions = options.questions;
@@ -1879,6 +1887,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Tag.prototype, "context", {
+            get: function () {
+                return this._context;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Tag.prototype.dealloc = function () {
             this.domElement.removeEventListener("change", this.changeCallback, false);
             this.changeCallback = null;
@@ -1890,43 +1905,22 @@ var cf;
             this.validationCallback = null;
             this.questions = null;
         };
+        Tag.testCondition = function (tagValue, conditional) {
+            if (typeof conditional === "object") {
+                // regex
+                return conditional.test(tagValue);
+            }
+            // string comparisson
+            return tagValue === conditional;
+        };
         Tag.testConditions = function (tagValue, condition) {
             if (typeof tagValue === "string") {
-                // tag value is a string
-                var value = tagValue;
-                var isValid = false;
-                for (var i = 0; i < condition.conditionals.length; i++) {
-                    var conditional = condition.conditionals[i];
-                    if (typeof conditional === "object") {
-                        // regex
-                        isValid = conditional.test(value);
-                    }
-                    else {
-                        // string comparisson
-                        isValid = tagValue === conditional;
-                    }
-                    if (isValid)
-                        break;
-                }
-                return isValid;
+                return condition.conditionals.some(function (conditional) { return (Tag.testCondition(tagValue, conditional)); });
             }
-            else {
-                if (!tagValue) {
-                    return false;
-                }
-                else {
-                    // tag value is an array
-                    var isValid = false;
-                    for (var i = 0; i < condition.conditionals.length; i++) {
-                        var conditional = condition.conditionals[i];
-                        isValid = tagValue.toString() == conditional.toString();
-                        if (isValid)
-                            break;
-                    }
-                    return isValid;
-                }
-                // arrays need to be the same
+            else if (Array.isArray(tagValue)) {
+                return condition.conditionals.some(function (conditional) { return (tagValue.some(function (value) { return (Tag.testCondition(value, conditional)); })); });
             }
+            return false;
         };
         Tag.isTagValid = function (element) {
             if (element.getAttribute("type") === "hidden")
@@ -1992,6 +1986,12 @@ var cf;
                 // console.warn("Tag is not valid!: "+ element);
                 return null;
             }
+        };
+        Tag.prototype.addContext = function (key, value) {
+            this._context[key] = value;
+        };
+        Tag.prototype.removeContext = function (key) {
+            delete this._context[key];
         };
         Tag.prototype.reset = function () {
             this.refresh();
@@ -2195,13 +2195,21 @@ var cf;
 var cf;
 (function (cf) {
     // class
-    var TagGroup = (function () {
+    var TagGroup = /** @class */ (function () {
         function TagGroup(options) {
             this.elements = options.elements;
             // set wrapping element
             this._fieldset = options.fieldset;
             if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
                 this.questions = cf.Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
+            }
+            this._context = {};
+            if (options.context) {
+                for (var key in options.context) {
+                    if (!options.context.hasOwnProperty(key))
+                        continue;
+                    this._context[key] = options.context[key];
+                }
             }
             if (cf.ConversationalForm.illustrateAppFlow)
                 console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
@@ -2328,6 +2336,19 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TagGroup.prototype, "context", {
+            get: function () {
+                return this._context;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TagGroup.prototype.addContext = function (key, value) {
+            this._context[key] = value;
+        };
+        TagGroup.prototype.removeContext = function (key) {
+            delete this._context[key];
+        };
         TagGroup.prototype.dealloc = function () {
             for (var i = 0; i < this.elements.length; i++) {
                 var element = this.elements[i];
@@ -2471,7 +2492,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var InputTag = (function (_super) {
+    var InputTag = /** @class */ (function (_super) {
         __extends(InputTag, _super);
         function InputTag(options) {
             var _this = _super.call(this, options) || this;
@@ -2535,7 +2556,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var SelectTag = (function (_super) {
+    var SelectTag = /** @class */ (function (_super) {
         __extends(SelectTag, _super);
         function SelectTag(options) {
             var _this = _super.call(this, options) || this;
@@ -2650,7 +2671,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var ButtonTag = (function (_super) {
+    var ButtonTag = /** @class */ (function (_super) {
         __extends(ButtonTag, _super);
         function ButtonTag(options) {
             var _this = _super.call(this, options) || this;
@@ -2683,7 +2704,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var OptionTag = (function (_super) {
+    var OptionTag = /** @class */ (function (_super) {
         __extends(OptionTag, _super);
         function OptionTag() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -2751,7 +2772,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var Button = (function (_super) {
+    var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
         function Button(options) {
             var _this = _super.call(this, options) || this;
@@ -2835,7 +2856,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var RadioButton = (function (_super) {
+    var RadioButton = /** @class */ (function (_super) {
         __extends(RadioButton, _super);
         function RadioButton() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -2897,7 +2918,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var CheckboxButton = (function (_super) {
+    var CheckboxButton = /** @class */ (function (_super) {
         __extends(CheckboxButton, _super);
         function CheckboxButton() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -2960,7 +2981,7 @@ var cf;
         CLICK: "cf-option-button-click"
     };
     // class
-    var OptionButton = (function (_super) {
+    var OptionButton = /** @class */ (function (_super) {
         __extends(OptionButton, _super);
         function OptionButton() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -3024,7 +3045,7 @@ var cf;
     // interface
     // class
     // builds x OptionsButton from the registered SelectTag
-    var OptionsList = (function () {
+    var OptionsList = /** @class */ (function () {
         function OptionsList(options) {
             this.context = options.context;
             this.eventTarget = options.eventTarget;
@@ -3121,7 +3142,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var UploadFileUI = (function (_super) {
+    var UploadFileUI = /** @class */ (function (_super) {
         __extends(UploadFileUI, _super);
         function UploadFileUI(options) {
             var _this = _super.call(this, options) || this;
@@ -3289,7 +3310,7 @@ var cf;
         TERMNIAL_ERROR: "cf-microphone-bridge-terminal-error"
     };
     // class
-    var MicrophoneBridge = (function () {
+    var MicrophoneBridge = /** @class */ (function () {
         function MicrophoneBridge(options) {
             this.currentTextResponse = "";
             this._hasUserMedia = false;
@@ -3528,7 +3549,7 @@ var cf;
         return MicrophoneBridge;
     }());
     cf.MicrophoneBridge = MicrophoneBridge;
-    var SimpleEqualizer = (function () {
+    var SimpleEqualizer = /** @class */ (function () {
         function SimpleEqualizer(options) {
             var _this = this;
             this.maxBorderWidth = 0;
@@ -3607,7 +3628,7 @@ var cf;
         CHANGE: "userinput-submit-button-change-value"
     };
     // class
-    var UserInputSubmitButton = (function () {
+    var UserInputSubmitButton = /** @class */ (function () {
         function UserInputSubmitButton(options) {
             this._active = true;
             this.eventTarget = options.eventTarget;
@@ -3774,7 +3795,7 @@ var __extends = (this && this.__extends) || (function () {
 var cf;
 (function (cf) {
     // interface
-    var UserInputElement = (function (_super) {
+    var UserInputElement = /** @class */ (function (_super) {
         __extends(UserInputElement, _super);
         function UserInputElement(options) {
             var _this = _super.call(this, options) || this;
@@ -3908,11 +3929,11 @@ var cf;
                 this.setFocusOnInput();
             }
         };
+        UserInputElement.ERROR_TIME = 2000;
+        UserInputElement.preventAutoFocus = false;
+        UserInputElement.hideUserInputOnNoneTextInput = false;
         return UserInputElement;
     }(cf.BasicElement));
-    UserInputElement.ERROR_TIME = 2000;
-    UserInputElement.preventAutoFocus = false;
-    UserInputElement.hideUserInputOnNoneTextInput = false;
     cf.UserInputElement = UserInputElement;
     cf.UserInputEvents = {
         SUBMIT: "cf-input-user-input-submit",
@@ -3945,7 +3966,7 @@ var cf;
 (function (cf) {
     // interface
     // class
-    var UserTextInput = (function (_super) {
+    var UserTextInput = /** @class */ (function (_super) {
         __extends(UserTextInput, _super);
         function UserTextInput(options) {
             var _this = _super.call(this, options) || this;
@@ -4480,7 +4501,7 @@ var cf;
         USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
     };
     // class
-    var ChatResponse = (function (_super) {
+    var ChatResponse = /** @class */ (function (_super) {
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
@@ -4499,7 +4520,10 @@ var cf;
         });
         Object.defineProperty(ChatResponse.prototype, "added", {
             get: function () {
-                return !!this.el.parentNode.parentNode;
+                if (!this.el)
+                    return false;
+                var parentNode = this.el.parentNode;
+                return Boolean(parentNode && parentNode.parentNode);
             },
             enumerable: true,
             configurable: true
@@ -4518,9 +4542,11 @@ var cf;
             configurable: true
         });
         Object.defineProperty(ChatResponse.prototype, "visible", {
+            get: function () {
+                return this.el.classList.contains("show");
+            },
             set: function (value) {
                 var _this = this;
-                this.el.offsetWidth;
                 setTimeout(function () { return value ? _this.el.classList.add("show") : _this.el.classList.remove("show"); }, 100);
             },
             enumerable: true,
@@ -4591,6 +4617,18 @@ var cf;
             // link reponse to another one, keeping the update circle complete.
             this.responseLink = response;
         };
+        ChatResponse.prototype.removeLinkToOtherResponse = function () {
+            this.responseLink = null;
+        };
+        ChatResponse.prototype.interpolate = function (str, context) {
+            var result = str;
+            for (var key in context) {
+                if (!context.hasOwnProperty(key))
+                    continue;
+                result = result.replace(new RegExp("{" + key + "}", 'g'), context[key]);
+            }
+            return result;
+        };
         ChatResponse.prototype.processResponseAndSetText = function () {
             var _this = this;
             if (!this.originalResponse)
@@ -4598,7 +4636,7 @@ var cf;
             var innerResponse = this.originalResponse;
             if (this._tag && this._tag.type == "password" && !this.isRobotResponse) {
                 var newStr = "";
-                for (var i_1 = 0; i_1 < innerResponse.length; i_1++) {
+                for (var i = 0; i < innerResponse.length; i++) {
                     newStr += "*";
                 }
                 innerResponse = newStr;
@@ -4606,31 +4644,36 @@ var cf;
             else {
                 innerResponse = cf.Helpers.emojify(innerResponse);
             }
-            if (this.responseLink && this.isRobotResponse) {
-                // if robot, then check linked response for binding values
-                // one way data binding values:
-                innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-            }
             if (this.isRobotResponse) {
+                var interpolationContext = {};
+                if (this.responseLink) {
+                    // if robot, then check linked response for binding values
+                    // one way data binding values:
+                    interpolationContext['previous-answer'] = this.responseLink.parsedResponse;
+                }
                 // Piping, look through IDs, and map values to dynamics
                 var reponses = ChatResponse.list.getResponses();
                 for (var i = 0; i < reponses.length; i++) {
                     var response = reponses[i];
-                    if (response !== this) {
-                        if (response.tag) {
-                            // check for id, standard
-                            if (response.tag.id) {
-                                innerResponse = innerResponse.split("{" + response.tag.id + "}").join(response.tag.value);
-                            }
-                            //fallback check for name
-                            if (response.tag.name) {
-                                innerResponse = innerResponse.split("{" + response.tag.name + "}").join(response.tag.value);
+                    if (response !== this && response.tag) {
+                        // check for id, standard
+                        if (response.tag.id) {
+                            interpolationContext[response.tag.id] = response.tag.value;
+                        }
+                        // fallback check for name
+                        if (response.tag.name) {
+                            interpolationContext[response.tag.name] = response.tag.value;
+                        }
+                        if (response.tag.context) {
+                            for (var key in response.tag.context) {
+                                if (!response.tag.context.hasOwnProperty(key))
+                                    continue;
+                                interpolationContext[key] = response.tag.context[key];
                             }
                         }
                     }
                 }
-                // add more..
-                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
+                innerResponse = this.interpolate(innerResponse, interpolationContext);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
@@ -4646,8 +4689,8 @@ var cf;
                 }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
-                var _loop_1 = function (i_2) {
-                    var str = chainedResponses[i_2];
+                var _loop_1 = function (i) {
+                    var str = chainedResponses[i];
                     setTimeout(function () {
                         _this.tryClearThinking();
                         _this.textEl.innerHTML += "<p>" + str + "</p>";
@@ -4655,11 +4698,11 @@ var cf;
                         p[p.length - 1].offsetWidth;
                         p[p.length - 1].classList.add("show");
                         _this.scrollTo();
-                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
+                    }, robotInitResponseTime + ((i + 1) * this_1.uiOptions.robot.chainedResponseTime));
                 };
                 var this_1 = this;
-                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
-                    _loop_1(i_2);
+                for (var i = 0; i < chainedResponses.length; i++) {
+                    _loop_1(i);
                 }
                 this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
@@ -4693,6 +4736,8 @@ var cf;
             this.response = innerResponse.split("&&").join(" ");
         };
         ChatResponse.prototype.scrollTo = function () {
+            if (!this.container)
+                return;
             var y = this.el.offsetTop;
             var h = this.el.offsetHeight;
             this.container.scrollTop = y + h + this.container.scrollTop;
@@ -4725,7 +4770,7 @@ var cf;
         * add one self to the chat list
         */
         ChatResponse.prototype.addSelf = function () {
-            if (this.el.parentNode != this.container) {
+            if (Boolean(this.container) && this.el.parentNode != this.container) {
                 this.container.appendChild(this.el);
             }
         };
@@ -4769,6 +4814,10 @@ var cf;
             this.container = null;
             this.uiOptions = null;
             this.onReadyCallback = null;
+            if (this.responseLink) {
+                this.responseLink.removeLinkToOtherResponse();
+                this.removeLinkToOtherResponse();
+            }
             if (this.onClickCallback) {
                 this.el.removeEventListener(cf.Helpers.getMouseEvent("click"), this.onClickCallback, false);
                 this.onClickCallback = null;
@@ -4779,9 +4828,9 @@ var cf;
         ChatResponse.prototype.getTemplate = function () {
             return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text></text>\n\t\t\t</cf-chat-response>";
         };
+        ChatResponse.THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
         return ChatResponse;
     }(cf.BasicElement));
-    ChatResponse.THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
     cf.ChatResponse = ChatResponse;
 })(cf || (cf = {}));
 
@@ -4806,7 +4855,7 @@ var cf;
         CHATLIST_UPDATED: "cf-chatlist-updated"
     };
     // class
-    var ChatList = (function (_super) {
+    var ChatList = /** @class */ (function (_super) {
         __extends(ChatList, _super);
         function ChatList(options) {
             var _this = _super.call(this, options) || this;
@@ -4907,7 +4956,6 @@ var cf;
                         robot.scrollTo();
                     });
                     if (_this.currentUserResponse) {
-                        // linked, but only if we should not ignore existing tag
                         _this.currentUserResponse.setLinkToOtherReponse(robot);
                         robot.setLinkToOtherReponse(_this.currentUserResponse);
                     }
@@ -5066,7 +5114,7 @@ var cf;
         FLOW_UPDATE: "cf-flow-update",
     };
     // class
-    var FlowManager = (function () {
+    var FlowManager = /** @class */ (function () {
         function FlowManager(options) {
             this.stopped = false;
             this.maxSteps = 0;
@@ -5334,9 +5382,9 @@ var cf;
                 }));
             }, 0);
         };
+        FlowManager.STEP_TIME = 1000;
         return FlowManager;
     }());
-    FlowManager.STEP_TIME = 1000;
     cf.FlowManager = FlowManager;
 })(cf || (cf = {}));
 
@@ -5355,7 +5403,7 @@ var cf;
 /// <reference path="interfaces/IUserInterfaceOptions.ts"/>
 var cf;
 (function (cf_1) {
-    var ConversationalForm = (function () {
+    var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
             this.version = "0.9.6";
             this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
@@ -5832,11 +5880,11 @@ var cf;
                 cf.ConversationalForm.hasAutoInstantiated = true;
             }
         };
+        ConversationalForm.animationsEnabled = true;
+        ConversationalForm.illustrateAppFlow = true;
+        ConversationalForm.hasAutoInstantiated = false;
         return ConversationalForm;
     }());
-    ConversationalForm.animationsEnabled = true;
-    ConversationalForm.illustrateAppFlow = true;
-    ConversationalForm.hasAutoInstantiated = false;
     cf_1.ConversationalForm = ConversationalForm;
 })(cf || (cf = {}));
 if (document.readyState == "complete") {

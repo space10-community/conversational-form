@@ -22,6 +22,7 @@
 
 // namespace
 namespace cf {
+	export type TagContext = { [key: string]: string|number };
 	// interface
 	export interface ITag{
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
@@ -45,7 +46,9 @@ namespace cf {
 		hasConditions():boolean;
 		hasConditionsFor(tagName: string):boolean;
 		checkConditionalAndIsValid():boolean;
-
+		readonly context: TagContext;
+		addContext(key: string, value: string|number):void;
+		removeContext(key: string):void;
 		validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
 	}
 
@@ -64,6 +67,7 @@ namespace cf {
 	}
 
 	export interface ITagOptions{
+		context?: TagContext,
 		domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement,
 		questions?: Array<string>,
 		label?: string,
@@ -82,8 +86,9 @@ namespace cf {
 		protected _eventTarget: EventDispatcher;
 		protected _label: string;
 		protected questions: Array<string>; // can also be set through cf-questions attribute.
+		protected _context: { [key: string]: string | number };
 
-		public flowManager: FlowManager
+		public flowManager: FlowManager;
 		public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
 		public defaultValue: string | number;
 		public initialDefaultValue: string | number;
@@ -164,15 +169,28 @@ namespace cf {
 			return this.errorMessages[Math.floor(Math.random() * this.errorMessages.length)];
 		}
 
+		public get context() {
+			return this._context;
+		}
+
 		constructor(options: ITagOptions){
 			this.domElement = options.domElement;
 			this.initialDefaultValue = this.domElement.value || this.domElement.getAttribute("value") || "";
 
 			this.changeCallback = this.onDomElementChange.bind(this);
 			this.domElement.addEventListener("change", this.changeCallback, false);
-			
+
 			// remove tabIndex from the dom element.. danger zone... should we or should we not...
 			this.domElement.tabIndex = -1;
+
+			this._context = <TagContext>{};
+			if (options.context) {
+                for (const key in options.context) {
+                    if (!options.context.hasOwnProperty(key)) continue;
+
+                    this._context[key] = options.context[key];
+                }
+			}
 
 			// questions array
 			if(options.questions)
@@ -187,7 +205,7 @@ namespace cf {
 			// reg ex pattern is set on the Tag, so use it in our validation
 			if(this.domElement.getAttribute("pattern"))
 				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
-			
+
 			// if(this.type == "email" && !this.pattern){
 			// 	// set a standard e-mail pattern for email type input
 			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
@@ -212,41 +230,30 @@ namespace cf {
 			this.questions = null;
 		}
 
+		private static testCondition(tagValue: string, conditional: string | RegExp):boolean{
+			if(typeof conditional === "object"){
+				// regex
+				return (<RegExp> conditional).test(tagValue);
+			}
+
+			// string comparisson
+			return <string>tagValue === conditional;
+		}
+
 		public static testConditions(tagValue: string | string[], condition: ConditionalValue):boolean{
 			if(typeof tagValue === "string"){
-				// tag value is a string
-				const value: string = <string> tagValue;
-				let isValid: boolean = false;
-				for (var i = 0; i < condition.conditionals.length; i++) {
-					var conditional: string | RegExp = condition.conditionals[i];
-					if(typeof conditional === "object"){
-						// regex
-						isValid = (<RegExp> conditional).test(value);
-					}else{
-						// string comparisson
-						isValid = <string>tagValue === conditional;
-					}
-
-					if(isValid) break;
-				}
-				return isValid;
-			}else{
-				if(!tagValue){
-					return false;
-				}else{
-					// tag value is an array
-					let isValid: boolean = false;
-					for (var i = 0; i < condition.conditionals.length; i++) {
-						var conditional: string | RegExp = condition.conditionals[i];
-						isValid = (<string[]>tagValue).toString() == conditional.toString();
-
-						if(isValid) break;
-					}
-
-					return isValid;
-				}
-				// arrays need to be the same
+				return condition.conditionals.some(conditional => (
+					Tag.testCondition(tagValue, conditional)
+				));
+			}else if (Array.isArray(tagValue)) {
+				return condition.conditionals.some(conditional => (
+					tagValue.some(value => (
+						Tag.testCondition(value, conditional)
+					))
+				));
 			}
+
+			return false;
 		}
 
 		public static isTagValid(element: HTMLElement):boolean{
@@ -275,7 +282,7 @@ namespace cf {
 			if(element.tagName.toLowerCase() == "option" && (!isTagFormless && innerText == "" || innerText == " ")){
 				return false;
 			}
-		
+
 			if(element.tagName.toLowerCase() == "select" || element.tagName.toLowerCase() == "option")
 				return true
 			else if(isTagFormless){
@@ -318,11 +325,19 @@ namespace cf {
 			}
 		}
 
+        addContext(key: string, value: string|number):void {
+			this._context[key] = value;
+		}
+
+        removeContext(key: string):void {
+			delete this._context[key];
+		}
+
 		public reset(){
 			this.refresh();
 
 			// this.disabled = false;
-			
+
 			// reset to initial value.
 			this.defaultValue = this.domElement.value = this.initialDefaultValue.toString();
 		}
@@ -346,7 +361,7 @@ namespace cf {
 				if("cf-conditional-"+tagName === condition.key){
 					return true;
 				}
-				
+
 			}
 
 			return false;
@@ -426,9 +441,9 @@ namespace cf {
 			const keys: any = this.domElement.attributes;
 			if(keys.length > 0){
 				this.conditionalTags = [];
-				
+
 				for (var key in keys) {
-					if (keys.hasOwnProperty(key)) {	
+					if (keys.hasOwnProperty(key)) {
 						let attr: any = keys[key];
 						if(attr && attr.name && attr.name.indexOf("cf-conditional") !== -1){
 							// conditional found
@@ -466,7 +481,7 @@ namespace cf {
 
 			if(this.domElement.getAttribute("cf-questions")){
 				this.questions = Helpers.getValuesOfBars(this.domElement.getAttribute("cf-questions"));
-				
+
 				if(this.domElement.getAttribute("cf-input-placeholder"))
 					this._inputPlaceholder = this.domElement.getAttribute("cf-input-placeholder");
 			}else if(this.domElement.parentNode && (<HTMLElement> this.domElement.parentNode).getAttribute("cf-questions")){
@@ -498,7 +513,7 @@ namespace cf {
 				this._label = this.domElement.getAttribute("cf-label");
 			}else{
 				const parentDomNode: Node = this.domElement.parentNode;
-				
+
 				if(parentDomNode){
 					// step backwards and check for label tag.
 					let labelTags: NodeListOf<Element> | Array<Element> = (<HTMLElement> parentDomNode).tagName.toLowerCase() == "label" ? [(<HTMLElement> parentDomNode)] : (<HTMLElement> parentDomNode).getElementsByTagName("label");
@@ -508,7 +523,7 @@ namespace cf {
 						const innerText: string = Helpers.getInnerTextOfElement((<any>parentDomNode));
 						if(innerText && innerText.length > 0)
 							labelTags = [(<HTMLLabelElement>parentDomNode)];
-						
+
 					}else if(labelTags.length > 0){
 						// check for "for" attribute
 						for (let i = 0; i < labelTags.length; i++) {

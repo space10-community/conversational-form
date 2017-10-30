@@ -105,7 +105,7 @@ namespace cf {
 						}
 					}
 				}
-				
+
 				responseToScrollTo.scrollTo();
 			}
 
@@ -135,14 +135,14 @@ namespace cf {
 				// robot response
 				setTimeout(() => {
 					const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question);
-					robot.whenReady(() =>{
+
+					robot.whenReady(() => {
 						// create user response
 						this.currentUserResponse = this.createResponse(false, currentTag);
 						robot.scrollTo();
 					});
 
-					if(this.currentUserResponse){
-						// linked, but only if we should not ignore existing tag
+					if (this.currentUserResponse) {
 						this.currentUserResponse.setLinkToOtherReponse(robot);
 						robot.setLinkToOtherReponse(this.currentUserResponse);
 					}
@@ -189,7 +189,7 @@ namespace cf {
 					if(!this.responses[this.responses.length - 1].isRobotResponse){
 						this.responses.pop().dealloc();
 					}
-					
+
 					// remove latest robot response, it should always be a robot response
 					this.responses.pop().dealloc();
 				}

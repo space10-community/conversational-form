@@ -1,10 +1,15 @@
 {
   "name": "conversational-form",
-  "version": "0.9.6",
+  "version": "0.9.8",
   "description": "Turning web forms into conversations",
   "main": "dist/conversational-form.js",
   "directories": {
     "dist": "distribution"
+  },
+  "scripts": {
+    "start": "gulp",
+    "dist": "gulp dist",
+    "test": "karma start"
   },
   "repository": {
     "type": "git",
@@ -24,6 +29,7 @@
     "build"
   ],
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jasmine-core": "^2.6.2",
     "karma": "^1.7.0",
     "karma-jasmine": "^1.1.0",

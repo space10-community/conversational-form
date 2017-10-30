@@ -12,6 +12,7 @@
 namespace cf {
 	// interface
 	export interface ITagGroupOptions{
+		context?: TagContext,
 		elements: Array <ITag>;
 		fieldset?: HTMLFieldSetElement;
 	}
@@ -40,6 +41,8 @@ namespace cf {
 		private _activeElements: Array<ITag>;
 		private _eventTarget: EventDispatcher;
 		private _fieldset: HTMLFieldSetElement;
+
+		private _context: TagContext;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -133,6 +136,10 @@ namespace cf {
 			return errorMessage;
 		}
 
+		public get context() {
+			return this._context;
+		}
+
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
 			
@@ -142,9 +149,26 @@ namespace cf {
 				this.questions = Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
 			}
 
+			this._context = <TagContext>{};
+			if (options.context) {
+				for (const key in options.context) {
+					if (!options.context.hasOwnProperty(key)) continue;
+
+					this._context[key] = options.context[key];
+				}
+			}
+
 			if(ConversationalForm.illustrateAppFlow)
 				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
+
+        addContext(key: string, value: string|number):void {
+            this._context[key] = value;
+        }
+
+        removeContext(key: string):void {
+            delete this._context[key];
+        }
 
 		public dealloc(){
 			for (let i = 0; i < this.elements.length; i++) {

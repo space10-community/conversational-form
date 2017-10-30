@@ -2,6 +2,7 @@
 node_modules
 bower_components
 .vscode
+.idea
 /build
 src/scripts/typings
 docs/build/conversational-form-docs.css
