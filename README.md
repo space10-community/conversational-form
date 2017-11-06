@@ -400,7 +400,3 @@ Lowest common denominator of browser testing:
 | --- | --- | --- | --- | --- | --- | --- |
 | 40+ ✔ | 40+ ✔ | 10+ ✔ | 46+ ✔ | 9.1+ ✔ | 9.1+ ✔ | 4.4+ ✔ |
 
-# Websites that use Conversational Form
-If you have a project that uses Conversational Form, feel free to make a PR to add it to this list:
-
-- ...
