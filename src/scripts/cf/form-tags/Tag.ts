@@ -194,7 +194,7 @@ namespace cf {
 			// }
 
 			if(this.type != "group" && ConversationalForm.illustrateAppFlow){
-				console.log('Conversational Form > Tag registered:', this.type, this);
+				if(!ConversationalForm.suppressLog) console.log('Conversational Form > Tag registered:', this.type, this);
 			}
 
 			this.refresh();
