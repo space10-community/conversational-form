@@ -235,7 +235,7 @@ namespace cf {
 						detail: Dictionary.get("microphone-terminal-error")
 					}));
 
-					console.log("Conversational Form: Terminal error: ", error);
+					if(!ConversationalForm.suppressLog) console.log("Conversational Form: Terminal error: ", error);
 				}else{
 					if(this.inputCurrentError != error){
 						// api failed ...
@@ -254,7 +254,7 @@ namespace cf {
 							detail: Dictionary.get("microphone-terminal-error")
 						}));
 
-						console.log("Conversational Form: Terminal error: ", error);
+						if(!ConversationalForm.suppressLog) console.log("Conversational Form: Terminal error: ", error);
 					}
 				}
 			});

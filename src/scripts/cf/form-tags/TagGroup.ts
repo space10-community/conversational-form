@@ -143,7 +143,7 @@ namespace cf {
 			}
 
 			if(ConversationalForm.illustrateAppFlow)
-				console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
+				if(!ConversationalForm.suppressLog) console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
 		}
 
 		public dealloc(){
