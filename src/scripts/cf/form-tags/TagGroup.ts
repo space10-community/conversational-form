@@ -25,6 +25,7 @@ namespace cf {
 		required: boolean;
 		disabled: boolean;
 		flowManager: FlowManager;
+		inputPlaceholder?: string;
 	}
 
 	// class
@@ -40,6 +41,7 @@ namespace cf {
 		private _activeElements: Array<ITag>;
 		private _eventTarget: EventDispatcher;
 		private _fieldset: HTMLFieldSetElement;
+		protected _inputPlaceholder: string;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -133,13 +135,19 @@ namespace cf {
 			return errorMessage;
 		}
 
+		public get inputPlaceholder (): string{
+			return this._inputPlaceholder;
+		}
+
 		constructor(options: ITagGroupOptions){
 			this.elements = options.elements;
-			
 			// set wrapping element
 			this._fieldset = options.fieldset;
 			if(this._fieldset && this._fieldset.getAttribute("cf-questions")){
 				this.questions = Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
+			}
+			if (this._fieldset && this._fieldset.getAttribute("cf-input-placeholder")) {
+				this._inputPlaceholder = this._fieldset.getAttribute("cf-input-placeholder");
 			}
 
 			if(ConversationalForm.illustrateAppFlow)

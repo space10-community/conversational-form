@@ -2219,6 +2219,9 @@ var cf;
             if (this._fieldset && this._fieldset.getAttribute("cf-questions")) {
                 this.questions = cf.Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
             }
+            if (this._fieldset && this._fieldset.getAttribute("cf-input-placeholder")) {
+                this._inputPlaceholder = this._fieldset.getAttribute("cf-input-placeholder");
+            }
             if (cf.ConversationalForm.illustrateAppFlow)
                 if (!cf.ConversationalForm.suppressLog)
                     console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
@@ -2341,6 +2344,13 @@ var cf;
                     errorMessage = element.errorMessage;
                 }
                 return errorMessage;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TagGroup.prototype, "inputPlaceholder", {
+            get: function () {
+                return this._inputPlaceholder;
             },
             enumerable: true,
             configurable: true
