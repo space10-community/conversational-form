@@ -138,7 +138,7 @@ namespace cf {
 
 			this.cdnPath = this.cdnPath.split("{version}").join(this.version);
 
-			if(options.suppressLog)
+			if(typeof options.suppressLog === 'boolean')
 				ConversationalForm.suppressLog = options.suppressLog;
 
 			if(!ConversationalForm.suppressLog) console.log('Conversational Form > version:', this.version);
