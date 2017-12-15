@@ -1,6 +1,6 @@
 .conversational-form {
   visibility: visible !important;
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: "Helvetica Neue", "Neue Helvetica W01", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   font-size: 12px;
   line-height: 1.416666667;
   position: absolute;
