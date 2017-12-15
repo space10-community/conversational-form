@@ -1,0 +1,369 @@
+@import "../_cf-variables";
+
+$introDelay: 0.4s;
+
+cf-input {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-bottom: 20px;
+	margin-top: 0px;
+	flex: 0 0 auto;
+
+	&.animate-in {
+		input, textarea {
+			transition-delay: 0s, 0s, 0s, $introDelay, $introDelay;
+			opacity: 1;
+			transform: translateY(0px) rotateX(0deg);
+		}
+		
+		cf-input-button.cf-input-button {
+			transition-delay: 0s, 0s $introDelay + 0.35;
+			transform: scale(1, 1);
+		}
+	}
+	
+	input {
+		padding: 5px 5px 5px 15px;
+	}
+
+	input, textarea {
+		resize: none;
+		overflow: hidden;
+		padding: 15px 40px 15px 15px;
+	}
+	
+	input, textarea {
+		// resets..
+		&:-webkit-autofill {
+			background-color: white;
+		}
+
+		outline: none;
+		-webkit-appearance: none;
+
+		// make sure no one can overwrite user-select as it has unintended behavior in safari..
+		-webkit-touch-callout: auto !important;
+		-webkit-user-select: auto !important;
+		-khtml-user-select: auto !important;
+		-moz-user-select: auto !important;
+		-ms-user-select: auto !important;
+		user-select: auto !important;
+
+		&:focus, &:active {
+			box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+		}
+		
+		border-radius: 0;
+		border: none;
+		-webkit-appearance: none;
+		position: relative;
+		z-index: 2;
+		display: block;
+
+		// styling
+		font-family: 'Helvetica Neue', sans-serif;
+		font-size: 12px;
+
+		width: 100%;
+		height: $input-field-height;
+		min-height: $input-field-height;
+		color: $color-input-text;
+		will-change: box-shadow, background, color, transform, opacity;
+		background: white;
+		box-shadow: 0px 0px 1px rgba(0,0,0,0.15);
+		opacity: 0;
+		transform: translateY(40px) rotateX(-40deg);
+
+		.conversational-form--enable-animation & {
+			transition: box-shadow $anim-time $anim-easeOut, background $anim-time $anim-easeOut, color $anim-time $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack 0s, opacity $anim-time * 0.5 $anim-easeOut 0s;
+		}
+
+		&:hover {
+			&::-webkit-input-placeholder { 
+				color: darken($color-chat-reponse-default-text, 20%);
+			}
+			&::-moz-input-placeholder {
+				color: darken($color-chat-reponse-default-text, 20%);
+			}
+			&:-moz-input-placeholder {
+				color: darken($color-chat-reponse-default-text, 20%);
+			}
+			&:-ms-input-placeholder {
+				color: darken($color-chat-reponse-default-text, 20%);
+			}
+		}
+		&::-webkit-input-placeholder {
+			color: currentColor;
+		}
+		&::-moz-input-placeholder {
+			color: currentColor;
+		}
+		&:-moz-input-placeholder {
+			color: currentColor;
+		}
+		&:-ms-input-placeholder {
+			color: currentColor;
+		}
+	}
+	
+	// hide input
+	&.hide-input {
+		input, textarea {
+			display: none;
+		}
+
+		cf-input-button {
+			display: none;
+		}
+	}
+	// --------------------
+
+	&[disabled="disabled"] {
+		pointer-events: none;
+
+		input, textarea {
+			background: rgba($color-chat-reponse-default-bg, .5);
+		}
+
+		.cf-input-button {
+			background: rgba($color-chat-reponse-default-bg, .75);
+		}
+	}
+	
+	cf-icon-audio-eq {
+		display: block;
+		border: 0px solid grey;
+		border-color: $color-chat-reponse-user-bg;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		z-index: 0;
+		position: absolute;
+		top: 0px;
+		left: 0px;
+	}
+	
+	&[error] {
+		pointer-events: none;
+
+		input, textarea {
+			background: $color-input-error-bg;
+			color: $color-input-error-text;
+		}
+		
+		.cf-input-button {
+			background: $color-input-error-bg;
+
+			svg polygon {
+				fill: $color-input-error-text;
+			}
+		}
+	}
+	
+	&[message] {
+		input, textarea {
+			background: $color-chat-reponse-user-bg;
+			color: $color-chat-reponse-user-text;
+		}
+
+		.cf-input-button {
+			background: $color-chat-reponse-user-bg;
+
+			svg polygon {
+				fill: $color-chat-reponse-user-text;
+			}
+		}
+	}
+	
+	&[tag-type="file"] cf-input-button.cf-input-button, cf-input-button.cf-input-button.loading {
+		&:after {
+			content: "";
+			display: block;
+			width: 100%;
+			height: 100%;
+		
+			border: 1px solid rgba(#b9bcbe, 50%);
+			border-radius: 50%;
+			border-left: 0;
+			border-top: 0;
+			animation: cf-spin 1s linear infinite;
+			will-change: opacity;
+			.conversational-form--enable-animation & {
+				transition: opacity $anim-time * 0.5 $anim-easeOut;
+			}
+		}
+	}
+	
+	&[tag-type="file"] cf-input-button.cf-input-button {
+		div.cf-icon-attachment {
+			transform: rotateX(0deg);
+			opacity: 1;
+		}
+			
+		div.cf-icon-progress {
+			transform: rotateX(-90deg);
+			opacity: 0;
+		}
+	}
+}
+
+cf-input-button.cf-input-button {
+	width: 29px;
+	height: 29px;
+	background: white;
+	position: absolute;
+	overflow: hidden;
+	right: 8px;
+	bottom: 8px;
+	z-index: 3;
+	cursor: pointer;
+	border-radius: 50%;
+	will-change: background, border;
+	transform-origin: 50% 50%;
+	transform: scale(0, 0);
+	backface-visibility: hidden;
+	border: 1px solid lighten($color-chat-reponse-user-text, 95%);
+
+	.conversational-form--enable-animation & {
+		transition: background $anim-time * 0.5 $anim-easeOut, border $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOutBack 0s;
+	}
+
+	// mic behavior
+	.cf-input-icons.cf-microphone {
+		transform: scale(0, 0);
+		pointer-events: none;
+	}
+	
+	&.microphone-interface {
+		.cf-input-icons {
+			transform-origin: 50% 50%;
+			transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+			transition: transform $anim-time * 0.5 $anim-easeOut;
+		}
+
+		.cf-input-icons:not(.cf-microphone){
+			pointer-events: none;
+			transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
+		}
+		
+		.cf-input-icons.cf-microphone {
+			pointer-events: auto;
+			transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+		}
+		
+		&.loading:not(.typing) {
+			pointer-events: none;
+			.cf-microphone {
+				div.cf-icon-audio {
+					opacity: 1;
+				}
+			}
+		}
+		// when user is typing
+		&.typing {
+			.cf-input-icons:not(.cf-microphone){
+				pointer-events: auto;
+				transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+			}
+			.cf-input-icons.cf-microphone {
+				transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
+				pointer-events: none;
+			}
+		}
+	}		
+	// ------------------------------------------
+
+	.cf-input-icons {
+		position: absolute;
+		z-index: 1;
+		pointer-events: none;
+		width: 100%;
+		height: 100%;
+
+		> div {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: 1;
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			transform-origin: 50% 50%;
+			will-change: transform, opacity;
+			.conversational-form--enable-animation & {
+				transition: transform $anim-time * 0.5 $anim-easeOut, opacity $anim-time * 0.5 $anim-easeOut;
+			}
+		}
+	}
+	
+	div.cf-icon-attachment {
+		transform: rotateX(90deg);
+		opacity: 0;
+		background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTIgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTczLjAwMDAwMCwgLTYwNS4wMDAwMDApIiBzdHJva2U9IiMwRDgzRkYiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4NC4wMDAwMDAsIDEzNi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEuMDAwMDAwLCA0NTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTQ5OSwyMy4xMDkyNDM3IEw0OTksMTguOTA3NTYzIEM0OTksMTYuMjAxNjgwNyA0OTYuNzU2ODQ5LDE0IDQ5NCwxNCBDNDkxLjI0MzE1MSwxNCA0ODksMTYuMjAxNjgwNyA0ODksMTguOTA3NTYzIEw0ODksMjQuNTA0MjAxNyBDNDg5LDI2LjQzNjk3NDggNDkwLjU5MjQ2NiwyOCA0OTIuNTYxNjQ0LDI4IEM0OTQuNTMwODIyLDI4IDQ5Ni4xMjMyODgsMjYuNDM2OTc0OCA0OTYuMTIzMjg4LDI0LjUwNDIwMTcgTDQ5Ni4xMjMyODgsMTguOTA3NTYzIEM0OTYuMTQwNDExLDE3Ljc0Nzg5OTIgNDk1LjE4MTUwNywxNi44MDY3MjI3IDQ5NCwxNi44MDY3MjI3IEM0OTIuODE4NDkzLDE2LjgwNjcyMjcgNDkxLjg1OTU4OSwxNy43NDc4OTkyIDQ5MS44NTk1ODksMTguOTA3NTYzIEw0OTEuODU5NTg5LDIzLjEwOTI0MzciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
+		background-size: 12px 16px;
+	}
+
+	div.cf-icon-progress {
+		transform: rotateX(0deg);
+		opacity: 1;
+
+		background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMzAgMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBmaWxsPSIjMEQ4M0ZGIj4KICAgICAgICAgICAgPHBvbHlnb24gdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUuNTAwMDAwLCAxNS41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTUuNTAwMDAwLCAtMTUuNTAwMDAwKSAiIHBvaW50cz0iMjIgMTQuNjg3NSAxMi4xMTE4NzUgMTQuNjg3NSAxNi42NDk2ODc1IDEwLjE0OTY4NzUgMTUuNSA5IDkgMTUuNSAxNS41IDIyIDE2LjY0OTY4NzUgMjAuODUwMzEyNSAxMi4xMTE4NzUgMTYuMzEyNSAyMiAxNi4zMTI1Ij48L3BvbHlnb24+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=");
+		background-size: 30px 30px;
+	}
+	
+	div.cf-icon-audio {
+		transform: rotateX(0deg);
+		opacity: 1;
+		background-image: url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAAABGdBTUEAALGPC/xhBQAAAu9JREFUSA3tVktIVFEY/v47TmU5oxm1EoroAUEPqDauglYFFYVtwh6LIEralJg1utIxE2tnErQp3PWigh6LoEXLgkgIKisDISjScUZ76dy//7/Oma7XOXemoEXgv5hz/u/7/vOdx5x7L6GEiCe5HoyjIl2bk/eD0JtOUF+xcgoTLOzkyskJXBZNnUV3vSyKwyPNNGrhUWYjFM9Oolca2+AqqRPNhLT7NCkU1hXItmxjF/cKFQUxcrBdtut+ENfcKQR6GOO4lQsSIVqrATM2B8ex5WFaq4H8SxbZBpyBh2jtBiwWpUaI1m5Q6uBFdLMGRTYo7B4ULS1NMHsGRfdpdov+fouIMF60OicI05bF2zjDQIUZbF41Yp8baEwewQOCrTd4WJvTYnEPV3wfRsZo5Wk5pof80QDauqOo0VbeUje0LSWM1tT6aj468lAe9AGYdLFF83g5umXpb/1cob5qVKucqc3rCO8d2Z4HeUA6ku/XfOgEfYsAh2SZKT/v7yunGtUqbmqNRvKHDkVwxwCeiFEb6+Cd2h9poSeRqJwD4bHm00Iw5VSjuNbIWdT6NTq299aKtfNNsd9tSFn2FyeCTanTNGiw2Dle7WSnPrzcCPozp+iV4arO8jI3i6di8Ps1S7iVaaE9nkF1B6+ZcPFCTGTF+RiKONiRStDzPFKgU5XkDVkXd4Xy/hyehJCNOlg3fIZeegYKxpJ8Eu7UYXki/SFMEOMi5qIn3URv8rh04l28Ej/QwIRjMrGon5OPocZMgs4rljfQRO7EFTmYA9oPhmzbO+E+KC5FS2U7lgc1Oe5qupUOGm6aATNTPIlOmVGTEfxRS+hKJ9BMJOvOxTQDA1a18y4X6JZZrjBYWCurG5Ab25hqodtBXUEDFW28xNHXn1AvxXvFaKtAcwLFP4V7JNy1VUvQ9+wI6UfwjLAa+JU1F7h8dBxf/VjlAsw3F8yPB/slGWhRrE3m6otMq8y/hLCKggMWG8tmqE/Tfxr/v8Ev0OXaWJ1GbxQAAAAASUVORK5CYII=");
+		background-size: 12px * 0.8 19px * 0.8;
+	}
+
+	&:active {
+		opacity: 0.2;
+	}
+	
+	&:hover, &:focus {
+		background: $color-chat-reponse-user-bg;
+		border: 1px solid lighten($color-chat-reponse-user-text, 75%);
+		&:after {
+			opacity: 0;
+		}
+
+		@media (min-width: $breakpoint-1) {
+			.cf-icon-progress {
+				animation: cf-arrow-up $anim-time $anim-easeInOut;
+			}
+		}
+	}
+}
+
+@keyframes cf-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes cf-arrow-up {
+	0% {
+		transform: translateY(0px);
+	}
+	40% {
+		transform: translateY(-40px);
+	}
+	40.001% {
+		transform: translateY(40px);
+	}
+	80% {
+		transform: translateY(-5px);
+	}
+	90% {
+		transform: translateY(2px);
+	}
+	100% {
+		transform: translateY(0px);	
+	}
+}
