@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Custom questions | Conversational Form</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+	<link rel="icon" href="/docs/0.9.6/assets/favicon.ico">
+
+	<link rel="publisher" href="http://space10.io/"/>
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+	<meta name="twitter:creator" content="@space10_journal">
+	<meta name="twitter:title" content="Turning web forms into conversations"/>
+	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+	<meta name="twitter:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Turning web forms into conversations"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<link href="/docs/0.9.6/assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/docs/0.9.6/css/style.css">
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	<script src="/docs/0.9.6/assets/prism.js"></script>
+
+	<script src="/docs/0.9.6/js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	</head>
+<body>
+	<header class="navbar navbar-expand flex-column flex-md-row cfdoc-navbar navbar-dark bg-dark">
+  <a class="navbar-brand mr-0 mr-md-2" href="/docs/0.9.6/getting-started/" aria-label="Bootstrap">
+    CONVERSATIONAL FORM
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/docs/0.9.6/getting-started/">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">SPACE10</a>
+      </li>
+
+      <li>
+        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#cfdoc-links" aria-controls="cfdoc-links" aria-expanded="false" aria-label="Toggle docs navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+
+          </button>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        v0.9.6
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
+                	<a class="dropdown-item active" href="/docs/0.9.6/">v0.9.6</a>
+              </div>
+    </li>
+
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/twbs/bootstrap/archive/v4.0.0-beta.2.zip">Download</a>
+</header>
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+								<nav class="cfdoc-links collapse" id="cfdoc-links">
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/getting-started/">Getting started</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/options/">Options</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/appearance/">Apperance</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/public-api/">Public API</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/events/">Events</a>
+													</div>
+																														<div class="toc-item active">
+							<a class="toc-link" href="/docs/0.9.6/functionality/">Functionality</a>
+															<ul class="nav cfdoc-sidenav">
+																	<li>
+										<a href="/docs/0.9.6/functionality/conditionals-and-branching/">Conditionals and branching</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-placeholder/">Custom placeholder text</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-questions/">Custom questions</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/labels-on-radio-checkbox/">Custom label for radio and checkbox</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-error-message/">Custom error message</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/formless/">Formless</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/image-answers/">Image answers</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/submit-callback/">Submit callback</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/validation/">Validation</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/value-piping/">Value piping</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/voice/">Voice</a>
+									</li>
+											
+								</ul>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/localization/">Localization</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/google-analytics-event-tracking/">Tracking using Google Analytics</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/examples/">Examples</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/build-the-source/">Build the source</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/credits/">Credits</a>
+													</div>
+										<hr>
+				</nav>
+			</div>
+													<main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5" role="main">
+				    <h1><a href="#dynamic-questions" id="dynamic-questions" class="anchor"></a>Custom questions</h1>
+
+    <pre><code class="language-javascript">&lt;input type="text" cf-questions="Type your name here..." /></code></pre>
+    <p>Use two pipe characters as seperator if you want to randomize the questions as used in the example below.</p>
+    <pre><code class="language-javascript">&lt;form id="form" cf-form>
+    &lt;input type="text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
+&lt;/form></code></pre>
+
+    <h3><a href="#questions-example" id="questions-example" class="anchor"></a>Example - randomly selecting between two questions</h3>
+    <div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+            <p>The form:</p>
+            <!-- Conversational Form will auto-run because of attribute "cf-form" -->
+            <form id="form" cf-form>
+                <input type="text" placeholder="some text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
+            </form>
+            
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+    </div>
+
+    <h2><a href="#one-way-binding" id="one-way-binding" class="anchor"></a>{One way value-binding} with cf-questions</h2>
+    <p>For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.</p>
+    <p>Using the {previous-answer} mapping:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your firstname?" />
+&lt;input type="text" cf-questions="Hello {previous-answer}, what is your lastname?"></pre></code>
+
+    <p>Using the ID attribute, this will loop through all submitted tags and map:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your first name?" id="firstname" />
+&lt;input type="text" cf-questions="What is your last name?" id="lastname" />
+&lt;input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?" /></pre></code>
+
+    <p>previous input could be a select:option list with countries.</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="So you want to travel to {previous-answer}" /></pre></code>
+
+    <h3><a href="#one-way-binding-example" id="one-way-binding-example" class="anchor"></a>Example - {One way value-binding}</h3>
+    <div class="row cfdoc-example-row">
+        <div class="col-md-12 col-lg-6">
+            <p>The form:</p>
+            <!-- Conversational Form will auto-run because of attribute "cf-form" -->
+            <form id="form-with-binding" cf-form>
+                <input type="text" name="name" placeholder="name" cf-questions="What is your name?" />
+                <input type="text" name="lastname" placeholder="lastname" cf-questions="{name}, what is your lastname?" />
+                <input type="text" name="goodbye" cf-questions="Great, {name} {lastname}. Thank you for your interest in Conversational Form." />
+            </form>
+            
+        </div>
+        <div class="col-md-12 col-lg-6 cfdoc-example">
+            <div id="cf-context" class="formwithbinding" role="cf-context" cf-context></div>
+        </div>
+    </div>
+	
+			</main>
+			
+					</div>
+
+			</body>
+</html>

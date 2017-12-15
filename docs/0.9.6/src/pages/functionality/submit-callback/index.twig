@@ -1,0 +1,58 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Submit callback' %}
+{% set page_slug = '/functionality/' %}
+
+{% block page %}
+    <h1><a href="#submit-callback" id="submit-callback" class="anchor"></a>{{page_title}}</h1>
+    <p>Perhaps you want to do a an AJAX request to your backend and save the form data?</p>
+
+    <pre><code class="language-javascript">var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+    formEl: document.getElementById("form"),
+    context: document.getElementById("cf-context"),
+    submitCallback: function(){
+        alert("Submit: check dev tools console for more");
+        // be aware that this prevents default form submit.
+        var formData = conversationalForm.getFormData();
+        var formDataSerialized = conversationalForm.getFormData(true);
+        console.log("Formdata:", formData);
+        console.log("Formdata, serialized:", formDataSerialized);
+        conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.");
+    }
+});</code></pre>
+
+    <div class="row cfdoc-example-row">
+    <div class="col-md-12 col-lg-6">
+        <p>Fill out the form and watch the console.</p>
+        <p>The form:</p>
+        <form id="form">
+            <input type="text" cf-questions="Fill out field to get Alert from custom callback method." />
+        </form>
+
+    </div>
+    <div class="col-md-12 col-lg-6 cfdoc-example">
+        <div id="cf-context" role="cf-context" cf-context></div>
+    </div>
+
+    <script>
+        window.onload = function(){
+            var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+                formEl: document.getElementById("form"),
+                context: document.getElementById("cf-context"),
+                submitCallback: function(){
+                    alert("Submit: check dev tools console for more");
+                    // be aware that this prevents default form submit.
+                    var formData = conversationalForm.getFormData();
+                    var formDataSerialized = conversationalForm.getFormData(true);
+                    console.log("Formdata:", formData);
+                    console.log("Formdata, serialized:", formDataSerialized);
+                    conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.");
+                }
+            });
+        };
+    </script>
+    
+</div>
+	
+	
+{% endblock %}

@@ -11,6 +11,7 @@ require("./gulp-tasks/styles");
 require("./gulp-tasks/scripts");
 require("./gulp-tasks/images");
 require("./gulp-tasks/bower");
+require("./gulp-tasks/documentation");
 
 //options
 var rootPath = "./";
@@ -42,6 +43,9 @@ global.gulp.task('watch', tasks, function() {
 
 	global.gulp.watch(srcFolder + '../docs/src/styles/**/*.styl', ['stylus-docs']);
 	global.gulp.watch(srcFolder + '/styles/**/*.styl', ['stylus-form']);
+
+	global.gulp.watch(srcFolder + '../docs/**/*.twig', ['documentation']);	
+	global.gulp.watch(srcFolder + '../docs/**/*.scss', ['documentationScss']);	
 });
 
 // Default tasks

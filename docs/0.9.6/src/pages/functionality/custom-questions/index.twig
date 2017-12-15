@@ -1,0 +1,62 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Custom questions' %}
+{% set page_slug = '/functionality/' %}
+
+
+{% block page %}
+    <h1><a href="#dynamic-questions" id="dynamic-questions" class="anchor"></a>{{page_title}}</h1>
+
+    <pre><code class="language-javascript">&lt;input type="text" cf-questions="Type your name here..." /></code></pre>
+    <p>Use two pipe characters as seperator if you want to randomize the questions as used in the example below.</p>
+    <pre><code class="language-javascript">&lt;form id="form" cf-form>
+    &lt;input type="text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
+&lt;/form></code></pre>
+
+    <h3><a href="#questions-example" id="questions-example" class="anchor"></a>Example - randomly selecting between two questions</h3>
+    <div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+            <p>The form:</p>
+            <!-- Conversational Form will auto-run because of attribute "cf-form" -->
+            <form id="form" cf-form>
+                <input type="text" placeholder="some text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
+            </form>
+            
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+    </div>
+
+    <h2><a href="#one-way-binding" id="one-way-binding" class="anchor"></a>{One way value-binding} with cf-questions</h2>
+    <p>For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.</p>
+    <p>Using the {previous-answer} mapping:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your firstname?" />
+&lt;input type="text" cf-questions="Hello {previous-answer}, what is your lastname?"></pre></code>
+
+    <p>Using the ID attribute, this will loop through all submitted tags and map:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your first name?" id="firstname" />
+&lt;input type="text" cf-questions="What is your last name?" id="lastname" />
+&lt;input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?" /></pre></code>
+
+    <p>previous input could be a select:option list with countries.</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="So you want to travel to {previous-answer}" /></pre></code>
+
+    <h3><a href="#one-way-binding-example" id="one-way-binding-example" class="anchor"></a>Example - {One way value-binding}</h3>
+    <div class="row cfdoc-example-row">
+        <div class="col-md-12 col-lg-6">
+            <p>The form:</p>
+            <!-- Conversational Form will auto-run because of attribute "cf-form" -->
+            <form id="form-with-binding" cf-form>
+                <input type="text" name="name" placeholder="name" cf-questions="What is your name?" />
+                <input type="text" name="lastname" placeholder="lastname" cf-questions="{name}, what is your lastname?" />
+                <input type="text" name="goodbye" cf-questions="Great, {name} {lastname}. Thank you for your interest in Conversational Form." />
+            </form>
+            
+        </div>
+        <div class="col-md-12 col-lg-6 cfdoc-example">
+            <div id="cf-context" class="formwithbinding" role="cf-context" cf-context></div>
+        </div>
+    </div>
+	
+{% endblock %}

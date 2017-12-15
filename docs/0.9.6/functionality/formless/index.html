@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Formless | Conversational Form</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+	<link rel="icon" href="/docs/0.9.6/assets/favicon.ico">
+
+	<link rel="publisher" href="http://space10.io/"/>
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+	<meta name="twitter:creator" content="@space10_journal">
+	<meta name="twitter:title" content="Turning web forms into conversations"/>
+	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+	<meta name="twitter:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Turning web forms into conversations"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<link href="/docs/0.9.6/assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/docs/0.9.6/css/style.css">
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	<script src="/docs/0.9.6/assets/prism.js"></script>
+
+	<script src="/docs/0.9.6/js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	</head>
+<body>
+	<header class="navbar navbar-expand flex-column flex-md-row cfdoc-navbar navbar-dark bg-dark">
+  <a class="navbar-brand mr-0 mr-md-2" href="/docs/0.9.6/getting-started/" aria-label="Bootstrap">
+    CONVERSATIONAL FORM
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/docs/0.9.6/getting-started/">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">SPACE10</a>
+      </li>
+
+      <li>
+        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#cfdoc-links" aria-controls="cfdoc-links" aria-expanded="false" aria-label="Toggle docs navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+
+          </button>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        v0.9.6
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
+                	<a class="dropdown-item active" href="/docs/0.9.6/">v0.9.6</a>
+              </div>
+    </li>
+
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/twbs/bootstrap/archive/v4.0.0-beta.2.zip">Download</a>
+</header>
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+								<nav class="cfdoc-links collapse" id="cfdoc-links">
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/getting-started/">Getting started</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/options/">Options</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/appearance/">Apperance</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/public-api/">Public API</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/events/">Events</a>
+													</div>
+																														<div class="toc-item active">
+							<a class="toc-link" href="/docs/0.9.6/functionality/">Functionality</a>
+															<ul class="nav cfdoc-sidenav">
+																	<li>
+										<a href="/docs/0.9.6/functionality/conditionals-and-branching/">Conditionals and branching</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-placeholder/">Custom placeholder text</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-questions/">Custom questions</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/labels-on-radio-checkbox/">Custom label for radio and checkbox</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/custom-error-message/">Custom error message</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/formless/">Formless</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/image-answers/">Image answers</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/submit-callback/">Submit callback</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/validation/">Validation</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/value-piping/">Value piping</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/functionality/voice/">Voice</a>
+									</li>
+											
+								</ul>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/localization/">Localization</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/google-analytics-event-tracking/">Tracking using Google Analytics</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/examples/">Examples</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/build-the-source/">Build the source</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/credits/">Credits</a>
+													</div>
+										<hr>
+				</nav>
+			</div>
+													<main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5" role="main">
+				    <h1><a href="#formless" id="formless" class="anchor"></a>Formless</h1>
+   	
+   	<p>The <strong>Formless</strong> feature allow you to setup a Conversational Fore without a form tag.</p>
+
+   	<p>Example see <a href="../../examples/formless/">/examples/formless/</a> and <a href="../../assets/formless.json">JSON</a></p>
+
+   	<p>JSON follows the rules of previous documentation, so you have</p>
+
+   	<p><code>options</code> this is the <a href="../../options/">initialise parameters</a></p>
+
+   	<p><code>tags</code> these are your form tags, simplest example:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text"
+}</code></pre>
+	
+	<p>A tag in JSON follows the supported native HTML tag standards, like min, max, pattern, value, type, so if you want to add min or max you just write it:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text",
+	"min": 3,
+	"max": 10
+}</code></pre>
+
+	<p>Same goes for Conversational Attributes, here we set the label:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text",
+	"value": "prefilled value",
+	"cf-label": "Please insert text"
+}
+</code></pre>
+
+	<p>After you have setup your JSON (or loaded..) then you call <code>var cf = window.cf.ConversationalForm.startTheConversation(json)</code> and the Conversation is started.</p>
+	<p>Formless uses DOM API under the hood to build logic, so you are able to do</p>
+	<pre><code class="language-javascript">console.log(cf.formEl)</code></pre>
+	<p>Which returns the form element generated from your JSON.</p>
+	<p>All other functionality of Conversational Form works with Formless.</p>
+	<p>Please see the above example of how to use Formless to communicate with a web-service and inject new tags at runtime.</p>
+
+	<h2><a href="#formless-example" id="formless-example" class="anchor"></a>Example</h2>
+	<p>A Conversational Form generated from JSON, see file <a href="/docs/0.9.6/assets/formless.json" target="_blank">formless.json</a>. Options and tag attributes are 1:1 with a form tag. The example here also mimics calls to a server and injecting of server created tags. This can be used to validate and create custom flows Server Side.</p>
+	
+	<div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+    		<pre><code class="language-javascript"> window.onload = function(){
+    var xhr = new XMLHttpRequest()
+    xhr.onload = function(event){
+        var str = xhr.response;
+        var json = JSON.parse(str);
+
+        console.log("JSON to parse as form:", json)
+
+        // start one w. string
+        // window.cf.ConversationalForm.startTheConversation(str);
+
+        // add callback hooks..
+        json.options.submitCallback = onFormlessSubmitted.bind(window);
+        json.options.flowStepCallback = onStepCallback.bind(window);
+        
+        // start one w. json
+        conversationalForm = window.cf.ConversationalForm.startTheConversation(json);
+        document.getElementById("cf-context").appendChild(conversationalForm.el);
+
+        // in-document form
+        // window.cf.ConversationalForm.startTheConversation({
+        //  formEl: document.getElementById("empty-form")
+        // });
+    }
+    xhr.open("GET", "../../assets/formless.json");
+    xhr.send();
+};</code></pre>
+            <p>The JSON content:</p>
+            <pre><code class="language-javascript">{
+    "options": {
+        "preventAutoAppend": true,
+        "preventAutoFocus": true,
+        "submitCallback": "window.onFormlessSubmited"
+    },
+    "tags": [
+        {
+            "tag": "input",
+            "type": "text",
+            "id": "first-tag",
+            "value": "Prefilled value here",
+            "cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
+        },
+        {
+            "tag": "select",
+            "cf-input-placeholder": "Choose one of the above",
+            "multiple": "multiple",
+            "cf-questions": "Choose multiple of the elements from the list",
+            "children":[
+                {
+                    "tag": "option",
+                    "name": "option-dropdown-1",
+                    "cf-label": "option-1",
+                    "value": "-1"
+                },
+                {
+                    "tag": "option",
+                    "name": "option-dropdown-1",
+                    "cf-label": "option-2",
+                    "value": "-2"
+                }
+            ]
+        },
+        {
+            "tag": "fieldset",
+            "type": "Radio buttons",
+            "cf-input-placeholder": "Choose one of the above",
+            "cf-questions": "Choose one of the radioss",
+            "children":[
+                {
+                    "tag": "input",
+                    "type": "radio",
+                    "name": "radio-buttons-1",
+                    "cf-label": "radio-1",
+                    "checked": "checked"
+                },
+                {
+                    "tag": "input",
+                    "type": "radio",
+                    "name": "radio-buttons-1",
+                    "cf-label": "radio-2"
+                }
+            ]
+        },
+        {
+            "tag": "fieldset",
+            "type": "Checkboxes",
+            "cf-input-placeholder": "Choose above",
+            "cf-questions": "Choose some checkboxes",
+            "children":[
+                {
+                    "tag": "input",
+                    "type": "checkbox",
+                    "name": "checkboxes-buttons-1",
+                    "cf-label": "checkbox-1",
+                    "checked": "checked"
+                },
+                {
+                    "tag": "input",
+                    "type": "checkbox",
+                    "name": "checkboxes-buttons-1",
+                    "cf-label": "checkbox-2"
+                }
+            ]
+        },
+        {
+            "tag": "input",
+            "type": "password",
+            "cf-input-placeholder": "Password field",
+            "cf-questions": "Write a password"
+        },
+        {
+            "tag": "input",
+            "type": "text",
+            "pattern": ".{5,10}",
+            "cf-input-placeholder": "Input w. pattern attribute",
+            "cf-error": "No less than 5 and no more than 10 characters",
+            "cf-questions": "Keep between 5-10 characters"
+        },
+        {
+            "tag": "input",
+            "type": "text",
+            "required": "required",
+            "cf-questions": "This field is required (attribute)",
+            "cf-error": "Please write something"
+        },
+        {
+            "tag": "input",
+            "type": "text",
+            "required": "required",
+            "cf-questions": "This field uses window.testValidation",
+            "cf-validation": "window.testValidation",
+            "cf-error": "Check the window.testValidation method"
+        }
+    ]
+}</code></pre>
+
+            <!-- Conversational Form will auto-run because of attribute "cf-form" -->
+            <form id="form" cf-form>
+                <!-- The form is freakin' empty -->
+            </form>
+            
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+
+        <script type="text/javascript">
+            // check formless.json
+            var testValidation = function(dto, success, error){
+                console.log("testValidation setup from formless.json, dto:", dto);
+                if(dto.text.indexOf("holmes") != -1)
+                    return success();
+                return error();
+            };
+
+            var conversationalForm;
+
+            // check formless.json
+            var onFormlessSubmitted = function(cf){
+                var formData = conversationalForm.getFormData();
+                var formDataSerialized = conversationalForm.getFormData(true);
+                console.log("Formdata:", formData);
+                console.log("Formdata, obj:", formDataSerialized);
+                conversationalForm.addRobotChatResponse("Check the dev console for FormatData output.")
+
+            }
+
+            var step = 0;
+
+            var onStepCallback = function(dto, success, error){
+                // fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
+                var xhr = new XMLHttpRequest()
+                xhr.onload = function(event){
+                    if(step++ == 0){
+                        // add tags that are received from pseudo webservice ..
+                        var tags = [
+                            {
+                                // select group
+                                "tag": "select",
+                                "name": "country",
+                                "cf-questions": "First tag value: {first-tag}&& + follow-up",
+                                "cf-input-placeholder": "Some copy",
+                                "multiple": false,
+                                "children":[
+                                    {
+                                        "tag": "option",
+                                        "cf-label": "USA",
+                                        "value": "usa"
+                                    },
+                                    {
+                                        "tag": "option",
+                                        "cf-label": "UK",
+                                        "value": "uk"
+                                    }
+                                ]
+                            },
+                            {
+                                // basic tag
+                                "tag": "input",
+                                "type": "text",
+                                "cf-questions": "Tag is injected at runtime, data from 'webservice', check source of <a href='formless.html' style='text-decoration:underline'>formless.html</a>",
+                                "cf-error": "Inject some text"
+                            },
+                            {
+                                // tag group
+                                "tag": "fieldset",
+                                "type": "Checkboxes",
+                                "cf-input-placeholder": "Tag group is injected",
+                                "cf-questions": "Choose an injected tag",
+                                "children":[
+                                    {
+                                        "tag": "input",
+                                        "type": "checkbox",
+                                        "name": "checkboxes-buttons-1",
+                                        "cf-label": "checkbox-x1",
+                                        "checked": "checked"
+                                    },
+                                    {
+                                        "tag": "input",
+                                        "type": "checkbox",
+                                        "name": "checkboxes-buttons-1",
+                                        "cf-label": "checkbox-x2"
+                                    }
+                                ]
+                            }
+                        ];
+
+
+                        console.log("Tags to parse and add at runtime to formless:", tags)
+
+                        // add tag
+                        // add tag at index
+                        conversationalForm.addTags(tags, true);
+                    }
+
+                    setTimeout(function(){
+                        // fake loading...
+                        success();
+                    }, 1000);
+                    
+                }
+                xhr.onerror = function(){
+                    error("Webservice failed??")
+                }
+
+                xhr.open("GET", window.location.href);
+                xhr.send();
+            }
+
+            // load json file with formless data (files/formless.json)
+            window.onload = function(){
+                var xhr = new XMLHttpRequest()
+                xhr.onload = function(event){
+                    var str = xhr.response;
+                    var json = JSON.parse(str);
+
+                    console.log("JSON to parse as form:", json)
+
+                    // start one w. string
+                    // window.cf.ConversationalForm.startTheConversation(str);
+
+                    // add callback hooks..
+                    json.options.submitCallback = onFormlessSubmitted.bind(window);
+                    json.options.flowStepCallback = onStepCallback.bind(window);
+                    
+                    // start one w. json
+                    conversationalForm = window.cf.ConversationalForm.startTheConversation(json);
+                    document.getElementById("cf-context").appendChild(conversationalForm.el);
+
+                    // in-document form
+                    // window.cf.ConversationalForm.startTheConversation({
+                    //  formEl: document.getElementById("empty-form")
+                    // });
+                }
+                xhr.open("GET", "../../assets/formless.json");
+                xhr.send();
+            };
+        </script>
+       
+    </div>
+
+			</main>
+			
+					</div>
+
+			</body>
+</html>
