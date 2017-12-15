@@ -579,6 +579,53 @@ cf-input-button.cf-input-button {
         -webkit-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
                 animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
 
+/**
+* Show submit button for groups when input is hidden
+*/
+cf-input[tag-type="group"].hide-input cf-input-button {
+  display: block;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto; }
+
+cf-input[tag-type="group"].hide-input cf-input-control-elements {
+  margin-bottom: 45px; }
+
+cf-input[error=""].hide-input cf-input-button .cf-icon-progress {
+  -webkit-filter: saturate(0);
+          filter: saturate(0);
+  -webkit-animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+          animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+@-webkit-keyframes shake {
+  10%, 90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0); }
+  20%, 80% {
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0); }
+  30%, 50%, 70% {
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0); }
+  40%, 60% {
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0); } }
+
+@keyframes shake {
+  10%, 90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0); }
+  20%, 80% {
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0); }
+  30%, 50%, 70% {
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0); }
+  40%, 60% {
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0); } }
+
 @-webkit-keyframes cf-spin {
   0% {
     -webkit-transform: rotate(0deg);

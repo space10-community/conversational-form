@@ -42,8 +42,7 @@ global.gulp.task('watch', tasks, function() {
 	global.gulp.watch(srcFolder + '/styles/**/*.scss', ['sass-form']);
 
 	global.gulp.watch(srcFolder + '../docs/**/*.twig', ['documentation']);	
-	global.gulp.watch(srcFolder + '../docs/**/*.scss', ['documentationScss']);	
-
+	global.gulp.watch(srcFolder + '../docs/**/*.scss', ['documentationScss']);
 });
 
 // Default tasks
