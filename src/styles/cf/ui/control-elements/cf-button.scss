@@ -1,0 +1,94 @@
+@import "../../_cf-variables";
+
+.cf-button { //use class because we share the styling on different elements
+	background: white;
+	cursor: pointer;
+	border: 1px solid rgba($color-dark-blue, .1);
+	
+	border-radius: 24px;
+	color: $color-chat-reponse-user-text;
+	line-height: 1;
+	user-select: none;
+	overflow: hidden;
+	transform: translateZ(0px); // <-- safari...;
+
+	> div {
+		padding: 12px 24px;
+	}
+
+	&.has-image {
+		max-width: 180px;
+	}
+	
+	> div {
+		position: relative;
+	}
+
+	transform-origin: 0% 100%;
+	will-change: opacity, background;
+	opacity: 0;
+	.conversational-form--enable-animation & {
+		transition: opacity 0s $anim-easeOut, background $anim-time $anim-easeOut;
+	}
+
+	&.animate-in {
+		.conversational-form--enable-animation & {
+			&:nth-child(even) {
+				transition-delay: 0.05s, 0s;
+			}
+			&:nth-child(odd) {
+				transition-delay: 0.15s, 0s;
+			}
+
+			transition-duration: $anim-time * 0.5, $anim-time;
+			transition-timing-function: $anim-easeOut, $anim-easeOut;
+		}
+		opacity: 1;
+		&.animate-out {
+			transform-origin: 75% 100%;
+			opacity: 0;
+		}
+	}
+	
+	&:not(:last-child) {
+		margin-right: 10px;
+	}
+
+	&:hover, &:focus {
+		// TODO
+		&:not(&[selected="selected"]):not([checked="checked"]) {
+			background: rgba($color-dark-blue, .1);
+		}
+	}
+
+	&[selected="selected"], &[checked="checked"] {
+		// TODO
+		&:not(:focus):not(:hover):not(.highlight) {
+			background: rgba($color-dark-blue, .1);
+		}
+	}
+	
+	&[disabled="disabled"] {
+		pointer-events: none;
+		&.animate-in {
+			opacity: 0.5;
+		}
+	}
+	
+	&:active {
+		> div {
+			opacity: 0.2;
+		}
+	}
+
+	.cf-image {
+		width: 100%;
+		height: auto;
+		will-change: opacity;
+		transition: opacity $anim-time $anim-easeOut;
+		opacity: 0;
+		&.loaded {
+			opacity: 1;
+		}
+	}
+}
