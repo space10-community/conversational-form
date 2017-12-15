@@ -1,0 +1,83 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'How to track form progress using Google Analytics event tracking' %}
+{% set page_slug = '/google-analytics-event-tracking/' %}
+
+
+{% block page %}
+    <h1><a href="#dynamic-questions" id="dynamic-questions" class="anchor"></a>{{page_title}}</h1>
+    
+    <div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+            <p>Each step in the form is registered along with the total number of steps contained in the form. Tracking is done using <code>flowStepCallback</code>.</p>
+            <p>Watch the console to see category, action and label being tracked.</p>
+    		
+            <p>The form:</p>
+            <form id="form">
+                <input required cf-label="Name" type="text" name="name" cf-input-placeholder="Your name" cf-questions="Hello?&&Please tell me your name.">
+                <input required cf-label="City" type="text" name="city" cf-input-placeholder="What city do you live in?" cf-questions="Great {name}. I'm Mr. Robot. What city do you live in?">
+                <input required cf-label="Question" type="text" name="question" cf-input-placeholder="Question" cf-questions="Please ask me a question">
+                <fieldset cf-questions="I'll think of an answer and get back to you. How was your experience?">
+                    <label for="experience-great">Great
+                        <input type="radio" name="cfc-experience" id="experience-great" value="yes">
+                    </label>
+
+                    <label for="experience-average">Average
+                        <input type="radio" name="cfc-experience" id="experience-average" value="average">
+                    </label>
+
+                    <label for="experience-bad">Bad
+                        <input type="radio" name="cfc-experience" id="experience-bad" value="bad">
+                    </label>
+
+                    <label for="experience-bad">Meh...
+                        <input type="radio" name="cfc-experience" id="experience-meh" value="meh">
+                    </label>
+                </fieldset>
+            </form>
+            
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+    </div>
+
+    <script>
+        function initExample(){
+            // called from examples code
+            
+            var ga_category = "CF form - myQuestionForm";
+            
+            var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+                formEl: document.getElementById("form"),
+                context: document.getElementById("cf-context"),
+                flowStepCallback: function(dto, success, error){
+
+                    var currentStep = conversationalForm.flowManager.getStep() + 1; // Steps are 0-based so we add 1
+                    var maxSteps = conversationalForm.flowManager.maxSteps; // This value is not 0-based
+                    var ga_action = "Step " + currentStep + "/" + maxSteps;
+                    var ga_label = "Field name - " + dto.tag.name; // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
+                    
+                    console.log("GA event tracking.\n\tCategory: " + ga_category + "\n\taction: " + ga_action + "\n\tlabel:" + ga_label);
+                    gtag('event', 'CF event', {
+                        'event_category': ga_category,
+                        'event_action': ga_action,
+                        'event_label': ga_label
+                    });
+                    
+                    success();
+                },
+                submitCallback: function(){
+                    conversationalForm.addRobotChatResponse("Thank you for interacting with me. We have now tracked 4/4 events in Google Analytics.");
+                    
+                    console.log("GA event tracking.\n\tCategory: " + ga_category + "\n\taction: Form submitted\n\tlabel:");             
+                    gtag('event', 'CF event', {
+                        'event_category': ga_category,
+                        'event_action': "Form submitted"
+                    });
+                }
+            });
+        }
+    </script>
+	
+{% endblock %}

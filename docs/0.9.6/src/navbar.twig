@@ -1,0 +1,40 @@
+<header class="navbar navbar-expand flex-column flex-md-row cfdoc-navbar navbar-dark bg-dark">
+  <a class="navbar-brand mr-0 mr-md-2" href="/docs/{{ nextVersion }}/getting-started/" aria-label="Bootstrap">
+    CONVERSATIONAL FORM
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/docs/{{ nextVersion }}/getting-started/">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">SPACE10</a>
+      </li>
+
+      <li>
+        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#cfdoc-links" aria-controls="cfdoc-links" aria-expanded="false" aria-label="Toggle docs navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+
+          </button>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ tagVersion }}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
+        {% for version in versions %}
+        	<a class="dropdown-item active" href="/docs/{{ version.path }}/">{{ version.label }}</a>
+        {% endfor %}
+      </div>
+    </li>
+
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/twbs/bootstrap/archive/v4.0.0-beta.2.zip">Download</a>
+</header>

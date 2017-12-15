@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Voice - Turn your webform into a conversation | Conversational Form</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+	<link rel="icon" href="/docs/0.9.6/assets/favicon.ico">
+
+	<link rel="publisher" href="http://space10.io/"/>
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+	<meta name="twitter:creator" content="@space10_journal">
+	<meta name="twitter:title" content="Turning web forms into conversations"/>
+	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+	<meta name="twitter:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Turning web forms into conversations"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:image" content="https://space10-community.github.io/docs/0.9.6/assets/share_img.jpg" />
+
+	<link href="/docs/0.9.6/assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/docs/0.9.6/css/style.css">
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	<script src="/docs/0.9.6/assets/prism.js"></script>
+
+	<script src="/docs/0.9.6/js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	</head>
+<body>
+	<header class="navbar navbar-expand flex-column flex-md-row cfdoc-navbar navbar-dark bg-dark">
+  <a class="navbar-brand mr-0 mr-md-2" href="/docs/0.9.6/getting-started/" aria-label="Bootstrap">
+    CONVERSATIONAL FORM
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/docs/0.9.6/getting-started/">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">SPACE10</a>
+      </li>
+
+      <li>
+        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#cfdoc-links" aria-controls="cfdoc-links" aria-expanded="false" aria-label="Toggle docs navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+
+          </button>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        v0.9.6
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
+                	<a class="dropdown-item active" href="/docs/0.9.6/">v0.9.6</a>
+              </div>
+    </li>
+
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/twbs/bootstrap/archive/v4.0.0-beta.2.zip">Download</a>
+</header>
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+								<nav class="cfdoc-links collapse" id="cfdoc-links">
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/getting-started/">Getting started</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/options/">Options</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/appearance/">Apperance</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/public-api/">Public API</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/events/">Events</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/functionality/">Functionality</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/localization/">Localization</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/google-analytics-event-tracking/">Tracking using Google Analytics</a>
+													</div>
+																														<div class="toc-item active">
+							<a class="toc-link" href="/docs/0.9.6/examples/">Examples</a>
+															<ul class="nav cfdoc-sidenav">
+																	<li>
+										<a href="/docs/0.9.6/examples/dynamic-questions/">Dynamic questions</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/voice-input/">Voice Control (1/2)</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/voice-input-output/">Voice input and output (2/2)</a>
+									</li>
+											
+								</ul>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/build-the-source/">Build the source</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/credits/">Credits</a>
+													</div>
+										<hr>
+				</nav>
+			</div>
+													<main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5" role="main">
+				    <h1><a href="#image-answers" id="image-answers" class="anchor"></a>Voice - Turn your webform into a conversation</h1>
+    
+    <div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+            <p><strong>CURRENTLY VOICE INPUT IS BROKEN. WE'LL TRY TO FIX IT REAL SOON.</strong></p>
+            <p>Conversational Form is an open-source concept by <a href="http://space10.io" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface.</p><p>Fill out the form to take it for a spin 👉</p>
+    		
+            <p>The form:</p>
+            <form id="cf-form" method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
+
+                <fieldset>
+                    <label for="name">What's your name?</label>
+                    <input required cf-questions="Hey there! It’s nice to meet you — what should I call you?" type="text" name="name" id="name">
+                </fieldset>
+
+                <fieldset cf-questions="That’s great, {name}! Can you believe it’s this easy to use your voice?">
+                    <h3>Can you believe it’s this easy to use your voice?</h3>
+                    <label for="believe-1">Yes</label>
+                    <input type="radio" name="believe" id="believe-1" value="yes">
+
+                    <label for="believe-2">No</label>
+                    <input type="radio" name="believe" id="believe-2" value="no">
+
+                    <label for="believe-3">We’re in the future!</label>
+                    <input type="radio" name="believe" id="believe-3" value="future">
+                </fieldset>
+
+                <fieldset>
+                    <label for="country">Where are you from?</label>
+                    <input required cf-questions="And where are you from?" type="text" name="country" id="country">
+                </fieldset>
+
+                <fieldset>
+                    <label for="season">Favourite season</label>
+                    <input required cf-questions="Lovely, I always wanted to visit {country}. What’s your favorite season of the year there?" type="text" name="season" id="season">
+                </fieldset>
+
+                <fieldset cf-questions="Wow, that’s cool, I love {season} too, but spring is my favorite!&&What’s your favorite color?">
+                    <h3>Favourite color</h3>
+                    <label for="color-1">Red</label>
+                    <input type="radio" name="color" id="color-1" value="red">
+
+                    <label for="color-2">Blue</label>
+                    <input type="radio" name="color" id="color-2" value="blue">
+
+                    <label for="color-3">Yellow</label>
+                    <input type="radio" name="color" id="color-3" value="yellow">
+
+                    <label for="color-4">Purple</label>
+                    <input type="radio" name="color" id="color-4" value="purple">
+                </fieldset>
+
+                <fieldset cf-questions="Oh, I like {color} too.&&I can’t believe we’re just talking... Do you think this is the future of web forms?">
+                    <h3>Is this the future of webforms?</h3>
+                    <label for="future-1">Yes</label>
+                    <input type="radio" name="future" id="future-1" value="yes">
+
+                    <label for="future-2">No</label>
+                    <input type="radio" name="future" id="future-2" value="no">
+
+                    <label for="future-3">Not sure</label>
+                    <input type="radio" name="future" id="future-3" value="not-sure">
+                </fieldset>
+
+                <fieldset cf-questions="Shall we do that again? Just say yes!">
+                    <h3>Shall we do that again?</h3>
+                    <label for="repeat-1">Yes</label>
+                    <input type="radio" name="repeat-voice" id="repeat-1" value="yes">
+
+                    <label for="repeat-2">No</label>
+                    <input type="radio" name="repeat-voice" id="repeat-2" value="no">
+                </fieldset>
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+    </div>
+
+    <script type="text/javascript">
+        var cf = "";
+        function initExample(){
+            var formEl = document.getElementById("cf-form");
+            var microphoneInput = {};
+            var dispatcher = new window.cf.EventDispatcher(), synth = null, recognition = null, msg = null, finalTranscript = "";
+            var isVoiceForm_1 = window.location.pathname.toLowerCase().indexOf("index-voice") !== -1;
+            
+                microphoneInput = {
+                    init: function () {
+                        // init is called one time, when the custom input is instantiated.
+                        // load voices \o/
+                        synth = window.speechSynthesis;
+                        msg = new window.SpeechSynthesisUtterance();
+                        var setVoice = function () {
+                            if (typeof synth === 'undefined') {
+                                return;
+                            }
+                            var voices = synth.getVoices();
+                            for (var i = 0; i < voices.length; i++) {
+                                var element = voices[i];
+                                if (element.name.toLowerCase() == "alex") {
+                                    msg.voice = element;
+                                    msg.lang = msg.voice.lang; // change language here
+                                }
+                            }
+                        };
+                        setVoice();
+                        if (typeof synth !== 'undefined' && synth.onvoiceschanged !== undefined) {
+                            synth.onvoiceschanged = setVoice;
+                        }
+                        // here we want to control the Voice input availability, so we don't end up with speech overlapping voice-input
+                        msg.onstart = function (event) {
+                            // on message end, so deactivate input
+                            console.log("voice: deactivate 1");
+                            cf.userInput.deactivate();
+                        };
+                        msg.onend = function (event) {
+                            // on message end, so reactivate input
+                            cf.userInput.reactivate();
+                        };
+                        // setup events to speak robot response
+                        dispatcher.addEventListener(window.cf.ChatListEvents.CHATLIST_UPDATED, function (event) {
+                            if (event.detail.currentResponse.isRobotResponse) {
+                                // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+                                // msg.text = event.detail.currentResponse.response
+                                msg.text = event.detail.currentResponse.strippedSesponse; //<-- no html tags
+                                synth.speak(msg);
+                            }
+                        }, false);
+                        // do other init stuff, like connect with external APIs ...
+                    },
+                    // set awaiting callback, as we will await the speak in this example
+                    awaitingCallback: true,
+                    cancelInput: function (event) {
+                        console.log("voice: CANCEL");
+                        finalTranscript = null;
+                        if (recognition) {
+                            recognition.onend = null;
+                            recognition.onerror = null;
+                            recognition.stop();
+                        }
+                    },
+                    input: function (resolve, reject, mediaStream) {
+                        console.log("voice: INPUT");
+                        // input is called when user is interacting with the CF input button (UserVoiceInput)
+                        // connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
+                        // using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+                        // if API fails use reject(result.toString())
+                        // if API succedes use resolve(result.toString())
+                        if (recognition)
+                            recognition.stop();
+                        recognition = new window.SpeechRecognition(),
+                            finalTranscript = '';
+                        recognition.continuous = false; // react only on single input
+                        recognition.interimResults = false; // we don't care about interim, only final.
+                        // recognition.onstart = function() {}
+                        recognition.onresult = function (event) {
+                            // var interimTranscript = "";
+                            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                                if (event.results[i].isFinal) {
+                                    finalTranscript += event.results[i][0].transcript;
+                                }
+                            }
+                        };
+                        recognition.onerror = function (event) {
+                            reject(event.error);
+                        };
+                        recognition.onend = function (event) {
+                            if (finalTranscript && finalTranscript !== "") {
+                                resolve(finalTranscript);
+                            }
+                        };
+                        recognition.start();
+                    }
+                };
+                // insert yes no if user wants to enroll with Voice
+                //  var fieldset = document.createElement("fieldset");
+                //  fieldset.setAttribute("cf-questions", "Want to try microphone?");
+                //  let checkYes: HTMLInputElement = document.createElement("input");
+                //  checkYes.setAttribute("type", "checkbox");
+                //  checkYes.setAttribute("cf-label", "Yes!");
+                //  fieldset.appendChild(checkYes);
+                //  let checkNo: HTMLInputElement = document.createElement("input");
+                //  checkNo.setAttribute("type", "checkbox");
+                //  checkNo.setAttribute("cf-label", "No");
+                //  fieldset.appendChild(checkNo);
+                //  formEl.insertBefore(fieldset, formEl.children[0]);
+                // no choice, just do it
+                // remove e-mail field because it is impossible to fill out the e-mail with the voice
+                var emailInput = formEl.querySelector("input[type='email']");
+                if (emailInput && emailInput.parentNode)
+                    emailInput.parentNode.removeChild(emailInput);
+            
+            cf = new window.cf.ConversationalForm({
+                formEl: formEl,
+                eventDispatcher: dispatcher,
+                // add the custom input (microphone)
+                microphoneInput: microphoneInput,
+                context: document.getElementById("cf-context"),
+                submitCallback: function () {
+                    alert("That is the end.")
+                },
+                flowStepCallback: function (dto, success, error) {
+                    console.log('flowStepCallback', dto);
+                    if (dto.tag && dto.tag.name == "repeat-voice") {
+                        if (dto.tag.value[0] !== "no") {
+                            location.reload();
+                        }
+                        else {
+                            cf.addRobotChatResponse("No problem. Talk soon");
+                            cf.doSubmitForm();
+                        }
+                    }
+                    else if (dto.tag && dto.tag.domElement) {
+                        if (dto.tag.domElement.getAttribute("name") == "repeat") {
+                            location.reload();
+                        }
+                        else if (dto.tag.domElement.getAttribute("name") == "submit-form") {
+                            submitForm_1(success);
+                        }
+                        else {
+                            success();
+                        }
+                    }
+                    else {
+                        success();
+                    }
+                }
+            });
+
+        };
+    </script>
+
+			</main>
+			
+					</div>
+
+			</body>
+</html>

@@ -1,0 +1,128 @@
+main {
+  h1:first-of-type {
+    margin-top: 10px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+header .btn-secondary {
+  background: #272829;
+  border-color: #636363;
+
+  &:hover {
+    background: #333;
+  }
+}
+.cfdoc-sidebar {
+  // background: #222 !important;
+  a {
+    font-weight: 400 !important;
+  }
+
+  hr {
+    border-top: 1px solid rgba(0,0,0, 0.05);
+  }
+
+  ul {
+    margin-left: .6em;
+
+    li {
+      width: 100%;
+    }
+  }
+
+}
+
+.cfdoc-links {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-right: -15px;
+  margin-left: -15px;
+
+  @include media-breakpoint-up(md) {
+    @supports (position: sticky) {
+      max-height: calc(100vh - 9rem);
+      overflow-y: auto;
+    }
+  }
+
+  // Override collapse behaviors
+  @include media-breakpoint-up(md) {
+    display: block !important;
+  }
+
+  .toc-item {
+
+    .toc-link {
+      display: block;
+      padding: .25rem 1.5rem;
+      font-weight: 500;
+      color: rgba(0,0,0, 0.55);
+
+      &:hover {
+        color: rgba(0,0,0, 0.85);
+        text-decoration: none;
+      }
+    }
+
+    &.active {
+      margin-bottom: .5rem;
+
+      &:not(:first-child) {
+        margin-top: .5rem;
+      }
+
+      > .toc-link {
+        color: rgba(0,0,0, 0.85);
+
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .nav > li > a {
+    display: block;
+    padding: .25rem 1.5rem;
+    font-size: 90%;
+    color: rgba(0,0,0, 0.85);
+  }
+
+  .nav > li > a:hover {
+    color: rgba(0,0,0, 0.85);
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .nav > .active > a,
+  .nav > .active:hover > a {
+    font-weight: 500;
+    color: rgba(0,0,0, 0.65);
+    background-color: transparent;
+  }
+
+
+}
+
+
+header .cfddoc-navbar-nav svg {
+  color: white;
+}
+
+@media (min-width: 768px){
+  #cfdoc-navbar {
+    display: block!important;
+  }
+  .cfdoc-sidebar {
+    position: sticky;
+    top: 4rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    height: 100vh;
+  }
+}
