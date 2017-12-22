@@ -9,7 +9,7 @@
 
 <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/images/readme-cf.gif)</a>
 
-Below you will find guides to inlcude the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
+Below you will find guides to include the ConversationalForm into a page containing a form or <a href="https://space10-community.github.io/conversational-form/" target="_blank" rel="Quick demo">try a quick demo</a>
 
 
 # Getting started
@@ -20,7 +20,7 @@ Include ConversationalForm in your page
 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
 ```
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form ...>
 ```
@@ -42,7 +42,7 @@ If you don't want to have the UserTextInput to auto focus.
 ```
 
 **cf-no-animation**  
-Add this to `<form> tag to disable animations completly.
+Add this to `<form> tag to disable animations completely.
 
 ```html
 <form id="my-form-element" cf-form cf-no-animation>
@@ -80,10 +80,10 @@ new cf.ConversationalForm({
 	// overwrite the default robot Dictionary items
 	dictionaryRobot,/*?: Object;*/
 
-	//base64 || image url // overwrite user image, without overwritting the user dictionary
+	//base64 || image url // overwrite user image, without overwriting the user dictionary
 	userImage,/*?: string;*/
 
-	// base64 || image url // overwrite robot image, without overwritting the robot dictionary
+	// base64 || image url // overwrite robot image, without overwriting the robot dictionary
 	robotImage,/*?: string;*/
 
 	// custom submit callback if button[type=submit] || form.submit() is not wanted..
@@ -101,10 +101,10 @@ new cf.ConversationalForm({
 	// prevents the initial auto focus set on the UserInput
 	preventAutoFocus,/*?: boolean;*/
 
-	// optional horizontal scroll accerlation value, 0-1
+	// optional horizontal scroll acceleration value, 0-1
 	scrollAccerlation,/*?: number;*/
 
-	// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
+	// allow for a global validation method, asynchronous, so a value can be validated through a server, call success || error
 	flowStepCallback,/*?: (dto: FlowDTO, success: () => void, error: () => void) => void;*/
 
 	// optional event dispatcher, has to be an instance of cf.EventDispatcher, see Wiki pages (Events)
@@ -156,11 +156,11 @@ Tags can then be set in the instantiation object, see [ConversationalFormOptions
 
 ### cf-questions
 * to map questions directly to a tag.
-* seperate with || to allow for more questions, app will shuffle.
+* separate with || to allow for more questions, app will shuffle.
 ```html
 <input type="text" cf-questions="What is your name?||Please tell me your name." ..
 ```
-* seperate with && to allow for chained questions.
+* separate with && to allow for chained questions.
 ```html
 <input type="text" cf-questions="Hello?&&Please tell me your name." ..
 ```
@@ -201,7 +201,7 @@ previous input could be a select:option list with countries.
 ### cf-validation
 * Javascript validate a <Tag> before submitting
 * OBS. eval is used.
-* Asyncronous, so a value can be validated through a server
+* Asynchronous, so a value can be validated through a server
 * three parameters is passed to the method
 	* dto: FlowDTO
 	* success: () => void //callback
@@ -212,7 +212,7 @@ previous input could be a select:option list with countries.
 
 ### cf-error
 * to map error messages directly to a tag.
-* seperate by | to allow for more error, app will shuffle.
+* separate by | to allow for more error, app will shuffle.
 ```html
 <input type="text" cf-error="Text is wrong wrong|Input is not right" ..
 ```
@@ -225,11 +225,11 @@ When instantiating ConversationalForm a reference to the instance will be availa
 window.ConversationalForm
 ```
 
-Be aware that if you create mutiple Conversational Forms within one page then the reference will be overwritten with latest created.
+Be aware that if you create multiple Conversational Forms within one page then the reference will be overwritten with latest created.
 Use `windo`.ConversationalForm[form["cf-create-id"]]?` or just manually instantiate the form and user the returned instance.
 
 ### addTags
-Add tags to the form, see examples/formless.html for how this can be achived.
+Add tags to the form, see examples/formless.html for how this can be achieved.
 ````javascript
 window.ConversationalForm.addTags(tagsData/*: Array<DataTag>*/, addAfterCurrentStep/*: boolean = true*/, atIndex/*: number = -1*/);
 ````
@@ -241,7 +241,7 @@ window.ConversationalForm.focus();
 ````
 
 ### addRobotChatResponse
-add a robot reponse, this you would usually do at the end of a process.
+add a robot response, this you would usually do at the end of a process.
 
 ````javascript
 window.ConversationalForm.addRobotChatResponse("You have reached the end of the form!");
@@ -249,7 +249,7 @@ window.ConversationalForm.addRobotChatResponse("You have reached the end of the 
 See example of end-message [here](TBD....)
  
 ### addUserChatResponse
-add a robot reponse, this you would usually do at the end of a process.
+add a robot response, this you would usually do at the end of a process.
 
 ````javascript
 window.ConversationalForm.addUserChatResponse("Hello from user.");
@@ -297,7 +297,7 @@ var cfInstance = cf.startTheConversation({
 ````
 
 # Overwrite styles
-You can overwrite the UI with your own styles. Please see how the [docs](https://space10-community.github.io/conversational-form/) site is overwritting the styles [here](https://github.com/space10-community/conversational-form/blob/master/docs/src/styles/cf/cf-theming.styl).
+You can overwrite the UI with your own styles. Please see how the [docs](https://space10-community.github.io/conversational-form/) site is overwriting the styles [here](https://github.com/space10-community/conversational-form/blob/master/docs/src/styles/cf/cf-theming.styl).
 
 # Contribute to ConversationalForm
 
