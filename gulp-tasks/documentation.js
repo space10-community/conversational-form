@@ -1,6 +1,7 @@
 var livereload = require('gulp-livereload');
 var git = require('git-rev');
 const sass        = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
 
 
 var lastCommit = "[LAST_COMMIT_HASH]";
@@ -14,7 +15,7 @@ git.tag(function (str) {
   tagVersion = str;
 });
 
-var nextVersion = "0.9.6";
+var nextVersion = "0.9.70";
 
 gulp.task('documentation', function () {
     'use strict';
@@ -29,8 +30,8 @@ gulp.task('documentation', function () {
                 lastCommit: lastCommit,
                 versions: [
                     {
-                        path: '0.9.6', 
-                        label: "v0.9.6"
+                        path: '0.9.70', 
+                        label: "v0.9.70"
                     },
                 ],
                 pages: [
@@ -75,6 +76,7 @@ gulp.task('documentationScss', function() {
         .pipe(sass({
             includePaths: [config.bootstrapDir + ''],
         }))
+        .pipe(autoprefixer({ browsers: ['> 1%']}))
         .pipe(gulp.dest('docs/' + nextVersion + '/css/'))
         .pipe(livereload());
 });
