@@ -1,0 +1,22 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Value piping' %}
+{% set page_slug = '/functionality/value-piping/' %}
+
+{% block page %}
+    <h1 id="value-piping">{{page_title}}</h1>
+    <p>Map values across tags using the <u>id</u> attribute.</p>
+    
+	<pre><code class="language-html" data-lang="html">&lt;form id="form">
+	&lt;input type="text" id="firstname" cf-questions="Please write your firstname" />
+	&lt;input type="text" id="lastname" cf-questions="Hi {firstname}, what is your last name?" />
+	
+	&lt;input type="text" cf-questions="{firstname} {lastname}, what a solid name!" />
+&lt;/form></code></pre>
+
+	<h2 id="value-piping-example">Example</h2>
+	
+	<p data-height="365" data-theme-id="light" data-slug-hash="ypOwZN" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Value piping" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/ypOwZN/">Conversational Forms - Value piping</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+{% endblock %}
