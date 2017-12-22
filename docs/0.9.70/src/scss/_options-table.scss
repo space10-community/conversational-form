@@ -1,0 +1,19 @@
+table.options-table tbody td:first-child, 
+table.options-table tbody td:nth-child(2), 
+table.options-table tbody td:nth-child(3):not(:last-child){
+	color: #8c2418;
+}
+
+table.options-table tbody td:nth-child(2) {
+    color: #006700;
+}
+
+table.options-table tbody {
+	th, td {
+		padding: 0.4rem;
+    }
+}
+
+table.compact {
+	font-size: 90%;
+}
