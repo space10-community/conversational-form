@@ -44,7 +44,7 @@ cf-input-control-elements {
 cf-list, cf-list-button {
 	will-change: height;
 	.conversational-form--enable-animation & {
-		transition: height $anim-time * 0.5 $anim-easeOut;
+		transition: height $cf-anim-time * 0.5 $cf-ease-easeOut;
 	}
 }
 

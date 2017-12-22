@@ -13,14 +13,14 @@ cf-info {
 	overflow: hidden;
 	display: block;
 	transform: translateY(-115%);
-	color: $color-input-text;
+	color: $cf-color-input-text;
 	opacity: 0;
 	will-change: opacity;
 
 	&.show {
 		opacity: 1;
 		.conversational-form--enable-animation & {
-			transition: opacity $anim-time $anim-easeOut;
+			transition: opacity $cf-anim-time $cf-ease-easeOut;
 		}
 	}
 

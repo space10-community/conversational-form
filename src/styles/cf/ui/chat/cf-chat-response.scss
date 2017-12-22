@@ -9,16 +9,16 @@
 cf-chat-response {
 	display: table;
 	max-width: 80%;
-	@media (min-width: $breakpoint-1) {
+	@media (min-width: $cf-breakpoint-medium) {
 		max-width: 50%;
 	}
 	min-width: 120px;
 	width: auto;
 	position: relative;
 	backface-visibility: hidden;
-	padding-left: calc(#{$thumbArea} + 10px);
+	padding-left: calc(#{$cf-avatar-area} + 10px);
 	padding-top: 16px;
-	color: $color-chat-reponse-default-text;
+	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
 	margin-right: auto;
 	word-break: break-all;
@@ -27,10 +27,10 @@ cf-chat-response {
 		cursor: pointer;
 
 		&:hover {
-			color: darken($color-chat-reponse-default-text, 25%);
+			color: darken($cf-color-chat-response-default-text, 25%);
 
 			text > p {
-				background: lighten($color-chat-reponse-user-bg, 50%);
+				background: lighten($cf-color-chat-response-user-bg, 50%);
 			}
 		}
 	}
@@ -39,7 +39,7 @@ cf-chat-response {
 		text > p {
 			opacity: 0;
 			will-change: opacity;
-			transition: opacity $anim-time * 0.5 $anim-easeOut 0.2s;
+			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
 			&.show {
 				opacity: 1;
 			}
@@ -50,8 +50,8 @@ cf-chat-response {
 		margin-right: 0px;
 		margin-left: auto;
 		padding-left: 0;
-		padding-right: calc(#{$thumbArea} + 10px);
-		color: $color-chat-reponse-user-text;
+		padding-right: calc(#{$cf-avatar-area} + 10px);
+		color: $cf-color-chat-response-user-text;
 
 		thumb {
 			left: auto;
@@ -63,8 +63,8 @@ cf-chat-response {
 			transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
 
 			> p {
-				background: $color-chat-reponse-user-bg;
-				border-radius: 20px 0px 20px 20px;
+				background: $cf-color-chat-response-user-bg;
+				border-radius: $cf-chat-response-border-radius 0px $cf-chat-response-border-radius $cf-chat-response-border-radius;
 				margin-right: 0px;
 				margin-left: auto;
 			}
@@ -83,10 +83,10 @@ cf-chat-response {
 
 	&.disabled {
 		pointer-events: none;
-		color: lighten($color-chat-reponse-default-text, 25%);
+		color: lighten($cf-color-chat-response-default-text, 25%);
 
 		text {
-			background: lighten($color-chat-reponse-user-bg, 50%);
+			background: lighten($cf-color-chat-response-user-bg, 50%);
 		}
 	}
 
@@ -130,23 +130,23 @@ cf-chat-response {
 		> p {
 			margin: 0px;
 			padding: 0px;
-			background: $color-chat-reponse-default-bg;
+			background: $cf-color-chat-response-default-bg;
 			padding: 12px 24px 12px 24px;
 			display: table; // wrap container around text;
 
 			// border radius rules
-			border-radius: 0px 20px 20px 20px;
-			transition: background $anim-time * 0.5 $anim-easeOut;
+			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
 			
 			&:not(:only-child) {
-				border-radius: 0px 20px 20px 0px;
+				border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius 0px;
 
 				&:first-child {
-					border-radius: 20px 20px 20px 0px;
+					border-radius: $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius 0px;
 				}
 				
 				&:last-child {
-					border-radius: 0px 20px 20px 20px;
+					border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
 				}
 
 				&:not(:first-child) {
@@ -203,10 +203,10 @@ cf-chat-response {
 		top: 0px;
 		left: 0px;
 		display: block;
-		width: $thumbArea;
-		height: $thumbArea;
+		width: $cf-avatar-area;
+		height: $cf-avatar-area;
 		border-radius: 50%;
-		background: rgba(white, .3);
+		background: $cf-avatar-background;
 		background-size: cover;
 		background-position: 50% 50%;
 		opacity: 0;
@@ -214,21 +214,21 @@ cf-chat-response {
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
 		.conversational-form--enable-animation & {
-			transition: transform $anim-time * 0.5 $anim-easeOut $anim-time * 0.25, opacity $anim-time * 0.5 $anim-easeOut $anim-time * 0.25;
+			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25, opacity $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25;
 		}
 	}
 	
 	&.show {
 		text {
 			.conversational-form--enable-animation & {
-				transition: transform $anim-time * 0.5 $anim-easeOut 0s, opacity $anim-time * 0.5 $anim-easeOut 0s;
+				transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
 			}
 
 			transform: translateY(0px) translateX(0px) scale(1, 1);
 			opacity: 1;
 			.conversational-form--enable-animation & {
-				transition-timing-function: $anim-easeOut, $anim-easeOut, $anim-easeOut;
-				transition-delay: $anim-time * 0.25, $anim-time * 0.25, 0s;
+				transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
+				transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
 			}
 
 			&[value-added] {

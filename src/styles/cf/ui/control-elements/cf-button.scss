@@ -3,10 +3,10 @@
 .cf-button { //use class because we share the styling on different elements
 	background: white;
 	cursor: pointer;
-	border: 1px solid rgba($color-dark-blue, .1);
+	border: 1px solid rgba($cf-color-primary, .1);
 	
-	border-radius: 24px;
-	color: $color-chat-reponse-user-text;
+	border-radius: calc(#{$cf-chat-response-border-radius} * 1.2);
+	color: $cf-color-chat-response-user-text;
 	line-height: 1;
 	user-select: none;
 	overflow: hidden;
@@ -28,7 +28,7 @@
 	will-change: opacity, background;
 	opacity: 0;
 	.conversational-form--enable-animation & {
-		transition: opacity 0s $anim-easeOut, background $anim-time $anim-easeOut;
+		transition: opacity 0s $cf-ease-easeOut, background $cf-anim-time $cf-ease-easeOut;
 	}
 
 	&.animate-in {
@@ -40,8 +40,8 @@
 				transition-delay: 0.15s, 0s;
 			}
 
-			transition-duration: $anim-time * 0.5, $anim-time;
-			transition-timing-function: $anim-easeOut, $anim-easeOut;
+			transition-duration: $cf-anim-time * 0.5, $cf-anim-time;
+			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut;
 		}
 		opacity: 1;
 		&.animate-out {
@@ -56,15 +56,16 @@
 
 	&:hover, &:focus {
 		// TODO
-		&:not(&[selected="selected"]):not([checked="checked"]) {
-			background: rgba($color-dark-blue, .1);
+		&:not(&[selected="selected"]),
+		&:not([checked="checked"]) {
+		 	background: rgba($cf-color-primary, .1);
 		}
 	}
 
 	&[selected="selected"], &[checked="checked"] {
 		// TODO
 		&:not(:focus):not(:hover):not(.highlight) {
-			background: rgba($color-dark-blue, .1);
+		 	background: rgba($cf-color-primary, .1);
 		}
 	}
 	
@@ -85,7 +86,7 @@
 		width: 100%;
 		height: auto;
 		will-change: opacity;
-		transition: opacity $anim-time $anim-easeOut;
+		transition: opacity $cf-anim-time $cf-ease-easeOut;
 		opacity: 0;
 		&.loaded {
 			opacity: 1;
