@@ -34,7 +34,7 @@ cf-chat {
 			-webkit-border-radius: 100px;
 		}
 		&::-webkit-scrollbar-thumb:vertical {
-			background: $color-chat-reponse-user-bg;
+			background: $cf-color-chat-response-user-bg;
 			-webkit-border-radius: 100px;
 		}
 		&::-webkit-scrollbar-thumb {
@@ -43,7 +43,7 @@ cf-chat {
 			-webkit-border-radius: 100px;
 		}
 		&::-webkit-scrollbar-thumb:vertical:active {
-			background: darken($color-chat-reponse-user-bg, 20%);
+			background: darken($cf-color-chat-response-user-bg, 20%);
 			border: none;
 			-webkit-border-radius: 100px;
 		}

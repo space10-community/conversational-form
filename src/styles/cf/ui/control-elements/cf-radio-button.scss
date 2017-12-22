@@ -3,7 +3,7 @@
 cf-radio-button.cf-button {
 	&:hover, &.highlight, &:focus {
 		cf-radio {
-			background: $color-chat-reponse-user-text;
+			background: $cf-color-chat-response-user-text;
 		}
 	}
 	
@@ -19,19 +19,19 @@ cf-radio-button.cf-button {
 		width: 14px;
 		height: 14px;
 		border-radius: 50%;
-		background: $color-chat-reponse-user-bg;
+		background: $cf-color-chat-response-user-bg;
 		will-change: background;
 		margin-right: 10px;
 		margin-left: -10px;
 		position: relative;
 		.conversational-form--enable-animation & {
-			transition: background $anim-time * 0.5 $anim-easeOut;
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 	}
 
 	&[checked="checked"] {
 		cf-radio {
-			background: $color-chat-reponse-user-text;
+			background: $cf-color-chat-response-user-text;
 			pointer-events: none;
 		}
 	}

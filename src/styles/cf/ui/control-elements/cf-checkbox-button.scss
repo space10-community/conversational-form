@@ -3,7 +3,7 @@
 .cf-button.cf-checkbox-button {
 	&:hover, &.highlight, &:focus {
 		cf-checkbox {
-			background: $color-chat-reponse-user-text;
+			background: $cf-color-chat-response-user-text;
 		}
 	}
 
@@ -28,13 +28,13 @@
 		width: 14px;
 		height: 14px;
 		border-radius: 3px;
-		background: $color-chat-reponse-user-bg;
+		background: $cf-color-chat-response-user-bg;
 		will-change: background;
 		margin-right: 10px;
 		margin-left: -10px;
 		position: relative;
 		.conversational-form--enable-animation & {
-			transition: background $anim-time * 0.5 $anim-easeOut;
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 
 		&:after {
@@ -52,19 +52,19 @@
 			will-change: transform;
 			transform: scale(0, 0);
 			.conversational-form--enable-animation & {
-				transition: transform $anim-time * 0.5 $anim-easeOut;
+				transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut;
 			}
 		}
 	}
 	
 	&[checked="checked"], &[selected="selected"] {
 		cf-checkbox {
-			background: rgba($color-chat-reponse-user-bg, 0);
+			background: rgba($cf-color-chat-response-user-bg, 0);
 
 			&:after {
 				transform: scale(1, 1);
 				.conversational-form--enable-animation & {
-					transition-timing-function: $anim-easeOut
+					transition-timing-function: $cf-ease-easeOut
 				}
 					
 			}

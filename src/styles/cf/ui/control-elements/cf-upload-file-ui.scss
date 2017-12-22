@@ -3,24 +3,24 @@
 cf-upload-file-ui {
 	display: block;
 	width: 100%;
-	height: $input-field-height;
+	height: $cf-input-field-height;
 	position: absolute;
 	top: 0px;
 	padding-right: 30px;
-	color: $color-chat-reponse-user-text;
+	color: $cf-color-chat-response-user-text;
 
 	opacity: 0;
 	transform: translateY(20px) rotateX(30deg);
 	will-change: opacity, transform;
 	.conversational-form--enable-animation & {
-		transition: opacity $anim-time * 0.5 $anim-easeOut, transform $anim-time * 0.5 $anim-easeOut;
+		transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut, transform $cf-anim-time * 0.5 $cf-ease-easeOut;
 	}
 
 	&.animate-in {
 		opacity: 1;
 		transform: translateY(0px) rotateX(0deg);
 		.conversational-form--enable-animation & {
-			transition-timing-function: $anim-easeOut, $anim-easeOut;
+			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut;
 		}
 	}
 
@@ -84,7 +84,7 @@ cf-upload-file-progress {
 		z-index: 2;
 		border-radius: 7px 0px 0px 7px;
 		.conversational-form--enable-animation & {
-			transition: width $anim-time * 0.2 linear, border-radius $anim-time * 0.5 $anim-easeOut;
+			transition: width $cf-anim-time * 0.2 linear, border-radius $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 
 		&.loaded {

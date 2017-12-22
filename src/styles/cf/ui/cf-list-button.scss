@@ -27,21 +27,21 @@ cf-list-button {
 	pointer-events: none;
 	will-change: opacity;
 	.conversational-form--enable-animation & {
-		transition: opacity $anim-time $anim-easeOut 0.5s;
+		transition: opacity $cf-anim-time $cf-ease-easeOut 0.5s;
 	}
 
-	@media (min-width: $breakpoint-1){
+	@media (min-width: $cf-breakpoint-medium){
 		&:hover:nth-child(1) {
 			background: linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%);
 			&:after {
-				animation: cf-arrow-left $anim-time $anim-easeInOut;
+				animation: cf-arrow-left $cf-anim-time $cf-ease-easeInOut;
 			}
 		}
 
 		&:hover:nth-child(2) {
 			background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%);
 			&:after {
-				animation: cf-arrow-right $anim-time $anim-easeInOut;
+				animation: cf-arrow-right $cf-anim-time $cf-ease-easeInOut;
 			}
 		}
 	}
@@ -98,7 +98,7 @@ cf-list-button {
 		opacity: 0;
 		will-change: opacity;
 		.conversational-form--enable-animation & {
-			transition: opacity $anim-time $anim-easeOut;
+			transition: opacity $cf-anim-time $cf-ease-easeOut;
 		}
 	}
 	
@@ -115,7 +115,7 @@ cf-list-button {
 		opacity: 0;
 		will-change: opacity;
 		.conversational-form--enable-animation & {
-			transition: opacity $anim-time * 0.5 $anim-easeOut;
+			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 	}
 }
