@@ -1,3 +1,5 @@
+/// <reference path="../logic/Helpers.ts"/>
+
 // namespace
 namespace cf {
 
@@ -155,6 +157,7 @@ namespace cf {
 			"tel": "What's your phone number?",
 			"radio": "I need you to select one of these.",
 			"select": "Choose any of these options.",
+			"file": "Select a file to upload.",
 			"general": "General1||General2||General3.."
 		}
 	}
