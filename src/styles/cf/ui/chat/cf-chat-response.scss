@@ -131,7 +131,7 @@ cf-chat-response {
 			margin: 0px;
 			padding: 0px;
 			background: $cf-color-chat-response-default-bg;
-			padding: 12px 24px 12px 24px;
+			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
 			display: table; // wrap container around text;
 
 			// border radius rules
@@ -150,18 +150,18 @@ cf-chat-response {
 				}
 
 				&:not(:first-child) {
-					margin-top: 3px;
+					margin-top: relativeValue(3px);
 				}
 			}
 			//--------------------
 
 			> img {
 				max-width: 140px;
-				padding-bottom: 5px;
+				padding-bottom: relativeValue(5px);
 				width: 100%;
 				height: auto;
 				display: block;
-				margin-bottom: 4px;
+				margin-bottom: relativeValue(4px);
 			}
 		}
 
@@ -170,9 +170,9 @@ cf-chat-response {
 			display: block;
 			position: absolute;
 			top: 50%;
-			left: 20px;
+			left: relativeValue(20px);
 			transform: translateY(-50%);
-			padding-right: 20px;
+			padding-right: relativeValue(20px);
 		}
 		
 		thinking {
@@ -191,10 +191,13 @@ cf-chat-response {
 		}
 
 		svg.cf-icon-file {
-			width: 10px;
+			width: relativeValue(10px);
 			height: auto;
 			display: inline-block;
-			margin-right: 7px;
+			margin-right: relativeValue(7px);
+			g {
+				fill: $cf-color-primary;
+			}
 		}
 	}
 

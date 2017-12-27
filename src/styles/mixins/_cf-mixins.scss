@@ -1,0 +1,9 @@
+@function relativeValue($pixels) {
+    $base-size: 12px;
+    
+    @if (unitless($pixels)) {
+        $pixels: $pixels * 1px;
+    }
+
+    @return $pixels  * ($cf-base-font-size/$base-size);
+}
