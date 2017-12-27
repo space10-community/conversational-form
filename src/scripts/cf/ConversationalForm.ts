@@ -221,8 +221,7 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			Helpers.setEmojiLib();
-
+			
 			if(this.loadExternalStyleSheet){
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];

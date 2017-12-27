@@ -155,8 +155,6 @@ namespace cf {
 				}
 
 				innerResponse = newStr;
-			}else{
-				innerResponse = Helpers.emojify(innerResponse)
 			}
 
 			if(this.responseLink && this.isRobotResponse){

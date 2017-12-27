@@ -68,27 +68,6 @@ namespace cf {
 			}
 		}
 
-		private static emojilib: any = null;
-		public static setEmojiLib(lib: string = "emojify", scriptSrc: string = "//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"){
-			const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
-			
-			const script: HTMLScriptElement = document.createElement("script");
-			script.type = "text/javascript";
-			script.async = true;
-			script.defer = true;
-			script.onload = function() {
-				// we use https://github.com/Ranks/emojify.js as a standard
-				Helpers.emojilib = (<any> window)[lib];
-				if(Helpers.emojilib){
-					Helpers.emojilib.setConfig({
-						img_dir: "https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/",
-					});
-				}
-			}
-			script.setAttribute("src", scriptSrc);
-			head.appendChild(script);
-		}
-
 		public static getValuesOfBars(str: string): Array<string>{
 
 			let strs: Array<string> = str.split("||");
@@ -99,14 +78,6 @@ namespace cf {
 				strs = str.split("|");
 			
 			return strs;
-		}
-
-		public static emojify(str: string): string{
-			if(Helpers.emojilib){
-				str = Helpers.emojilib.replace(str);
-			}
-
-			return str;
 		}
 
 		public static setTransform(el: any, transformString: string){
