@@ -8,7 +8,7 @@
 	}
 
 	&.no-text {
-		padding: 12px 16px;
+		padding: relativeValue(12px) relativeValue(16px);
 
 		cf-checkbox {
 			margin-right: 0px;
@@ -25,13 +25,14 @@
 	cf-checkbox {
 		display: block;
 		float: left;
-		width: 14px;
-		height: 14px;
-		border-radius: 3px;
+		width: relativeValue(14px);
+		height: relativeValue(14px);
+		border-radius: relativeValue(3px);
 		background: $cf-color-chat-response-user-bg;
 		will-change: background;
 		margin-right: 10px;
 		margin-left: -10px;
+		margin-top: relativeValue(-1px); // We just need to slightly move it a bit up to align better
 		position: relative;
 		.conversational-form--enable-animation & {
 			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
@@ -40,13 +41,13 @@
 		&:after {
 			content: "";
 			position: absolute;
-			top: 2px;
-			left: 1px;
+			top: relativeValue(2px);
+			left: relativeValue(1px);
 			display: block;
-			width: 13px;
-			height: 10px;
-			background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTNweCIgaGVpZ2h0PSIxMHB4IiB2aWV3Qm94PSIwIDAgMTMgMTAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjkwLjAwMDAwMCwgLTUwNS4wMDAwMDApIiBmaWxsPSIjMDA3NkZGIj4KICAgICAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODQuMDAwMDAwLCAxMzYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxLjAwMDAwMCwgMjE2LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4OS4wMDAwMDAsIDEzOS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICAgICAgPHBvbHlnb24gcG9pbnRzPSIxNy41IDE4LjUgMTYgMjAgMjAgMjQgMjkgMTUuNSAyNy41IDE0IDIwIDIxIj48L3BvbHlnb24+CiAgICAgICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=");
-			background-size: 13px 10px;
+			width: relativeValue(13px);
+			height: relativeValue(10px);
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate(-290.000000, -505.000000)' fill='" + $cf-color-primary + "'%3e%3cg transform='translate(84.000000, 136.000000)'%3e%3cg transform='translate(1.000000, 216.000000)'%3e%3cg transform='translate(189.000000, 139.000000)'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+			background-size: relativeValue(13px) relativeValue(10px);
 			background-repeat: no-repeat;
 			transform-origin: 50% 50%;
 			will-change: transform;

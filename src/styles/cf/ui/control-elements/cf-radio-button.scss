@@ -16,13 +16,14 @@ cf-radio-button.cf-button {
 	cf-radio {
 		display: block;
 		float: left;
-		width: 14px;
-		height: 14px;
+		width: relativeValue(14px);
+		height: relativeValue(14px);
 		border-radius: 50%;
 		background: $cf-color-chat-response-user-bg;
 		will-change: background;
 		margin-right: 10px;
 		margin-left: -10px;
+		margin-top: relativeValue(-1px); // We just need to slightly move it a bit up to align better
 		position: relative;
 		.conversational-form--enable-animation & {
 			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
