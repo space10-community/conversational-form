@@ -213,11 +213,28 @@ cf-chat-response {
 		background-size: cover;
 		background-position: 50% 50%;
 		opacity: 0;
+		overflow: hidden;
 		transform-origin: 50% 50%;
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
 		.conversational-form--enable-animation & {
 			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25, opacity $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25;
+		}
+
+		// Centered text, e.g. initials.
+		> span {
+			display: block;
+			line-height: relativeValue(24px);
+			text-align: center;
+			font-weight: bold;
+			font-size: $cf-base-font-size * .8;
+
+			&[length="1"] {
+				font-size: $cf-base-font-size * 1.6;
+			}
+			&[length="3"] {
+				font-size: $cf-base-font-size * .66;
+			}
 		}
 	}
 	
