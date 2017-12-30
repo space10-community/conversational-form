@@ -6,7 +6,7 @@
 [**Learn why we did it**](https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq)
 </p>
 <p align="center">
-[**Explore Conversational Form docs »**](https://space10-community.github.io/conversational-form/docs/0.9.6/)
+[**Explore Conversational Form docs »**](https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/)
 </p>
 <p align="center">
 ![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/images/readme-cf.gif)
@@ -17,7 +17,7 @@
 Include ConversationalForm in your page:
 
 ```html
-<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/{{nextVersion}}/conversational-form.min.js" crossorigin></script>
 ```
 Or download the latest release:
 - Clone the repo: ````git clone https://github.com/space10-community/conversational-form.git````
@@ -33,7 +33,7 @@ ConversationalForm will automatically look through the DOM for a form element wi
 
 [jsbin](https://jsbin.com/vopuxukaze/edit?html,js,output)
 
-Read the [Getting started](https://space10-community.github.io/conversational-form/docs/0.9.6/getting-started/) page for information on the framework contents, options, templates and examples and more.
+Read the [Getting started](https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/getting-started/) page for information on the framework contents, options, templates and examples and more.
 
 ## Status
 [![npm version](https://img.shields.io/npm/v/conversational-form.svg)](https://www.npmjs.com/package/conversational-form)
