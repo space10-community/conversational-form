@@ -89,7 +89,7 @@ namespace cf {
 		public static illustrateAppFlow: boolean = true;
 		public static suppressLog: boolean = true;
 
-		private cdnPath: string = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
+		private cdnPath: string = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
