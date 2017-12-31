@@ -9,7 +9,7 @@
 [**Explore Conversational Form docs »**](https://space10-community.github.io/conversational-form/docs/0.9.70/)
 </p>
 <p align="center">
-![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/assets/readme-cf.gif)
+![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif)
 </p>
 
 ## Quick Start
