@@ -63,21 +63,21 @@ namespace cf {
 		}
 
 		private onDomElementChange(event: any){
-			console.log("...onDomElementChange");
+			if(!ConversationalForm.suppressLog) console.log("...onDomElementChange");
 
 			var reader: FileReader = new FileReader();
 			this._files = (<HTMLInputElement> this.referenceTag.domElement).files;
 
 			reader.onerror = (event: any) => {
-				console.log("onerror", event);
+				if(!ConversationalForm.suppressLog) console.log("onerror", event);
 			}
 			reader.onprogress = (event: ProgressEvent) => {
-				console.log("onprogress", event);
+				if(!ConversationalForm.suppressLog) console.log("onprogress", event);
 
 				this.progressBar.style.width = ((event.loaded / event.total) * 100) + "%";
 			}
 			reader.onabort = (event: any) => {
-				console.log("onabort", event);
+				if(!ConversationalForm.suppressLog) console.log("onabort", event);
 			}
 			reader.onloadstart = (event: any) => {
 				// check for file size

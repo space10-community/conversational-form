@@ -45,7 +45,7 @@ namespace cf {
 
 		public set disabled(value: boolean){
 			const hasChanged: boolean = this._disabled != value;
-			console.log('option hasChanged', value);
+			if(!ConversationalForm.suppressLog) console.log('option hasChanged', value);
 			
 			if(hasChanged){
 				this._disabled = value;
@@ -225,7 +225,7 @@ namespace cf {
 			this.el.setAttribute("error", "");
 			this.disabled = true;
 			// cf-error
-			this.inputElement.setAttribute("placeholder", dto.errorText || this._currentTag.errorMessage);
+			this.inputElement.setAttribute("placeholder", dto.errorText || (this._currentTag ? this._currentTag.errorMessage : ""));
 			clearTimeout(this.errorTimer);
 
 			// remove loading class
@@ -233,7 +233,7 @@ namespace cf {
 
 			this.errorTimer = setTimeout(() => {
 				this.disabled = false;
-				console.log('option, disabled 1', );
+				if(!ConversationalForm.suppressLog) console.log('option, disabled 1', );
 				this.el.removeAttribute("error");
 				this.inputElement.value = this.inputElement.getAttribute("data-value");
 				this.inputElement.setAttribute("data-value", "");
@@ -376,7 +376,7 @@ namespace cf {
 		private onControlElementProgressChange(event: CustomEvent){
 			const status: string = event.detail;
 			this.disabled = status == ControlElementProgressStates.BUSY;
-			console.log('option, disabled 2', );
+			if(!ConversationalForm.suppressLog) console.log('option, disabled 2', );
 		}
 
 		private buildControlElements(tags: Array<ITag>){

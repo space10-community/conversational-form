@@ -1,10 +1,13 @@
 {
   "name": "space10",
   "version": "0.0.0",
-  "dependencies": {
-    "gulp": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "bootstrap": "4.0.0-beta.2",
+    "font-awesome": "^4.7.0",
+    "git-rev": "^0.2.1",
+    "gulp": "*",
+    "gulp-autoprefixer": "^4.0.0",
     "gulp-bower": "*",
     "gulp-changed": "*",
     "gulp-clean-css": "^3.0.2",
@@ -15,13 +18,13 @@
     "gulp-notify": "*",
     "gulp-prompt": "*",
     "gulp-rename": "^1.2.2",
-    "gulp-stylus": "*",
+    "gulp-sass": "^3.1.0",
     "gulp-sync": "^0.1.4",
+    "gulp-twig": "^1.1.1",
     "gulp-typescript": "*",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "*",
-    "nib": "*",
-    "rupture": "*",
+    "prismjs": "^1.9.0",
     "stream": "*",
     "typescript": "*"
   }
