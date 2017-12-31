@@ -1,0 +1,298 @@
+@import "../../_cf-variables";
+
+.conversational-form.done {
+	cf-chat-response {
+		pointer-events: none;
+	}
+}
+
+cf-chat-response {
+	display: table;
+	max-width: 80%;
+	@media (min-width: $cf-breakpoint-medium) {
+		max-width: 50%;
+	}
+	min-width: 120px;
+	width: auto;
+	position: relative;
+	backface-visibility: hidden;
+	padding-left: calc(#{$cf-avatar-area} + 10px);
+	padding-top: 16px;
+	color: $cf-color-chat-response-default-text;
+	margin-left: 0px;
+	margin-right: auto;
+	word-break: break-all;
+
+	&.can-edit {
+		cursor: pointer;
+
+		&:hover {
+			color: darken($cf-color-chat-response-default-text, 25%);
+
+			text > p {
+				background: lighten($cf-color-chat-response-user-bg, 50%);
+			}
+		}
+	}
+
+	&.robot {
+		text > p {
+			opacity: 0;
+			will-change: opacity;
+			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
+			&.show {
+				opacity: 1;
+			}
+		}
+	}
+
+	&.user {
+		margin-right: 0px;
+		margin-left: auto;
+		padding-left: 0;
+		padding-right: calc(#{$cf-avatar-area} + 10px);
+		color: $cf-color-chat-response-user-text;
+
+		thumb {
+			left: auto;
+			right: 0px;
+		}
+		
+		text {
+			transform-origin: 100% 0%;
+			transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+
+			> p {
+				background: $cf-color-chat-response-user-bg;
+				border-radius: $cf-chat-response-border-radius 0px $cf-chat-response-border-radius $cf-chat-response-border-radius;
+				margin-right: 0px;
+				margin-left: auto;
+			}
+		}
+
+		&.peak-thumb {
+			thumb {
+				transform: scale(1, 1) translateY(0px);
+				opacity: 1;
+				.conversational-form--enable-animation & {
+					transition-delay: 0.2s, 0.2s, 0.2s;
+				}
+			}
+		}
+	}
+
+	&.disabled {
+		pointer-events: none;
+		color: lighten($cf-color-chat-response-default-text, 25%);
+
+		text {
+			background: lighten($cf-color-chat-response-user-bg, 50%);
+		}
+	}
+
+	&[thinking] {
+		text thinking {
+			display: block;
+		}
+	}
+
+	text {
+		user-select: none;
+		display: block;
+		overflow: hidden;
+		position: relative;
+		min-height: 40px;
+		opacity: 0;
+		white-space: pre-wrap;
+		word-break: normal;
+		transform-origin: 0% 0%;
+		transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+		will-change: transform, opacity, background;
+		backface-visibility: hidden;
+		height: auto;
+		
+		> div {
+			display: inline-block;
+		}
+		
+		thinking {
+			@for $num from 1 through 3 {
+				span:nth-child(#{$num}) {
+					animation-delay: ($num * (1 - (1 / 3))s);
+				}
+			}
+		}
+
+		strong {
+			font-weight: 900;
+		}
+
+		> p {
+			margin: 0px;
+			padding: 0px;
+			background: $cf-color-chat-response-default-bg;
+			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
+			display: table; // wrap container around text;
+
+			// border radius rules
+			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
+			
+			&:not(:only-child) {
+				border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius 0px;
+
+				&:first-child {
+					border-radius: $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius 0px;
+				}
+				
+				&:last-child {
+					border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
+				}
+
+				&:not(:first-child) {
+					margin-top: relativeValue(3px);
+				}
+			}
+			//--------------------
+
+			> img {
+				max-width: 140px;
+				padding-bottom: relativeValue(5px);
+				width: 100%;
+				height: auto;
+				display: block;
+				margin-bottom: relativeValue(4px);
+			}
+		}
+
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 50%;
+			left: relativeValue(20px);
+			transform: translateY(-50%);
+			padding-right: relativeValue(20px);
+		}
+		
+		thinking {
+			position: relative;
+			display: table;
+			user-select: none;
+			display: none;
+			transform-origin: 0% 50%;
+			transform: scale(1.5);
+
+			@for $num from 1 through 3 {
+				span:nth-child(#{$num}) {
+					animation: dot-fade 1s linear ($num * (1 / 3)s) infinite;
+				}
+			}
+		}
+
+		svg.cf-icon-file {
+			width: relativeValue(10px);
+			height: auto;
+			display: inline-block;
+			margin-right: relativeValue(7px);
+			g {
+				fill: $cf-color-primary;
+			}
+		}
+	}
+
+	thumb {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		display: block;
+		width: $cf-avatar-area;
+		height: $cf-avatar-area;
+		border-radius: 50%;
+		background: $cf-avatar-background;
+		background-size: cover;
+		background-position: 50% 50%;
+		opacity: 0;
+		overflow: hidden;
+		transform-origin: 50% 50%;
+		transform: scale(0.001, 0.001) translateY(50px);
+		will-change: transform, opacity;
+		.conversational-form--enable-animation & {
+			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25, opacity $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25;
+		}
+
+		// Centered text, e.g. initials.
+		> span {
+			display: block;
+			line-height: relativeValue(24px);
+			text-align: center;
+			font-weight: bold;
+			font-size: $cf-base-font-size * .8;
+
+			&[length="1"] {
+				font-size: $cf-base-font-size * 1.6;
+			}
+			&[length="3"] {
+				font-size: $cf-base-font-size * .66;
+			}
+		}
+	}
+	
+	&.show {
+		text {
+			.conversational-form--enable-animation & {
+				transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
+			}
+
+			transform: translateY(0px) translateX(0px) scale(1, 1);
+			opacity: 1;
+			.conversational-form--enable-animation & {
+				transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
+				transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
+			}
+
+			&[value-added] {
+				will-change: auto;
+			}
+		}
+	}
+	
+	&.show.robot {
+		thumb {
+			transform: scale(1, 1) translateY(0px);
+			opacity: 1;
+			.conversational-form--enable-animation & {
+				transition-delay: 0.2s, 0.2s, 0.2s;
+			}
+		}
+	}
+}
+@keyframes dot-fade {
+	0% {
+		opacity: 1;
+	}
+	15.1111% {
+		opacity: 0;
+	}
+	33.333% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(1.05, 1.05);
+		opacity: 0.85;
+	}
+	100% {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+}

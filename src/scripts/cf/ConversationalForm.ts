@@ -71,6 +71,9 @@ namespace cf {
 
 		// optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses
 		userInterfaceOptions?:IUserInterfaceOptions;
+
+		// optional, Whenther to suppress console.log, default true
+		suppressLog?:boolean;
 	}
 
 	// CUI formless options
@@ -80,12 +83,13 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		public version: string = "0.9.6";
+		public version: string = "0.9.70";
 
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
+		public static suppressLog: boolean = true;
 
-		private cdnPath: string = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
+		private cdnPath: string = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
 		/**
 		 * createId
 		 * Id of the instance, to isolate events
@@ -134,8 +138,11 @@ namespace cf {
 
 			this.cdnPath = this.cdnPath.split("{version}").join(this.version);
 
-			console.log('Conversational Form > version:', this.version);
-			console.log('Conversational Form > options:', options);
+			if(typeof options.suppressLog === 'boolean')
+				ConversationalForm.suppressLog = options.suppressLog;
+
+			if(!ConversationalForm.suppressLog) console.log('Conversational Form > version:', this.version);
+			if(!ConversationalForm.suppressLog) console.log('Conversational Form > options:', options);
 
 			window.ConversationalForm[this.createId] = this;
 
@@ -214,8 +221,7 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			Helpers.setEmojiLib();
-
+			
 			if(this.loadExternalStyleSheet){
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
@@ -343,7 +349,7 @@ namespace cf {
 
 		public start(){
 			this.userInput.disabled = false;
-			console.log('option, disabled 3', );
+			if(!ConversationalForm.suppressLog) console.log('option, disabled 3', );
 			this.userInput.visible = true;
 
 			this.flowManager.start();
@@ -615,9 +621,9 @@ namespace cf {
 
 			if(ConversationalForm.illustrateAppFlow){
 				const highlight: string = "font-weight: 900; background: "+(type == "receive" ? "#e6f3fe" : "pink")+"; color: black; padding: 0px 5px;";
-				console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c"+(<any> classRef.constructor).name, "font-weight: 900;",highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
+				if(!ConversationalForm.suppressLog) console.log("%c** event flow: %c" + eventType + "%c flow type: %c" + type + "%c from: %c"+(<any> classRef.constructor).name, "font-weight: 900;",highlight, "font-weight: 400;", highlight, "font-weight: 400;", highlight);
 				if(detail)
-					console.log("** event flow detail:", detail);
+					if(!ConversationalForm.suppressLog) console.log("** event flow detail:", detail);
 			}
 		}
 

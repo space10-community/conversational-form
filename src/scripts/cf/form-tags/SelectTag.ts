@@ -14,6 +14,10 @@ namespace cf {
 			return "select";
 		}
 
+		public get name (): string{
+			return this.domElement && this.domElement.hasAttribute("name") ? this.domElement.getAttribute("name") : this.optionTags[0].name;
+		}
+
 		public get value (): string | Array<string> {
 			return this._values;
 		}

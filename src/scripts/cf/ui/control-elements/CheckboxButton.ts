@@ -37,7 +37,7 @@ namespace cf {
 			return `<cf-button class="cf-button cf-checkbox-button `+(this.referenceTag.label.trim().length == 0 ? "no-text" : "")+`" checked=`+(isChecked ? "checked" : "")+`>
 				<div>
 					<cf-checkbox></cf-checkbox>
-					` + this.referenceTag.label + `
+					<span>` + this.referenceTag.label + `</span>
 				</div>
 			</cf-button>
 			`;

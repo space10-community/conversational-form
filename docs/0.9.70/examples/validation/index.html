@@ -1,0 +1,257 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Different validation strategies | Conversational Form</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="/docs/0.9.6/assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/docs/0.9.6/css/style.css">
+	
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	<script src="/docs/0.9.6/assets/prism.js"></script>
+
+	<script src="/docs/0.9.6/js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	</head>
+<body>
+	<header class="navbar navbar-expand flex-column flex-md-row cfdoc-navbar">
+  <a class="navbar-brand mr-0 mr-md-2" href="/docs/0.9.6/getting-started/" aria-label="Bootstrap">
+    CONVERSATIONAL FORM
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+
+      <li class="nav-item">
+        <a class="nav-link " href="/docs/0.9.6/getting-started/">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">SPACE10</a>
+      </li>
+
+      
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfddoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        v0.9.6
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfddoc-versions">
+                	<a class="dropdown-item active" href="/docs/0.9.6/">v0.9.6</a>
+              </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link p-2" href="https://github.com/twbs/bootstrap" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg class="navbar-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 499.36" focusable="false"><title>GitHub</title><path d="M256 0C114.64 0 0 114.61 0 256c0 113.09 73.34 209 175.08 242.9 12.8 2.35 17.47-5.56 17.47-12.34 0-6.08-.22-22.18-.35-43.54-71.2 15.49-86.2-34.34-86.2-34.34-11.64-29.57-28.42-37.45-28.42-37.45-23.27-15.84 1.73-15.55 1.73-15.55 25.69 1.81 39.21 26.38 39.21 26.38 22.84 39.12 59.92 27.82 74.5 21.27 2.33-16.54 8.94-27.82 16.25-34.22-56.84-6.43-116.6-28.43-116.6-126.49 0-27.95 10-50.8 26.35-68.69-2.63-6.48-11.42-32.5 2.51-67.75 0 0 21.49-6.88 70.4 26.24a242.65 242.65 0 0 1 128.18 0c48.87-33.13 70.33-26.24 70.33-26.24 14 35.25 5.18 61.27 2.55 67.75 16.41 17.9 26.31 40.75 26.31 68.69 0 98.35-59.85 120-116.88 126.32 9.19 7.9 17.38 23.53 17.38 47.41 0 34.22-.31 61.83-.31 70.23 0 6.85 4.61 14.81 17.6 12.31C438.72 464.97 512 369.08 512 256.02 512 114.62 397.37 0 256 0z" fill="currentColor" fill-rule="evenodd"></path></svg>
+
+      </a>
+    </li>
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/twbs/bootstrap/archive/v4.0.0-beta.2.zip">Download</a>
+</header>
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+				
+								<nav class="cfdoc-links">
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/getting-started/">Getting started</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/options/">Options</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/appearance/">Apperance</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/public-api/">Public API</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/functionality/events/">Events</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/functionality/">Functionality</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/integration/">Integration</a>
+													</div>
+																	<div class="toc-item">
+							<a class="toc-link" href="/docs/0.9.6/localization/">Localization</a>
+													</div>
+																														<div class="toc-item active">
+							<a class="toc-link" href="/docs/0.9.6/examples/google-analytics-event-tracking/">Event tracking using Google Analytics</a>
+													</div>
+																														<div class="toc-item active">
+							<a class="toc-link" href="/docs/0.9.6/examples/">Examples</a>
+															<ul class="nav cfdoc-sidenav">
+																	<li>
+										<a href="/docs/0.9.6/examples/feature-cf-placeholder/">Custom placeholder text</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/feature-cf-questions/">Custom questions</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/dynamic-questions/">Dynamic questions</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/exit-message/">Exit message</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/formless/">Form geneted from JSON (formless)</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/image-answers/">Image answers</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/multi-form/">Multiple forms</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/overwrite-styles/">Overwrite CF styles</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/submit-callback/">Submit callback</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/validation/">Validation</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/voice-input/">Voice Control (1/2)</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/voice-input-output/">Voice input and output (2/2)</a>
+									</li>
+																	<li>
+										<a href="/docs/0.9.6/examples/welcome-message/">Welcome message</a>
+									</li>
+											
+								</ul>
+													</div>
+									</nav>
+				<hr>
+				<small class="text-muted">
+					<a href="/docs/0.9.6/credits/">Credits and License</a>
+				</small>
+
+				
+
+			</div>
+													<main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5" role="main">
+				    <h1><a href="#reactjs" id="reactjs" class="anchor"></a>Different validation strategies</h1>
+    
+    <div class="row cfdoc-example-row">
+    	<div class="col-md-12 col-lg-6">
+            <p>Simple questions about Sherlock Holmes.</p>
+    		
+            <p>The form:</p>
+            <form id="form">
+
+                <fieldset cf-questions="What is sherlock holmes gender?">
+                    <label for="male">Male</label>
+                    <input type="radio" name="gender" id="male" value="male"><br>
+
+                    <label for="female">Female</label>
+                    <input type="radio" name="gender" id="female" value="female"><br>
+
+                    <label for="hen">Hen</label>
+                    <input type="radio" name="gender" id="hen" value="hen"><br><br>
+                </fieldset>
+
+                <label for="firstname">
+                    What is sherlocks holmes firstname?
+                </label>
+
+                <input 
+                    id="firstname"
+                    name="firstname"
+                    required 
+                    cf-error="Check flowStepCallback for hints"
+                    />
+
+                <input
+                    type="text"
+                    id="billing:firstname"
+                    name="lastname"
+
+                    cf-validation="window.lastnameCheck"
+                    cf-questions="Put on the Sherlock Holmes hat to get past this step, and look at the custom validation method window.lastnameCheck"
+                    cf-error="This value goes through the window.javascript method called lastnameCheck, check that for guide.."
+                    />
+            
+            </form>
+
+    	</div>
+    	<div class="col-md-12 col-lg-6 cfdoc-example">
+    		<div id="cf-context" role="cf-context" cf-context></div>
+    	</div>
+
+        <script>
+            var lastnameCheck = function(dto, success, error){
+                console.log("testValidation, dto:", dto, success, error);
+                if(dto.text.toLowerCase().indexOf("holmes") != -1)
+                    return success();
+                return error();
+            };
+
+            window.onload = function(){
+                var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+                    formEl: document.getElementById("form"),
+                    context: document.getElementById("cf-context"),
+                    flowStepCallback: function(dto, success, error){
+                        
+                        if(dto.tag.id == "firstname"){
+                            if(dto.tag.value.toLowerCase() === "sherlock"){
+                                return success();
+                            }else{
+                                return error();
+                            }
+                            //conversationalForm.stop("Stopping form, but added value");
+                        }else if(dto.tag.name == "gender"){
+                            if(dto.tag.value[0] === "male"){
+                                return success();
+                            }else{
+                                return error();
+                            }
+                        }
+
+                        return success();
+                    },
+                    submitCallback: function(){
+                        // remove Conversational Form
+
+                        alert("Custom submit callback reached, removing Conversational Form, see markup of this file")
+                    }
+                });
+            };
+        </script>
+
+    </div>
+	
+			</main>
+			
+					</div>
+
+			</body>
+	</html>

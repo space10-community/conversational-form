@@ -1,0 +1,30 @@
+@import "../_cf-variables";
+
+cf-info {
+	position: absolute;
+	pointer-events: none;
+	z-index: 0;
+	left: 2px;
+	top: 0px;
+	height: auto;
+	width: 100%;
+	text-overflow: ellipsis;
+	padding-right: 20px;
+	overflow: hidden;
+	display: block;
+	transform: translateY(-115%);
+	color: $cf-color-input-text;
+	opacity: 0;
+	will-change: opacity;
+
+	&.show {
+		opacity: 1;
+		.conversational-form--enable-animation & {
+			transition: opacity $cf-anim-time $cf-ease-easeOut;
+		}
+	}
+
+	strong {
+		font-weight: 900;
+	}
+}

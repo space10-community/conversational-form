@@ -132,9 +132,18 @@ namespace cf {
 		}
 
 		public updateThumbnail(src: string){
-			this.image = src;
+
 			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
-			thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+
+			// Check if src is base64/url or string
+			if(src.indexOf("data:") === 0 || src.indexOf("http") === 0 || src.indexOf("//") === 0){
+				this.image = src;
+				thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+			} else {
+				const thumbElSpan: HTMLElement = <HTMLElement> thumbEl.getElementsByTagName("span")[0];
+				thumbElSpan.innerHTML = src;
+				thumbElSpan.setAttribute("length", src.length.toString());
+			}
 		}
 
 		public setLinkToOtherReponse(response: ChatResponse){
@@ -155,8 +164,6 @@ namespace cf {
 				}
 
 				innerResponse = newStr;
-			}else{
-				innerResponse = Helpers.emojify(innerResponse)
 			}
 
 			if(this.responseLink && this.isRobotResponse){
@@ -360,7 +367,7 @@ namespace cf {
 		// template, can be overwritten ...
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotResponse ? "robot" : "user") + `">
-				<thumb></thumb>
+				<thumb><span></span></thumb>
 				<text></text>
 			</cf-chat-response>`;
 		}

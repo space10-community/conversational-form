@@ -1,0 +1,51 @@
+@import "../../_cf-variables";
+
+cf-chat {
+	display: block;
+	width: 100%;
+	height: auto;
+	min-height: 100%; // to play nice with flexbox;
+	overflow: visible;
+	// flow children to bottom
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: flex-end;
+	align-items: baseline;
+	margin-bottom: 20px;
+
+	
+	scrollable {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 100%;
+		min-height: 40px;
+		overflow-y: auto;
+		padding-bottom: 20px; // allow for bounce;
+		padding-top: 40px; // allow for out of gradient scroll;
+		&::-webkit-scrollbar {
+			width: 4px;
+			height: 4px;
+			-webkit-appearance: none;
+			-webkit-border-radius: 100px;
+		}
+		&::-webkit-scrollbar-track {
+			background: white;
+			-webkit-border-radius: 100px;
+		}
+		&::-webkit-scrollbar-thumb:vertical {
+			background: $cf-color-chat-response-user-bg;
+			-webkit-border-radius: 100px;
+		}
+		&::-webkit-scrollbar-thumb {
+			background: white;
+			border: none;
+			-webkit-border-radius: 100px;
+		}
+		&::-webkit-scrollbar-thumb:vertical:active {
+			background: darken($cf-color-chat-response-user-bg, 20%);
+			border: none;
+			-webkit-border-radius: 100px;
+		}
+	}
+}

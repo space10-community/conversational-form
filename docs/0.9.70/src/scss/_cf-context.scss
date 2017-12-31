@@ -1,0 +1,31 @@
+div[role="cf-context"] {
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	@media (min-width: 992px) {
+		min-height: 400px;
+	}
+
+	.cfdoc-example-row {
+		.cfdoc-example {
+			height: 90vh;
+			border-left: 1px solid #f3f3f3;
+			@media (min-width: 992px) {
+				height: 600px;
+			}
+		}
+	}
+}
+
+.cf-context-functionality {
+	height: 80vh;
+	width: 100%;
+	@media (min-width: 992px) {
+		height: 400px;
+		width: 480px;
+	}
+}
+
+div.conversational-form {
+	border: 1px solid #f6f6f6;
+}

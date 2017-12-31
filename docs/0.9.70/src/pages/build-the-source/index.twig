@@ -1,0 +1,38 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Build the source' %}
+{% set page_slug = '/build-the-source/' %}
+
+
+{% block page %}
+    <h1 id="build">Build the source</h1>
+    
+	<h2 id="npm">NPM</h2>
+	<pre class="command-line language-bash"><code class="language-terminal">cd gulp-tasks
+$ npm install</code></pre>
+
+	<h2 id="gulp">Gulp</h2>
+	<p>Install local gulp from project root</p>
+	<pre class="command-line language-bash"><code class="language-terminal">npm install gulp</code></pre>
+
+	<h2 id="typescript-typings">Typescript Typings</h2>
+	<a href="https://github.com/typings/typings" target="_blank">Install Typings</a>
+	<pre class="command-line language-bash"><code class="language-terminal">cd src/scripts
+typings install</code></pre>
+
+	<h2 id="gulp-tasks">Gulp tasks</h2>
+	<h3>Build and development</h3>
+	<p>Watch task, watches .styl, .ts, .jpg, .png, .gif, compiles to /build</p>
+	<p>Compiles (same as build) and watches files.</p>
+	<pre class="command-line language-bash"><code class="language-terminal">gulp</code></pre>
+
+	<h3 id="distribution">Distribution</h3>
+	<p>Compiles build files, to run locally, runs docs, examples, conversational form scripts and styles and finally runs through Karma tests.</p>
+	<pre class="command-line language-bash"><code class="language-terminal">gulp dist</code></pre>
+
+	<h2 id="tests">Tests / Unit tests</h2>
+	<p>We are using <a href="https://travis-ci.org/" target="_blank">Travis</a> and <a href="http://karma-runner.github.io/">Karma</a> to run tests.</p>
+	<pre class="command-line language-bash"><code class="language-terminal">karma start</code></pre>
+	<p>this will run through the tests defined in .tests, after starting karma, you can access http://localhost:9876 to view and modify the tests-cases.</p>
+
+{% endblock %}

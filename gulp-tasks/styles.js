@@ -1,6 +1,3 @@
-var rupture = require('rupture');
-var nib = require('nib');
-var stylus = require('gulp-stylus');
 var flatten = require('gulp-flatten');
 var changed = require('gulp-changed');
 var gutil = require('gulp-util');
@@ -9,6 +6,9 @@ var notify = require("gulp-notify");
 var concat = require('gulp-concat');
 var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
+
+const sass = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
 
 function swallowError(error) {
 	// If you want details of the error in the console
@@ -24,6 +24,7 @@ function swallowError(error) {
 /**
  * form style tasks
  */
+
 global.gulp.task('stylus-form', function() {
 	var src = [
 		global.srcFolder + "/styles/**/*.styl",
@@ -38,7 +39,7 @@ global.gulp.task('stylus-form', function() {
 			extension: '.css'
 		}))
 		.pipe(stylus({
-			use: [nib(), rupture()],
+			use: [nib()],
 			errors: true
 		}))
 		.on('error', swallowError)
@@ -49,7 +50,8 @@ global.gulp.task('stylus-form', function() {
 	return stream;
 });
 
-global.gulp.task('styles-form-build', ['stylus-form'], function(){
+
+global.gulp.task('sass-form-build', ['sass-form'], function(){
 	var src = [
 		global.buildFolder + "cf/cf.css",
 		global.buildFolder + "cf/ui/control-elements/cf-control-elements.css",
@@ -81,55 +83,30 @@ global.gulp.task('styles-form-build', ['stylus-form'], function(){
 });
 
 
-
 /**
- * /docs style tasks
+ * SCSS
  */
-global.gulp.task('stylus-docs', function(){
+global.gulp.task('sass-form', function () {
 	var src = [
-		global.srcFolder + "../docs/src/**/*.styl",
-		"!" + global.srcFolder + "../docs/src/**/_cf-docs-variables.styl",
+		global.srcFolder + "/styles/**/*.scss",
+		"!" + global.srcFolder + "styles/mixins/_cf-mixins.scss",
+		"!" + global.srcFolder + "/styles/**/_*-variables.scss"
 	]
-	var dst = global.srcFolder + "../docs/build";
-
-	var stream = global.gulp.src(src)
-		.pipe(changed(dst, {
-			extension: '.css'
-		}))
-		.pipe(stylus({
-			use: [nib(), rupture()],
-			errors: true
-		}))	
-		.pipe(global.gulp.dest(dst));
+	var dst = global.buildFolder;
 	
-	return stream;
-});
-
-global.gulp.task('styles-docs-build', ['stylus-docs'], function(){
-	var src = [
-		global.srcFolder + "../docs/build/styles/**/*.css",
-		global.srcFolder + "../docs/build/styles/cf/docs.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/cf-theming.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/section-cf-context.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/section-form.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/section-info.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/sticky-menu.css",
-		global.srcFolder + "../docs/build/styles/cf/ui/switch.css",
-		
-		"!" + global.srcFolder + "../docs/build/**/cf-theming.css",
-		"!" + global.srcFolder + "../docs/build/**/cf-docs-variables.css",
-		"!" + global.srcFolder + "../docs/build/conversational-form-docs.css",
-		"!" + global.srcFolder + "../docs/build/conversational-form-docs.min.css",
-	]
-	
-	var dst = global.srcFolder + "../docs/build";
-
 	var stream = global.gulp.src(src)
-		.pipe(concat('conversational-form-docs.css'))
-		.pipe(cleanCSS())
+		.pipe(sass().on('error', sass.logError))
+		.pipe(autoprefixer({ browsers: ['> 1%']}))
 		.pipe(global.gulp.dest(dst))
-		.pipe(rename({suffix: '.min'}))
-		.pipe(global.gulp.dest(dst));
-	
+		.pipe(livereload())
+		.pipe(notify("CSS compiled."));
+
 	return stream;
 });
+
+
+
+
+
+
+
