@@ -3,13 +3,13 @@
 **Turning web forms into conversations.** Conversational Form is an open-source concept by [SPACE10](https://www.space10.io) to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
 
 <p align="center">
-[**Learn why we did it**](https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq)
+	<a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq"><strong>Learn why we did it</strong></a>
 </p>
 <p align="center">
-[**Explore Conversational Form docs »**](https://space10-community.github.io/conversational-form/docs/0.9.70/)
+	<a href="https://space10-community.github.io/conversational-form/docs/0.9.70/"><strong>Explore Conversational Form docs »</strong></a>
 </p>
 <p align="center">
-![Quick demo](https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif)
+	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif" />
 </p>
 
 ## Quick Start
