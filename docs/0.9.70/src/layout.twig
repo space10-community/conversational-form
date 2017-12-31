@@ -8,7 +8,7 @@
 
 	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
 	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
-	<link rel="icon" href="/docs/{{nextVersion}}/assets/favicon.ico">
+	<link rel="icon" href="{{root_path}}assets/favicon.ico">
 
 	<link rel="publisher" href="http://space10.io/"/>
 
@@ -18,15 +18,21 @@
 	<meta name="twitter:creator" content="@space10_journal">
 	<meta name="twitter:title" content="Turning web forms into conversations"/>
 	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
-	<meta name="twitter:image" content="https://space10-community.github.io/docs/{{nextVersion}}/assets/share_img.jpg" />
+	<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/assets/share_img.jpg" />
 
 	<!-- Open Graph data -->
 	<meta property="og:title" content="Turning web forms into conversations"/>
 	<meta property="og:type" content="article"/>
-	<meta property="og:image" content="https://space10-community.github.io/docs/{{nextVersion}}/assets/share_img.jpg" />
+	<meta property="og:image" content="https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/assets/share_img.jpg" />
 
-	<link href="/docs/{{nextVersion}}/assets/prism.css" rel="stylesheet" />
-	<link rel="stylesheet" href="/docs/{{nextVersion}}/css/style.css">
+	{% if page_slug|split('/')|length == 4 %}
+		{% set root_path = "../../" %}
+	{% else %}
+		{% set root_path = "../" %}
+	{% endif %}
+
+	<link href="{{root_path}}assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="{{root_path}}css/style.css">
 	
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
 	<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
@@ -34,10 +40,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-	<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
-	<script src="/docs/{{nextVersion}}/assets/prism.js"></script>
-
-	<script src="/docs/{{nextVersion}}/js/documentation.js"></script>
+	<script src="{{root_path}}assets/prism.js"></script>
+	<script src="{{root_path}}js/documentation.js"></script>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
@@ -161,7 +165,7 @@
 							{% set _path = link.path %}
 						{% endif %}
 						<div class="toc-item{{ _classes }}">
-							<a class="toc-link" href="/docs/{{nextVersion}}{{_path}}">{{link.label}}</a>
+							<a class="toc-link" href="{{root_path}}{{_path[1:]}}">{{link.label}}</a>
 							{% if link.children and link.path in page_slug  %}
 								<ul class="nav cfdoc-sidenav">
 								{% for child in link.children %}
@@ -171,7 +175,7 @@
 										{% set _classes = "" %}
 									{% endif %}
 									<li>
-										<a class="{{_classes}}" href="/docs/{{nextVersion}}{{ child.path }}">{{ child.label }}</a>
+										<a class="{{_classes}}" href="{{root_path}}{{ child.path[1:] }}">{{ child.label }}</a>
 									</li>
 								{% endfor %}			
 								</ul>
