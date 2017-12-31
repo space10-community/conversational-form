@@ -326,26 +326,6 @@ var cf;
             var msie = ua.indexOf("MSIE ");
             return msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
         };
-        Helpers.setEmojiLib = function (lib, scriptSrc) {
-            if (lib === void 0) { lib = "emojify"; }
-            if (scriptSrc === void 0) { scriptSrc = "//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"; }
-            var head = document.head || document.getElementsByTagName("head")[0];
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.async = true;
-            script.defer = true;
-            script.onload = function () {
-                // we use https://github.com/Ranks/emojify.js as a standard
-                Helpers.emojilib = window[lib];
-                if (Helpers.emojilib) {
-                    Helpers.emojilib.setConfig({
-                        img_dir: "https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/",
-                    });
-                }
-            };
-            script.setAttribute("src", scriptSrc);
-            head.appendChild(script);
-        };
         Helpers.getValuesOfBars = function (str) {
             var strs = str.split("||");
             // TODO: remove single |
@@ -353,12 +333,6 @@ var cf;
             if (strs.length <= 1)
                 strs = str.split("|");
             return strs;
-        };
-        Helpers.emojify = function (str) {
-            if (Helpers.emojilib) {
-                str = Helpers.emojilib.replace(str);
-            }
-            return str;
         };
         Helpers.setTransform = function (el, transformString) {
             el.style["-webkit-transform"] = transformString;
@@ -388,7 +362,6 @@ var cf;
                 return false;
             }
         };
-        Helpers.emojilib = null;
         return Helpers;
     }());
     cf.Helpers = Helpers;
@@ -1583,6 +1556,7 @@ var cf;
     cf.ScrollController = ScrollController;
 })(cf || (cf = {}));
 
+/// <reference path="../logic/Helpers.ts"/>
 // namespace
 var cf;
 (function (cf) {
@@ -1621,6 +1595,7 @@ var cf;
                 "tel": "What's your phone number?",
                 "radio": "I need you to select one of these.",
                 "select": "Choose any of these options.",
+                "file": "Select a file to upload.",
                 "general": "General1||General2||General3.."
             };
             Dictionary.instance = this;
@@ -4626,9 +4601,17 @@ var cf;
             }
         };
         ChatResponse.prototype.updateThumbnail = function (src) {
-            this.image = src;
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
-            thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+            // Check if src is base64/url or string
+            if (src.indexOf("data:") === 0 || src.indexOf("http") === 0 || src.indexOf("//") === 0) {
+                this.image = src;
+                thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+            }
+            else {
+                var thumbElSpan = thumbEl.getElementsByTagName("span")[0];
+                thumbElSpan.innerHTML = src;
+                thumbElSpan.setAttribute("length", src.length.toString());
+            }
         };
         ChatResponse.prototype.setLinkToOtherReponse = function (response) {
             // link reponse to another one, keeping the update circle complete.
@@ -4645,9 +4628,6 @@ var cf;
                     newStr += "*";
                 }
                 innerResponse = newStr;
-            }
-            else {
-                innerResponse = cf.Helpers.emojify(innerResponse);
             }
             if (this.responseLink && this.isRobotResponse) {
                 // if robot, then check linked response for binding values
@@ -4820,7 +4800,7 @@ var cf;
         };
         // template, can be overwritten ...
         ChatResponse.prototype.getTemplate = function () {
-            return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb></thumb>\n\t\t\t\t<text></text>\n\t\t\t</cf-chat-response>";
+            return "<cf-chat-response class=\"" + (this.isRobotResponse ? "robot" : "user") + "\">\n\t\t\t\t<thumb><span></span></thumb>\n\t\t\t\t<text></text>\n\t\t\t</cf-chat-response>";
         };
         ChatResponse.THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
         return ChatResponse;
@@ -5402,8 +5382,8 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.6";
-            this.cdnPath = "https://cf-4053.kxcdn.com/conversational-form/{version}/";
+            this.version = "0.9.70";
+            this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
             this.preventAutoAppend = false;
@@ -5493,7 +5473,6 @@ var cf;
             configurable: true
         });
         ConversationalForm.prototype.init = function () {
-            cf_1.Helpers.setEmojiLib();
             if (this.loadExternalStyleSheet) {
                 // not in development/examples, so inject production css
                 var head = document.head || document.getElementsByTagName("head")[0];
