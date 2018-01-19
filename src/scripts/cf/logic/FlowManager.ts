@@ -183,14 +183,15 @@ namespace cf {
 						let tagCondition: ConditionalValue = tagConditions[j];
 						// only check tags where tag id or name is defined
 						const tagName: string = (tag.name || tag.id || "").toLowerCase();
-						if(tagName !== "" && "cf-conditional-"+tagName === tagCondition.key.toLowerCase()){
+						if(tagName !== "" && ("cf-conditional-"+tagName === tagCondition.key.toLowerCase() || "cf-or-conditional-"+tagName === tagCondition.key.toLowerCase())){
 							// key found, so check condition
 							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
-							let areConditionsMeet: boolean = Tag.testConditions(flowTagValue, tagCondition);
-							if(areConditionsMeet){
+							let areConditionsMet: boolean = Tag.testConditions(flowTagValue, tagCondition);
+							let isOrCondition: boolean = "cf-or-conditional-"+tagName === tagCondition.key.toLowerCase();
+							if(areConditionsMet){
 								this.activeConditions[tagName] = tagConditions;
-								// conditions are meet
-								if(++numConditionsFound == tagConditions.length){
+								// conditions are met
+								if(++numConditionsFound == tagConditions.length || isOrCondition){
 									return true;
 								}
 							}

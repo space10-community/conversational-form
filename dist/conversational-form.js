@@ -2025,7 +2025,7 @@ var cf;
             }
             for (var i = 0; i < this.conditionalTags.length; i++) {
                 var condition = this.conditionalTags[i];
-                if ("cf-conditional-" + tagName.toLowerCase() === condition.key.toLowerCase()) {
+                if ("cf-conditional-" + tagName.toLowerCase() === condition.key.toLowerCase() || "cf-or-conditional-" + tagName.toLowerCase() === condition.key.toLowerCase()) {
                     return true;
                 }
             }
@@ -2097,7 +2097,7 @@ var cf;
                 for (var key in keys) {
                     if (keys.hasOwnProperty(key)) {
                         var attr = keys[key];
-                        if (attr && attr.name && attr.name.indexOf("cf-conditional") !== -1) {
+                        if (attr && attr.name && (attr.name.indexOf("cf-conditional") !== -1 || attr.name.indexOf("cf-or-conditional") !== -1)) {
                             // conditional found
                             var _conditionals = [];
                             // TODO: when && use to combine multiple values to complete condition.
@@ -5235,14 +5235,15 @@ var cf;
                         var tagCondition = tagConditions[j];
                         // only check tags where tag id or name is defined
                         var tagName = (tag.name || tag.id || "").toLowerCase();
-                        if (tagName !== "" && "cf-conditional-" + tagName === tagCondition.key.toLowerCase()) {
+                        if (tagName !== "" && ("cf-conditional-" + tagName === tagCondition.key.toLowerCase() || "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase())) {
                             // key found, so check condition
                             var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
-                            var areConditionsMeet = cf.Tag.testConditions(flowTagValue, tagCondition);
-                            if (areConditionsMeet) {
+                            var areConditionsMet = cf.Tag.testConditions(flowTagValue, tagCondition);
+                            var isOrCondition = "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
+                            if (areConditionsMet) {
                                 this.activeConditions[tagName] = tagConditions;
-                                // conditions are meet
-                                if (++numConditionsFound == tagConditions.length) {
+                                // conditions are met
+                                if (++numConditionsFound == tagConditions.length || isOrCondition) {
                                     return true;
                                 }
                             }

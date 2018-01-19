@@ -355,7 +355,7 @@ namespace cf {
 
 			for (var i = 0; i < this.conditionalTags.length; i++) {
 				var condition: ConditionalValue = this.conditionalTags[i];
-				if("cf-conditional-"+tagName.toLowerCase() === condition.key.toLowerCase()){
+				if("cf-conditional-"+tagName.toLowerCase() === condition.key.toLowerCase() || "cf-or-conditional-"+tagName.toLowerCase() === condition.key.toLowerCase()){
 					return true;
 				}
 				
@@ -445,7 +445,7 @@ namespace cf {
 				for (var key in keys) {
 					if (keys.hasOwnProperty(key)) {	
 						let attr: any = keys[key];
-						if(attr && attr.name && attr.name.indexOf("cf-conditional") !== -1){
+						if(attr && attr.name && (attr.name.indexOf("cf-conditional") !== -1 || attr.name.indexOf("cf-or-conditional") !== -1 )){
 							// conditional found
 							let _conditionals: Array<string | RegExp> = [];
 							
