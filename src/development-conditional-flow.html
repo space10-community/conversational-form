@@ -48,12 +48,22 @@
 					<label for="intro-disabled">Disabled..</label>
 				</fieldset>
 
+				<fieldset id="test-please" cf-questions="Please, please, please?">
+					<label for="please-ok">OK!
+						<input cf-conditional-cfc-intro="no" type="radio" name="cfc-please" id="please-yes" value="yes">
+					</label>
+
+					<input cf-conditional-cfc-intro="no" type="radio" name="cfc-please" id="please-no" value="no">
+					<label for="please-no">No means NO!</label>
+				</fieldset>
+
 				<input
 					type="text"
 					id="gr8"
 					name="cfc-step1"
-					cf-questions="{test-value}! Let's goo! please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
-					cf-conditional-cfc-intro="yes" />
+					cf-questions="Yes! Let's goo! please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
+					cf-or-conditional-cfc-intro="yes"
+					cf-or-conditional-cfc-please="yes" />
 
 				<fieldset cf-questions="<strong>{gr8}!</strong> Please choose a path.">
 					<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$||great">
@@ -164,6 +174,67 @@
 					type="text"
 					cf-questions="Path D question 2/2/22"
 					cf-conditional-path-d-option="option-b"
+				/>
+
+				<fieldset id="multiple-conditions-a" cf-questions="Choose a letter">
+					<label for="multiple-conditions-a-A">A
+						<input 
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes" 
+							type="radio" name="cfc-multiple-conditions-a" id="multiple-conditions-a-A" value="A">
+					</label>
+
+					<input 
+					  cf-or-conditional-cfc-intro="yes"
+					  cf-or-conditional-cfc-please="yes"
+						type="radio" name="cfc-multiple-conditions-a" id="multiple-conditions-a-B" value="B">
+					<label for="multiple-conditions-a-B">B</label>
+				</fieldset>
+
+				<fieldset id="multiple-conditions-b" cf-questions="Choose a color">
+					<label for="multiple-conditions-b-red">Red
+						<input
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes"
+						  type="radio" name="cfc-multiple-conditions-b" id="multiple-conditions-b-red" value="red">
+					</label>
+
+					<input 
+						cf-or-conditional-cfc-intro="yes"
+						cf-or-conditional-cfc-please="yes"
+					  type="radio" name="cfc-multiple-conditions-b" id="multiple-conditions-b-green" value="green">
+					<label for="multiple-conditions-b-green">Green</label>
+				</fieldset>
+
+				<fieldset id="multiple-conditions-c" cf-questions="Choose a season">
+					<label for="multiple-conditions-c-spring">Spring
+						<input 
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes"
+							type="radio" name="cfc-multiple-conditions-c" id="multiple-conditions-c-spring" value="spring">
+					</label>
+
+					<input 
+						cf-or-conditional-cfc-intro="yes"
+						cf-or-conditional-cfc-please="yes"
+						type="radio" name="cfc-multiple-conditions-c" id="multiple-conditions-c-summer" value="summer">
+					<label for="multiple-conditions-c-summer">Summer</label>
+				</fieldset>
+
+				<input 
+					type="text"
+					cf-questions="You chose A and either Red or Spring"
+					cf-conditional-cfc-multiple-conditions-a = "A"
+					cf-or-conditional-cfc-multiple-conditions-b = "red"
+					cf-or-conditional-cfc-multiple-conditions-c = "spring"
+				/>
+
+				<input 
+					type="text"
+					cf-questions="You chose B and either Green or Summer"
+					cf-conditional-cfc-multiple-conditions-a = "B"
+					cf-or-conditional-cfc-multiple-conditions-b = "green"
+					cf-or-conditional-cfc-multiple-conditions-c = "summer"
 				/>
 
 				<!-- standard flow, no confitionals -->

@@ -1,7 +1,55 @@
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 .conversational-form {
   visibility: visible !important;
   font-family: "Helvetica Neue", "Neue Helvetica W01", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-size: 12px;
+  font-size: 0.85714rem;
   line-height: 1.416666667;
   position: absolute;
   top: 0px;
@@ -10,7 +58,7 @@
   bottom: 0px;
   z-index: 999;
   margin: auto;
-  background: white;
+  background: #fff;
   overflow: hidden;
   opacity: 0;
   will-change: opacity; }
@@ -77,6 +125,54 @@
   opacity: 1; }
 
 @charset "UTF-8";
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-input-control-elements {
   width: auto;
   height: auto;
@@ -122,12 +218,60 @@ cf-list {
   cf-list.disabled {
     pointer-events: none; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 .cf-button {
   background: white;
   cursor: pointer;
   border: 1px solid rgba(13, 131, 255, 0.1);
-  border-radius: 24px;
-  color: #1b9bfc;
+  border-radius: calc(1.42857rem * 1.2);
+  color: #409dff;
   line-height: 1;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -163,7 +307,7 @@ cf-list {
       opacity: 0; }
   .cf-button:not(:last-child) {
     margin-right: 10px; }
-  .cf-button:hover:not(.cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"], .cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"]):not([checked="checked"]), .cf-button:focus:not(.cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"], .cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"]):not([checked="checked"]) {
+  .cf-button:hover:not(.cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"], .cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"]), .cf-button:hover:not([checked="checked"]), .cf-button:focus:not(.cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"], .cf-button:hover[selected="selected"], .cf-button:focus[selected="selected"]), .cf-button:focus:not([checked="checked"]) {
     background: rgba(13, 131, 255, 0.1); }
   .cf-button[selected="selected"]:not(:focus):not(:hover):not(.highlight), .cf-button[checked="checked"]:not(:focus):not(:hover):not(.highlight) {
     background: rgba(13, 131, 255, 0.1); }
@@ -182,8 +326,56 @@ cf-list {
     .cf-button .cf-image.loaded {
       opacity: 1; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-radio-button.cf-button:hover cf-radio, cf-radio-button.cf-button.highlight cf-radio, cf-radio-button.cf-button:focus cf-radio {
-  background: #1b9bfc; }
+  background: #409dff; }
 
 cf-radio-button.cf-button.has-image cf-checkbox {
   margin-left: 0px; }
@@ -194,7 +386,7 @@ cf-radio-button.cf-button cf-radio {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #e6f3fe;
+  background: #e3f1ff;
   will-change: background;
   margin-right: 10px;
   margin-left: -10px;
@@ -203,11 +395,59 @@ cf-radio-button.cf-button cf-radio {
     transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 cf-radio-button.cf-button[checked="checked"] cf-radio {
-  background: #1b9bfc;
+  background: #409dff;
   pointer-events: none; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 .cf-button.cf-checkbox-button:hover cf-checkbox, .cf-button.cf-checkbox-button.highlight cf-checkbox, .cf-button.cf-checkbox-button:focus cf-checkbox {
-  background: #1b9bfc; }
+  background: #409dff; }
 
 .cf-button.cf-checkbox-button.no-text {
   padding: 12px 16px; }
@@ -224,7 +464,7 @@ cf-radio-button.cf-button[checked="checked"] cf-radio {
   width: 14px;
   height: 14px;
   border-radius: 3px;
-  background: #e6f3fe;
+  background: #e3f1ff;
   will-change: background;
   margin-right: 10px;
   margin-left: -10px;
@@ -253,25 +493,121 @@ cf-radio-button.cf-button[checked="checked"] cf-radio {
       transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox, .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox {
-  background: rgba(230, 243, 254, 0); }
+  background: rgba(227, 241, 255, 0); }
   .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox:after, .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox:after {
     -webkit-transform: scale(1, 1);
             transform: scale(1, 1); }
     .conversational-form--enable-animation .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox:after, .conversational-form--enable-animation .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox:after {
       transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-options-list {
   display: block;
   width: auto; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-upload-file-ui {
   display: block;
   width: 100%;
-  height: 45px;
+  height: 3.21429rem;
   position: absolute;
   top: 0px;
   padding-right: 30px;
-  color: #1b9bfc;
+  color: #409dff;
   opacity: 0;
   -webkit-transform: translateY(20px) rotateX(30deg);
           transform: translateY(20px) rotateX(30deg);
@@ -340,6 +676,54 @@ cf-upload-file-progress {
     cf-upload-file-progress cf-upload-file-progress-bar.loaded {
       border-radius: 7px 7px 7px 7px; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-input {
   display: block;
   position: relative;
@@ -348,7 +732,10 @@ cf-input {
   margin-bottom: 20px;
   margin-top: 0px;
   -webkit-box-flex: 0;
-          flex: 0 0 auto; }
+          flex: 0 0 auto;
+  /*input {
+		padding: 5px 5px 5px 15px;
+	}*/ }
   cf-input.animate-in input, cf-input.animate-in textarea {
     transition-delay: 0s, 0s, 0s, 0.4s, 0.4s;
     opacity: 1;
@@ -358,12 +745,10 @@ cf-input {
     transition-delay: 0s, 0s 0.75s;
     -webkit-transform: scale(1, 1);
             transform: scale(1, 1); }
-  cf-input input {
-    padding: 5px 5px 5px 15px; }
   cf-input input, cf-input textarea {
     resize: none;
     overflow: hidden;
-    padding: 15px 40px 15px 15px; }
+    padding: calc((3.21429rem - 2px - 0.85714rem)/2) calc(3.21429rem - 6px) calc((3.21429rem - 2px - 0.85714rem)/2) 15px; }
   cf-input input, cf-input textarea {
     outline: none;
     -webkit-appearance: none;
@@ -372,17 +757,17 @@ cf-input {
     -moz-user-select: auto !important;
     -ms-user-select: auto !important;
     user-select: auto !important;
-    border-radius: 0;
+    border-radius: 0rem;
     border: none;
     -webkit-appearance: none;
     position: relative;
     z-index: 2;
     display: block;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 12px;
+    font-family: "Helvetica Neue", "Neue Helvetica W01", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-size: 0.85714rem;
     width: 100%;
-    height: 45px;
-    min-height: 45px;
+    height: 3.21429rem;
+    min-height: 3.21429rem;
     color: #acb2b6;
     will-change: box-shadow, background, color, transform, opacity;
     background: white;
@@ -399,13 +784,13 @@ cf-input {
       transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
       transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, -webkit-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s; }
     cf-input input:hover::-webkit-input-placeholder, cf-input textarea:hover::-webkit-input-placeholder {
-      color: #767d7e; }
+      color: #768086; }
     cf-input input:hover::-moz-input-placeholder, cf-input textarea:hover::-moz-input-placeholder {
-      color: #767d7e; }
+      color: #768086; }
     cf-input input:hover:-moz-input-placeholder, cf-input textarea:hover:-moz-input-placeholder {
-      color: #767d7e; }
+      color: #768086; }
     cf-input input:hover:-ms-input-placeholder, cf-input textarea:hover:-ms-input-placeholder {
-      color: #767d7e; }
+      color: #768086; }
     cf-input input::-webkit-input-placeholder, cf-input textarea::-webkit-input-placeholder {
       color: currentColor; }
     cf-input input::-moz-input-placeholder, cf-input textarea::-moz-input-placeholder {
@@ -421,13 +806,13 @@ cf-input {
   cf-input[disabled="disabled"] {
     pointer-events: none; }
     cf-input[disabled="disabled"] input, cf-input[disabled="disabled"] textarea {
-      background: rgba(248, 248, 248, 0.5); }
+      background: rgba(247, 247, 247, 0.5); }
     cf-input[disabled="disabled"] .cf-input-button {
-      background: rgba(248, 248, 248, 0.75); }
+      background: rgba(247, 247, 247, 0.75); }
   cf-input cf-icon-audio-eq {
     display: block;
     border: 0px solid grey;
-    border-color: #e6f3fe;
+    border-color: #e3f1ff;
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -438,19 +823,19 @@ cf-input {
   cf-input[error] {
     pointer-events: none; }
     cf-input[error] input, cf-input[error] textarea {
-      background: #fef0f0;
+      background: #ffebe9;
       color: #fe8d84; }
     cf-input[error] .cf-input-button {
-      background: #fef0f0; }
+      background: #ffebe9; }
       cf-input[error] .cf-input-button svg polygon {
         fill: #fe8d84; }
   cf-input[message] input, cf-input[message] textarea {
-    background: #e6f3fe;
-    color: #1b9bfc; }
+    background: #e3f1ff;
+    color: #409dff; }
   cf-input[message] .cf-input-button {
-    background: #e6f3fe; }
+    background: #e3f1ff; }
     cf-input[message] .cf-input-button svg polygon {
-      fill: #1b9bfc; }
+      fill: #409dff; }
   cf-input[tag-type="file"] cf-input-button.cf-input-button:after, cf-input cf-input-button.cf-input-button.loading:after {
     content: "";
     display: block;
@@ -475,9 +860,9 @@ cf-input {
     opacity: 0; }
 
 cf-input-button.cf-input-button {
-  width: 29px;
-  height: 29px;
-  background: white;
+  width: -12.78571rem;
+  height: -12.78571rem;
+  background: none;
   position: absolute;
   overflow: hidden;
   right: 8px;
@@ -570,11 +955,11 @@ cf-input-button.cf-input-button {
   cf-input-button.cf-input-button:active {
     opacity: 0.2; }
   cf-input-button.cf-input-button:hover, cf-input-button.cf-input-button:focus {
-    background: #e6f3fe;
+    background: #e3f1ff;
     border: 1px solid white; }
     cf-input-button.cf-input-button:hover:after, cf-input-button.cf-input-button:focus:after {
       opacity: 0; }
-    @media (min-width: 768px) {
+    @media (min-width: 54.85714rem) {
       cf-input-button.cf-input-button:hover .cf-icon-progress, cf-input-button.cf-input-button:focus .cf-icon-progress {
         -webkit-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
                 animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
@@ -590,7 +975,7 @@ cf-input[tag-type="group"].hide-input cf-input-button {
   margin-right: auto; }
 
 cf-input[tag-type="group"].hide-input cf-input-control-elements {
-  margin-bottom: 45px; }
+  margin-bottom: 3.21429rem; }
 
 cf-input[error=""].hide-input cf-input-button .cf-icon-progress {
   -webkit-filter: saturate(0);
@@ -682,6 +1067,54 @@ cf-input[error=""].hide-input cf-input-button .cf-icon-progress {
     -webkit-transform: translateY(0px);
             transform: translateY(0px); } }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-info {
   position: absolute;
   pointer-events: none;
@@ -706,6 +1139,54 @@ cf-info {
   cf-info strong {
     font-weight: 900; }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-input-control-elements.animate-in cf-list-button {
   opacity: 1; }
 
@@ -726,7 +1207,7 @@ cf-list-button {
   will-change: opacity; }
   .conversational-form--enable-animation cf-list-button {
     transition: opacity 0.75s cubic-bezier(0.215, 0.61, 0.355, 1) 0.5s; }
-  @media (min-width: 768px) {
+  @media (min-width: 54.85714rem) {
     cf-list-button:hover:nth-child(1) {
       background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, white 75%); }
       cf-list-button:hover:nth-child(1):after {
@@ -885,6 +1366,54 @@ cf-list-button {
             transform: translateX(0px);
     opacity: 1; } }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 .conversational-form.done cf-chat-response {
   pointer-events: none; }
 
@@ -896,19 +1425,19 @@ cf-chat-response {
   position: relative;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  padding-left: calc(24px + 10px);
+  padding-left: calc(1.71429rem + 10px);
   padding-top: 16px;
-  color: #aaafb0;
+  color: #acb2b6;
   margin-left: 0px;
   margin-right: auto;
   word-break: break-all; }
-  @media (min-width: 768px) {
+  @media (min-width: 54.85714rem) {
     cf-chat-response {
       max-width: 50%; } }
   cf-chat-response.can-edit {
     cursor: pointer; }
     cf-chat-response.can-edit:hover {
-      color: #697071; }
+      color: #6a7379; }
       cf-chat-response.can-edit:hover text > p {
         background: white; }
   cf-chat-response.robot text > p {
@@ -921,8 +1450,8 @@ cf-chat-response {
     margin-right: 0px;
     margin-left: auto;
     padding-left: 0;
-    padding-right: calc(24px + 10px);
-    color: #1b9bfc; }
+    padding-right: calc(1.71429rem + 10px);
+    color: #409dff; }
     cf-chat-response.user thumb {
       left: auto;
       right: 0px; }
@@ -932,8 +1461,8 @@ cf-chat-response {
       -webkit-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
               transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001); }
       cf-chat-response.user text > p {
-        background: #e6f3fe;
-        border-radius: 20px 0px 20px 20px;
+        background: #e3f1ff;
+        border-radius: 1.42857rem 0px 1.42857rem 1.42857rem;
         margin-right: 0px;
         margin-left: auto; }
     cf-chat-response.user.peak-thumb thumb {
@@ -944,7 +1473,7 @@ cf-chat-response {
         transition-delay: 0.2s, 0.2s, 0.2s; }
   cf-chat-response.disabled {
     pointer-events: none;
-    color: #eceded; }
+    color: #f0f1f2; }
     cf-chat-response.disabled text {
       background: white; }
   cf-chat-response[thinking] text thinking {
@@ -985,17 +1514,17 @@ cf-chat-response {
     cf-chat-response text > p {
       margin: 0px;
       padding: 0px;
-      background: #f8f8f8;
+      background: #f7f7f7;
       padding: 12px 24px 12px 24px;
       display: table;
-      border-radius: 0px 20px 20px 20px;
+      border-radius: 0px 1.42857rem 1.42857rem 1.42857rem;
       transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
       cf-chat-response text > p:not(:only-child) {
-        border-radius: 0px 20px 20px 0px; }
+        border-radius: 0px 1.42857rem 1.42857rem 0px; }
         cf-chat-response text > p:not(:only-child):first-child {
-          border-radius: 20px 20px 20px 0px; }
+          border-radius: 1.42857rem 1.42857rem 1.42857rem 0px; }
         cf-chat-response text > p:not(:only-child):last-child {
-          border-radius: 0px 20px 20px 20px; }
+          border-radius: 0px 1.42857rem 1.42857rem 1.42857rem; }
         cf-chat-response text > p:not(:only-child):not(:first-child) {
           margin-top: 3px; }
       cf-chat-response text > p > img {
@@ -1045,10 +1574,10 @@ cf-chat-response {
     top: 0px;
     left: 0px;
     display: block;
-    width: 24px;
-    height: 24px;
+    width: 1.71429rem;
+    height: 1.71429rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: none;
     background-size: cover;
     background-position: 50% 50%;
     opacity: 0;
@@ -1129,6 +1658,54 @@ cf-chat-response {
             transform: scale(1, 1);
     opacity: 1; } }
 
+/*
+    Globals
+*/
+/*
+    Response
+*/
+/*
+    Input
+*/
+/*
+$cf-font-family: 'Helvetica Neue','Neue Helvetica W01',Helvetica,Arial,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+$cf-chat-response-font-size: 12px;
+$cf-chat-response-border-radius: 20px;
+$cf-color-background: #fff;
+$cf-color-primary: #0D83FF;
+$cf-color-secondary: #acb2b6;
+$cf-color-error: #fe8d84;
+
+$cf-input-field-height: 45px;
+$cf-input-field-border-radius: 0;
+$cf-input-submit-background: none;
+$cf-input-font-size: 12px; // 12px
+
+$cf-avatar-area: 24px; //The width/height of Robot and Human image/icon.
+$cf-avatar-background: none;
+
+
+
+$cf-breakpoint-medium: 768px;
+
+
+$cf-anim-time: 0.75s;
+$cf-ease-easeIn: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+$cf-ease-easeOut: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$cf-ease-easeInOut: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$cf-ease-easeOutBack: cubic-bezier(0.175,  0.885, 0.320, 1.275);
+
+
+$cf-color-input-text: $cf-color-secondary;
+$cf-color-chat-response-default-text: $cf-color-secondary;
+$cf-color-chat-response-default-bg: darken($cf-color-background, 3%);
+
+$cf-color-chat-response-user-text: lighten($cf-color-primary, 10%);
+$cf-color-chat-response-user-bg: lighten($cf-color-primary, 42%);
+
+$cf-input-color-error-text: $cf-color-error;
+$cf-input-color-error-bg: lighten($cf-color-error, 20%);
+*/
 cf-chat {
   display: block;
   width: 100%;
@@ -1163,13 +1740,13 @@ cf-chat {
       background: white;
       -webkit-border-radius: 100px; }
     cf-chat scrollable::-webkit-scrollbar-thumb:vertical {
-      background: #e6f3fe;
+      background: #e3f1ff;
       -webkit-border-radius: 100px; }
     cf-chat scrollable::-webkit-scrollbar-thumb {
       background: white;
       border: none;
       -webkit-border-radius: 100px; }
     cf-chat scrollable::-webkit-scrollbar-thumb:vertical:active {
-      background: #84c4fa;
+      background: #7dbcff;
       border: none;
       -webkit-border-radius: 100px; }
