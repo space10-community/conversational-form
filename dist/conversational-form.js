@@ -5225,26 +5225,67 @@ var cf;
                 // we don't use this (yet), it's only to keep track of active conditions
                 this.activeConditions = [];
             }
-            var numConditionsFound = 0;
+            var numTotalANDconditions = 0;
+            var numSatisfiedANDconditions = 0;
+            var hasORconditions = false;
+            var satisfiedORconditions = false;
+            // find out total number of AND conditions
+            // and whether the tag has any OR conditions
+            for (var i = 0; i < this.tags.length; i++) {
+                var tag = this.tags[i];
+                if (tag !== tagWithConditions) {
+                    // only check tags where tag id or name is defined
+                    var tagName = (tag.name || tag.id || "").toLowerCase();
+                    for (var j = 0; j < tagConditions.length; j++) {
+                        var tagCondition = tagConditions[j];
+                        var isAndCondition = "cf-conditional-" + tagName === tagCondition.key.toLowerCase();
+                        var isOrCondition = "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
+                        if (tagName !== "" && (isAndCondition || isOrCondition)) {
+                            if (isAndCondition) {
+                                numTotalANDconditions++;
+                            }
+                            if (isOrCondition) {
+                                hasORconditions = true;
+                            }
+                        }
+                    }
+                }
+            }
             // find out if tagWithConditions fullfills conditions
             for (var i = 0; i < this.tags.length; i++) {
                 var tag = this.tags[i];
                 if (tag !== tagWithConditions) {
                     // check if tags are fullfilled
                     for (var j = 0; j < tagConditions.length; j++) {
-                        var tagCondition = tagConditions[j];
                         // only check tags where tag id or name is defined
                         var tagName = (tag.name || tag.id || "").toLowerCase();
-                        if (tagName !== "" && ("cf-conditional-" + tagName === tagCondition.key.toLowerCase() || "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase())) {
+                        var tagCondition = tagConditions[j];
+                        var isAndCondition = "cf-conditional-" + tagName === tagCondition.key.toLowerCase();
+                        var isOrCondition = "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
+                        if (tagName !== "" && (isAndCondition || isOrCondition)) {
                             // key found, so check condition
                             var flowTagValue = typeof tag.value === "string" ? tag.value : tag.value;
                             var areConditionsMet = cf.Tag.testConditions(flowTagValue, tagCondition);
-                            var isOrCondition = "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
                             if (areConditionsMet) {
-                                this.activeConditions[tagName] = tagConditions;
-                                // conditions are met
-                                if (++numConditionsFound == tagConditions.length || isOrCondition) {
-                                    return true;
+                                if (!this.activeConditions[tagName])
+                                    this.activeConditions[tagName] = [];
+                                this.activeConditions[tagName].push(tagCondition);
+                                if (isAndCondition) {
+                                    numSatisfiedANDconditions++;
+                                }
+                                if (isOrCondition) {
+                                    satisfiedORconditions = true;
+                                }
+                                if (numSatisfiedANDconditions == numTotalANDconditions) {
+                                    // all AND conditions are satisfied
+                                    if (hasORconditions && satisfiedORconditions) {
+                                        // at least ONE OR condition is satisfied
+                                        return true;
+                                    }
+                                    else if (!hasORconditions) {
+                                        // does not have any OR conditions
+                                        return true;
+                                    }
                                 }
                             }
                         }

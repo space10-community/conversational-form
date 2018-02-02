@@ -173,26 +173,81 @@ namespace cf {
 				this.activeConditions = [];
 			}
 
-			let numConditionsFound: number = 0;
+			let numTotalANDconditions: number = 0;
+			let numSatisfiedANDconditions: number = 0;
+			let hasORconditions: boolean = false;
+			let satisfiedORconditions: boolean = false;
+
+			// find out total number of AND conditions
+			// and whether the tag has any OR conditions
+			for (var i = 0; i < this.tags.length; i++) {
+				const tag: ITag | ITagGroup = this.tags[i];
+				if(tag !== tagWithConditions){
+					// only check tags where tag id or name is defined
+					const tagName: string = (tag.name || tag.id || "").toLowerCase();
+
+					for (var j = 0; j < tagConditions.length; j++) {
+						let tagCondition: ConditionalValue = tagConditions[j];
+
+						let isAndCondition: boolean = "cf-conditional-"    + tagName === tagCondition.key.toLowerCase();
+						let isOrCondition: boolean =  "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
+
+						if (tagName !== "" && (isAndCondition || isOrCondition)) {
+							if (isAndCondition) {
+								numTotalANDconditions++;
+							}					
+
+							if (isOrCondition) {
+								hasORconditions = true;
+							}
+						}
+					}
+				}
+			}
+
 			// find out if tagWithConditions fullfills conditions
-			for(var i = 0; i < this.tags.length; i++){
+			for (var i = 0; i < this.tags.length; i++) {
 				const tag: ITag | ITagGroup = this.tags[i];
 				if(tag !== tagWithConditions){
 					// check if tags are fullfilled
 					for (var j = 0; j < tagConditions.length; j++) {
-						let tagCondition: ConditionalValue = tagConditions[j];
 						// only check tags where tag id or name is defined
 						const tagName: string = (tag.name || tag.id || "").toLowerCase();
-						if(tagName !== "" && ("cf-conditional-"+tagName === tagCondition.key.toLowerCase() || "cf-or-conditional-"+tagName === tagCondition.key.toLowerCase())){
+
+						let tagCondition: ConditionalValue = tagConditions[j];
+
+						let isAndCondition: boolean = "cf-conditional-"    + tagName === tagCondition.key.toLowerCase();
+						let isOrCondition: boolean =  "cf-or-conditional-" + tagName === tagCondition.key.toLowerCase();
+
+						if(tagName !== "" && (isAndCondition || isOrCondition)){
 							// key found, so check condition
 							const flowTagValue: string | string[] = typeof tag.value === "string" ? <string> (<ITag> tag).value : <string[]>(<ITagGroup> tag).value;
 							let areConditionsMet: boolean = Tag.testConditions(flowTagValue, tagCondition);
-							let isOrCondition: boolean = "cf-or-conditional-"+tagName === tagCondition.key.toLowerCase();
-							if(areConditionsMet){
-								this.activeConditions[tagName] = tagConditions;
-								// conditions are met
-								if(++numConditionsFound == tagConditions.length || isOrCondition){
-									return true;
+
+							if (areConditionsMet) {
+								if (!this.activeConditions[tagName])
+									this.activeConditions[tagName] = [];
+								
+								this.activeConditions[tagName].push(tagCondition);
+
+								if (isAndCondition) {
+									numSatisfiedANDconditions++;
+								}
+
+								if (isOrCondition) {
+									satisfiedORconditions = true;
+								}
+
+								if (numSatisfiedANDconditions == numTotalANDconditions) {
+									// all AND conditions are satisfied
+
+									if (hasORconditions && satisfiedORconditions) {
+										// at least ONE OR condition is satisfied
+										return true;
+									} else if (!hasORconditions) {
+										// does not have any OR conditions
+										return true;
+									}
 								}
 							}
 						}

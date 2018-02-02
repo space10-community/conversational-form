@@ -176,6 +176,67 @@
 					cf-conditional-path-d-option="option-b"
 				/>
 
+				<fieldset id="multiple-conditions-a" cf-questions="Choose a letter">
+					<label for="multiple-conditions-a-A">A
+						<input 
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes" 
+							type="radio" name="cfc-multiple-conditions-a" id="multiple-conditions-a-A" value="A">
+					</label>
+
+					<input 
+					  cf-or-conditional-cfc-intro="yes"
+					  cf-or-conditional-cfc-please="yes"
+						type="radio" name="cfc-multiple-conditions-a" id="multiple-conditions-a-B" value="B">
+					<label for="multiple-conditions-a-B">B</label>
+				</fieldset>
+
+				<fieldset id="multiple-conditions-b" cf-questions="Choose a color">
+					<label for="multiple-conditions-b-red">Red
+						<input
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes"
+						  type="radio" name="cfc-multiple-conditions-b" id="multiple-conditions-b-red" value="red">
+					</label>
+
+					<input 
+						cf-or-conditional-cfc-intro="yes"
+						cf-or-conditional-cfc-please="yes"
+					  type="radio" name="cfc-multiple-conditions-b" id="multiple-conditions-b-green" value="green">
+					<label for="multiple-conditions-b-green">Green</label>
+				</fieldset>
+
+				<fieldset id="multiple-conditions-c" cf-questions="Choose a season">
+					<label for="multiple-conditions-c-spring">Spring
+						<input 
+							cf-or-conditional-cfc-intro="yes"
+							cf-or-conditional-cfc-please="yes"
+							type="radio" name="cfc-multiple-conditions-c" id="multiple-conditions-c-spring" value="spring">
+					</label>
+
+					<input 
+						cf-or-conditional-cfc-intro="yes"
+						cf-or-conditional-cfc-please="yes"
+						type="radio" name="cfc-multiple-conditions-c" id="multiple-conditions-c-summer" value="summer">
+					<label for="multiple-conditions-c-summer">Summer</label>
+				</fieldset>
+
+				<input 
+					type="text"
+					cf-questions="You chose A and either Red or Spring"
+					cf-conditional-cfc-multiple-conditions-a = "A"
+					cf-or-conditional-cfc-multiple-conditions-b = "red"
+					cf-or-conditional-cfc-multiple-conditions-c = "spring"
+				/>
+
+				<input 
+					type="text"
+					cf-questions="You chose B and either Green or Summer"
+					cf-conditional-cfc-multiple-conditions-a = "B"
+					cf-or-conditional-cfc-multiple-conditions-b = "green"
+					cf-or-conditional-cfc-multiple-conditions-c = "summer"
+				/>
+
 				<!-- standard flow, no confitionals -->
 				<input
 					id="nope"
