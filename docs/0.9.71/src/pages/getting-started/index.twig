@@ -1,0 +1,139 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Getting Started' %}
+{% set page_slug = '/getting-started/' %}
+
+{% block page %}
+    <h1 id="getting-started">Getting Started</h1>
+    <p>Turning web forms into conversations. Conversational Form is an open-source concept by <a href="https://space10.io/" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.</p>
+    
+    <h2 id="include-conversationalform-in-your-page">Include ConversationalForm in your page</h2>
+    <pre><code class="language-html" data-lang="html">&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{{nextVersion}}/dist/conversational-form.min.js" crossorigin></script></code></pre>
+    
+    <p>ConversationalForm will automatically look through the DOM for a form element with the attibute cf-form, and auto-instantiate.</p>
+    <pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form ...></code></pre>
+
+    <p><strong>That's it! Your form is now conversational 👍</strong></p>
+
+    <h2 id="instantiate-with-jquery">Instantiate with jQuery</h2>
+    <p>See <a href="../options/">ConversationalFormOptions</a> for all available options.</p>
+    <pre><code class="language-javascript" data-lang="javascript">$("form").conversationalForm({
+        
+});</code></pre>
+
+    <h2 id="self-instantiate-with-vanilla-javascript"></a>Self-instantiate with vanilla Javascript</h2>
+    <p>Only parameter <code>formEl</code> is mandatory for the object you pass to the constructor. See full list of <a href="../options/">ConversationalFormOptions</a>.</p>
+    <pre><code class="language-javascript" data-lang="javascript">new cf.ConversationalForm({
+    // HTMLFormElement
+    formEl/*: HTMLFormElement;*/
+});</code></pre>
+
+    <h2 id="react"></a>React</h2>
+    <pre><code class="language-javascript" data-lang="javascript">class Hello extends React.Component {
+    constructor(props) {
+        super(props);
+        this.cf = null; // <-- Conversational Form ref
+    }
+    componentDidMount(){
+        // add Conversational Form info
+        this.refs.name.setAttribute('cf-questions', "Your name?");
+        this.refs.email.setAttribute('cf-questions', "Your email?");
+        this.refs.description.setAttribute('cf-questions', "What is description?");
+
+        this.cf = window.cf.ConversationalForm.startTheConversation({
+            formEl: this.refs.form,
+            context: document.getElementById("cf-context"),
+            flowStepCallback: function(dto, success, error){
+                success();
+            },
+            submitCallback: function(){
+                // this callback could also be added to the React.createElement it self...
+                alert("You made it!")
+                console.log("Form submitted...");
+            }
+        });
+    }
+    render() {
+        return React.createElement('form', {
+            id: "form",
+            ref: "form",
+            className: 'form'
+        },
+            React.createElement('input', {
+                type: 'text',
+                ref: "name",
+                placeholder: 'Name (required)',
+                defaultValue: this.props.name,
+            }),
+            React.createElement('input', {
+                type: 'email',
+                ref: "email",
+                placeholder: 'Email',
+                defaultValue: this.props.email,
+            }),
+            React.createElement('textarea', {
+                placeholder: 'Description',
+                ref: "description",
+                defaultValue: this.props.description,
+            }),
+            React.createElement('button', {type: 'submit'}, "Submit")
+        )
+    }
+};
+
+ReactDOM.render(React.createElement(Hello, {
+    name: "Input name..",
+    email: "Input email..",
+    description: "Input description..",
+}), document.getElementsByClassName('form-outer')[0]);</code></pre>
+    
+    <h2 id="requirejs"></a>RequireJS</h2>
+    <pre><code class="language-javascript">requirejs.config({
+  baseUrl: 'js',
+  paths: {
+    conversationalform: 'conversational-form'
+    // conversationalform: 'https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min'
+  }
+});
+
+requirejs(["conversational-form"], function(conversationalForm) {
+  console.log("Conversational Form loaded with requirejs:", conversationalForm);
+
+  // start the conversation
+  var conversationalForm = conversationalForm.startTheConversation({
+    formEl: document.getElementById("form"),
+    context: document.getElementById("cf-context")
+  });
+});</code></pre>
+
+    <h2 id="use-with-various-es6-module-bundlers"></a>Use with various ES6 module bundlers</h2>
+    <p>like <a href="https://github.com/webpack/webpack" target="_blank">Webpack</a> and <a href="https://github.com/rollup/rollup" target="_blank">Rollup</a></p>
+    <pre><code class="language-javascript" data-lang="javascript">import cf from 'conversational-form';
+    var cfInstance = cf.startTheConversation({
+    formEl: document.getElementById("form")
+});</code></pre>
+
+    <h2 id="include-conversational-form-in-your-project"></a>Include Conversational Form in your project</h2>
+    <h3 id="npm"></a>NPM</h3>
+    <pre class="command-line language-bash"><code class="language-terminal" data-lang="terminal">npm install conversational-form</code></pre>
+
+    
+
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#getting-started">Getting Started</a></li>
+		<li class="toc-entry toc-h2"><a href="#include-conversationalform-in-your-page">Include ConversationalForm in your page</a></li>
+		<li class="toc-entry toc-h2"><a href="#instantiate-with-jquery">Instantiate with jQuery</a></li>
+		<li class="toc-entry toc-h2"><a href="#self-instantiate-with-vanilla-javascript">Self-instantiate with vanilla Javascript</a>
+    <li class="toc-entry toc-h2"><a href="#reactjs">React</a></li>
+    <li class="toc-entry toc-h2"><a href="#requirejs">RequireJS</a></li>
+		<li class="toc-entry toc-h2"><a href="#use-with-various-es6-module-bundlers">Use with various ES6 module bundlers</a></li>
+		<li class="toc-entry toc-h2"><a href="#include-conversational-form-in-your-project">Include Conversational Form in your project</a>
+			<ul>
+				<li class="toc-entry toc-h3"><a href="#npm">NPM</a></li>
+			</ul>
+		</li>
+	</ul>
+{% endblock %}
