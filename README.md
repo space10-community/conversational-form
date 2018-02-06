@@ -6,7 +6,7 @@
 	<a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq"><strong>Learn why we did it</strong></a>
 </p>
 <p align="center">
-	<a href="https://space10-community.github.io/conversational-form/docs/0.9.70/"><strong>Explore Conversational Form docs »</strong></a>
+	<a href="https://space10-community.github.io/conversational-form/docs/0.9.71/"><strong>Explore Conversational Form docs »</strong></a>
 </p>
 <p align="center">
 	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif" />
@@ -17,7 +17,7 @@
 Include ConversationalForm in your page:
 
 ```html
-<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.70/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@0.9.71/dist/conversational-form.min.js" crossorigin></script>
 ```
 Or download the latest release:
 - Clone the repo: ````git clone https://github.com/space10-community/conversational-form.git````
@@ -33,7 +33,7 @@ ConversationalForm will automatically look through the DOM for a form element wi
 
 [jsbin](https://jsbin.com/vopuxukaze/edit?html,js,output)
 
-Read the [Getting started](https://space10-community.github.io/conversational-form/docs/0.9.70/getting-started/) page for information on the framework contents, options, templates and examples and more.
+Read the [Getting started](https://space10-community.github.io/conversational-form/docs/0.9.71/getting-started/) page for information on the framework contents, options, templates and examples and more.
 
 ## Status
 [![npm version](https://img.shields.io/npm/v/conversational-form.svg)](https://www.npmjs.com/package/conversational-form)
@@ -53,7 +53,7 @@ Pull Requests for bug fixes or new features are always welcome. If you choose to
 - Fork the "develop" branch
 - If you forked a while ago please get the latest changes from the "develop"-branch before submitting a Pull Request
 	- Locally merge (or rebase) the upstream development branch into your topic branch:
-		- ````git remote add upstream https://github.com/space10-community/conversational-form.git```
+		- ````git remote add upstream https://github.com/space10-community/conversational-form.git````
 		- ````git checkout develop````
 		- ````git pull upstream````
 		- ````git pull [--rebase] upstream develop````
@@ -65,7 +65,7 @@ See the <a href="https://github.com/space10-community/conversational-form/releas
 
 ## Acknowledgement
 Thank you to everyone who has taken part in the creation of Conversational Form.
-- Development by <a href="http://twitter.com/flexmotion" target="_blank">Felix Nielsen</a>
+- Development by <a href="http://twitter.com/flexmotion" target="_blank">Felix Nielsen</a> and <a href="https://jenssogaard.com/" target="_blank">Jens Soegaard</a> (v0.9.70+)
 - Design by <a href="http://www.charlieisslander.com/" target="_blank">Charlie Isslander</a> and <a href="http://norgram.co/" target="_blank">Norgram®</a>
 - Concept by <a href="https://space10.io" target="_blank">SPACE10</a>
 

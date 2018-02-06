@@ -15,7 +15,7 @@ git.tag(function (str) {
   tagVersion = str;
 });
 
-var nextVersion = "0.9.70";
+var nextVersion = "0.9.71";
 
 gulp.task('documentation', function () {
     'use strict';
@@ -30,9 +30,13 @@ gulp.task('documentation', function () {
                 lastCommit: lastCommit,
                 versions: [
                     {
+                        path: '0.9.71', 
+                        label: "v0.9.71"
+                    },
+                    {
                         path: '0.9.70', 
                         label: "v0.9.70"
-                    },
+                    }
                 ],
                 pages: [
                     {
