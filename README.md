@@ -24,7 +24,7 @@ Or download the latest release:
 - Install with npm: ````npm install conversational-form````
 - Install with yarn: ````yarn add conversational-form````
 
-ConversationalForm will automatically look through the DOM for a form element with the attibute `cf-form`, and auto-instantiate.
+ConversationalForm will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form>
 ...
@@ -46,13 +46,13 @@ Read the [Getting started](https://space10-community.github.io/conversational-fo
 If you see a bug, have an issue or a feature request then please submit an issue in the<a href="https://github.com/space10-community/conversational-form/issues">GitHub issue tracker</a>. For the sake of efficiency we urge you to look through open and closed issues before opening a new issue. Thank you ⭐
 
 ## Documentation
-Conversational Form's documentation is included in /docs of this repo as well as being <a href="https://space10-community.github.io/conversational-form/docs/">hosted on github pages</a>.
+Conversational Form's documentation is included in /docs of this repo as well as being <a href="https://space10-community.github.io/conversational-form/docs/">hosted on GitHub Pages</a>.
 
 ## Contributing
 Pull Requests for bug fixes or new features are always welcome. If you choose to do a Pull Request please keep these guidelines in mind:
 - Fork the "develop" branch
 - If you forked a while ago please get the latest changes from the "develop"-branch before submitting a Pull Request
-	- Locally merge (or rebase) the upstream development branch into your topic branch: 
+	- Locally merge (or rebase) the upstream development branch into your topic branch:
 		- ````git remote add upstream https://github.com/space10-community/conversational-form.git```
 		- ````git checkout develop````
 		- ````git pull upstream````
@@ -64,7 +64,7 @@ Pull Requests for bug fixes or new features are always welcome. If you choose to
 See the <a href="https://github.com/space10-community/conversational-form/releases">Releases section of our GitHub project</a> for changelogs for each release version of Conversational Form. We will do our best to summarize noteworthy changes made in each release.
 
 ## Acknowledgement
-Thank you to everyone who has taken part in the creation of Conversational Form. 
+Thank you to everyone who has taken part in the creation of Conversational Form.
 - Development by <a href="http://twitter.com/flexmotion" target="_blank">Felix Nielsen</a>
 - Design by <a href="http://www.charlieisslander.com/" target="_blank">Charlie Isslander</a> and <a href="http://norgram.co/" target="_blank">Norgram®</a>
 - Concept by <a href="https://space10.io" target="_blank">SPACE10</a>
