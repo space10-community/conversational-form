@@ -1,0 +1,97 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Voice - Setup Voice control of a form element' %}
+{% set page_slug = '/functionality/voice/' %}
+
+{% block page %}
+    <h1 id="voice">{{page_title}}</h1>
+    
+    <p>See the two examples below to get insights into how to implement various APIs. Be aware that in the examples we use HTML5 standard APIs, but these could just as well be 3rd party like <a href="https://cloud.google.com/speech/">Google Cloud Speech API</a></p>
+    <p>Be aware that Voice only works with elements <code>input[type="text/password/email/radio"]</code>.</p>
+    
+    <p><strong>Be aware that examples are using bleeding-edge browser features like <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API">Web Speech API</a>.</strong></p>
+
+    <hr>
+
+    <p><strong>You need to instantiate Conversational Form manually, here is a snippet:</strong></p>
+    <pre><code class="language-javascript">var dispatcher = new cf.EventDispatcher();
+
+var microphoneInput = null;// see examples or description below.
+
+var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+	// your form element
+	formEl: document.getElementById("form"),
+	
+	// your context
+	context: document.getElementById("cf-context"),
+	
+	// custom event dispatcher
+	eventDispatcher: dispatcher,
+
+	// add the custom input (microphone)
+	microphoneInput: microphoneInput,
+
+	submitCallback: function(){
+		// remove Conversational Form
+		console.log("voice: Form submitted...", conversationalForm.getFormData(true));
+		alert("You made it! Check console for data")
+	}
+});</code></pre>
+
+	<p>You will notice a new attribute in the init method <code>microphoneInput</code>, this is your interface into Voice control.</p>
+	<p><code>microphoneInput</code> can have the following methods and attributes, some optional some mandatory:</p>
+	<hr>
+	<p><code>init</code>
+<strong>Optional</strong> method
+<code>init</code> is called one time, when the custom input is instantiated together with instantiation of the Conversational Form instance. <code>init</code> can be used to hook into <a href="https://github.com/space10-community/conversational-form/wiki/Events">Conversational Form Events</a></p>
+	
+	<pre><code class="language-javascript">init: () => {
+	...
+}</code></pre>
+
+	<hr>
+	<p><code>awaitingCallback</code>
+<strong>Optional</strong> boolean
+<code>awaitingCallback</code> can be set to <code>true</code> to include an API in-between user input and
+set awaiting callback, as we will await the speak in this example</p>
+	<pre><code class="language-javascript">awaitingCallback: true</code></pre>
+
+	<hr>
+
+	<p><code>input</code>
+<strong>Mandatory method</strong>
+Used to tap into an API when user talks into Microphone (using <a href="https://developer.mozilla.org/en/docs/Web/API/Navigator/getUserMedia">getUserMedia</a>).
+It takes 3 attributes, resolve and reject, both callback methods that are tied to a Promise. 3rd parameter is a mediaStream which can be used to send to external API (server..).</p>
+
+	<pre><code class="language-javascript">input: (resolve, reject, mediaStream) => {
+
+}</code></pre>
+
+	<hr>
+
+	<p><code>cancelInput</code>
+	<strong>Optional</strong> method
+	can be used to cancel the input call.</p>
+
+	<pre><code class="language-javascript">cancelInput: function() {
+	
+}</code></pre>
+
+	<p>See Feature-support: <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Browser_compatibility">Browser support</a></p>
+
+	<h2 id="example-voice-input">Example - Voice input</h2>
+	<p data-height="400" data-theme-id="light" data-slug-hash="ZvWwBj" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Form - Voice input example" data-preview="true" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/ZvWwBj/">Conversational Form - Voice input example</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+	<h2 id="example-voice-input-output">Example - Voice input and output</h2>
+	<p data-height="422" data-theme-id="light" data-slug-hash="jYqdmY" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Form - Voice input and output example" data-preview="true" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/jYqdmY/">Conversational Form - Voice input and output example</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#voice">Voice</a></li>
+		<li class="toc-entry toc-h2"><a href="#example-voice-input">Example - Voice input</a></li>
+		<li class="toc-entry toc-h2"><a href="#example-voice-input-output">Example - Voice input and output</a></li>
+	</ul>
+{% endblock %}

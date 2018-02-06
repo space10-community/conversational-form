@@ -135,14 +135,13 @@ namespace cf {
 
 			const thumbEl: HTMLElement = <HTMLElement> this.el.getElementsByTagName("thumb")[0];
 
-			// Check if src is base64/url or string
-			if(src.indexOf("data:") === 0 || src.indexOf("http") === 0 || src.indexOf("//") === 0){
+			if(src.indexOf("text:") === 0){
+				const thumbElSpan: HTMLElement = <HTMLElement> thumbEl.getElementsByTagName("span")[0];
+				thumbElSpan.innerHTML = src.split("text:")[1];
+				thumbElSpan.setAttribute("length", src.length.toString());
+			} else {
 				this.image = src;
 				thumbEl.style.backgroundImage = 'url("' + this.image + '")';
-			} else {
-				const thumbElSpan: HTMLElement = <HTMLElement> thumbEl.getElementsByTagName("span")[0];
-				thumbElSpan.innerHTML = src;
-				thumbElSpan.setAttribute("length", src.length.toString());
 			}
 		}
 
