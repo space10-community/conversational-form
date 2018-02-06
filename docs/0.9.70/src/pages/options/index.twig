@@ -52,13 +52,17 @@
                 <td>userImage</td>
                 <td>base64, image url or a text string (max of 3 chars)</td>
                 <td></td>
-                <td>Add a custom user image or short text string, without overwritting the user dictionary.</td>
+                <td>Add a custom user image or short text string, without overwritting the user dictionary.
+                    <span class="text-danger">UNWATED BREAKING BEHAVIOUR: for users refering to assets without a protocol their assets will be interpreted as a text string. To fix this add a protocol. Will be resolved in patch update.</span>
+                </td>
             </tr>
             <tr>
                 <td>robotImage</td>
                 <td>base64, image url or a text string (max of 3 chars)</td>
                 <td></td>
-                <td>Add a custom robot image or short text string, without overwritting the robot dictionary.</td>
+                <td>Add a custom robot image or short text string, without overwritting the robot dictionary.<br />
+                    <span class="text-danger">UNWATED BREAKING BEHAVIOUR: for users refering to assets without a protocol their assets will be interpreted as a text string. To fix this add a protocol. Will be resolved in patch update.</span>
+                </td>
             </tr>
     		<tr>
     			<td>submitCallback</td>
