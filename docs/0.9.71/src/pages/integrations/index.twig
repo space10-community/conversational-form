@@ -1,0 +1,40 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Integrations' %}
+{% set page_slug = '/integrations/' %}
+
+{# {% block sidebar %}
+	{% include 'sidebar.twig' %}
+{% endblock %} #}
+
+{% block page %}
+    <h1 id="integrations">{{page_title}}</h1>
+    <p>This section aims at covering some frequently asked for integrations. If you have an integration that you think we should cover, then please open an issue on <a href="https://github.com/space10-community/conversational-form/issues" target="_blank">our github issue tracker</a>.</p>
+
+    
+    <h2 id="google-analytics">Google Analytics event tracking</h2>
+
+    <p>Each step in the form is registered along with the total number of steps contained in the form. Tracking is done using <code>flowStepCallback</code>.</p>
+    
+    <p>Watch the console to see category, action and label being tracked.</p>
+    
+    <p data-height="448" data-theme-id="light" data-slug-hash="YYqBWP" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Form - Google Analytics" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/YYqBWP/">Conversational Form - Google Analytics</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+    <h2 id="mailchimp-signup">Mailchimp signup</h2>
+    <p>This example shows how you can submit to a Mailchimp newsletter list using a simple post request.</p>
+
+    <p data-height="406" data-theme-id="light" data-slug-hash="mpPvaW" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Mailchimp example" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/mpPvaW/">Conversational Forms - Mailchimp example</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+{% endblock %}
+
+{% block toc %}
+    <ul class="section-nav">
+        <li class="toc-entry toc-h2"><a href="#integrations">Integrations</a>
+            <ul>
+                <li class="toc-entry toc-h2"><a href="#google-analytics">Google Analytics</a></li>
+                <li class="toc-entry toc-h2"><a href="#mailchimp-signup">Mailchimp</a></li>
+            </ul>
+        </li>
+    </ul>
+{% endblock %}

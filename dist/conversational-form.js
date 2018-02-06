@@ -4602,15 +4602,14 @@ var cf;
         };
         ChatResponse.prototype.updateThumbnail = function (src) {
             var thumbEl = this.el.getElementsByTagName("thumb")[0];
-            // Check if src is base64/url or string
-            if (src.indexOf("data:") === 0 || src.indexOf("http") === 0 || src.indexOf("//") === 0) {
-                this.image = src;
-                thumbEl.style.backgroundImage = 'url("' + this.image + '")';
+            if (src.indexOf("text:") === 0) {
+                var thumbElSpan = thumbEl.getElementsByTagName("span")[0];
+                thumbElSpan.innerHTML = src.split("text:")[1];
+                thumbElSpan.setAttribute("length", src.length.toString());
             }
             else {
-                var thumbElSpan = thumbEl.getElementsByTagName("span")[0];
-                thumbElSpan.innerHTML = src;
-                thumbElSpan.setAttribute("length", src.length.toString());
+                this.image = src;
+                thumbEl.style.backgroundImage = 'url("' + this.image + '")';
             }
         };
         ChatResponse.prototype.setLinkToOtherReponse = function (response) {
@@ -5382,7 +5381,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.70";
+            this.version = "0.9.71";
             this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
