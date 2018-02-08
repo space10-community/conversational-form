@@ -3,6 +3,7 @@
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
+/// <reference path="form-tags/CfRobotMessageTag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
 /// <reference path="form-tags/InputTag.ts"/>
 /// <reference path="form-tags/SelectTag.ts"/>
@@ -261,7 +262,7 @@ namespace cf {
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea"), 0);
+				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea, cf-robot-message"), 0);
 
 				for (var i = 0; i < fields.length; i++) {
 					const element = fields[i];
