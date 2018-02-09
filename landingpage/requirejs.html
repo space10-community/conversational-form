@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+	</head>
+	<body>
+		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
+
+		<main class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form examples</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<article>
+					<h1 id="writer">
+						Load Conversational Form with Require.js/AMD
+					</h1>
+					<h2>
+						This example uses <a href="http://requirejs.org/" target="_blank">requirejs</a> to init the conversation.</br>
+						Atm. using local copy of Conversational Form, like when you use <a href="https://www.npmjs.com/" target="_blank">npm</a> or <a href="http://bower.org/" target="_blank">bower</a> to get a copy of Conversational Form.</br>
+						Conversational Form 0.9.6 and above will support loading the interface from CDN.
+					</h2>
+				</article>
+			</section>
+
+			<section role="form">
+				<div class="form-outer">
+
+					<form id="form">
+						<label for="radio">
+							<input cf-questions="require.js started the Conversation" cf-label="Great!" type="radio" value="0">
+							
+						</label>
+
+						<input type="text" cf-questions="..." />
+					</form>
+				</div>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+
+			<!-- load require from cdn -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js" crossorigin></script>
+		
+		<script>
+			window.onload = function(){
+				requirejs.config({
+					baseUrl: '../dist',
+					paths: {
+						conversationalform: 'conversational-form'
+						// conversationalform: 'https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min'
+					}
+				});
+
+				requirejs(["conversationalform"], function(conversationalForm) {
+					console.log("Conversational Form loaded with requirejs:", conversationalForm);
+
+					// start the conversation
+					var conversationalForm = conversationalForm.startTheConversation({
+						formEl: document.getElementById("form"),
+						context: document.getElementById("cf-context")
+					});
+				});
+			}
+		</script>
+		</main>
+	</body>
+</html>

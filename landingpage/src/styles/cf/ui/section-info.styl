@@ -1,0 +1,169 @@
+@import "nib"
+@import "rupture"
+@import "../_cf-docs-variables"
+@import "../../../src/styles/mixins/_cf-mixins.styl"
+
+main.content
+	&.menu-toggle:not(.cf-toggle)
+		section[role="info"]
+			transform translateX(0%)
+
+	section[role="info"]
+		background $color-black
+		position absolute
+		left 0px
+		top 0px
+		z-index $zIndex-low + 1
+		color $color-white
+		height 100%
+		width 100%
+		transform translateX(-100%)
+		will-change transform
+		transition transform $anim-time-2 $anim-easeOut
+		padding 27px
+
+		a
+			opacity 1
+			+above($breakpoint-1)
+				will-change opacity
+				transition opacity $anim-time $anim-easeOut
+
+				&:hover
+					opacity 0.5
+
+		+below($breakpoint-1)
+			transform translateX(100%)
+			z-index $zIndex-high - 1
+
+		+above($breakpoint-1)
+			padding 37px 40px
+			transform translateX(0%)
+
+			will-change opacity
+			transition opacity $anim-time $anim-easeOut
+
+			> article h1
+				opacity 0
+				&.show
+					opacity 1
+
+			.github-button__outer
+				visibility hidden
+
+			> h3, > article h2, > article .github-button__outer iframe, footer > h3, footer > a svg
+				will-change opacity
+				transition opacity $anim-time $anim-easeOut
+				opacity 0
+
+			> h3
+				transition-delay 2s
+
+			> article
+				> h2
+					transition-delay 0.5s
+				> .github-button__outer iframe:nth-child(1)
+					transition-delay 0.7s
+				> .github-button__outer iframe:nth-child(2)
+					transition-delay 0.9s
+
+				footer > h3
+					transition-delay 2s
+				footer > a svg
+					transition-delay 3s
+
+			&.show
+				.github-button__outer
+					visibility visible
+
+				> h3, > article h2
+					opacity 0.7
+				> article .github-button__outer iframe, footer > h3, footer > a svg
+					opacity 1
+
+		.close-btn
+			display none
+
+		+below($breakpoint-1)
+			.close-btn
+				display block
+				position absolute
+				z-index $zIndex-high - 1
+				right 24px
+				top 18px
+				width 24px
+				height 24px
+				border none
+				background none
+				padding 0
+				margin 0
+
+				svg
+					width 100%
+					height 100%
+
+		> h3
+			line-height 1.25
+			font-weight $font-weight-bold
+			font-size responsivePXValue(9, 12)
+
+		article
+			position absolute
+			bottom 27px
+			width calc(100% - 54px)
+			+above($breakpoint-1)
+				bottom 37px
+				width calc(50% - 80px)
+
+			h1
+				line-height 1.1
+				letter-spacing 0.5px
+				font-weight $font-weight-bold
+				font-size responsivePXValue(35, 50)
+				padding-right 20px
+				max-width 800px
+
+			h2
+				line-height 1.2
+				letter-spacing -0.1px
+				font-weight $font-weight-regular
+				font-size responsivePXValue(12, 13)
+				max-width responsivePXValue(270, 320)
+				margin-top responsivePXValue(11, 30)
+				margin-bottom responsivePXValue(22, 60)
+
+				+above($breakpoint-1)
+					span.below-768
+						display none
+				+below($breakpoint-1)
+					span.above-768
+						display none
+
+			.github-button__outer
+				height 28px
+
+				iframe:first-of-type
+					margin-right 10px
+
+			
+			footer
+				width 100%
+				position relative
+				margin-top responsivePXValue(65, 138)
+
+				h3
+					font-weight $font-weight-bold
+					font-size responsivePXValue(11, 13)
+					padding-right 70px //prevent text overlapping logo
+
+				> a
+					position absolute
+					right 0px
+					top 0px
+					height 16px
+					width responsivePXValue(51, 58)
+
+					svg
+						width 100%
+						height 100%
+
+		
