@@ -1,0 +1,50 @@
+@import "nib"
+@import "rupture"
+@import "../_cf-docs-variables"
+@import "../../../src/styles/mixins/_cf-mixins.styl"
+
+main.content
+	&.menu-toggle
+		> menu
+			transform translateY(-100%)
+
+	> menu
+		background $color-black
+		position fixed
+		z-index $zIndex-high
+		padding 0px
+		margin 0px
+		height $menu-height
+		width 100%
+		color $color-white
+		left 0px
+		top 0px
+
+		will-change transform
+		transition transform $anim-time-2 $anim-easeOut
+
+		+above($breakpoint-1)
+			display none
+
+		h2
+			font-weight $font-weight-bold
+			transform translateY(-50%)
+			position absolute
+			left 24px
+			top 50%
+			font-size responsivePXValue(14, 16)
+
+		.switch-btn
+			position absolute
+			right 63px
+			top 16px
+
+		.hamburger-btn
+			position absolute
+			height 14px
+			width 29px
+			right 21px
+			top 23px
+			svg
+				width 100%
+				height 100%

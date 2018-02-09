@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	</head>
+	<body>
+		<script src="build/conversational-form-examples.min.js" id="examples-script" manual-init="manual-init"></script>
+
+		<main class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form examples</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<article>
+					<h1 id="writer">
+						Utilise browser auto-complete
+					</h1>
+					<h2>
+						1. Fill out the form on the right</br>
+						2. Submit it, and use browser back button to come back here</br>
+						3. The form is now prefilled with your previous data (mimic autocomplete)</br>
+						</br>
+						<button onclick="startTheConversation()">Now, start the Conversation to see the mapped values</button>
+						</br>
+						</br>
+						<a href="https://dl.dropboxusercontent.com/u/4512798/cf-auto-complete.mp4" target="_blank">Video of auto-complete features</a>
+					</h2>
+				</article>
+			</section>
+
+			<section role="form">
+				<div class="form-outer">
+
+
+
+					<!-- Conversational Form will NOT auto-run because of the absense of attribute "cf-form" -->
+					<!-- https://www.w3schools.com/tags/att_input_autocomplete.asp -->
+					<form id="form" method="POST" action="about:blank" autocomplete="on">
+						<fieldset>
+							<legend>Native form</legend>
+							<p>
+								<label for="facebook-social">Choose your favourite social channel</label>
+								<p>
+									<input required cf-label="Facebook" type="radio" id="facebook-social" name="social" tabindex="4" value="facebook" autocomplete="facebook-social">
+									<label for="facebook-social">Facebook</label>
+								</p>
+								<p>
+									<input required cf-label="Ello" type="radio" id="ello-social" name="social" tabindex="5" value="ello" autocomplete="ello-social">
+									<label for="ello-social">Ello</label>
+								</p>
+								<p>
+									<input required cf-label="Twitter" type="radio" id="twitter-social" name="social" tabindex="6" value="Twitter" autocomplete="twitter-social">
+									<label for="twitter-social">Twitter</label>
+								</p>
+							</p>
+
+							<p>
+								<input type="text" placeholder="#fname" name="fname" id="fname" value="" tabindex="1" autocomplete="on">
+								<label for="fname">Your FIRST name</label>
+							</p>
+							<p>
+								<input type="text" placeholder="#lname" name="lname" id="lname" value="" tabindex="2" autocomplete="on">
+								<label for="lname">Your LAST name</label>
+							</p>
+							<p>
+								<input type="email" placeholder="#email" name="email" id="email" value="" tabindex="3" autocomplete="on">
+								<label for="email">Your email</label>
+							</p>
+							</br>
+							</br>
+							<button type="submit">Submit</button>
+						</fieldset>
+					</form>
+
+					</div>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+		</main>
+
+
+		<script>
+			function startTheConversation(){
+
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("cf-context")
+				});
+
+				window.conversationalFormExamples.toggleConversation();
+			}
+		</script>
+	</body>
+</html>

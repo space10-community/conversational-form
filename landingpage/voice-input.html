@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+
+		<!-- <script id="conversational-form-development" src="../dist/conversational-form.min.js"></script>
+		<link rel="stylesheet" href="../dist/conversational-form.min.css"> -->
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	</head>
+	<body>
+		<style>
+			.custom-template{
+				font-size:12px;
+				color:red;
+			}
+		</style>
+
+		<main class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form examples</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<article>
+					<h1 id="writer">
+						Voice Control (1/2)
+					</h1>
+					<h2>
+						Fill out a form using your voice. This example uses HTML5s <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition" target="_blank">SpeechRecognition</a> API to have <u>speech 2 text</u>.
+						</br></br>
+						Read WIKI <a href="https://github.com/space10-community/conversational-form/wiki/Conditional-Flow" target="_blank">here</a>
+						</br></br>
+						See an example where we also include <a href="voice-input-output.html" target="_self">text 2 speech here</a>
+					</h2>
+				</article>
+			</section>
+
+			<section role="form">
+				<div class="form-outer">
+
+					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+					<form id="form">
+						<input
+							id="123"
+							name="123"
+							type="text"
+							cf-questions="Hello, please tell me your name?"
+						/>
+
+						<fieldset cf-questions="Choose your favourite color, <span style='background: blue;'>blue</span>, <span style='background: red;'>red</span> or <span style='background: yellow;'>yellow</span>">
+							<input type="radio" cf-label="blue" value="blue" id="1" />
+							<input type="radio" cf-label="red" value="red" id="2" />
+							<input type="radio" cf-label="yellow" value="yellow" id="3" />
+						</fieldset>
+					</form>
+		
+				</div>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+		</main>
+
+		<script>
+			function initExample(){
+				var dispatcher = new cf.EventDispatcher(),
+					synth = null,
+					recognition = null,
+					msg = null,
+					SpeechRecognition = null;
+				
+				try{
+					SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+				}catch(e){
+					console.log("Example support range: https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility");
+				}
+
+				// here we use https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+				// you can use what ever API you want, ex.: Google Cloud Speech API -> https://cloud.google.com/speech/
+
+				if(SpeechRecognition){
+					// here we create our input
+					var microphoneInput = {
+						// behaviors needs to follow the cf.IUserInput interface, they will be checked
+						init: function() {
+							console.log("voice: init method called from mic integration");
+						},
+						// set awaiting callback to false, as we will NOT await the speak in this example
+						awaitingCallback: false,
+						cancelInput: function() {
+							console.log("voice: CANCEL")
+							finalTranscript = null;
+							if(recognition){
+								recognition.onend = null;
+								recognition.onerror = null;
+								recognition.stop();
+							}
+						},
+						input: function(resolve, reject, mediaStream) {
+							console.log("voice: INPUT")
+							// input is called when user is interacting with the CF input button (UserVoiceInput)
+
+							// connect to Speech API (ex. Google Cloud Speech), Watson (https://github.com/watson-developer-cloud/speech-javascript-sdk) or use Web Speech API (like below), resolve with the text returned..
+							// using Promise pattern -> https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+								// if API fails use reject(result.toString())
+								// if API succedes use resolve(result.toString())
+							
+							if(recognition)
+								recognition.stop();
+
+							recognition = new SpeechRecognition(),
+								finalTranscript = '';
+
+							recognition.continuous = false; // react only on single input
+							recognition.interimResults = false; // we don't care about interim, only final.
+							
+							// recognition.onstart = function() {}
+							recognition.onresult = function(event) {
+								// var interimTranscript = "";
+								for (var i = event.resultIndex; i < event.results.length; ++i) {
+									if (event.results[i].isFinal) {
+										finalTranscript += event.results[i][0].transcript;
+									}
+								}
+							}
+
+							recognition.onerror = function(event) {
+								reject(event.error);
+							}
+
+							recognition.onend = function(event) {
+								if(finalTranscript && finalTranscript !== ""){
+									resolve(finalTranscript);
+								}
+							}
+
+							recognition.start();
+						}
+					}
+				}
+
+				var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("cf-context"),
+					eventDispatcher: dispatcher,
+
+					// add the custom input (microphone)
+					microphoneInput: microphoneInput,
+
+					submitCallback: function(){
+						// remove Conversational Form
+						console.log("voice: Form submitted...", conversationalForm.getFormData(true));
+						alert("You made it! Check console for data")
+					}
+				});
+
+				if(!SpeechRecognition){
+					conversationalForm.addRobotChatResponse("SpeechRecognition not supported, so <strong>no</strong> Microphone here.");
+				}
+			};
+		</script>
+
+		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
+	</body>
+</html>
