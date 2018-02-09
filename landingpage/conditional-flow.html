@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css">
+
+		<script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js" crossorigin></script>
+	</head>
+	<body>
+		<script src="build/conversational-form-examples.min.js" id="examples-script"></script>
+
+		<main class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form examples</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormExamples.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormExamples.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormExamples.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<article>
+					<h1 id="writer">
+						Conditional flow
+					</h1>
+					<h2>
+						Using attr: cf-conditional to make conditional form flows. For documentation and more info see <a target="_blank" href="https://github.com/space10-community/conversational-form/wiki/Conditional-Flow">Wiki</a>
+					</h2>
+				</article>
+			</section>
+
+			<section role="form">
+				<div class="form-outer">
+
+					<!-- Conversational Form will auto-run because of attribute "cf-form" -->
+					<form id="form">
+
+						<fieldset cf-questions="Ready to try a conditional flow?">
+							<label for="intro-yes">Yes
+								<input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+							</label>
+
+							<label for="intro-no">No thanks
+								<input type="radio" name="cfc-intro" id="intro-no" value="no">
+							</label>
+
+							<label for="intro-disabled">Disabled..
+								<input type="radio" disabled name="cfc-intro" id="intro-disabled" value="ignore">
+							</label>
+						</fieldset>
+
+						<input
+							type="text"
+							id="gr8"
+							name="cfc-step1"
+							cf-questions="Conditional flow pre, please write, <strong>gr8</strong> to continue, if you write something else than <strong>gr8</strong> the will you will skip elements."
+							cf-conditional-cfc-intro="yes" />
+
+						<fieldset cf-questions="<strong>{gr8}!</strong> Please choose a path.">
+							<input required type="radio" name="cfc-path" id="path-a" value="a" cf-conditional-cfc-step1="^gr8$||great">
+							<label for="path-a">Path A</label>
+
+							<input required type="radio" name="cfc-path" id="path-b" value="b" cf-conditional-cfc-step1="^gr8$||great">
+							<label for="path-b">Path B (checkboxes and radiobuttons)</label>
+
+							<input required type="radio" name="cfc-path" id="path-d" value="d" cf-conditional-cfc-step1="^gr8$||great">
+							<label for="path-d">Path D (C is ignored)</label>
+						</fieldset>
+
+						<!--Path A-->
+						<input
+							id="path-a-1"
+							type="text"
+							cf-questions="Path A question 1/1, try and change your previous choice to B"
+							cf-conditional-cfc-path="a"
+						/>
+
+						<!--Path B-->
+						<fieldset
+							cf-questions="Path B question 1/2, multi choice"
+						>
+							<input 
+								required
+								type="checkbox"
+								cf-conditional-cfc-path="b"
+								name="cfc-path-b-checkbox"
+								id="path-b-checkbox-1"
+								value="test1"
+							>
+							<label for="path-b-checkbox-1">Path B, checkbox 1</label>
+
+							<input 
+								required
+								type="checkbox"
+								cf-conditional-cfc-path="b"
+								name="cfc-path-b-checkbox"
+								id="path-b-checkbox-2"
+								value="test2"
+								checked="checked"
+							>
+							<label for="path-b-checkbox-2">Path B, checkbox 2</label>
+						</fieldset>
+
+
+						<!-- if both checkboxes are checked-->
+						<!-- also path b -->
+						<!-- two different conditions !-->
+						<input
+							id="path-b-alternative"
+							type="text"
+							cf-questions="Both checkboxes checked and path 'b' was choosen, hurray \o/"
+							cf-conditional-cfc-path="b"
+							cf-conditional-cfc-path-b-checkbox="test1,test2"
+						/>
+
+						<fieldset
+							cf-questions="Path B question 2/2, radio buttons, <strong>hint:</strong> choose one to continue"
+						>
+							<input 
+								required
+								type="radio"
+								cf-conditional-cfc-path="b"
+								name="cfc-path-b-radio"
+								id="path-b-radio-1"
+								value="test1"
+							>
+							<label for="path-b-radio-1">Path radio 1</label>
+
+							<input 
+								required
+								type="radio"
+								cf-conditional-cfc-path="b"
+								name="cfc-path-b-radio"
+								id="path-b-radio-2"
+								value="test2"
+								checked="checked"
+							>
+							<label for="path-b-radio-2">Path radio 2</label>
+						</fieldset>
+
+						<!--Path C-->
+						<input
+							type="text"
+							cf-questions="Path C question 1/1, I will be completly ignored as there is no C Path."
+							cf-conditional-cfc-path="c"
+						/>
+
+						<!--Path D, section > option-->
+						<select
+							cf-questions="Path D question 1/1, Pick an option."
+							cf-conditional-cfc-path="d"
+							name="path-d-option"
+						>
+							<option value="option-a" selected>Path D 2/2 #1</option>
+							<option value="option-b">Path D 2/2 #2</option>
+						</select>
+
+						<input
+							type="text"
+							cf-questions="Path D question 2/2/1"
+							cf-conditional-path-d-option="option-a"
+						/>
+
+						<input
+							type="text"
+							cf-questions="Path D question 2/2/22"
+							cf-conditional-path-d-option="option-b"
+						/>
+
+						<!-- standard flow, no confitionals -->
+						<input
+							id="nope"
+							type="text"
+							cf-questions="You decided not to continue on the conditional adventure, Zelda is sad."
+							cf-conditional-cfc-intro="no" />
+
+						<fieldset 
+							cf-questions="I am apart of standard flow, a natural part of the flow. No conditionals involved here."
+						>
+							<input required type="radio" name="standard-radios" id="standard-yes" value="a">
+							<label for="standard-yes">Standard radio 1</label>
+
+							<input required type="radio" name="standard-radios" id="standard-no" value="b">
+							<label for="standard-no">Standard radio 2</label>
+						</fieldset>
+
+						<input
+							id="outsider"
+							type="text"
+							cf-questions="Lst step of the flow (not a conditional step)"
+							/>
+					</form>
+		
+				</div>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+		</main>
+
+
+		<script>
+			var testValidation = function(dto, success, error){
+				console.log("dto....", dto, success, error);
+				if(dto.text.indexOf("world") != -1)
+					return success();
+				return error();
+			};
+
+			(function(){
+				const dispatcher = new cf.EventDispatcher();
+				dispatcher.addEventListener(cf.ChatListEvents.CHATLIST_UPDATED, function(event){
+					// console.log("chat list updated...", event);
+				}, false);
+
+				var conversationalForm = new cf.ConversationalForm({
+					formEl: document.getElementById("form"),
+					context: document.getElementById("cf-context"),
+					eventDispatcher: dispatcher,
+					flowStepCallback: function(dto, success, error){
+						success();
+					},
+					submitCallback: function(){
+						// remove Conversational Form
+						alert("You made it!")
+						console.log("Form submitted...");
+					}
+				});
+			})();
+		</script>
+
+	</body>
+</html>

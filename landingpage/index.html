@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+	<head>
+		<title>Turning web forms into conversations</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+
+		<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+		<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+
+		<link rel="author" href="Relax, we are the good guys"/>
+		<link rel="publisher" href="http://space10.io/"/>
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+		<meta name="twitter:creator" content="@space10_journal">
+		<meta name="twitter:title" content="Turning web forms into conversations"/>
+		<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+		<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/images/share_img-twitter.jpg" />
+
+		<!-- Open Graph data -->
+		<meta property="og:title" content="Turning web forms into conversations"/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:image" content="images/share_img.jpg" />
+		<meta property="og:image:width" content="1200"/>
+		<meta property="og:image:height" content="630"/>
+
+		<link rel="stylesheet" href="build/conversational-form-docs.min.css?v=1.0.0">
+		
+		<!-- file to overwrite Conversational Form styles -->
+		<link rel="stylesheet" href="build/styles/cf/cf-theming.css?v=1.0.0">
+
+		<link rel="icon" href="images/favicon.ico">
+	</head>
+
+	<body>
+		<!-- Load Conversational Form (v0.9.6) -->
+		 <script type="text/javascript" src="https://cf-4053.kxcdn.com/conversational-form/0.9.6/conversational-form.min.js?v=1.0.0" crossorigin></script>
+		<!-- Load docs -->
+		 <script src="build/conversational-form-docs.min.js?v=1.0.0"></script>  
+
+		<!-- dev -> -->
+		<!-- <script id="conversational-form-development" src="../build/conversational-form.js"></script>
+		<script src="build/cf/ConversationalFormDocs.js"></script>
+		<link rel="stylesheet" href="../dist/conversational-form.min.css">  -->
+
+		<main id="conversational-form-docs" class="content">
+			<menu id="small-screen-menu">
+				<h2>Conversational Form</h2>
+
+				<div class="switch-btn">
+					<label class="switch">
+						<input type="checkbox" onclick="window.conversationalFormDocs.toggleConversation(event)">
+						<div class="slider round"></div>
+					</label>
+				</div>
+
+				<div class="hamburger-btn" onclick="window.conversationalFormDocs.toggleMenuState(event)">
+					<svg viewBox="0 0 29 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-325.000000, -87.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g transform="translate(325.000000, 87.000000)">
+									<path d="M27.4802431,7 L1.23827993,7"></path>
+									<path d="M27.4802431,1 L1.23827993,1"></path>
+									<path d="M27.4802431,13 L1.23827993,13"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</menu>
+
+			<div class="switch-btn" id="cf-toggle-btn" data-label="Enable Conversational Form" data-label-toggled="Disable Conversational Form">
+				<label class="switch">
+					<input type="checkbox" onclick="window.conversationalFormDocs.toggleConversation(event)">
+					<div class="slider round"></div>
+				</label>
+			</div>
+
+			<section id="info" role="info">
+				<div class="close-btn" onclick="window.conversationalFormDocs.toggleMenuState()">
+					<svg viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+							<g transform="translate(-328.000000, -83.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="close" transform="translate(329.000000, 84.000000)">
+									<path d="M19.6371966,19.2779351 L1.08132646,0.722064927"></path>
+									<path d="M19.4923318,0.722064927 L0.936461672,19.2779351"></path>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</div>
+
+				<h3>
+					Conversational Form is licensed under <a href="https://github.com/space10-community/conversational-form/blob/master/LICENSE.md" target="_blank">MIT</a>,
+					</br>documentation under <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+					</br>Development by <a href="http://twitter.com/flexmotion" target="_blank">Felix Nielsen</a>.
+					</br>Design by <a href="http://www.charlieisslander.com/" target="_blank">Charlie Isslander</a> and <a href="http://norgram.co/" target="_blank">Norgram®</a>.
+
+					</br></br>Concept by <a href="http://space10.io" target="_blank">SPACE10</a>.
+				</h3>
+
+				<article>
+					<h1 id="writer">
+						Turning webforms into conversations.
+					</h1>
+					<h2>
+						Conversational Form is an open-source concept by <a href="http://space10.io" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface.
+					</br></br>Find examples of feature implementations <a href="examples.html" target="_self">here</a> or fill out the form <span class="below-768">below</span><span class="above-768">on the right</span> to take it for a spin 👉
+					</h2>
+
+
+					<div class="github-button__outer">
+						<a class="github-button" 
+							href="https://github.com/space10-community/conversational-form/fork" 
+							data-style="mega" 
+							data-count-href="/space10-community/conversational-form/network" 
+							data-count-api="/repos/space10-community/conversational-form#forks_count" 
+							data-count-aria-label="# forks on GitHub" 
+							aria-label="Fork space10-community/conversational-form on GitHub"></a>
+						</a>
+
+						<a class="github-button" 
+							href="https://github.com/space10-community/conversational-form" 
+							data-style="mega" 
+							data-count-href="/space10-community/conversational-form/stargazers" 
+							data-count-api="/repos/space10-community/conversational-form#stargazers_count" 
+							data-count-aria-label="# stargazers on GitHub" a
+							ria-label="Star space10-community/conversational-form on GitHub"></a>
+					</div>
+					
+					<footer>
+						<h3>
+							<a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq" target="_blank">Why we built Conversational Form</a>
+							&mdash;
+							<a href="https://medium.com/conversational-interfaces/the-conversational-form-evolved-now-with-voice-bc4f9a7da79f" target="_blank">Introducing voice</a>
+						</h3>
+						
+						<a href="http://space10.io" target="_blank">
+							<svg viewBox="0 0 685 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+								<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+									<g fill="white">
+										<path d="M28.3469,74.5235 C28.9559,87.3265 36.8819,91.4405 48.9209,91.4405 C57.4559,91.4405 66.2949,88.3935 66.2949,80.3155 C66.2949,70.7145 50.7509,68.8855 35.0529,64.4655 C19.5079,60.0465 3.2019,53.0355 3.2019,33.0705 C3.2019,9.2965 27.1279,0.0005 47.5499,0.0005 C69.1899,0.0005 90.9849,10.5155 91.1379,35.0515 L62.7909,35.0515 C63.2479,25.1455 53.9509,21.9455 45.2639,21.9455 C39.1669,21.9455 31.5489,24.0785 31.5489,31.2425 C31.5489,39.6245 47.2449,41.1485 63.0949,45.5675 C78.7919,49.9875 94.6419,57.3015 94.6419,76.9615 C94.6419,104.5465 71.1729,113.3855 47.2449,113.3855 C22.2519,113.3855 0.1519,102.4135 -0.0001,74.5235 L28.3469,74.5235 Z"></path>
+										<path d="M137.2485,53.8828 L156.2985,53.8828 C165.1385,53.8828 171.5375,50.2258 171.5375,40.3198 C171.5375,30.1088 164.9855,25.9928 156.2985,25.9928 L137.2485,25.9928 L137.2485,53.8828 Z M108.9015,3.2858 L160.5655,3.2858 C180.8345,3.2858 199.8845,12.5828 199.8845,38.3368 C199.8845,65.3128 184.4935,75.8278 160.5655,75.8278 L137.2485,75.8278 L137.2485,112.1008 L108.9015,112.1008 L108.9015,3.2858 Z"></path>
+										<path d="M234.0302,71.5618 L258.7202,71.5618 L246.6812,33.4608 L246.3742,33.4608 L234.0302,71.5618 Z M232.2022,3.2858 L261.0062,3.2858 L301.6972,112.1008 L272.1312,112.1008 L265.4242,92.5928 L227.4782,92.5928 L220.6192,112.1008 L191.5112,112.1008 L232.2022,3.2858 Z"></path>
+										<path d="M376.5072,42.1483 C374.9832,31.1753 366.4492,25.3833 354.5622,25.3833 C336.2732,25.3833 329.2642,41.5393 329.2642,57.6923 C329.2642,73.8473 336.2732,90.0023 354.5622,90.0023 C367.8222,90.0023 375.4402,82.3823 376.5072,69.8853 L404.8542,69.8853 C403.3302,97.9283 382.7562,114.3863 355.1712,114.3863 C322.2532,114.3863 300.9172,89.2403 300.9172,57.6923 C300.9172,26.1453 322.2532,1.0003 355.1712,1.0003 C378.6422,1.0003 404.0922,15.9343 404.8542,42.1483 L376.5072,42.1483 Z"></path>
+										<polygon points="421.9519 3.2858 508.6689 3.2858 508.6689 25.9928 450.2989 25.9928 450.2989 45.0438 503.6389 45.0438 503.6389 66.9888 450.2989 66.9888 450.2989 87.7168 510.1929 87.7168 510.1929 112.1008 421.9519 112.1008"></polygon>
+										<path d="M525.4045,44.2815 L525.4045,25.2315 C540.3385,25.5355 555.7325,20.0505 556.7985,3.2855 L578.2875,3.2855 L578.2875,112.1005 L550.8545,112.1005 L550.8545,44.2815 L525.4045,44.2815 Z"></path>
+										<path d="M660.1669,57.1582 C660.1669,42.8422 659.1809,22.7082 641.5619,22.7082 C624.5729,22.7082 623.1149,42.8422 623.1149,57.1582 C623.1149,71.4722 624.5729,91.7642 641.5619,91.7642 C659.1809,91.7642 660.1669,71.4722 660.1669,57.1582 M598.3469,57.1582 C598.3469,27.8992 609.6299,1.0002 640.7759,1.0002 C672.8659,1.0002 684.9349,27.8992 684.9349,57.1582 C684.9349,86.4152 672.8659,113.4722 640.7759,113.4722 C609.6299,113.4722 598.3469,86.4152 598.3469,57.1582"></path>
+									</g>
+								</g>
+							</svg>
+						</a>
+					</footer>
+				</article>
+			</section>
+
+			<section id="form" role="form">
+				<form id="cf-form" method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
+					<fieldset>
+						<label for="name">What's your name?</label>
+						<input required cf-questions="Hi there! What's your name? 😊" type="text" class="form-control" name="name" id="name">
+					</fieldset>
+
+					<fieldset>
+						<label for="occupation">Occupation</label>
+						<div class="radio">
+						<label>
+							<input cf-questions="Great to meet you, {previous-answer}! I'm a web form, what do you do?|Awesome, {previous-answer}! And what do you do?" type="radio" name="occupation" id="occupation-1" value="developer">
+							Developer
+						</label>
+						</div>
+						<div class="radio">
+						<label>
+							<input type="radio" name="occupation" id="occupation-2" value="designer">
+							Designer
+						</label>
+						</div>
+						<div class="radio">
+						<label>
+							<input type="radio" name="occupation" id="occupation-3" value="curious-mind">
+							Curious mind
+						</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="occupation" id="occupation-2" value="lost">
+								Lost cause
+							</label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<label for="company">Company</label>
+						<input cf-questions="Which company are you with?" type="text" class="form-control" name="company" id="company">
+					</fieldset>
+
+					<fieldset>
+						<label for="opinion">Will conversational interfaces be everywhere?</label>
+						<select cf-questions="Do you think conversational forms will replace web forms in the future?" name="opinion" id="opinion" class="form-control">
+							<option></option>
+							<option>Definitely</option>
+							<option>Maybe</option>
+							<option>No</option>
+						</select>
+					</fieldset>
+
+					<fieldset>
+						<label for="email">Email</label>
+						<input pattern=".+\@.+\..+" cf-error="E-mail not correct" cf-questions="If you want to stay updated on conversational interfaces from SPACE10, please give me your email." type="email" class="form-control" name="email" id="your-email">
+					</fieldset>
+
+					<fieldset style="display: none;">
+						<label for="thats-all">Are you ready to submit the form?</label>
+						<select cf-questions="Are you ready to submit the form?" name="submit-form" id="submit-form" class="form-control">
+							<option></option>
+							<option>Yup</option>
+						</select>
+					</fieldset>
+
+					<fieldset style="display: none;">
+						<label for="thats-all">Want to start over?</label>
+						<select cf-questions="Want to start over?" name="repeat" id="repeat" class="form-control">
+							<option></option>
+							<option>Yes, let's go again</option>
+						</select>
+					</fieldset>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</section>
+
+			<section id="cf-context" role="cf-context" cf-context>
+				
+			</section>
+		</main>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-69941652-5', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+		<script async defer src="https://buttons.github.io/buttons.js"></script>
+	</body>
+
+</html>
