@@ -1,0 +1,98 @@
+@import "nib"
+@import "rupture"
+@import "../_cf-docs-variables"
+@import "../../../src/styles/mixins/_cf-mixins.styl"
+
+main.content
+	section[role="form"]
+		position absolute
+		background $color-white
+		top 0px
+		left 0px
+		z-index $zIndex-low
+		height 100%
+		width 100%
+		padding 27px
+		padding-top $menu-height + 27px
+		display flex
+		flex-flow row
+		justify-content flex-start
+
+		+above($breakpoint-1)
+			padding 37px 40px
+			width 50vw
+			z-index $zIndex-middle
+			right 0px
+			left auto
+			will-change opacity
+			transition opacity $anim-time-2 $anim-easeOut
+			opacity 0
+
+			&.show
+				opacity 1
+
+		.close-btn
+			position absolute
+			z-index $zIndex-high - 1
+			right 24px
+			top 18px
+			width 24px
+			height 24px
+
+			svg
+				width 100%
+				height 100%
+		
+		form
+			align-self flex-end
+			width 100%
+		
+		form h3
+			margin-bottom 15px
+			margin-bottom 10px
+			font-size 16px
+
+		fieldset
+			margin-bottom 20px
+			max-width 400px
+
+			> input[type="radio"]
+				margin-left 0px
+
+			> *:not([type="radio"])
+				display block
+				width 100%
+			
+			button
+				max-width 50px
+
+			label
+				font-weight $font-weight-bold
+				font-size responsivePXValue(9, 12)
+				margin-bottom 4px
+			
+			input
+				padding 8px
+
+				&[type="text"], &[type="email"]
+					border 1px solid $color-black
+			
+			select
+				-webkit-appearance none
+				-webkit-border-radius 0px
+				// from http://stackoverflow.com/a/29151997
+				background url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><path fill='#444' d='M7.406 7.828l4.594 4.594 4.594-4.594 1.406 1.406-6 6-6-6z'></path></svg>")
+				background-repeat no-repeat
+				background-size 60% 60%
+				background-position 160% 50%
+
+				padding 8px
+
+				height 31px
+				font-size responsivePXValue(9, 12)
+				border-radius 0px
+				background-color white
+				border-color black
+			
+			.radio
+				margin-left 30px

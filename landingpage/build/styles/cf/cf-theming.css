@@ -1,0 +1,148 @@
+main.content .conversational-form {
+  font-family: Helvetica Neue, Helvetica;
+  font-style: normal;
+}
+main.content .conversational-form cf-chat scrollable::-webkit-scrollbar {
+  width: 0px;
+}
+main.content .conversational-form cf-chat-response {
+  padding-top: 0px;
+  min-width: 200px;
+}
+@media only screen and (max-width: 769px) {
+  main.content .conversational-form cf-chat-response {
+    max-width: 83%;
+  }
+}
+main.content .conversational-form cf-chat-response text {
+  font-weight: 900;
+  min-height: 42px;
+  font-size: 13px;
+}
+main.content .conversational-form cf-chat-response thumb {
+  height: 42px;
+  width: 42px;
+}
+main.content .conversational-form cf-chat-response thumb > p {
+  background-color: #ebebeb;
+}
+main.content .conversational-form cf-chat-response:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+main.content .conversational-form cf-chat-response.robot {
+  padding-left: 48px;
+}
+main.content .conversational-form cf-chat-response.robot text {
+  color: #222;
+}
+main.content .conversational-form cf-chat-response.robot text > p {
+  border-radius: 4px 20px 20px 20px;
+  background: #ebebeb;
+}
+main.content .conversational-form cf-chat-response.robot text > p:not(:only-child):first-child {
+  border-radius: 20px 20px 20px 4px;
+}
+main.content .conversational-form cf-chat-response.robot text > p:not(:only-child):last-child {
+  border-radius: 4px 20px 20px 20px;
+}
+main.content .conversational-form cf-chat-response.robot thumb {
+  background-color: #ebebeb;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+}
+main.content .conversational-form cf-chat-response.user {
+  padding-right: 48px;
+}
+main.content .conversational-form cf-chat-response.user text {
+  color: #fff;
+}
+main.content .conversational-form cf-chat-response.user text > p {
+  background: #222;
+  border-radius: 20px 4px 20px 20px;
+}
+main.content .conversational-form cf-chat-response.user thumb {
+  background-color: #222;
+  background-size: 20px 16px;
+  background-repeat: no-repeat;
+  background-position: 11px 12px;
+}
+main.content .conversational-form cf-input input,
+main.content .conversational-form cf-input textarea {
+  border-radius: 40px;
+  min-height: 57px;
+  font-size: 14px;
+  padding: 19px 60px 19px 30px;
+  height: 56px;
+  color: rgba(34,34,34,0.4);
+  font-weight: 900;
+}
+@media only screen and (min-width: 769px) {
+  main.content .conversational-form cf-input input,
+  main.content .conversational-form cf-input textarea {
+    font-size: 16px;
+  }
+}
+main.content .conversational-form cf-input input:not(:focus),
+main.content .conversational-form cf-input textarea:not(:focus) {
+  box-shadow: 0 0 1px rgba(58,58,58,0.5);
+}
+main.content .conversational-form cf-input-button {
+  background: #222;
+  height: 42px;
+  width: 42px;
+  border: none;
+}
+main.content .conversational-form cf-input-button.microphone-interface {
+  background: #fff;
+}
+main.content .conversational-form cf-input-button .cf-icon-progress {
+  background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMThweCIgaGVpZ2h0PSIxOXB4IiB2aWV3Qm94PSIwIDAgMTggMTkiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTM3Mi4wMDAwMDAsIC05NDUuMDAwMDAwKSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NTEuMDAwMDAwLCA5MjcuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MjIuMDAwMDAwLCAxOS4wMDAwMDApIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNOC4xNDAzNTA4OCwyLjEwOTE4MTE0IEw4LjE0MDM1MDg4LDE2LjA4MDkzODUiIGlkPSJMaW5lIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJSZWN0YW5nbGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcuOTkzODAzLCA4LjA2ODc0NSkgcm90YXRlKC0zMTUuMDAwMDAwKSB0cmFuc2xhdGUoLTcuOTkzODAzLCAtOC4wNjg3NDUpICIgcG9pbnRzPSIyLjYyNTkxMzI4IDEzLjQ4Njk1OCAyLjYyNTkxMzI4IDIuNjUwNTMxMjEgMi42MjU5MTMyOCAyLjY1MDUzMTIxIDEzLjM2MTY5MjEgMi42NTA1MzEyMSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
+  background-size: 18px 19px;
+}
+main.content .conversational-form cf-input-button.loading:after {
+  border: 2px solid #1ed97b;
+}
+main.content .conversational-form cf-input-button .cf-icon-audio {
+  background-image: url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAAGpAGuzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtlJREFUeNpiUFJSYgDh////M7AwQMB/ZWVlBiYGJADiqACx/N27dxlByu7AZAACiAFqwCeQATA9vDA9KAb8BzGARv8HcRhBHJBpAAHECDIAZjGMAZJA0Y9u1mcg5kEWhJnLC5UEgf1QehFOOwACCFniKBBPBwouQXb8NiC2AuLFyJaDgCc2V+F0Lk4JkGsuYvMHCBhA6QNAQT8QgwUacCBd94DYAYRhUcKAJMkFFPyObDnM199g9gAEELLPMYIGCpYDTYnC5Y1/WHwUic/fjAwEABMDiYBkDaBg2gXErkCcCQom5BCBJQtYLCCH0h8gZgbiJ0Asi6YBFEvnoWxtFiSbQOA2lmAFgQBg0G7EFg/YFIOTKowNEEDYIi4GiKcB8WUgtgYqxvA0MliGFFFWUBsZ8QVrJLp1wNDZRmo8eJCqgZG+SWMQamBBSg64Ms9FYFzwQIu8L0zYkjIasIQmFxA4hqzBD1rEH0ASk4cWI9Oh/GxQ4tMCMq5CBQyB+AKaDY+BWAaI/wI1s4BsuAYqgqGS56F+2gd13n+oYlASZ0EOpXhQJkEy1RFU1UDZd5DzA3Ly3ggNKU6kfM2Inh+YsJR6yIXAf1jmJzviAAIMWxZFBvxAPAeIQ3DIrwHiFKCzP5JjgSe01iIGeAEt2U6qBa+BWIRIC94ALRAlNTOIkBDUIlTLbTTPzqMW0NWCrySY8xVfEXwLiFWRxDSB+AYQdwJxE5EWdEKrTQ0gdR1J/DbIBzPQFM+F0s1AbAvEH/AYDJKzBWayZjS9MDADlpPXAXEgksRbIDYB4gdIYupArAtlg5oSN6EFM8jlCkDmGSAWRlK/HigXhFxUFANxD5oLfkPbJlOhrSFkAArWbCDOAmJWNLkSoOG92MoiUAHfAcRlZCaaLiCuABr+n5jCjhVaXYYCsTMQs6HJ/wLivUC8GoiXAA39TU59gK/9B+snkV3h/CclbJArVrrmZAB+mc1ty+WBKAAAAABJRU5ErkJggg==");
+  background-size: 12px 19px;
+  mix-blend-mode: difference;
+}
+main.content .conversational-form cf-input-button cf-icon-audio-eq {
+  border-color: #222;
+}
+main.content .conversational-form .cf-button {
+  color: #222;
+  border-color: #ddd;
+  transition: opacity 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), border-color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1);
+  background: none !important;
+  font-weight: 900;
+  line-height: 1.2;
+}
+main.content .conversational-form .cf-button > div {
+  padding: 14px 24px;
+}
+main.content .conversational-form .cf-button cf-radio {
+  background: rgba(34,34,34,0.2);
+}
+main.content .conversational-form .cf-button.highlight,
+main.content .conversational-form .cf-button:focus,
+main.content .conversational-form .cf-button:hover,
+main.content .conversational-form .cf-button[checked="checked"],
+main.content .conversational-form .cf-button.selected {
+  border-color: #6f6f6f;
+  color: #595959;
+}
+main.content .conversational-form .cf-button.highlight cf-radio,
+main.content .conversational-form .cf-button:focus cf-radio,
+main.content .conversational-form .cf-button:hover cf-radio,
+main.content .conversational-form .cf-button[checked="checked"] cf-radio,
+main.content .conversational-form .cf-button.selected cf-radio {
+  background: #222;
+}
+main.content .conversational-form cf-list-button:after {
+  background-image: none;
+  background: #000;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}

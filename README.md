@@ -40,6 +40,7 @@ Read the [Getting started](https://space10-community.github.io/conversational-fo
 [![Build Status](https://travis-ci.org/space10-community/conversational-form.svg?branch=develop)](https://travis-ci.org/space10-community/conversational-form)
 [![JS gzip size](http://img.badgesize.io/space10-community/conversational-form/master/dist/conversational-form.min.js?compression=gzip&label=JS+gzip+size)](https://github.com/space10-community/conversational-form/blob/master/dist/conversational-form.min.js)
 [![CSS gzip size](http://img.badgesize.io/space10-community/conversational-form/master/dist/conversational-form.min.css?compression=gzip&label=CSS+gzip+size)](https://github.com/space10-community/conversational-form/blob/master/dist/conversational-form.min.css)
+[![](https://data.jsdelivr.com/v1/package/npm/conversational-form/badge)](https://www.jsdelivr.com/package/npm/conversational-form)
 
 
 ## Bugs and feature requests
