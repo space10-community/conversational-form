@@ -2,7 +2,6 @@
 node_modules
 bower_components
 .vscode
-package-lock.json
 /build
 src/scripts/typings
 docs/build/conversational-form-docs.css
