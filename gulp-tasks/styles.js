@@ -46,7 +46,7 @@ global.gulp.task('sass-form-build', ['sass-form'], function(){
  */
 global.gulp.task('sass-form', function () {
 	var src = [
-		global.srcFolder + "/styles/main.scss"
+		global.srcFolder + "/styles/conversational-form.scss"
 	]
 	var dst = global.buildFolder;
 
