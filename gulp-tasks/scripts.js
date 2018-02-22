@@ -81,6 +81,7 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/form-tags/SelectTag.js",
 		global.buildFolder + "cf/form-tags/ButtonTag.js",
 		global.buildFolder + "cf/form-tags/OptionTag.js",
+		global.buildFolder + "cf/form-tags/CfRobotMessageTag.js",
 		global.buildFolder + "cf/ui/control-elements/Button.js",
 		global.buildFolder + "cf/ui/control-elements/RadioButton.js",
 		global.buildFolder + "cf/ui/control-elements/CheckboxButton.js",

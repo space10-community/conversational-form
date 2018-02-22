@@ -1691,6 +1691,7 @@ var cf;
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="SelectTag.ts"/>
 /// <reference path="OptionTag.ts"/>
+/// <reference path="CfRobotMessageTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
 /// <reference path="../logic/EventDispatcher.ts"/>
 /// <reference path="../parsing/TagsParser.ts"/>
@@ -1720,6 +1721,7 @@ var cf;
             this.domElement.addEventListener("change", this.changeCallback, false);
             // remove tabIndex from the dom element.. danger zone... should we or should we not...
             this.domElement.tabIndex = -1;
+            this.skipUserInput = false;
             // questions array
             if (options.questions)
                 this.questions = options.questions;
@@ -1974,6 +1976,11 @@ var cf;
                         domElement: element
                     });
                 }
+                else if (element.tagName.toLowerCase() == "cf-robot-message") {
+                    tag = new cf.CfRobotMessageTag({
+                        domElement: element
+                    });
+                }
                 return tag;
             }
             else {
@@ -2200,6 +2207,7 @@ var cf;
             if (cf.ConversationalForm.illustrateAppFlow)
                 if (!cf.ConversationalForm.suppressLog)
                     console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
+            this.skipUserInput = false;
         }
         Object.defineProperty(TagGroup.prototype, "required", {
             get: function () {
@@ -2742,6 +2750,37 @@ var cf;
         return OptionTag;
     }(cf.Tag));
     cf.OptionTag = OptionTag;
+})(cf || (cf = {}));
+
+/// <reference path="Tag.ts"/>
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    // class
+    var CfRobotMessageTag = /** @class */ (function (_super) {
+        __extends(CfRobotMessageTag, _super);
+        function CfRobotMessageTag(options) {
+            var _this = _super.call(this, options) || this;
+            _this.skipUserInput = true;
+            return _this;
+        }
+        CfRobotMessageTag.prototype.dealloc = function () {
+            _super.prototype.dealloc.call(this);
+        };
+        return CfRobotMessageTag;
+    }(cf.Tag));
+    cf.CfRobotMessageTag = CfRobotMessageTag;
 })(cf || (cf = {}));
 
 /// <reference path="ControlElement.ts"/>
@@ -4235,6 +4274,9 @@ var cf;
             if (this._currentTag.type == "text" || this._currentTag.type == "email") {
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
+            if (this._currentTag.skipUserInput === true) {
+                this.el.classList.add("hide-input");
+            }
             if (cf.UserInputElement.hideUserInputOnNoneTextInput) {
                 // toggle userinput hide
                 if (this.controlElements.active) {
@@ -4495,7 +4537,7 @@ var __extends = (this && this.__extends) || (function () {
 var cf;
 (function (cf) {
     cf.ChatResponseEvents = {
-        USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
+        USER_ANSWER_CLICKED: "cf-on-user-answer-clicked"
     };
     // class
     var ChatResponse = /** @class */ (function (_super) {
@@ -4688,6 +4730,11 @@ var cf;
                         _this.onReadyCallback();
                     // reset, as it can be called again
                     _this.onReadyCallback = null;
+                    if (_this._tag.skipUserInput === true) {
+                        setTimeout(function () {
+                            _this._tag.flowManager.nextStep();
+                        }, _this.uiOptions.robot.chainedResponseTime);
+                    }
                 }, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
             }
             else {
@@ -5369,6 +5416,7 @@ var cf;
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
+/// <reference path="form-tags/CfRobotMessageTag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
 /// <reference path="form-tags/InputTag.ts"/>
 /// <reference path="form-tags/SelectTag.ts"/>
@@ -5495,7 +5543,7 @@ var cf;
             // if tags are not defined then we will try and build some tags our selves..
             if (!this.tags || this.tags.length == 0) {
                 this.tags = [];
-                var fields = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea"), 0);
+                var fields = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea, cf-robot-message"), 0);
                 for (var i = 0; i < fields.length; i++) {
                     var element = fields[i];
                     if (cf_1.Tag.isTagValid(element)) {
