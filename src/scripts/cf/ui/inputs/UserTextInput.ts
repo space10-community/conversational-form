@@ -357,6 +357,12 @@ namespace cf {
 				this.inputElement.value = this._currentTag.defaultValue.toString();
 			}
 
+			if(this._currentTag.skipUserInput === true){
+				this.el.classList.add("hide-input");
+			} else {
+				this.el.classList.remove("hide-input");
+			}
+
 			if(UserInputElement.hideUserInputOnNoneTextInput){
 				// toggle userinput hide
 				if(this.controlElements.active){
