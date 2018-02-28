@@ -5,5 +5,5 @@
         $pixels: $pixels * 1px;
     }
 
-    @return $pixels  * ($cf-base-font-size/$base-size);
+    @return round( $pixels  * ($cf-base-font-size/$base-size) );
 }
