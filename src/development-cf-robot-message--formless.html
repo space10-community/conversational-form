@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	</head>
+	<body>
+
+		<style>
+			body{
+				margin: 0px;
+				padding: 0px;
+			}
+
+			.form-outer{
+				background: lightgrey;
+				width: 100%;
+				height: 90vh;
+			}
+
+			#conversational-form{
+				width: 90vw;
+				left: auto;
+				right: 0px;
+			}
+		</style>
+
+		<div id="context" class="form-outer" cf-context>
+
+
+
+			<form id="form">
+
+			</form>
+		</div>
+
+
+
+
+
+
+		<!-- <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/promise-polyfill/promise.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+		></script>
+
+		<script
+			id="conversational-form-development" 
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/parsing/TagsParser.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ConversationalForm.plugin.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/Helpers.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/EventDispatcher.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInterfaceOptions.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/BasicElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/ControlElements.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/ScrollController.js"
+		></script>
+
+		<script 
+			type="text/javascript"
+			src="../build/cf/data/Dictionary.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/Tag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/TagGroup.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/InputTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/SelectTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/ButtonTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/OptionTag.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/Button.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/RadioButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/CheckboxButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/OptionsList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/control-elements/UploadFileUI.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/interfaces/IUserInputElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserInputElement.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserTextInput.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/MicrophoneBridge.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/inputs/UserInputSubmitButton.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatResponse.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/ui/chat/ChatList.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/logic/FlowManager.js"
+		></script>
+
+		<script
+			type="text/javascript"
+			src="../build/cf/form-tags/CfRobotMessageTag.js"
+		></script>
+
+		<link type="text/css" rel="stylesheet" href="../build/conversational-form.css"/>
+
+		<!-- OR -->
+		<!--<script type="text/javascript" id="conversational-form-development" src="../dist/conversational-form.min.js" crossorigin></script>-->
+
+		<script>
+			// check formless.json
+			var testValidation = function(dto, success, error){
+				console.log("testValidation setup from formless.json, dto:", dto);
+				if(dto.text.indexOf("holmes") != -1)
+					return success();
+				return error();
+			};
+
+			var cfInstance;
+
+			// check formless.json
+			var onFormlessSubmitted = function(cf){
+				var formData = cfInstance.getFormData();
+				var formDataSerialized = cfInstance.getFormData(true);
+				console.log("Formdata:", formData);
+				console.log("Formdata, obj:", formDataSerialized);
+				cfInstance.addRobotChatResponse("Check the dev console for FormatData output.")
+
+			}
+
+			var step = 0;
+
+			var onStepCallback = function(dto, success, error){
+				// fake load, to illustrate how oe could communicate with a back-end service which could return new tags based on answer.
+				var xhr = new XMLHttpRequest()
+				xhr.onload = function(event){
+					if(step++ == 2){
+						// add tags that are received from pseudo webservice ..
+						var tags = [
+							{
+								// select group
+								"tag": "select",
+								"name": "country",
+								"cf-questions": "Runtime injected tags, first tag value: {first-tag}&& + follow-up",
+								"cf-input-placeholder": "Some copy",
+								"multiple": false,
+								"children":[
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "USA",
+										"value": "usa"
+									},
+									{
+										"tag": "option",
+										"cf-label": "UK",
+										"value": "uk"
+									}
+								]
+							},
+							{
+								// basic tag
+								"tag": "input",
+								"type": "text",
+								"cf-questions": "Tag is injected at runtime, data from 'webservice', check source of <a href='formless.html' style='text-decoration:underline'>formless.html</a>",
+								"cf-error": "Inject some text"
+							},
+							{
+								// tag group
+								"tag": "fieldset",
+								"type": "Checkboxes",
+								"cf-input-placeholder": "Tag group is injected",
+								"cf-questions": "Choose an injected tag",
+								"children":[
+									{
+										"tag": "input",
+										"type": "checkbox",
+										"name": "checkboxes-buttons-1",
+										"cf-label": "checkbox-x1",
+										"checked": "checked"
+									},
+									{
+										"tag": "input",
+										"type": "checkbox",
+										"name": "checkboxes-buttons-1",
+										"cf-label": "checkbox-x2"
+									}
+								]
+							}
+						];
+
+
+						console.log("Tags to parse and add at runtime to formless:", tags)
+
+						// add tag
+						// add tag at index
+						cfInstance.addTags(tags, true);
+					}
+
+					setTimeout(function(){
+						// fake loading...
+						success();
+					}, 1000);
+					
+				}
+				xhr.onerror = function(){
+					error("Webservice failed??")
+				}
+
+				xhr.open("GET", window.location.href);
+				xhr.send();
+			}
+
+			// load json file with formless data (files/formless.json)
+			window.onload = function(){
+				var xhr = new XMLHttpRequest();
+				xhr.onload = function(event){
+					var str = xhr.response;
+					var json = JSON.parse(str);
+
+					console.log("JSON to parse as form:", json)
+
+					// start one w. string
+					// window.cf.cfInstance.startTheConversation(str);
+
+					// add callback hooks..
+					json.options.submitCallback = onFormlessSubmitted.bind(window);
+					json.options.flowStepCallback = onStepCallback.bind(window);
+					
+					// add UI options
+					json.options.userInterfaceOptions = {
+						controlElementsInAnimationDelay: 250,
+						robot: {
+							robotResponseTime: 1000,
+							chainedResponseTime: 400
+						},
+						user:{
+							showThinking: true,
+							showThumb: false
+						}
+					}
+					
+					// start one w. json
+					cfInstance = window.cf.ConversationalForm.startTheConversation(json);
+					document.getElementById("context").appendChild(cfInstance.el);
+
+					// in-document form
+					// window.cf.cfInstance.startTheConversation({
+					// 	formEl: document.getElementById("empty-form")
+					// });
+				}
+				xhr.open("GET", "files/formless-test-data.json");
+				xhr.send();
+			};
+		</script>
+
+	</body>
+</html>

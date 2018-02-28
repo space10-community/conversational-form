@@ -1,0 +1,44 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Functionality' %}
+{% set page_slug = '/functionality/' %}
+
+{# {% block sidebar %}
+	{% include 'sidebar.twig' %}
+{% endblock %} #}
+
+{% block page %}
+    <h1 id="functionality">{{page_title}}</h1>
+    <p>This section aims at covering key functionality. Have a look at the nav for a list of topics.</p>
+
+    <form id="form" style="visibility: hidden;">
+    	<fieldset cf-questions="Thank you for your interest. What do you want to know more about?">
+	    	{% for link in _links %}
+	    		{% if link.path == "/functionality/" %}
+	    			{% for childLink in link.children %}
+	    				<input type="radio" name="path" value="{{childLink.path}}" cf-label="{{childLink.label}}" />
+	    			{% endfor %}
+	    		{% endif %}
+	    	{% endfor %}
+	    </fieldset>
+    </form>
+    <div id="cf-context" class="cf-context-functionality" cf-context></div>
+
+    <script>
+
+        window.location.href = "./conditionals-and-branching/"
+
+        window.onload = function(){
+            var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+                formEl: document.getElementById("form"),
+                context: document.getElementById("cf-context"),
+                submitCallback: function(){
+                    var formDataSerialized = conversationalForm.getFormData(true);
+                    console.log("Let's go to: ", formDataSerialized.path)
+                    window.location.href = ".." + formDataSerialized.path;
+                }
+            });
+        };
+    </script>
+
+{% endblock %}

@@ -16,7 +16,7 @@ namespace cf {
 	}
 
 	export const ChatResponseEvents = {
-		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
+		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked"
 	}
 
 	// class
@@ -234,6 +234,13 @@ namespace cf {
 
 						// reset, as it can be called again
 						this.onReadyCallback = null;
+
+						if(this._tag.skipUserInput === true){
+							setTimeout(() =>{
+								this._tag.flowManager.nextStep()
+							},this.uiOptions.robot.chainedResponseTime);
+						}
+
 					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
 				}else{
 					// user response, act normal
@@ -288,7 +295,7 @@ namespace cf {
 		}
 
 		private setToThinking(){
-			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);
 			if(canShowThinking){
 				this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
 				this.el.classList.remove("can-edit");

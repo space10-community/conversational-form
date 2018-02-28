@@ -24,6 +24,7 @@ namespace cf {
 		dealloc():void;
 		required: boolean;
 		disabled: boolean;
+		skipUserInput: boolean;
 		flowManager: FlowManager;
 		inputPlaceholder?: string;
 	}
@@ -42,6 +43,8 @@ namespace cf {
 		private _eventTarget: EventDispatcher;
 		private _fieldset: HTMLFieldSetElement;
 		protected _inputPlaceholder: string;
+
+		public skipUserInput: boolean;
 
 		// event target..
 		public defaultValue: string; // not getting set... as taggroup differs from tag
@@ -152,6 +155,8 @@ namespace cf {
 
 			if(ConversationalForm.illustrateAppFlow)
 				if(!ConversationalForm.suppressLog) console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
+
+			this.skipUserInput = false;
 		}
 
 		public dealloc(){
