@@ -3,6 +3,7 @@
 /// <reference path="logic/FlowManager.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
+/// <reference path="form-tags/CfRobotMessageTag.ts"/>
 /// <reference path="form-tags/TagGroup.ts"/>
 /// <reference path="form-tags/InputTag.ts"/>
 /// <reference path="form-tags/SelectTag.ts"/>
@@ -83,7 +84,7 @@ namespace cf {
 	}
 
 	export class ConversationalForm{
-		public version: string = "0.9.71";
+		public version: string = "0.9.80";
 
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
@@ -261,7 +262,7 @@ namespace cf {
 			if(!this.tags || this.tags.length == 0){
 				this.tags = [];
 
-				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea"), 0);
+				let fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll("input, select, button, textarea, cf-robot-message"), 0);
 
 				for (var i = 0; i < fields.length; i++) {
 					const element = fields[i];

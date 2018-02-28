@@ -7,6 +7,10 @@
 	},
 	"tags": [
 		{
+			"tag": "cf-robot-message",
+			"cf-questions": "Så er der formless bajer"
+		},
+		{
 			"tag": "select",
 			"cf-input-placeholder": "Choose one of the above..",
 			"multiple": "multiple",

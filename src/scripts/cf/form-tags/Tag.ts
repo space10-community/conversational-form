@@ -3,6 +3,7 @@
 /// <reference path="ButtonTag.ts"/>
 /// <reference path="SelectTag.ts"/>
 /// <reference path="OptionTag.ts"/>
+/// <reference path="CfRobotMessageTag.ts"/>
 /// <reference path="../ConversationalForm.ts"/>
 /// <reference path="../logic/EventDispatcher.ts"/>
 /// <reference path="../parsing/TagsParser.ts"/>
@@ -40,6 +41,7 @@ namespace cf {
 		required: boolean;
 		defaultValue: string | number;
 		disabled: boolean;
+		skipUserInput: boolean;
 		eventTarget: EventDispatcher;
 		flowManager: FlowManager;
 		hasConditions():boolean;
@@ -88,6 +90,8 @@ namespace cf {
 		public defaultValue: string | number;
 		public initialDefaultValue: string | number;
 		public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
+
+		public skipUserInput: boolean; // Used by cf-robot-message which has no input and is just a robot message
 
 		public get type (): string{
 			return this.domElement.getAttribute("type") || this.domElement.tagName.toLowerCase();
@@ -173,6 +177,8 @@ namespace cf {
 			
 			// remove tabIndex from the dom element.. danger zone... should we or should we not...
 			this.domElement.tabIndex = -1;
+
+			this.skipUserInput = false;
 
 			// questions array
 			if(options.questions)
@@ -319,6 +325,10 @@ namespace cf {
 					});
 				}else if(element.tagName.toLowerCase() == "option"){
 					tag = new OptionTag({
+						domElement: element
+					});
+				}else if(element.tagName.toLowerCase() == "cf-robot-message"){
+					tag = new CfRobotMessageTag({
 						domElement: element
 					});
 				}

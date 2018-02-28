@@ -25,51 +25,9 @@ function swallowError(error) {
  * form style tasks
  */
 
-global.gulp.task('stylus-form', function() {
-	var src = [
-		global.srcFolder + "/styles/**/*.styl",
-		"!" + global.srcFolder + "styles/mixins/_cf-mixins.styl",
-		"!" + global.srcFolder + "/styles/**/_*-variables.styl"
-	]
-	var dst = global.buildFolder;
-
-	var stream = global.gulp.src(src)
-		// .pipe(flatten()) // flatten folder structure
-		.pipe(changed(dst, {
-			extension: '.css'
-		}))
-		.pipe(stylus({
-			use: [nib()],
-			errors: true
-		}))
-		.on('error', swallowError)
-		.pipe(global.gulp.dest(dst))
-		.pipe(livereload())
-		.pipe(notify("Stylus compiled."));
-
-	return stream;
-});
-
-
 global.gulp.task('sass-form-build', ['sass-form'], function(){
 	var src = [
-		global.buildFolder + "cf/cf.css",
-		global.buildFolder + "cf/ui/control-elements/cf-control-elements.css",
-		global.buildFolder + "cf/ui/control-elements/cf-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-radio-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-checkbox-button.css",
-		global.buildFolder + "cf/ui/control-elements/cf-options-list.css",
-		global.buildFolder + "cf/ui/control-elements/cf-upload-file-ui.css",
-		global.buildFolder + "cf/ui/cf-input.css",
-		global.buildFolder + "cf/ui/cf-info.css",
-		global.buildFolder + "cf/ui/cf-list-button.css",
-		global.buildFolder + "cf/ui/chat/cf-chat-response.css",
-		global.buildFolder + "cf/ui/chat/cf-chat.css",
-
-		"!" + global.buildFolder + "conversational-form-docs.css",
-		"!" + global.buildFolder + "conversational-form-docs.min.css",
-		"!" + global.buildFolder + "conversational-form.css",
-		"!" + global.distFolder + "conversational-form.min.css",
+		global.buildFolder + "main.css"
 	]
 
 	var stream = global.gulp.src(src)
@@ -78,7 +36,7 @@ global.gulp.task('sass-form-build', ['sass-form'], function(){
 		.pipe(cleanCSS())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(global.gulp.dest(global.distFolder));
-	
+
 	return stream;
 });
 
@@ -88,12 +46,10 @@ global.gulp.task('sass-form-build', ['sass-form'], function(){
  */
 global.gulp.task('sass-form', function () {
 	var src = [
-		global.srcFolder + "/styles/**/*.scss",
-		"!" + global.srcFolder + "styles/mixins/_cf-mixins.scss",
-		"!" + global.srcFolder + "/styles/**/_*-variables.scss"
+		global.srcFolder + "/styles/conversational-form.scss"
 	]
 	var dst = global.buildFolder;
-	
+
 	var stream = global.gulp.src(src)
 		.pipe(sass().on('error', sass.logError))
 		.pipe(autoprefixer({ browsers: ['> 1%']}))
