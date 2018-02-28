@@ -1,0 +1,25 @@
+pre .toolbar {
+  top: .5em !important;
+  right: .5em !important;
+  
+  .toolbar-item {
+    text-shadow: none !important;   
+    border-radius: 4px;
+    > a {
+      box-shadow: none !important;
+    // padding: 0 !important;
+    color: #818a91 !important;
+    background: none !important;
+
+  }
+
+  &:hover {
+    color: #fff;
+    background-color: $primary;
+
+    > a {
+      color: white !important;
+    }
+  }
+  }
+}

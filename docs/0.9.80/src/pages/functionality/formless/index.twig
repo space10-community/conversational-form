@@ -1,0 +1,49 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Formless' %}
+{% set page_slug = '/functionality/formless/' %}
+
+{% block page %}
+    <h1 id="formless">{{page_title}}</h1>
+   	
+   	<p>The <strong>Formless</strong> feature allow you to setup a Conversational Fore without a form tag.</p>
+
+   	<p>JSON follows the rules of previous documentation, so you have</p>
+
+   	<p><code>options</code> this is the <a href="../../options/">initialise parameters</a></p>
+
+   	<p><code>tags</code> these are your form tags, simplest example:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text"
+}</code></pre>
+	
+	<p>A tag in JSON follows the supported native HTML tag standards, like min, max, pattern, value, type, so if you want to add min or max you just write it:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text",
+	"min": 3,
+	"max": 10
+}</code></pre>
+
+	<p>Same goes for Conversational Attributes, here we set the label:</p>
+	<pre><code class="language-javascript">{
+	"tag": "input",
+	"type": "text",
+	"value": "prefilled value",
+	"cf-label": "Please insert text"
+}
+</code></pre>
+
+	<p>After you have setup your JSON (or loaded..) then you call <code>var cf = window.cf.ConversationalForm.startTheConversation(json)</code> and the Conversation is started.</p>
+	<p>Formless uses DOM API under the hood to build logic, so you are able to do</p>
+	<pre><code class="language-javascript">console.log(cf.formEl)</code></pre>
+	<p>Which returns the form element generated from your JSON.</p>
+	<p>All other functionality of Conversational Form works with Formless.</p>
+	<p>Please see the above example of how to use Formless to communicate with a web-service and inject new tags at runtime.</p>
+
+	<h2 id="formless-example">Example</h2>
+	
+    <p data-height="409" data-theme-id="light" data-slug-hash="EoKMLg" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - formless" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/EoKMLg/">Conversational Forms - formless</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+{% endblock %}

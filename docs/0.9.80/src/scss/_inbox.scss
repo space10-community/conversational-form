@@ -1,0 +1,187 @@
+main {
+  margin-top: 3.4rem;
+  min-height: 101vh !important;
+
+  /* h1:first-of-type {
+    margin-top: 10px;
+  } */
+
+  h1, h2, h3, h4, h5, h6  {
+    margin-top: 2.8rem;
+    @include media-breakpoint-down(sm) {
+      margin-top: 1.6rem;
+    }
+  }
+  h1:first-of-type {
+    margin-top: 0.8rem;
+    @include media-breakpoint-down(sm) {
+      margin-top: 1.6rem;
+    }
+  }
+
+  a:not(.btn) {
+    text-decoration: underline;
+  }
+
+  .btn {
+    margin-top: 0.5rem;
+  }
+}
+
+header .btn-secondary {
+  background: #272829;
+  border-color: #636363;
+
+  &:hover {
+    background: #333;
+  }
+}
+.cfdoc-sidebar {
+  @include media-breakpoint-up(md) {
+    max-width: 320px;
+  }
+  border-right: 1px solid #eee;
+
+  @media (max-width: 767px) {
+    top: 4rem;
+
+    position: fixed;
+    background: white;
+    z-index: 10;
+  }
+  a {
+    font-weight: 400 !important;
+  }
+
+  hr {
+    border-top: 1px solid rgba(0,0,0, 0.05);
+  }
+
+  ul {
+    margin-left: .6em;
+
+    li {
+      width: 100%;
+    }
+  }
+
+}
+
+.cfdoc-links {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-right: -15px;
+  margin-left: -15px;
+
+  @include media-breakpoint-up(md) {
+    @supports (position: sticky) {
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      height: 100%;
+    }
+  }
+
+  // Override collapse behaviors
+  @include media-breakpoint-up(md) {
+    display: block !important;
+  }
+
+  .toc-item {
+
+    .toc-link {
+      display: block;
+      padding: .25rem 1.5rem;
+      font-weight: 500;
+      color: rgba(0,0,0, 0.55);
+
+      &:hover {
+        color: rgba(0,0,0, 0.85);
+        text-decoration: none;
+      }
+    }
+
+    &.active {
+      margin-bottom: .5rem;
+
+      &:not(:first-child) {
+        margin-top: .5rem;
+      }
+
+      > .toc-link {
+        color: rgba(0,0,0, 0.85);
+        font-weight: bold !important;
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .nav > li > a {
+    display: block;
+    padding: .25rem 1.5rem;
+    font-size: 90%;
+    color: rgba(0,0,0, 0.85);
+
+    &.active {
+      font-weight: bold !important;
+    }
+  }
+
+  .nav > li > a:hover {
+    color: rgba(0,0,0, 0.85);
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .nav > .active > a,
+  .nav > .active:hover > a {
+    font-weight: 500;
+    color: rgba(0,0,0, 0.65);
+    background-color: transparent;
+  }
+
+
+}
+
+
+header .cfddoc-navbar-nav svg {
+  color: white;
+}
+
+@media (min-width: 768px){
+  #cfdoc-navbar {
+    display: block!important;
+  }
+  .cfdoc-sidebar {
+    position: sticky;
+    top: 4rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+}
+
+.cf-navbar-logo {
+  margin-top: 4px;
+
+  @media (max-width: 767px) {
+    position: absolute;
+    left: 1rem;
+    margin-top: 8px;
+  }
+}
+.navbar-nav-scroll {
+  position: absolute;
+  right: 1rem;
+  top: 12px;
+}
+
+header {
+  .navbar-nav-svg {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-top;
+  }
+}

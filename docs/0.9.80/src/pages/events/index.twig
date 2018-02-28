@@ -1,0 +1,159 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Events' %}
+{% set page_slug = '/events/' %}
+
+{% block page %}
+    <h1 id="events">{{page_title}}</h1>
+   	
+   	<p>You can pass in a <code>cf.EventDispatcher</code> instance to listen for events of your Conversational Form instance.</p>
+	<pre><code class="language-javascript">var dispatcher = new cf.EventDispatcher();
+dispatcher.addEventListener(cf.FlowEvents.FLOW_UPDATE, function(event){
+	// your code here
+}, false);
+var cf = new cf.ConversationalForm({
+	formEl: document.getElementById("my-form"),
+	eventDispatcher: dispatcher
+});</code></pre>
+
+	<p>All events are <a href="https://developer.mozilla.org/en/docs/Web/API/CustomEvent">CustomEvents</a>, expect the detail object to contain data.</p>
+	<p><code>cf.EventDispatcher()</code> implements the <a href="https://developer.mozilla.org/en/docs/Web/API/EventTarget">EventTarget</a> interface</p>
+
+	<h2 id="list-of-events">List of events</h2>
+	<table class="table compact">
+    	<thead>
+    		<tr>
+    			<th scope="col">Event name</th>
+    			<th scope="col">Description</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td>cf.TagEvents.ORIGINAL_ELEMENT_CHANGED</td>
+    			<td>Original tag (dom element) has changed value. <pre><code class="language-javascript">event.detail: {
+	value: String,
+	tag: cf.ITag
+}</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.FlowEvents.USER_INPUT_UPDATE</td>
+    			<td>When ever the UserInput element changes value. <pre><code class="language-javascript">event.detail: cf.FlowDTO</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.FlowEvents.USER_INPUT_INVALID</td>
+    			<td>When an error has been registered. <pre><code class="language-javascript">event.detail: cf.FlowDTO</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.FlowEvents.FLOW_UPDATE</td>
+    			<td>When ever the flow of Conversational Form is updated. <pre><code class="language-javascript">event.detail: {
+	tag: this.currentTag,
+	ignoreExistingTag: this.ignoreExistingTags
+}</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>ChatListEvents.CHATLIST_UPDATED</td>
+    			<td>When the chatlist has been updated. <pre><code class="language-javascript">event.detail: cf.ChatList</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.ChatResponseEvents.USER_ANSWER_CLICKED</td>
+    			<td>When user clicks a previous answer. <pre><code class="language-javascript">event.detail: cf.ITag</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.ControlElementEvents.ON_LOADED</td>
+    			<td>When an control element is loaded, like when an control element contains an image.</td>
+    		</tr>
+			<tr>
+    			<td>cf.ControlElementEvents.ON_FOCUS</td>
+    			<td>When focus on an control element. <pre><code class="language-javascript">event.detail: cf.ControlElementVector</code></pre></td>
+    		</tr>
+			<tr>
+    			<td>cf.ControlElementEvents.SUBMIT_VALUE</td>
+    			<td>When control value has changed, ex. clicking a check-box, radio-button etc. <pre><code class="language-javascript">event.detail: cf.ControlElement || 
+cf.OptionButton</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.CONTROL_ELEMENTS_ADDED</td>
+    			<td>When a control element has been added. <pre><code class="language-javascript">event.detail: cf.ControlElementsDTO</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.OptionButtonEvents.CLICK</td>
+    			<td>Option element click, normally you would use cf.ControlElementEvents.SUBMIT_VALUE. <pre><code class="language-javascript">event.detail: cf.OptionButton</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.ControlElementEvents.PROGRESS_CHANGE</td>
+    			<td>Upload a file, get progress event. <pre><code class="language-javascript">event.detail: 
+cf.ControlElementProgressStates.BUSY || 
+cf.ControlElementProgressStates.READY || 
+cf.ControlElementProgressStates.READY</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.HEIGHT_CHANGE</td>
+    			<td>When height of input field change. <pre><code class="language-javascript">detail: number 
+//this.inputElement.scrollHeight</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.KEY_CHANGE</td>
+    			<td><pre><code class="language-javascript">event.detail: {
+	dto: cf.FlowDTO
+	keyCode: Number
+	inputFieldActive: Boolean
+}</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.SUBMIT</td>
+    			<td>On user submits value. <pre><code class="language-javascript">event.detail: cf.FlowDTO</code></pre></td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.FOCUS</td>
+    			<td>On user input field Focus.</td>
+    		</tr>
+    		<tr>
+    			<td>cf.UserInputEvents.BLUR</td>
+    			<td>On user input field Blur (focus removed).</td>
+    		</tr>
+    		<tr>
+    			<td>cf.MicrophoneBridgeEvent.TERMNIAL_ERROR</td>
+    			<td>When Microphone interface terminates.</td>
+    		</tr>
+    		<tr>
+    			<td>cf.ControlElementsEvents.CHANGED</td>
+    			<td>When control elements changed, added or removed elements.</td>
+    		</tr>
+			<tr>
+    			<td>cf.ControlElementsEvents.ON_RESIZE</td>
+    			<td>When control elements resizes.</td>
+    		</tr>
+    	</tbody>
+    </table>
+
+{% endblock %}
+
+{% block toc %}
+	{# <ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#events">Events</a></li>
+		<li class="toc-entry toc-h2"><a href="#list-of-events">List of events</a>
+			<ul>
+                <li class="toc-entry toc-h3"><a href="#cf-tagevents-original-element-changed">ORIGINAL_ELEMENT_CHANGED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-flowevents-user-input-update">USER_INPUT_UPDATE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-flowevents-user-input-invalid">USER_INPUT_INVALID</a>
+                <li class="toc-entry toc-h3"><a href="#cf-flowevents-flow-update">FLOW_UPDATE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-chatlistevents-chatlist-updated">CHATLIST_UPDATED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-chatresponseevents-user-answer-clicked">USER_ANSWER_CLICKED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-on-loaded">ON_LOADED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-on-focus">ON_FOCUS</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-submit-value">SUBMIT_VALUE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-control-elements-added">CONTROL_ELEMENTS_ADDED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-optionbuttonevents-click">CLICK</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-progress-change">PROGRESS_CHANGE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-height-change">HEIGHT_CHANGE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-key-change">KEY_CHANGE</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-submit">SUBMIT</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-focus">FOCUS</a>
+                <li class="toc-entry toc-h3"><a href="#cf-userinputevents-blur">BLUR</a>
+                <li class="toc-entry toc-h3"><a href="#cf-microphonebridgeevent-termnial-error">TERMNIAL_ERROR</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementsevents-changed">CHANGED</a>
+                <li class="toc-entry toc-h3"><a href="#cf-controlelementsevents-on-resize">ON_RESIZE</a>
+			</ul>
+		</li>
+	</ul> #}
+{% endblock %}
