@@ -73,10 +73,15 @@
     height: auto;
     overflow: hidden;
     margin-bottom: auto;
+    display: -webkit-box;
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-end;
-    align-items: baseline; }
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-flow: column nowrap;
+    -webkit-box-pack: end;
+            justify-content: flex-end;
+    -webkit-box-align: baseline;
+            align-items: baseline; }
   .conversational-form--enable-animation .conversational-form {
     transition: opacity 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1); }
   .conversational-form * {
@@ -107,7 +112,8 @@ cf-info {
   padding-right: 20px;
   overflow: hidden;
   display: block;
-  transform: translateY(-115%);
+  -webkit-transform: translateY(-115%);
+          transform: translateY(-115%);
   color: #acb2b6;
   opacity: 0;
   will-change: opacity; }
@@ -134,17 +140,20 @@ cf-input {
   height: auto;
   margin-bottom: 20px;
   margin-top: 0px;
-  flex: 0 0 auto;
+  -webkit-box-flex: 0;
+          flex: 0 0 auto;
   /*input {
 		padding: 5px 5px 5px 15px;
 	}*/ }
   cf-input.animate-in input, cf-input.animate-in textarea {
     transition-delay: 0s, 0s, 0s, 0.4s, 0.4s;
     opacity: 1;
-    transform: translateY(0px) rotateX(0deg); }
+    -webkit-transform: translateY(0px) rotateX(0deg);
+            transform: translateY(0px) rotateX(0deg); }
   cf-input.animate-in cf-input-button.cf-input-button {
     transition-delay: 0s, 0s 0.75s;
-    transform: scale(1, 1); }
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1); }
   cf-input input, cf-input textarea {
     resize: none;
     overflow: hidden;
@@ -173,13 +182,16 @@ cf-input {
     background: white;
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
     opacity: 0;
-    transform: translateY(40px) rotateX(-40deg); }
+    -webkit-transform: translateY(40px) rotateX(-40deg);
+            transform: translateY(40px) rotateX(-40deg); }
     cf-input input:-webkit-autofill, cf-input textarea:-webkit-autofill {
       background-color: white; }
     cf-input input:focus, cf-input input:active, cf-input textarea:focus, cf-input textarea:active {
       box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2); }
     .conversational-form--enable-animation cf-input input, .conversational-form--enable-animation cf-input textarea {
-      transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s; }
+      transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, -webkit-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+      transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+      transition: box-shadow 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), background 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), color 0.75s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, -webkit-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s; }
     cf-input input:hover::-webkit-input-placeholder, cf-input textarea:hover::-webkit-input-placeholder {
       color: #768086; }
     cf-input input:hover::-moz-input-placeholder, cf-input textarea:hover::-moz-input-placeholder {
@@ -242,15 +254,18 @@ cf-input {
     border-radius: 50%;
     border-left: 0;
     border-top: 0;
-    animation: cf-spin 1s linear infinite;
+    -webkit-animation: cf-spin 1s linear infinite;
+            animation: cf-spin 1s linear infinite;
     will-change: opacity; }
     .conversational-form--enable-animation cf-input[tag-type="file"] cf-input-button.cf-input-button:after, .conversational-form--enable-animation cf-input cf-input-button.cf-input-button.loading:after {
       transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
   cf-input[tag-type="file"] cf-input-button.cf-input-button div.cf-icon-attachment {
-    transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
     opacity: 1; }
   cf-input[tag-type="file"] cf-input-button.cf-input-button div.cf-icon-progress {
-    transform: rotateX(-90deg);
+    -webkit-transform: rotateX(-90deg);
+            transform: rotateX(-90deg);
     opacity: 0; }
 
 cf-input-button.cf-input-button {
@@ -265,35 +280,48 @@ cf-input-button.cf-input-button {
   cursor: pointer;
   border-radius: 50%;
   will-change: background, border;
-  transform-origin: 50% 50%;
-  transform: scale(0, 0);
+  -webkit-transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
+  -webkit-transform: scale(0, 0);
+          transform: scale(0, 0);
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   border: 1px solid white; }
   .conversational-form--enable-animation cf-input-button.cf-input-button {
-    transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s; }
+    transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+    transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+    transition: background 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), border 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s, -webkit-transform 0.375s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s; }
   cf-input-button.cf-input-button .cf-input-icons.cf-microphone {
-    transform: scale(0, 0);
+    -webkit-transform: scale(0, 0);
+            transform: scale(0, 0);
     pointer-events: none; }
   cf-input-button.cf-input-button.microphone-interface .cf-input-icons {
-    transform-origin: 50% 50%;
-    transform: scale(1, 1) rotateX(0deg) translateZ(0px);
-    transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+            transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+    transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
   cf-input-button.cf-input-button.microphone-interface .cf-input-icons:not(.cf-microphone) {
     pointer-events: none;
-    transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px); }
+    -webkit-transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
+            transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px); }
   cf-input-button.cf-input-button.microphone-interface .cf-input-icons.cf-microphone {
     pointer-events: auto;
-    transform: scale(1, 1) rotateX(0deg) translateZ(0px); }
+    -webkit-transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+            transform: scale(1, 1) rotateX(0deg) translateZ(0px); }
   cf-input-button.cf-input-button.microphone-interface.loading:not(.typing) {
     pointer-events: none; }
     cf-input-button.cf-input-button.microphone-interface.loading:not(.typing) .cf-microphone div.cf-icon-audio {
       opacity: 1; }
   cf-input-button.cf-input-button.microphone-interface.typing .cf-input-icons:not(.cf-microphone) {
     pointer-events: auto;
-    transform: scale(1, 1) rotateX(0deg) translateZ(0px); }
+    -webkit-transform: scale(1, 1) rotateX(0deg) translateZ(0px);
+            transform: scale(1, 1) rotateX(0deg) translateZ(0px); }
   cf-input-button.cf-input-button.microphone-interface.typing .cf-input-icons.cf-microphone {
-    transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
+    -webkit-transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
+            transform: scale(0.25, 0.25) rotateX(90deg) translateZ(0px);
     pointer-events: none; }
   cf-input-button.cf-input-button .cf-input-icons {
     position: absolute;
@@ -308,22 +336,28 @@ cf-input-button.cf-input-button {
       z-index: 1;
       background-repeat: no-repeat;
       background-position: 50% 50%;
-      transform-origin: 50% 50%;
+      -webkit-transform-origin: 50% 50%;
+              transform-origin: 50% 50%;
       will-change: transform, opacity; }
       .conversational-form--enable-animation cf-input-button.cf-input-button .cf-input-icons > div {
-        transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
+        transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+        transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+        transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
   cf-input-button.cf-input-button div.cf-icon-attachment {
-    transform: rotateX(90deg);
+    -webkit-transform: rotateX(90deg);
+            transform: rotateX(90deg);
     opacity: 0;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='12px' height='16px' viewBox='0 0 12 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate(-573.000000, -605.000000)' stroke='#0D83FF'%3e%3cg transform='translate(84.000000, 136.000000)'%3e%3cg transform='translate(1.000000, 456.000000)'%3e%3cpath d='M499,23.1092437 L499,18.907563 C499,16.2016807 496.756849,14 494,14 C491.243151,14 489,16.2016807 489,18.907563 L489,24.5042017 C489,26.4369748 490.592466,28 492.561644,28 C494.530822,28 496.123288,26.4369748 496.123288,24.5042017 L496.123288,18.907563 C496.140411,17.7478992 495.181507,16.8067227 494,16.8067227 C492.818493,16.8067227 491.859589,17.7478992 491.859589,18.907563 L491.859589,23.1092437'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
     background-size: 12px 16px; }
   cf-input-button.cf-input-button div.cf-icon-progress {
-    transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
     opacity: 1;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='30px' height='30px' viewBox='0 0 30 30' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg fill='#0D83FF'%3e%3cpolygon transform='translate(15.500000, 15.500000) rotate(90.000000) translate(-15.500000, -15.500000) ' points='22 14.6875 12.111875 14.6875 16.6496875 10.1496875 15.5 9 9 15.5 15.5 22 16.6496875 20.8503125 12.111875 16.3125 22 16.3125'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
     background-size: 30px 30px; }
   cf-input-button.cf-input-button div.cf-icon-audio {
-    transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
     opacity: 1;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='utf-8'?%3e%3c!-- Generator: Adobe Illustrator 16.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e%3c!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3e%3csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='512px' height='512px' fill='#0D83FF' viewBox='0 0 512 512' enable-background='new 0 0 512 512' xml:space='preserve'%3e%3cg%3e%3cpath d='M256,320c37.712,0,68.571-30.924,68.571-68.714V100.714C324.571,62.924,293.712,32,256,32s-68.571,30.924-68.571,68.714 v150.572C187.429,289.076,218.288,320,256,320z M377.139,244.548c0,68.714-58.282,116.815-121.139,116.815 s-121.139-48.102-121.139-116.815H96c0,77.873,61.719,143.153,137.144,153.465V480h45.713v-81.987 C354.281,386.561,416,322.421,416,244.548H377.139z'/%3e%3c/g%3e%3c/svg%3e ");
     background-size: 26px 26px; }
@@ -336,7 +370,8 @@ cf-input-button.cf-input-button {
       opacity: 0; }
     @media (min-width: 768px) {
       cf-input-button.cf-input-button:hover .cf-icon-progress, cf-input-button.cf-input-button:focus .cf-icon-progress {
-        animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
+        -webkit-animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+                animation: cf-arrow-up 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
 
 /**
 * Show submit button for groups when input is hidden
@@ -354,37 +389,92 @@ cf-input[tag-type="group"].hide-input cf-input-control-elements {
 cf-input[error=""].hide-input cf-input-button .cf-icon-progress {
   -webkit-filter: saturate(0);
           filter: saturate(0);
-  animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+  -webkit-animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+          animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+@-webkit-keyframes shake {
+  10%, 90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0); }
+  20%, 80% {
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0); }
+  30%, 50%, 70% {
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0); }
+  40%, 60% {
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0); } }
 
 @keyframes shake {
   10%, 90% {
-    transform: translate3d(-1px, 0, 0); }
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0); }
   20%, 80% {
-    transform: translate3d(1px, 0, 0); }
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0); }
   30%, 50%, 70% {
-    transform: translate3d(-2px, 0, 0); }
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0); }
   40%, 60% {
-    transform: translate3d(2px, 0, 0); } }
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0); } }
+
+@-webkit-keyframes cf-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
 
 @keyframes cf-spin {
   0% {
-    transform: rotate(0deg); }
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
   100% {
-    transform: rotate(360deg); } }
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+@-webkit-keyframes cf-arrow-up {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px); }
+  40% {
+    -webkit-transform: translateY(-40px);
+            transform: translateY(-40px); }
+  40.001% {
+    -webkit-transform: translateY(40px);
+            transform: translateY(40px); }
+  80% {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px); }
+  90% {
+    -webkit-transform: translateY(2px);
+            transform: translateY(2px); }
+  100% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px); } }
 
 @keyframes cf-arrow-up {
   0% {
-    transform: translateY(0px); }
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px); }
   40% {
-    transform: translateY(-40px); }
+    -webkit-transform: translateY(-40px);
+            transform: translateY(-40px); }
   40.001% {
-    transform: translateY(40px); }
+    -webkit-transform: translateY(40px);
+            transform: translateY(40px); }
   80% {
-    transform: translateY(-5px); }
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px); }
   90% {
-    transform: translateY(2px); }
+    -webkit-transform: translateY(2px);
+            transform: translateY(2px); }
   100% {
-    transform: translateY(0px); } }
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px); } }
 
 /*
     Globals
@@ -419,11 +509,13 @@ cf-list-button {
     cf-list-button:hover:nth-child(1) {
       background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, white 75%); }
       cf-list-button:hover:nth-child(1):after {
-        animation: cf-arrow-left 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); }
+        -webkit-animation: cf-arrow-left 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+                animation: cf-arrow-left 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); }
     cf-list-button:hover:nth-child(2) {
       background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, white 75%); }
       cf-list-button:hover:nth-child(2):after {
-        animation: cf-arrow-right 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
+        -webkit-animation: cf-arrow-right 0.75s cubic-bezier(0.645, 0.045, 0.355, 1);
+                animation: cf-arrow-right 0.75s cubic-bezier(0.645, 0.045, 0.355, 1); } }
   cf-list-button.cf-gradient:before {
     opacity: 1; }
   cf-list-button.active {
@@ -468,44 +560,108 @@ cf-list-button {
     .conversational-form--enable-animation cf-list-button:after {
       transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
-@keyframes cf-arrow-right {
+@-webkit-keyframes cf-arrow-right {
   0% {
-    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
     opacity: 1; }
   40% {
-    transform: translateX(20px);
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
     opacity: 0; }
   40.001% {
-    transform: translateX(-20px);
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
     opacity: 0; }
   80% {
-    transform: translateX(4px);
+    -webkit-transform: translateX(4px);
+            transform: translateX(4px);
     opacity: 1; }
   90% {
-    transform: translateX(-2px);
+    -webkit-transform: translateX(-2px);
+            transform: translateX(-2px);
     opacity: 1; }
   100% {
-    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+    opacity: 1; } }
+
+@keyframes cf-arrow-right {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+    opacity: 1; }
+  40% {
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+    opacity: 0; }
+  40.001% {
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
+    opacity: 0; }
+  80% {
+    -webkit-transform: translateX(4px);
+            transform: translateX(4px);
+    opacity: 1; }
+  90% {
+    -webkit-transform: translateX(-2px);
+            transform: translateX(-2px);
+    opacity: 1; }
+  100% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+    opacity: 1; } }
+
+@-webkit-keyframes cf-arrow-left {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+    opacity: 1; }
+  40% {
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
+    opacity: 0; }
+  40.001% {
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+    opacity: 0; }
+  80% {
+    -webkit-transform: translateX(-4px);
+            transform: translateX(-4px);
+    opacity: 1; }
+  90% {
+    -webkit-transform: translateX(2px);
+            transform: translateX(2px);
+    opacity: 1; }
+  100% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
     opacity: 1; } }
 
 @keyframes cf-arrow-left {
   0% {
-    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
     opacity: 1; }
   40% {
-    transform: translateX(-20px);
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
     opacity: 0; }
   40.001% {
-    transform: translateX(20px);
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
     opacity: 0; }
   80% {
-    transform: translateX(-4px);
+    -webkit-transform: translateX(-4px);
+            transform: translateX(-4px);
     opacity: 1; }
   90% {
-    transform: translateX(2px);
+    -webkit-transform: translateX(2px);
+            transform: translateX(2px);
     opacity: 1; }
   100% {
-    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
     opacity: 1; } }
 
 /*
@@ -523,10 +679,15 @@ cf-chat {
   height: auto;
   min-height: 100%;
   overflow: visible;
+  display: -webkit-box;
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-end;
-  align-items: baseline;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-flow: column nowrap;
+  -webkit-box-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: baseline;
+          align-items: baseline;
   margin-bottom: 20px; }
   cf-chat scrollable {
     display: block;
@@ -608,15 +769,18 @@ cf-chat-response {
       left: auto;
       right: 0px; }
     cf-chat-response.user text {
-      transform-origin: 100% 0%;
-      transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001); }
+      -webkit-transform-origin: 100% 0%;
+              transform-origin: 100% 0%;
+      -webkit-transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+              transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001); }
       cf-chat-response.user text > p {
         background: #e3f1ff;
         border-radius: 20px 0px 20px 20px;
         margin-right: 0px;
         margin-left: auto; }
     cf-chat-response.user.peak-thumb thumb {
-      transform: scale(1, 1) translateY(0px);
+      -webkit-transform: scale(1, 1) translateY(0px);
+              transform: scale(1, 1) translateY(0px);
       opacity: 1; }
       .conversational-form--enable-animation cf-chat-response.user.peak-thumb thumb {
         transition-delay: 0.2s, 0.2s, 0.2s; }
@@ -639,8 +803,10 @@ cf-chat-response {
     opacity: 0;
     white-space: pre-wrap;
     word-break: normal;
-    transform-origin: 0% 0%;
-    transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+    -webkit-transform-origin: 0% 0%;
+            transform-origin: 0% 0%;
+    -webkit-transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+            transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
     will-change: transform, opacity, background;
     -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
@@ -648,11 +814,14 @@ cf-chat-response {
     cf-chat-response text > div {
       display: inline-block; }
     cf-chat-response text thinking span:nth-child(1) {
-      animation-delay: 0.66667 s; }
+      -webkit-animation-delay: 0.66667 s;
+              animation-delay: 0.66667 s; }
     cf-chat-response text thinking span:nth-child(2) {
-      animation-delay: 1.33333 s; }
+      -webkit-animation-delay: 1.33333 s;
+              animation-delay: 1.33333 s; }
     cf-chat-response text thinking span:nth-child(3) {
-      animation-delay: 2 s; }
+      -webkit-animation-delay: 2 s;
+              animation-delay: 2 s; }
     cf-chat-response text strong {
       font-weight: 900; }
     cf-chat-response text > p {
@@ -684,7 +853,8 @@ cf-chat-response {
       position: absolute;
       top: 50%;
       left: 20px;
-      transform: translateY(-50%);
+      -webkit-transform: translateY(-50%);
+              transform: translateY(-50%);
       padding-right: 20px; }
     cf-chat-response text thinking {
       position: relative;
@@ -694,14 +864,19 @@ cf-chat-response {
           -ms-user-select: none;
               user-select: none;
       display: none;
-      transform-origin: 0% 50%;
-      transform: scale(1.5); }
+      -webkit-transform-origin: 0% 50%;
+              transform-origin: 0% 50%;
+      -webkit-transform: scale(1.5);
+              transform: scale(1.5); }
       cf-chat-response text thinking span:nth-child(1) {
-        animation: dot-fade 1s linear 0.33333 s infinite; }
+        -webkit-animation: dot-fade 1s linear 0.33333 s infinite;
+                animation: dot-fade 1s linear 0.33333 s infinite; }
       cf-chat-response text thinking span:nth-child(2) {
-        animation: dot-fade 1s linear 0.66667 s infinite; }
+        -webkit-animation: dot-fade 1s linear 0.66667 s infinite;
+                animation: dot-fade 1s linear 0.66667 s infinite; }
       cf-chat-response text thinking span:nth-child(3) {
-        animation: dot-fade 1s linear 1 s infinite; }
+        -webkit-animation: dot-fade 1s linear 1 s infinite;
+                animation: dot-fade 1s linear 1 s infinite; }
     cf-chat-response text svg.cf-icon-file {
       width: 10px;
       height: auto;
@@ -722,11 +897,15 @@ cf-chat-response {
     background-position: 50% 50%;
     opacity: 0;
     overflow: hidden;
-    transform-origin: 50% 50%;
-    transform: scale(0.001, 0.001) translateY(50px);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-transform: scale(0.001, 0.001) translateY(50px);
+            transform: scale(0.001, 0.001) translateY(50px);
     will-change: transform, opacity; }
     .conversational-form--enable-animation cf-chat-response thumb {
-      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s; }
+      transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s;
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s, -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1875s; }
     cf-chat-response thumb > span {
       display: block;
       line-height: 24px;
@@ -738,20 +917,34 @@ cf-chat-response {
       cf-chat-response thumb > span[length="3"] {
         font-size: 7.92px; }
   cf-chat-response.show text {
-    transform: translateY(0px) translateX(0px) scale(1, 1);
+    -webkit-transform: translateY(0px) translateX(0px) scale(1, 1);
+            transform: translateY(0px) translateX(0px) scale(1, 1);
     opacity: 1; }
     .conversational-form--enable-animation cf-chat-response.show text {
-      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s; }
+      transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s, -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1) 0s; }
     .conversational-form--enable-animation cf-chat-response.show text {
       transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1);
       transition-delay: 0.1875s, 0.1875s, 0s; }
     cf-chat-response.show text[value-added] {
       will-change: auto; }
   cf-chat-response.show.robot thumb {
-    transform: scale(1, 1) translateY(0px);
+    -webkit-transform: scale(1, 1) translateY(0px);
+            transform: scale(1, 1) translateY(0px);
     opacity: 1; }
     .conversational-form--enable-animation cf-chat-response.show.robot thumb {
       transition-delay: 0.2s, 0.2s, 0.2s; }
+
+@-webkit-keyframes dot-fade {
+  0% {
+    opacity: 1; }
+  15.1111% {
+    opacity: 0; }
+  33.333% {
+    opacity: 1; }
+  100% {
+    opacity: 1; } }
 
 @keyframes dot-fade {
   0% {
@@ -763,15 +956,32 @@ cf-chat-response {
   100% {
     opacity: 1; } }
 
-@keyframes bounce {
+@-webkit-keyframes bounce {
   0% {
-    transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1);
     opacity: 1; }
   50% {
-    transform: scale(1.05, 1.05);
+    -webkit-transform: scale(1.05, 1.05);
+            transform: scale(1.05, 1.05);
     opacity: 0.85; }
   100% {
-    transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1);
+    opacity: 1; } }
+
+@keyframes bounce {
+  0% {
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1);
+    opacity: 1; }
+  50% {
+    -webkit-transform: scale(1.05, 1.05);
+            transform: scale(1.05, 1.05);
+    opacity: 0.85; }
+  100% {
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1);
     opacity: 1; } }
 
 /*
@@ -849,8 +1059,10 @@ cf-list {
       -ms-user-select: none;
           user-select: none;
   overflow: hidden;
-  transform: translateZ(0px);
-  transform-origin: 0% 100%;
+  -webkit-transform: translateZ(0px);
+          transform: translateZ(0px);
+  -webkit-transform-origin: 0% 100%;
+          transform-origin: 0% 100%;
   will-change: opacity, background;
   opacity: 0; }
   .cf-button > div {
@@ -871,7 +1083,8 @@ cf-list {
       .conversational-form--enable-animation .cf-button.animate-in:nth-child(odd) {
         transition-delay: 0.15s, 0s; }
     .cf-button.animate-in.animate-out {
-      transform-origin: 75% 100%;
+      -webkit-transform-origin: 75% 100%;
+              transform-origin: 75% 100%;
       opacity: 0; }
   .cf-button:not(:last-child) {
     margin-right: 10px; }
@@ -940,16 +1153,21 @@ cf-list {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate(-290.000000, -505.000000)' fill='#0D83FF'%3e%3cg transform='translate(84.000000, 136.000000)'%3e%3cg transform='translate(1.000000, 216.000000)'%3e%3cg transform='translate(189.000000, 139.000000)'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
     background-size: 13px 10px;
     background-repeat: no-repeat;
-    transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
     will-change: transform;
-    transform: scale(0, 0); }
+    -webkit-transform: scale(0, 0);
+            transform: scale(0, 0); }
     .conversational-form--enable-animation .cf-button.cf-checkbox-button cf-checkbox:after {
-      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
+      transition: -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+      transition: transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox, .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox {
   background: rgba(227, 241, 255, 0); }
   .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox:after, .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox:after {
-    transform: scale(1, 1); }
+    -webkit-transform: scale(1, 1);
+            transform: scale(1, 1); }
     .conversational-form--enable-animation .cf-button.cf-checkbox-button[checked="checked"] cf-checkbox:after, .conversational-form--enable-animation .cf-button.cf-checkbox-button[selected="selected"] cf-checkbox:after {
       transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
 
@@ -1018,13 +1236,17 @@ cf-upload-file-ui {
   padding-right: 30px;
   color: #409dff;
   opacity: 0;
-  transform: translateY(20px) rotateX(30deg);
+  -webkit-transform: translateY(20px) rotateX(30deg);
+          transform: translateY(20px) rotateX(30deg);
   will-change: opacity, transform; }
   .conversational-form--enable-animation cf-upload-file-ui {
-    transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
+    transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: opacity 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1), -webkit-transform 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
   cf-upload-file-ui.animate-in {
     opacity: 1;
-    transform: translateY(0px) rotateX(0deg); }
+    -webkit-transform: translateY(0px) rotateX(0deg);
+            transform: translateY(0px) rotateX(0deg); }
     .conversational-form--enable-animation cf-upload-file-ui.animate-in {
       transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), cubic-bezier(0.215, 0.61, 0.355, 1); }
 

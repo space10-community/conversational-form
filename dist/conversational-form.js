@@ -4277,6 +4277,9 @@ var cf;
             if (this._currentTag.skipUserInput === true) {
                 this.el.classList.add("hide-input");
             }
+            else {
+                this.el.classList.remove("hide-input");
+            }
             if (cf.UserInputElement.hideUserInputOnNoneTextInput) {
                 // toggle userinput hide
                 if (this.controlElements.active) {
@@ -4779,7 +4782,7 @@ var cf;
             }
         };
         ChatResponse.prototype.setToThinking = function () {
-            var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking);
+            var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);
             if (canShowThinking) {
                 this.textEl.innerHTML = ChatResponse.THINKING_MARKUP;
                 this.el.classList.remove("can-edit");
