@@ -1,0 +1,20 @@
+/**
+ * Absolutely inspired by the Bootstrap docs anchors
+ */
+.anchorjs {
+  font-weight: 400;
+  line-height: 0;
+  color: rgba($link-color, .5);
+  transition: color .16s linear;
+  text-decoration: none !important;
+  padding-left: 0.375rem;
+
+  &:hover {
+    color: $link-color;
+    text-decoration: none !important;
+  }
+}
+
+[data-anchorjs-icon]::after {
+    content: attr(data-anchorjs-icon);
+}
