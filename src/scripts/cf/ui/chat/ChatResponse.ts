@@ -75,6 +75,7 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
+			console.log("XXX CONST", options);
 			this.container = options.container;
 			this.uiOptions = options.cfReference.uiOptions;
 			this._tag = options.tag;
@@ -202,10 +203,14 @@ namespace cf {
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
 
+			console.log("XXXXXX", this, this.uiOptions)
+
 			// if(this.response != innerResponse){
 				// now set it
 				if(this.isRobotResponse){
 					this.textEl.innerHTML = "";
+
+					if(!this.uiOptions) this.uiOptions = this.cfReference.uiOptions; // On edit uiOptions are empty, so this mitigates the problem. Not ideal.
 
 					let robotInitResponseTime: number = this.uiOptions.robot.robotResponseTime;
 					if(robotInitResponseTime != 0){
@@ -277,6 +282,9 @@ namespace cf {
 		public scrollTo(){
 			const y: number = this.el.offsetTop;
 			const h: number = this.el.offsetHeight;
+
+			if(!this.container && this.el) this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
+
 			this.container.scrollTop = y + h + this.container.scrollTop;
 		}
 
