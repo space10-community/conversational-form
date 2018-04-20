@@ -237,7 +237,7 @@ namespace cf {
 						// reset, as it can be called again
 						this.onReadyCallback = null;
 
-						if(this._tag.skipUserInput === true){
+						if(this._tag && this._tag.skipUserInput === true){
 							setTimeout(() =>{
 								this._tag.flowManager.nextStep()
 								this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response

@@ -4735,7 +4735,7 @@ var cf;
                         _this.onReadyCallback();
                     // reset, as it can be called again
                     _this.onReadyCallback = null;
-                    if (_this._tag.skipUserInput === true) {
+                    if (_this._tag && _this._tag.skipUserInput === true) {
                         setTimeout(function () {
                             _this._tag.flowManager.nextStep();
                             _this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response
