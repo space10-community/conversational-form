@@ -75,7 +75,6 @@ namespace cf {
 
 		constructor(options: IChatResponseOptions){
 			super(options);
-			console.log("XXX CONST", options);
 			this.container = options.container;
 			this.uiOptions = options.cfReference.uiOptions;
 			this._tag = options.tag;
@@ -203,8 +202,6 @@ namespace cf {
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
 
-			console.log("XXXXXX", this, this.uiOptions)
-
 			// if(this.response != innerResponse){
 				// now set it
 				if(this.isRobotResponse){
@@ -243,6 +240,7 @@ namespace cf {
 						if(this._tag.skipUserInput === true){
 							setTimeout(() =>{
 								this._tag.flowManager.nextStep()
+								this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response
 							},this.uiOptions.robot.chainedResponseTime);
 						}
 
