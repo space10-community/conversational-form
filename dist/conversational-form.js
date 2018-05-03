@@ -2944,6 +2944,9 @@ var __extends = (this && this.__extends) || (function () {
 var cf;
 (function (cf) {
     // interface
+    cf.CheckboxButtonEvents = {
+        CLICK: "cf-checkbox-button-click"
+    };
     // class
     var CheckboxButton = /** @class */ (function (_super) {
         __extends(CheckboxButton, _super);
@@ -2978,12 +2981,18 @@ var cf;
         });
         CheckboxButton.prototype.onClick = function (event) {
             this.checked = !this.checked;
+
+            cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.CheckboxButtonEvents.CLICK, this);
+            this.eventTarget.dispatchEvent(new CustomEvent(cf.CheckboxButtonEvents.CLICK, {
+                detail: this
+            }));
         };
         // override
         CheckboxButton.prototype.getTemplate = function () {
             var isChecked = this.referenceTag.domElement.checked && this.referenceTag.domElement.hasAttribute("checked");
             return "<cf-button class=\"cf-button cf-checkbox-button " + (this.referenceTag.label.trim().length == 0 ? "no-text" : "") + "\" checked=" + (isChecked ? "checked" : "") + ">\n\t\t\t\t<div>\n\t\t\t\t\t<cf-checkbox></cf-checkbox>\n\t\t\t\t\t<span>" + this.referenceTag.label + "</span>\n\t\t\t\t</div>\n\t\t\t</cf-button>\n\t\t\t";
         };
+        
         return CheckboxButton;
     }(cf.Button));
     cf.CheckboxButton = CheckboxButton;
@@ -3029,6 +3038,7 @@ var cf;
             set: function (value) {
                 if (value) {
                     this.el.setAttribute("selected", "selected");
+
                 }
                 else {
                     this.el.removeAttribute("selected");
@@ -3081,6 +3091,10 @@ var cf;
             this.multiChoice = this.referenceTag.domElement.hasAttribute("multiple");
             this.onOptionButtonClickCallback = this.onOptionButtonClick.bind(this);
             this.eventTarget.addEventListener(cf.OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false);
+            
+            this.onCheckboxButtonClickCallback = this.onCheckboxButtonClick.bind(this);
+            this.eventTarget.addEventListener(cf.CheckboxButtonEvents.CLICK, this.onCheckboxButtonClickCallback, false);
+
             this.createElements();
         }
         Object.defineProperty(OptionsList.prototype, "type", {
@@ -3124,6 +3138,7 @@ var cf;
             }
             else {
                 event.detail.selected = !event.detail.selected;
+
             }
         };
         OptionsList.prototype.createElements = function () {
@@ -5453,8 +5468,12 @@ var cf;
             if (!this.eventTarget.cf)
                 this.eventTarget.cf = this;
             // set a general step validation callback
+            if (options.onOptionButtonClickCallback)
+                this.onOptionButtonClickCallback = options.onOptionButtonClickCallback;
+
             if (options.flowStepCallback)
                 this.flowStepCallback = options.flowStepCallback;
+
             this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
             if (this.isDevelopment || options.loadExternalStyleSheet == false) {
                 this.loadExternalStyleSheet = false;

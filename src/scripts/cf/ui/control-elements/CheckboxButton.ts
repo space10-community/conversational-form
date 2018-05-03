@@ -31,6 +31,15 @@ namespace cf {
 			this.checked = !this.checked;
 		}
 
+		protected onClick(event: MouseEvent){
+			ConversationalForm.illustrateFlow(this, "dispatch", CheckboxButtonEvents.CLICK, this);
+			this.eventTarget.dispatchEvent(new CustomEvent(CheckboxButtonEvents.CLICK, {
+				detail: this
+			}));
+
+			this.checked = !this.checked;
+		}
+
 		// override
 		public getTemplate () : string {
 			const isChecked: boolean = (<HTMLInputElement> this.referenceTag.domElement).checked && this.referenceTag.domElement.hasAttribute("checked");

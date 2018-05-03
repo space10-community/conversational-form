@@ -79,6 +79,12 @@ cf.OptionButton</code></pre></td>
     			<td>cf.OptionButtonEvents.CLICK</td>
     			<td>Option element click, normally you would use cf.ControlElementEvents.SUBMIT_VALUE. <pre><code class="language-javascript">event.detail: cf.OptionButton</code></pre></td>
     		</tr>
+
+            <tr>
+                <td>cf.CheckboxButtonEvents.CLICK</td>
+                <td>Checkbox button element click. (select or deselect) <pre><code class="language-javascript">event.detail: cf.CheckboxButton</code></pre></td>
+            </tr>
+
     		<tr>
     			<td>cf.ControlElementEvents.PROGRESS_CHANGE</td>
     			<td>Upload a file, get progress event. <pre><code class="language-javascript">event.detail: 
@@ -143,7 +149,8 @@ cf.ControlElementProgressStates.READY</code></pre></td>
                 <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-on-focus">ON_FOCUS</a>
                 <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-submit-value">SUBMIT_VALUE</a>
                 <li class="toc-entry toc-h3"><a href="#cf-userinputevents-control-elements-added">CONTROL_ELEMENTS_ADDED</a>
-                <li class="toc-entry toc-h3"><a href="#cf-optionbuttonevents-click">CLICK</a>
+                <li class="toc-entry toc-h3"><a href="#cf-optionbuttonevents-click">cf.OptionButtonEvents.CLICK</a>
+                <li class="toc-entry toc-h3"><a href="#cf-checkboxbuttonevents-click">cf.CheckboxButtonEvents.CLICK</a>
                 <li class="toc-entry toc-h3"><a href="#cf-controlelementevents-progress-change">PROGRESS_CHANGE</a>
                 <li class="toc-entry toc-h3"><a href="#cf-userinputevents-height-change">HEIGHT_CHANGE</a>
                 <li class="toc-entry toc-h3"><a href="#cf-userinputevents-key-change">KEY_CHANGE</a>
