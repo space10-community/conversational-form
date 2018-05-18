@@ -4707,6 +4707,8 @@ var cf;
             // now set it
             if (this.isRobotResponse) {
                 this.textEl.innerHTML = "";
+                if (!this.uiOptions)
+                    this.uiOptions = this.cfReference.uiOptions; // On edit uiOptions are empty, so this mitigates the problem. Not ideal.
                 var robotInitResponseTime = this.uiOptions.robot.robotResponseTime;
                 if (robotInitResponseTime != 0) {
                     this.setToThinking();
@@ -4733,9 +4735,10 @@ var cf;
                         _this.onReadyCallback();
                     // reset, as it can be called again
                     _this.onReadyCallback = null;
-                    if (_this._tag.skipUserInput === true) {
+                    if (_this._tag && _this._tag.skipUserInput === true) {
                         setTimeout(function () {
                             _this._tag.flowManager.nextStep();
+                            _this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response
                         }, _this.uiOptions.robot.chainedResponseTime);
                     }
                 }, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
@@ -4767,6 +4770,8 @@ var cf;
         ChatResponse.prototype.scrollTo = function () {
             var y = this.el.offsetTop;
             var h = this.el.offsetHeight;
+            if (!this.container && this.el)
+                this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
             this.container.scrollTop = y + h + this.container.scrollTop;
         };
         ChatResponse.prototype.checkForEditMode = function () {
@@ -5432,7 +5437,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.80";
+            this.version = "0.9.81";
             this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
