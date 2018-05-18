@@ -189,31 +189,16 @@
 	<body>
 			
 				<form id="cf-form">
-
-					<input cf-questions="red or blue pill" type="text" name="pill">
-
-					<cf-robot-message cf-conditional-pill="blue" cf-questions="GREAT. YOU ARE ON THE BLUE PILL!!!!!!!!!!"></cf-robot-message>
-
-					<cf-robot-message cf-questions="Welcome to this form&&It will take around 20 seconds to complete it."></cf-robot-message>
-					<cf-robot-message cf-questions="Buckle up||Let's do this"></cf-robot-message>
-
-					<fieldset>
-						<label>
-							<input cf-questions="Checkboxes, not required." type="checkbox" name="checkboxes" id="checkboxes-1" value="developer">
-							Developer
-						</label>
-						<label>
-							<input type="checkbox" name="checkboxes" id="checkboxes-2" value="designer">
-							Designer
-						</label>
-						</div>
-						<label>
-							<input type="checkbox" name="checkboxes" id="checkboxes-3" value="curious-mind">
-							Curious mind
-						</label>
-					</fieldset>
-
-					<cf-robot-message cf-questions="Thank you for playing along."></cf-robot-message>
+						<input type="text" name="CHEESE" value="comte" cf-questions="What is your fave cheese?">
+					  <!-- <label for="radio">
+					    <input cf-questions="Hi friend. Ready to signup for our demo newsletter?" cf-label="Yes, let's begin!" type="radio" value="0">
+					    Start
+					  </label> -->
+					  <cf-robot-message cf-questions="this is just a test message to show that the next question will be skipped when trying to edit the first question."></cf-robot-message>
+					  <input type="text" name="FNAME" cf-questions="What is your firstname?">
+					  <input type="text" name="LNAME" cf-questions="What is your lastname?">
+					  <input type="text" name="EMAIL" cf-questions="What is your email?">
+					
 				</form>
 
 			<div id="cf-context" role="cf-context" cf-context style="height: 600px; width: 400px; border: 1px solid #999;">
