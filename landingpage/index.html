@@ -2,7 +2,7 @@
 <html lang="en">
 
 	<head>
-		<title>Turning web forms into conversations</title>
+		<title>Starting a business</title>
 
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -95,26 +95,25 @@
 					</svg>
 				</div>
 
-				<h3>
+				<!-- <h3>
 					Conversational Form is licensed under <a href="https://github.com/space10-community/conversational-form/blob/master/LICENSE.md" target="_blank">MIT</a>,
 					</br>documentation under <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
 					</br>Development by <a href="http://twitter.com/flexmotion" target="_blank">Felix Nielsen</a>.
 					</br>Design by <a href="http://www.charlieisslander.com/" target="_blank">Charlie Isslander</a> and <a href="http://norgram.co/" target="_blank">Norgram®</a>.
 
 					</br></br>Concept by <a href="http://space10.io" target="_blank">SPACE10</a>.
-				</h3>
+				</h3> -->
 
 				<article>
 					<h1 id="writer">
-						Turning webforms into conversations.
+						So you want to start a business?
 					</h1>
 					<h2>
-						Conversational Form is an open-source concept by <a href="http://space10.io" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface.
-					</br></br>Find examples of feature implementations <a href="examples.html" target="_self">here</a> or fill out the form <span class="below-768">below</span><span class="above-768">on the right</span> to take it for a spin 👉
+						Here is some basic descriptive text
 					</h2>
 
 
-					<div class="github-button__outer">
+					<!-- <div class="github-button__outer">
 						<a class="github-button" 
 							href="https://github.com/space10-community/conversational-form/fork" 
 							data-style="mega" 
@@ -131,14 +130,14 @@
 							data-count-api="/repos/space10-community/conversational-form#stargazers_count" 
 							data-count-aria-label="# stargazers on GitHub" a
 							ria-label="Star space10-community/conversational-form on GitHub"></a>
-					</div>
+					</div> -->
 					
 					<footer>
-						<h3>
+						<!-- <h3>
 							<a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq" target="_blank">Why we built Conversational Form</a>
 							&mdash;
 							<a href="https://medium.com/conversational-interfaces/the-conversational-form-evolved-now-with-voice-bc4f9a7da79f" target="_blank">Introducing voice</a>
-						</h3>
+						</h3> -->
 						
 						<a href="http://space10.io" target="_blank">
 							<svg viewBox="0 0 685 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -163,40 +162,53 @@
 				<form id="cf-form" method="post" action="https://api.formbucket.com/f/buk_YR7xGobkQQBP0bmXAWXtxn1B">
 					<fieldset>
 						<label for="name">What's your name?</label>
-						<input required cf-questions="Hi there! What's your name? 😊" type="text" class="form-control" name="name" id="name">
+						<input required cf-questions="Hello savvy kiwi! What's your name? 😊" type="text" class="form-control" name="name" id="name">
 					</fieldset>
 
 					<fieldset>
 						<label for="occupation">Occupation</label>
 						<div class="radio">
 						<label>
-							<input cf-questions="Great to meet you, {previous-answer}! I'm a web form, what do you do?|Awesome, {previous-answer}! And what do you do?" type="radio" name="occupation" id="occupation-1" value="developer">
-							Developer
+							<input cf-questions="Great to meet you, {previous-answer}! I'm a web form, where are you based?|Awesome, {previous-answer}! And where are you based?" type="radio" name="occupation" id="occupation-1" value="developer">
+							Auckland
 						</label>
 						</div>
 						<div class="radio">
 						<label>
 							<input type="radio" name="occupation" id="occupation-2" value="designer">
-							Designer
+							Hamilton
 						</label>
 						</div>
 						<div class="radio">
 						<label>
 							<input type="radio" name="occupation" id="occupation-3" value="curious-mind">
-							Curious mind
+							Tauranga
 						</label>
 						</div>
 						<div class="radio">
 							<label>
-								<input type="radio" name="occupation" id="occupation-2" value="lost">
-								Lost cause
+								<input type="radio" name="occupation" id="occupation-4" value="lost">
+								Wellington
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="occupation" id="occupation-5" value="lost">
+								Christchurch
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="occupation" id="occupation-6" value="lost">
+								Dunedin
 							</label>
 						</div>
 					</fieldset>
 
 					<fieldset>
-						<label for="company">Company</label>
-						<input cf-questions="Which company are you with?" type="text" class="form-control" name="company" id="company">
+						<label for="company-name">Company Name</label>
+						<input cf-questions="I like {occupation} too! What would you like the name of your business to be?
+" type="text" class="form-control" name="company-name" id="company-name">
 					</fieldset>
 
 					<fieldset>
