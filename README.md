@@ -17,7 +17,7 @@
 Include ConversationalForm in your page:
 
 ```html
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@0.9.80/dist/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@0.9.83/dist/conversational-form.min.js" crossorigin></script>
 ```
 Or download the latest release:
 - Clone the repo: ````git clone https://github.com/space10-community/conversational-form.git````
