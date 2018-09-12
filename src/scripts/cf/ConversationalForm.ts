@@ -571,7 +571,7 @@ namespace cf {
 				// doing classic .submit wont trigger onsubmit if that is present on form element
 				// as described here: http://wayback.archive.org/web/20090323062817/http://blogs.vertigosoftware.com/snyholm/archive/2006/09/27/3788.aspx
 				// so we mimic a click.
-				var button: HTMLButtonElement = this.formEl.ownerDocument.createElement('input');
+				var button: HTMLButtonElement = this.formEl.ownerDocument.createElement('button');
 				button.style.display = 'none';
 				button.type = 'submit';
 				this.formEl.appendChild(button);
