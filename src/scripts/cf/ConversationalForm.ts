@@ -289,7 +289,7 @@ namespace cf {
 				this.tags.splice(this.tags.indexOf(tag), 1);
 			}
 
-			if(!this.tags || this.tags.length == 0){
+			if(!ConversationalForm.suppressLog && (!this.tags || this.tags.length == 0)) {
 				console.warn("Conversational Form: No tags found or registered.");
 			}
 
