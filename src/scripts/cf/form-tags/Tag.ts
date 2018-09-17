@@ -125,6 +125,10 @@ namespace cf {
 			return this.domElement.hasAttribute("cf-image");
 		}
 
+		public get rows (): number {
+			return this.domElement.hasAttribute("rows") ? parseInt(this.domElement.getAttribute("rows")) : 0;
+		}
+
 		public get disabled (): boolean{
 			// a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
 			return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute("disabled") != undefined && this.domElement.getAttribute("disabled") != null);
