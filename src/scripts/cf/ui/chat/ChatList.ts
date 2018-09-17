@@ -113,6 +113,7 @@ namespace cf {
 		}
 
 		private onInputElementChanged(){
+			if (!this.cfReference || !this.cfReference.el) return;
 			const cfHeight: number = this.cfReference.el.offsetHeight;
 			const inputHeight: number = this.input.height;
 			const listHeight: number = cfHeight - inputHeight;
