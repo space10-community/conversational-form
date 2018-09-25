@@ -15,14 +15,19 @@ cf-chat {
 
 	
 	scrollable {
-		display: block;
+		// display: block;
 		width: 100%;
-		height: auto;
+		// height: auto;
 		max-height: 100%;
 		min-height: 40px;
-		overflow-y: auto;
-		padding-bottom: 20px; // allow for bounce;
-		padding-top: 40px; // allow for out of gradient scroll;
+		// overflow-y: auto;
+		flex-grow:1;
+		overflow:scroll;
+	  	display: flex;
+	  	flex-direction: column-reverse; /* 'column' for start, 'column-reverse' for end */
+		overflow-y: scroll;
+		// padding-bottom: 20px; // allow for bounce;
+		// padding-top: 40px; // allow for out of gradient scroll;
 		&::-webkit-scrollbar {
 			width: 4px;
 			height: 4px;
@@ -47,5 +52,15 @@ cf-chat {
 			border: none;
 			-webkit-border-radius: 100px;
 		}
+	}
+
+	.scrollableInner {
+		position: relative;
+		flex:0 0 auto;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 20px; // allow for bounce;
+		padding-top: 40px; // al
+		// border:1px solid blue;
 	}
 }

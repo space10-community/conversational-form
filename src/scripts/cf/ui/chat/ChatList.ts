@@ -214,7 +214,6 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
-
 				chatResponse.show();
 			}, 0);
 		}
@@ -273,7 +272,7 @@ namespace cf {
 		}
 
 		public createResponse(isRobotResponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
-			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
+			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector(".scrollableInner");
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				cfReference: this.cfReference,
@@ -297,7 +296,9 @@ namespace cf {
 
 		public getTemplate () : string {
 			return `<cf-chat type='pluto'>
-						<scrollable></scrollable>
+						<scrollable>
+							<div class="scrollableInner"></div>
+						</scrollable>
 					</cf-chat>`;
 		}
 

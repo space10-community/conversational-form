@@ -60,9 +60,36 @@ namespace cf {
 				this.el.classList.remove("disabled");
 		}
 
+		private animateIn() {
+			
+			//console.log(this);
+			
+			requestAnimationFrame(() => {
+				var height = this.el.scrollHeight;
+				this.el.style.height = '0px';
+				
+				requestAnimationFrame(() => { 
+
+					this.el.style.position = 'relative';
+					this.el.style.visibility = 'visible';
+					this.el.style.height = height + 'px';
+
+					this.el.classList.add('show');
+				});
+			});
+		}
+
 		public set visible(value: boolean){
-			this.el.offsetWidth;
-			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
+			//this.el.offsetWidth;
+			// console.log('visible',this.el);
+			// setTimeout(() => {
+			// 	if(value) {
+			// 		this.animateIn();
+			// 	} else {
+			// 		this.el.classList.remove("show");
+			// 	}
+			// },100);
+			//setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
 		}
 
 		public get strippedSesponse():string{
@@ -85,9 +112,10 @@ namespace cf {
 		}
 
 		public setValue(dto: FlowDTO = null){
-			if(!this.visible){
-				this.visible = true;
-			}
+			
+			// if(!this.visible){
+			// 	this.visible = true;
+			// }
 
 			const isThinking: boolean = this.el.hasAttribute("thinking");
 
@@ -122,8 +150,10 @@ namespace cf {
 		}
 
 		public show(){
+			
 			this.visible = true;
 			this.disabled = false;
+
 			if(!this.response){
 				this.setToThinking();
 			}else{
@@ -161,7 +191,6 @@ namespace cf {
 				for (let i = 0; i < innerResponse.length; i++) {
 					newStr += "*";
 				}
-
 				innerResponse = newStr;
 			}
 
@@ -192,7 +221,6 @@ namespace cf {
 						}
 					}
 				}
-
 				// add more..
 				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}
@@ -201,7 +229,6 @@ namespace cf {
 			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
-
 			// if(this.response != innerResponse){
 				// now set it
 				if(this.isRobotResponse){
@@ -253,11 +280,13 @@ namespace cf {
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
-
+			
 					this.scrollTo();
+					
 				}
-
+				
 				this.parsedResponse = innerResponse;
+
 			// }
 
 			// value set, so add element, if not added
@@ -269,21 +298,22 @@ namespace cf {
 				this.textEl.setAttribute("value-added", "");
 				this.el.classList.add("peak-thumb");
 			}, 0);
-
+			
 			this.checkForEditMode();
-
+			
+			
 			// update response
 			// remove the double ampersands if present
 			this.response = innerResponse.split("&&").join(" ");
 		}
 		
 		public scrollTo(){
+
 			const y: number = this.el.offsetTop;
 			const h: number = this.el.offsetHeight;
 
 			if(!this.container && this.el) this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-
-			this.container.scrollTop = y + h + this.container.scrollTop;
+			this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
 		}
 
 		private checkForEditMode(){
@@ -299,6 +329,36 @@ namespace cf {
 				this.el.removeAttribute("thinking");
 			}
 		}
+
+		//t = current time
+		//b = start value
+		//c = change in value
+		//d = duration
+		private easeInOutQuad(t:number, b:number, c:number, d:number) {
+			t /= d/2;
+			if (t < 1) return c/2*t*t + b;
+			t--;
+			return -c/2 * (t*(t-2) - 1) + b;
+		};	
+
+		private scrollToAnimate(to:number, duration:number) {
+			const element = this.container.parentElement;
+			var start = element.scrollTop,
+				change = to - start,
+				currentTime = 0,
+				increment = 20;
+				
+			var animateScroll = () => {        
+				currentTime += increment;
+				var val = this.easeInOutQuad(currentTime, start, change, duration);
+				element.scrollTop = val;
+				if(currentTime < duration) {
+					setTimeout(animateScroll, increment);
+				}
+			};
+			animateScroll();
+		}
+		
 
 		private setToThinking(){
 			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);
@@ -318,8 +378,12 @@ namespace cf {
 		* add one self to the chat list
 		*/
 		private addSelf(): void {
+			
 			if(this.el.parentNode != this.container){
 				this.container.appendChild(this.el);
+				setTimeout(() => {
+					this.animateIn();
+				},100);
 			}
 		}
 
@@ -375,7 +439,6 @@ namespace cf {
 
 			super.dealloc();
 		}
-
 		// template, can be overwritten ...
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotResponse ? "robot" : "user") + `">

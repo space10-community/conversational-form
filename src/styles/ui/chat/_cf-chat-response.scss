@@ -6,14 +6,14 @@
 	}
 }
 
+
 cf-chat-response {
-	display: table;
-	max-width: 80%;
+	// display: table;
+		max-width: 80%;
 	@media (min-width: $cf-breakpoint-medium) {
 		max-width: 50%;
 	}
 	min-width: 120px;
-	width: auto;
 	position: relative;
 	backface-visibility: hidden;
 	padding-left: calc(#{$cf-avatar-area} + 10px);
@@ -22,7 +22,15 @@ cf-chat-response {
 	margin-left: 0px;
 	margin-right: auto;
 	word-break: break-all;
-
+	display:flex;
+	
+	flex-shrink:0;
+	flex-grow:1;
+	position:absolute;
+	visibility:hidden;
+	will-change:transform;
+	transition:height $cf-anim-time * 0.45 $cf-ease-easeOut;
+	
 	&.can-edit {
 		cursor: pointer;
 
@@ -37,16 +45,17 @@ cf-chat-response {
 
 	&.robot {
 		text > p {
-			opacity: 0;
-			will-change: opacity;
-			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
-			&.show {
-				opacity: 1;
-			}
+			// opacity: 0;
+			// will-change: opacity;
+			// transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
+			// &.show {
+			// 	opacity: 1;
+			// }
 		}
 	}
 
 	&.user {
+		justify-content: flex-end;
 		margin-right: 0px;
 		margin-left: auto;
 		padding-left: 0;
@@ -59,8 +68,8 @@ cf-chat-response {
 		}
 		
 		text {
-			transform-origin: 100% 0%;
-			transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
+			// transform-origin: 100% 0%;
+			// transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
 
 			> p {
 				background: $cf-color-chat-response-user-bg;
@@ -75,7 +84,7 @@ cf-chat-response {
 				transform: scale(1, 1) translateY(0px);
 				opacity: 1;
 				.conversational-form--enable-animation & {
-					transition-delay: 0.2s, 0.2s, 0.2s;
+					// transition-delay: 0.2s, 0.2s, 0.2s;
 				}
 			}
 		}
@@ -98,18 +107,18 @@ cf-chat-response {
 
 	text {
 		user-select: none;
-		display: block;
-		overflow: hidden;
+		display: inline-block;
 		position: relative;
 		min-height: 40px;
-		opacity: 0;
-		white-space: pre-wrap;
+		height:auto;
+		// opacity: 0;
+		//white-space: pre-wrap;
 		word-break: normal;
-		transform-origin: 0% 0%;
-		transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-		will-change: transform, opacity, background;
-		backface-visibility: hidden;
-		height: auto;
+		//transform-origin: 0% 0%;
+		// transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
+		// will-change: transform, opacity, background;
+		//backface-visibility: hidden;
+		// height: auto;
 		
 		> div {
 			display: inline-block;
@@ -132,7 +141,7 @@ cf-chat-response {
 			padding: 0px;
 			background: $cf-color-chat-response-default-bg;
 			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
-			display: table; // wrap container around text;
+			display: inline-block; // wrap container around text;
 
 			// border radius rules
 			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
@@ -218,7 +227,7 @@ cf-chat-response {
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
 		.conversational-form--enable-animation & {
-			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25, opacity $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25;
+			transition: transform $cf-anim-time * 0.35 $cf-ease-easeOut, opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 
 		// Centered text, e.g. initials.
@@ -237,23 +246,26 @@ cf-chat-response {
 			}
 		}
 	}
-	
+
 	&.show {
 		text {
 			.conversational-form--enable-animation & {
-				transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
+				animation:moveIn $cf-anim-time * 0.35 $cf-ease-easeOut;
 			}
+	// 		
+	// 			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
+	// 		}
 
-			transform: translateY(0px) translateX(0px) scale(1, 1);
-			opacity: 1;
-			.conversational-form--enable-animation & {
-				transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
-				transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
-			}
+	// 		transform: translateY(0px) translateX(0px) scale(1, 1);
+	// 		opacity: 1;
+	// 		.conversational-form--enable-animation & {
+	// 			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
+	// 			transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
+	// 		}
 
-			&[value-added] {
-				will-change: auto;
-			}
+	// 		&[value-added] {
+	// 			will-change: auto;
+	// 		}
 		}
 	}
 	
@@ -261,9 +273,9 @@ cf-chat-response {
 		thumb {
 			transform: scale(1, 1) translateY(0px);
 			opacity: 1;
-			.conversational-form--enable-animation & {
-				transition-delay: 0.2s, 0.2s, 0.2s;
-			}
+			// .conversational-form--enable-animation & {
+			// 	transition-delay: 0.2s, 0.2s, 0.2s;
+			// }
 		}
 	}
 }
@@ -294,5 +306,17 @@ cf-chat-response {
 	100% {
 		transform: scale(1, 1);
 		opacity: 1;
+	}
+}
+
+@keyframes moveIn {
+	0% {
+	  transform:scale(0,0) translateY(30px);
+	  opacity:0;
+	}
+	
+	100% {
+	  transform:scale(1,1) translateY(0px);
+	  opacity:1;
 	}
 }

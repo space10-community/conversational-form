@@ -226,16 +226,16 @@
 
 		<script>
 				window.paused = false;
-				var answerAfter = 3000;
+				var answerAfter = 2500;
 
 				function pause() {
     			window.paused = !window.paused;
     			if (window.paused === false) submitAnswer();
     		}
 
-    		setTimeout(function() {
-					submitAnswer();		    			
-    		}, answerAfter);
+    		// setTimeout(function() {
+			// 		submitAnswer();		    			
+    		// }, answerAfter);
 
     		function submitAnswer() {
     			if (window.paused === true) return;

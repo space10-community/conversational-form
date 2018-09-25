@@ -515,9 +515,12 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../form-tags/Tag.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1799,6 +1802,13 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Tag.prototype, "rows", {
+            get: function () {
+                return this.domElement.hasAttribute("rows") ? parseInt(this.domElement.getAttribute("rows")) : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Tag.prototype, "disabled", {
             get: function () {
                 // a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
@@ -2467,9 +2477,12 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2531,9 +2544,12 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2653,9 +2669,12 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2686,9 +2705,12 @@ var cf;
 /// <reference path="Tag.ts"/>
 /// <reference path="../parsing/TagsParser.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2754,9 +2776,12 @@ var cf;
 
 /// <reference path="Tag.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2785,9 +2810,12 @@ var cf;
 
 /// <reference path="ControlElement.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2869,9 +2897,12 @@ var cf;
 
 /// <reference path="Button.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2931,9 +2962,12 @@ var cf;
 
 /// <reference path="Button.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2991,9 +3025,12 @@ var cf;
 
 /// <reference path="Button.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3155,9 +3192,12 @@ var cf;
 /// <reference path="Button.ts"/>
 /// <reference path="../../logic/Helpers.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3814,9 +3854,12 @@ var cf;
 /// <reference path="../../logic/FlowManager.ts"/>
 /// <reference path="../../interfaces/IUserInput.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3985,9 +4028,12 @@ var cf;
 /// <reference path="UserInputElement.ts"/>
 /// <reference path="UserInputSubmitButton.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4280,6 +4326,10 @@ var cf;
             else {
                 this.el.classList.remove("hide-input");
             }
+            // Set rows attribute if present
+            if (this._currentTag.rows && this._currentTag.rows > 1) {
+                this.inputElement.setAttribute('rows', this._currentTag.rows.toString());
+            }
             if (cf.UserInputElement.hideUserInputOnNoneTextInput) {
                 // toggle userinput hide
                 if (this.controlElements.active) {
@@ -4493,6 +4543,8 @@ var cf;
         };
         UserTextInput.prototype.resetValue = function () {
             this.inputElement.value = "";
+            if (this.inputElement.hasAttribute('rows'))
+                this.inputElement.setAttribute('rows', '1');
             this.onInputChange();
         };
         UserTextInput.prototype.dealloc = function () {
@@ -4527,9 +4579,12 @@ var cf;
 /// <reference path="../../ConversationalForm.ts"/>
 /// <reference path="../../interfaces/IUserInterfaceOptions.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4580,11 +4635,32 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        ChatResponse.prototype.animateIn = function () {
+            var _this = this;
+            requestAnimationFrame(function () {
+                var height = _this.el.scrollHeight;
+                _this.el.style.height = '0px';
+                requestAnimationFrame(function () {
+                    _this.el.style.position = 'relative';
+                    _this.el.style.visibility = 'visible';
+                    _this.el.style.height = height + 'px';
+                    _this.el.classList.add('show');
+                });
+            });
+        };
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
                 var _this = this;
-                this.el.offsetWidth;
-                setTimeout(function () { return value ? _this.el.classList.add("show") : _this.el.classList.remove("show"); }, 100);
+                //this.el.offsetWidth;
+                setTimeout(function () {
+                    if (value) {
+                        _this.animateIn();
+                    }
+                    else {
+                        _this.el.classList.remove("show");
+                    }
+                }, 800);
+                // setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
             },
             enumerable: true,
             configurable: true
@@ -4866,9 +4942,12 @@ var cf;
 /// <reference path="../BasicElement.ts"/>
 /// <reference path="../../logic/FlowManager.ts"/>
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4958,6 +5037,8 @@ var cf;
             this.onInputElementChanged();
         };
         ChatList.prototype.onInputElementChanged = function () {
+            if (!this.cfReference || !this.cfReference.el)
+                return;
             var cfHeight = this.cfReference.el.offsetHeight;
             var inputHeight = this.input.height;
             var listHeight = cfHeight - inputHeight;
@@ -5097,7 +5178,7 @@ var cf;
         };
         ChatList.prototype.createResponse = function (isRobotResponse, currentTag, value) {
             if (value === void 0) { value = null; }
-            var scrollable = this.el.querySelector("scrollable");
+            var scrollable = this.el.querySelector(".scrollableInner");
             var response = new cf.ChatResponse({
                 // image: null,
                 cfReference: this.cfReference,
@@ -5115,7 +5196,7 @@ var cf;
             return response;
         };
         ChatList.prototype.getTemplate = function () {
-            return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";
+            return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable>\n\t\t\t\t\t\t\t<div class=\"scrollableInner\"></div>\n\t\t\t\t\t\t</scrollable>\n\t\t\t\t\t</cf-chat>";
         };
         ChatList.prototype.dealloc = function () {
             this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -5575,7 +5656,7 @@ var cf;
                 var tag = indexesToRemove[i];
                 this.tags.splice(this.tags.indexOf(tag), 1);
             }
-            if (!this.tags || this.tags.length == 0) {
+            if (!ConversationalForm.suppressLog && (!this.tags || this.tags.length == 0)) {
                 console.warn("Conversational Form: No tags found or registered.");
             }
             //let's start the conversation
@@ -5675,7 +5756,7 @@ var cf;
                         // remove the tags as they are now apart of a group
                         for (var i = 0; i < groups[group].length; i++) {
                             var tagToBeRemoved = groups[group][i];
-                            if (i == 0)
+                            if (i == 0) // add the group at same index as the the first tag to be removed
                                 tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
                             else
                                 tags.splice(tags.indexOf(tagToBeRemoved), 1);
@@ -5819,7 +5900,7 @@ var cf;
                 // doing classic .submit wont trigger onsubmit if that is present on form element
                 // as described here: http://wayback.archive.org/web/20090323062817/http://blogs.vertigosoftware.com/snyholm/archive/2006/09/27/3788.aspx
                 // so we mimic a click.
-                var button = this.formEl.ownerDocument.createElement('input');
+                var button = this.formEl.ownerDocument.createElement('button');
                 button.style.display = 'none';
                 button.type = 'submit';
                 this.formEl.appendChild(button);
