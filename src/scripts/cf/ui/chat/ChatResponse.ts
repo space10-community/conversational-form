@@ -16,7 +16,8 @@ namespace cf {
 	}
 
 	export const ChatResponseEvents = {
-		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked"
+		USER_ANSWER_CLICKED: "cf-on-user-answer-clicked",
+		ELEMENT_ADDED: "cf-on-element-added"
 	}
 
 	// class
@@ -62,7 +63,7 @@ namespace cf {
 
 		public set visible(value: boolean){
 			this.el.offsetWidth;
-			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
+			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 1100);
 		}
 
 		public get strippedSesponse():string{
@@ -85,9 +86,9 @@ namespace cf {
 		}
 
 		public setValue(dto: FlowDTO = null){
-			if(!this.visible){
-				this.visible = true;
-			}
+			// if(!this.visible){
+			// 	this.visible = true;
+			// }
 
 			const isThinking: boolean = this.el.hasAttribute("thinking");
 
@@ -122,6 +123,7 @@ namespace cf {
 		}
 
 		public show(){
+			if (this.visible === true) return;
 			this.visible = true;
 			this.disabled = false;
 			if(!this.response){
@@ -278,6 +280,7 @@ namespace cf {
 		}
 		
 		public scrollTo(){
+			return false;
 			const y: number = this.el.offsetTop;
 			const h: number = this.el.offsetHeight;
 
@@ -320,6 +323,11 @@ namespace cf {
 		private addSelf(): void {
 			if(this.el.parentNode != this.container){
 				this.container.appendChild(this.el);
+				
+				ConversationalForm.illustrateFlow(this, "dispatch", ChatResponseEvents.ELEMENT_ADDED, event);
+				this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.ELEMENT_ADDED, {
+					detail: this._tag
+				}));
 			}
 		}
 

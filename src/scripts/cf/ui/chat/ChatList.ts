@@ -22,6 +22,8 @@ namespace cf {
 		private flowDTOFromUserInputUpdate: FlowDTO;
 		private responses: Array<ChatResponse>;
 		private input: UserInputElement;
+		private scrollable: HTMLElement;
+		private scrollAnimateTimeout: any;
 
 		constructor(options: IBasicElementOptions){
 			super(options);
@@ -52,6 +54,20 @@ namespace cf {
 
 			this.onControlElementsChangedCallback = this.onControlElementsChanged.bind(this);
 			this.eventTarget.addEventListener(ControlElementsEvents.CHANGED, this.onControlElementsChangedCallback, false);
+
+			// flow update
+			this.onElementAdded = this.onElementAdded.bind(this);
+			this.eventTarget.addEventListener(ChatResponseEvents.ELEMENT_ADDED, this.onElementAdded, false);
+		}
+
+		private onElementAdded(e: CustomEvent) {
+			if(this.scrollAnimateTimeout) clearTimeout(this.scrollAnimateTimeout);
+
+			var el:any = this.scrollable.children[this.scrollable.children.length-1]; // get last added element
+			var scrollToY = el.offsetTop + el.offsetHeight + this.scrollable.scrollHeight
+			console.log('ChatList.onElementAdded', scrollToY);
+
+			this.scrollToAnimate(scrollToY, 1000);
 		}
 
 		private onInputHeightChange(event: CustomEvent){
@@ -273,7 +289,7 @@ namespace cf {
 		}
 
 		public createResponse(isRobotResponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
-			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
+			this.scrollable = <HTMLElement> this.el.querySelector("scrollable");
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				cfReference: this.cfReference,
@@ -283,7 +299,7 @@ namespace cf {
 				isRobotResponse: isRobotResponse,
 				response: value,
 				image: isRobotResponse ? Dictionary.getRobotResponse("robot-image") : Dictionary.get("user-image"),
-				container: scrollable
+				container: this.scrollable
 			});
 
 			this.responses.push(response);
@@ -293,6 +309,31 @@ namespace cf {
 			this.onListUpdate(response);
 
 			return response;
+		}
+
+		private easeInOutQuad(t:number, b:number, c:number, d:number) {
+			t /= d/2;
+			if (t < 1) return c/2*t*t + b;
+			t--;
+			return -c/2 * (t*(t-2) - 1) + b;
+		};	
+
+		private scrollToAnimate(to:number, duration:number) {
+			const element = this.scrollable;
+			var start = element.scrollTop,
+				change = to - start,
+				currentTime = 0,
+				increment = 20;
+				
+			var animateScroll = () => {        
+				currentTime += increment;
+				var val = this.easeInOutQuad(currentTime, start, change, duration);
+				element.scrollTop = val;
+				if(currentTime < duration) {
+					this.scrollAnimateTimeout = setTimeout(animateScroll, increment);
+				}
+			};
+			animateScroll();
 		}
 
 		public getTemplate () : string {
