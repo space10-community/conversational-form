@@ -15,8 +15,8 @@ cf-chat-response {
 	}
 	min-width: 120px;
 	position: relative;
-	backface-visibility: hidden;
-	padding-left: calc(#{$cf-avatar-area} + 10px);
+	//backface-visibility: hidden;
+	padding-left: $cf-avatar-area + 10px;
 	padding-top: 16px;
 	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
@@ -26,10 +26,15 @@ cf-chat-response {
 	
 	flex-shrink:0;
 	flex-grow:1;
-	position:absolute;
-	visibility:hidden;
-	will-change:transform;
+	position: absolute;
+	visibility: hidden;
+	will-change:height;
 	transition:height $cf-anim-time * 0.45 $cf-ease-easeOut;
+
+	&.show {
+		position: relative;
+		visibility: visible;
+	}
 	
 	&.can-edit {
 		cursor: pointer;
@@ -143,6 +148,17 @@ cf-chat-response {
 			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
 			display: inline-block; // wrap container around text;
 
+			.conversational-form--enable-animation & {
+				transform:scale(0,0) translateY(30px);
+				opacity:0;
+			}
+
+			&.show {
+				.conversational-form--enable-animation & {
+					animation:moveIn $cf-anim-time * 0.35 forwards $cf-anim-time * 0.15 $cf-ease-easeOut;
+				}
+			}
+
 			// border radius rules
 			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
 			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
@@ -249,9 +265,9 @@ cf-chat-response {
 
 	&.show {
 		text {
-			.conversational-form--enable-animation & {
-				animation:moveIn $cf-anim-time * 0.35 $cf-ease-easeOut;
-			}
+			// .conversational-form--enable-animation & {
+			// 	animation:moveIn $cf-anim-time * 0.35 $cf-ease-easeOut;
+			// }
 	// 		
 	// 			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
 	// 		}

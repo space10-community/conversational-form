@@ -4636,6 +4636,7 @@ var cf;
             configurable: true
         });
         ChatResponse.prototype.animateIn = function () {
+            //console.log(this);
             var _this = this;
             requestAnimationFrame(function () {
                 var height = _this.el.scrollHeight;
@@ -4650,17 +4651,16 @@ var cf;
         };
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
-                var _this = this;
                 //this.el.offsetWidth;
-                setTimeout(function () {
-                    if (value) {
-                        _this.animateIn();
-                    }
-                    else {
-                        _this.el.classList.remove("show");
-                    }
-                }, 800);
-                // setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
+                // console.log('visible',this.el);
+                // setTimeout(() => {
+                // 	if(value) {
+                // 		this.animateIn();
+                // 	} else {
+                // 		this.el.classList.remove("show");
+                // 	}
+                // },100);
+                //setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
             },
             enumerable: true,
             configurable: true
@@ -4680,10 +4680,10 @@ var cf;
             this.onReadyCallback = resolve;
         };
         ChatResponse.prototype.setValue = function (dto) {
+            // if(!this.visible){
+            // 	this.visible = true;
+            // }
             if (dto === void 0) { dto = null; }
-            if (!this.visible) {
-                this.visible = true;
-            }
             var isThinking = this.el.hasAttribute("thinking");
             if (!dto) {
                 this.setToThinking();
@@ -4848,7 +4848,7 @@ var cf;
             var h = this.el.offsetHeight;
             if (!this.container && this.el)
                 this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-            this.container.scrollTop = y + h + this.container.scrollTop;
+            this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
         };
         ChatResponse.prototype.checkForEditMode = function () {
             if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
@@ -4861,6 +4861,32 @@ var cf;
                 this.textEl.innerHTML = "";
                 this.el.removeAttribute("thinking");
             }
+        };
+        //t = current time
+        //b = start value
+        //c = change in value
+        //d = duration
+        ChatResponse.prototype.easeInOutQuad = function (t, b, c, d) {
+            t /= d / 2;
+            if (t < 1)
+                return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        };
+        ;
+        ChatResponse.prototype.scrollToAnimate = function (to, duration) {
+            var _this = this;
+            var element = this.container.parentElement;
+            var start = element.scrollTop, change = to - start, currentTime = 0, increment = 20;
+            var animateScroll = function () {
+                currentTime += increment;
+                var val = _this.easeInOutQuad(currentTime, start, change, duration);
+                element.scrollTop = val;
+                if (currentTime < duration) {
+                    setTimeout(animateScroll, increment);
+                }
+            };
+            animateScroll();
         };
         ChatResponse.prototype.setToThinking = function () {
             var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);
@@ -4878,8 +4904,12 @@ var cf;
         * add one self to the chat list
         */
         ChatResponse.prototype.addSelf = function () {
+            var _this = this;
             if (this.el.parentNode != this.container) {
                 this.container.appendChild(this.el);
+                setTimeout(function () {
+                    _this.animateIn();
+                }, 100);
             }
         };
         /**

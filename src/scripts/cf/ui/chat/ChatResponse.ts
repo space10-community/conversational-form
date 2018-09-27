@@ -61,35 +61,19 @@ namespace cf {
 		}
 
 		private animateIn() {
-			
-			//console.log(this);
-			
-			requestAnimationFrame(() => {
+			requestAnimationFrame(() => { 
+				//listen for transitionend and set to height:auto
 				var height = this.el.scrollHeight;
 				this.el.style.height = '0px';
-				
 				requestAnimationFrame(() => { 
-
-					this.el.style.position = 'relative';
-					this.el.style.visibility = 'visible';
 					this.el.style.height = height + 'px';
-
 					this.el.classList.add('show');
 				});
 			});
 		}
 
 		public set visible(value: boolean){
-			//this.el.offsetWidth;
-			// console.log('visible',this.el);
-			// setTimeout(() => {
-			// 	if(value) {
-			// 		this.animateIn();
-			// 	} else {
-			// 		this.el.classList.remove("show");
-			// 	}
-			// },100);
-			//setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
+
 		}
 
 		public get strippedSesponse():string{
@@ -245,17 +229,33 @@ namespace cf {
 					var chainedResponses: Array<string> = innerResponse.split("&&");
 					for (let i = 0; i < chainedResponses.length; i++) {
 						let str: string = <string>chainedResponses[i];
-						setTimeout(() =>{
-							this.tryClearThinking();
+						this.textEl.innerHTML += "<p>" + str + "</p>";
+						
+						// setTimeout(() =>{
+						// 	this.tryClearThinking();
+							
+						// 	this.textEl.innerHTML += "<p>" + str + "</p>";
+						// 	const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+							
+						// 	p[p.length - 1].offsetWidth;
+						// 	p[p.length - 1].classList.add("show");
 
-							this.textEl.innerHTML += "<p>" + str + "</p>";
-							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
-							p[p.length - 1].offsetWidth;
-							p[p.length - 1].classList.add("show");
-
-							this.scrollTo();
-						}, robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
+						// 	this.scrollTo();
+						// 	console.log('changed',this.textEl.innerHTML);
+						// },robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
 					}
+					
+					for (let i = 0; i < chainedResponses.length; i++) {
+						setTimeout(() =>{
+
+							this.tryClearThinking();
+							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+								p[i].classList.add("show");
+								this.scrollTo();
+
+						},robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
+					}
+
 
 					this.readyTimer = setTimeout(() => {
 						if(this.onReadyCallback)
@@ -270,7 +270,7 @@ namespace cf {
 								this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response
 							},this.uiOptions.robot.chainedResponseTime);
 						}
-
+						
 					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
 				}else{
 					// user response, act normal
@@ -278,6 +278,7 @@ namespace cf {
 
 					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+					console.log('first');
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
 			
@@ -378,12 +379,9 @@ namespace cf {
 		* add one self to the chat list
 		*/
 		private addSelf(): void {
-			
 			if(this.el.parentNode != this.container){
 				this.container.appendChild(this.el);
-				setTimeout(() => {
-					this.animateIn();
-				},100);
+				this.animateIn();
 			}
 		}
 
