@@ -61,8 +61,10 @@ namespace cf {
 		}
 
 		private animateIn() {
+			
+			//TODO: listen for transitionend and set to height:auto
+
 			requestAnimationFrame(() => { 
-				//listen for transitionend and set to height:auto
 				var height = this.el.scrollHeight;
 				this.el.style.height = '0px';
 				requestAnimationFrame(() => { 
@@ -213,7 +215,6 @@ namespace cf {
 			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
-			// if(this.response != innerResponse){
 				// now set it
 				if(this.isRobotResponse){
 					this.textEl.innerHTML = "";
@@ -230,19 +231,6 @@ namespace cf {
 					for (let i = 0; i < chainedResponses.length; i++) {
 						let str: string = <string>chainedResponses[i];
 						this.textEl.innerHTML += "<p>" + str + "</p>";
-						
-						// setTimeout(() =>{
-						// 	this.tryClearThinking();
-							
-						// 	this.textEl.innerHTML += "<p>" + str + "</p>";
-						// 	const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
-							
-						// 	p[p.length - 1].offsetWidth;
-						// 	p[p.length - 1].classList.add("show");
-
-						// 	this.scrollTo();
-						// 	console.log('changed',this.textEl.innerHTML);
-						// },robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
 					}
 					
 					for (let i = 0; i < chainedResponses.length; i++) {
@@ -253,7 +241,7 @@ namespace cf {
 								p[i].classList.add("show");
 								this.scrollTo();
 
-						},robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
+						},chainedResponses.length > 1 && i > 0 ? robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime) : 0);
 					}
 
 
@@ -330,36 +318,6 @@ namespace cf {
 				this.el.removeAttribute("thinking");
 			}
 		}
-
-		//t = current time
-		//b = start value
-		//c = change in value
-		//d = duration
-		private easeInOutQuad(t:number, b:number, c:number, d:number) {
-			t /= d/2;
-			if (t < 1) return c/2*t*t + b;
-			t--;
-			return -c/2 * (t*(t-2) - 1) + b;
-		};	
-
-		private scrollToAnimate(to:number, duration:number) {
-			const element = this.container.parentElement;
-			var start = element.scrollTop,
-				change = to - start,
-				currentTime = 0,
-				increment = 20;
-				
-			var animateScroll = () => {        
-				currentTime += increment;
-				var val = this.easeInOutQuad(currentTime, start, change, duration);
-				element.scrollTop = val;
-				if(currentTime < duration) {
-					setTimeout(animateScroll, increment);
-				}
-			};
-			animateScroll();
-		}
-		
 
 		private setToThinking(){
 			const canShowThinking: boolean = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);

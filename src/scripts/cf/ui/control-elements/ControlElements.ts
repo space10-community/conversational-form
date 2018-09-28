@@ -365,26 +365,27 @@ namespace cf {
 		}
 
 		public animateElementsIn(){
-			console.log('this.elements',this.elements);
+		
 			if(this.elements.length > 0){
-				this.resize();
-				
-				console.log('animateElementsIn',this.el.scrollHeight);
+				this.resize();		
+				// this.el.style.transition = 'height 0.35s ease-out 0.2s';
+				setTimeout(() => {
+					this.list.style.height = this.list.scrollHeight + 'px';
+					const elements: Array<IControlElement> = this.getElements();
 
-				this.el.style.transition = 'height 0.35s ease-out 0.2s';
-				this.el.style.height = this.el.scrollHeight + 'px';
+					setTimeout(() => {
+						if(elements.length > 0){
+							if(!this.el.classList.contains("animate-in"))
+								this.el.classList.add("animate-in");
+							
+							for (let i = 0; i < elements.length; i++) {
+								let element: ControlElement = <ControlElement>elements[i];
+								element.animateIn();
+							}
+						}
+					}, 500);
+				},200); 
 
-				const elements: Array<IControlElement> = this.getElements();
-
-				if(elements.length > 0){
-					if(!this.el.classList.contains("animate-in"))
-						this.el.classList.add("animate-in");
-					
-					for (let i = 0; i < elements.length; i++) {
-						let element: ControlElement = <ControlElement>elements[i];
-						element.animateIn();
-					}
-				}
 			}
 		}
 
@@ -500,8 +501,8 @@ namespace cf {
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
 
-			this.el.style.transition = 'height 0.35s ease-out 0.2s';
-			this.el.style.height = '0px';
+			// this.el.style.transition = 'height 0.35s ease-out 0.2s';
+			this.list.style.height = '0px';
 		}
 
 		public getElement(index: number):IControlElement | OptionsList{

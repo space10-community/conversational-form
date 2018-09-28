@@ -8,14 +8,13 @@
 
 
 cf-chat-response {
-	// display: table;
-		max-width: 80%;
+	max-width: 80%;
 	@media (min-width: $cf-breakpoint-medium) {
 		max-width: 50%;
 	}
 	min-width: 120px;
 	position: relative;
-	//backface-visibility: hidden;
+	backface-visibility: hidden;
 	padding-left: $cf-avatar-area + 10px;
 	padding-top: 16px;
 	color: $cf-color-chat-response-default-text;
@@ -48,17 +47,6 @@ cf-chat-response {
 		}
 	}
 
-	&.robot {
-		text > p {
-			// opacity: 0;
-			// will-change: opacity;
-			// transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
-			// &.show {
-			// 	opacity: 1;
-			// }
-		}
-	}
-
 	&.user {
 		justify-content: flex-end;
 		margin-right: 0px;
@@ -73,9 +61,7 @@ cf-chat-response {
 		}
 		
 		text {
-			// transform-origin: 100% 0%;
-			// transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-
+			
 			> p {
 				background: $cf-color-chat-response-user-bg;
 				border-radius: $cf-chat-response-border-radius 0px $cf-chat-response-border-radius $cf-chat-response-border-radius;
@@ -89,7 +75,19 @@ cf-chat-response {
 				transform: scale(1, 1) translateY(0px);
 				opacity: 1;
 				.conversational-form--enable-animation & {
-					// transition-delay: 0.2s, 0.2s, 0.2s;
+					transition-delay: 0.2s, 0.2s, 0.2s;
+				}
+			}
+		}
+	}
+
+	&.robot {
+		&.peak-thumb {
+			thumb {
+				transform: scale(1, 1) translateY(0px);
+				opacity: 1;
+				.conversational-form--enable-animation & {
+					transition-delay: 0.2s, 0.2s, 0.2s;
 				}
 			}
 		}
@@ -116,15 +114,9 @@ cf-chat-response {
 		position: relative;
 		min-height: 40px;
 		height:auto;
-		// opacity: 0;
-		//white-space: pre-wrap;
+		white-space: pre-wrap;
 		word-break: normal;
-		//transform-origin: 0% 0%;
-		// transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-		// will-change: transform, opacity, background;
-		//backface-visibility: hidden;
-		// height: auto;
-		
+
 		> div {
 			display: inline-block;
 		}
@@ -149,13 +141,14 @@ cf-chat-response {
 			display: inline-block; // wrap container around text;
 
 			.conversational-form--enable-animation & {
+				will-change: transform,opacity;
 				transform:scale(0,0) translateY(30px);
 				opacity:0;
 			}
 
 			&.show {
 				.conversational-form--enable-animation & {
-					animation:moveIn $cf-anim-time * 0.35 forwards $cf-anim-time * 0.15 $cf-ease-easeOut;
+					animation:moveIn $cf-anim-time * 0.35 forwards $cf-anim-time * 0.5 $cf-ease-easeOut;
 				}
 			}
 
@@ -242,6 +235,7 @@ cf-chat-response {
 		transform-origin: 50% 50%;
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
+		
 		.conversational-form--enable-animation & {
 			transition: transform $cf-anim-time * 0.35 $cf-ease-easeOut, opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
@@ -262,39 +256,8 @@ cf-chat-response {
 			}
 		}
 	}
-
-	&.show {
-		text {
-			// .conversational-form--enable-animation & {
-			// 	animation:moveIn $cf-anim-time * 0.35 $cf-ease-easeOut;
-			// }
-	// 		
-	// 			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
-	// 		}
-
-	// 		transform: translateY(0px) translateX(0px) scale(1, 1);
-	// 		opacity: 1;
-	// 		.conversational-form--enable-animation & {
-	// 			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
-	// 			transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
-	// 		}
-
-	// 		&[value-added] {
-	// 			will-change: auto;
-	// 		}
-		}
-	}
-	
-	&.show.robot {
-		thumb {
-			transform: scale(1, 1) translateY(0px);
-			opacity: 1;
-			// .conversational-form--enable-animation & {
-			// 	transition-delay: 0.2s, 0.2s, 0.2s;
-			// }
-		}
-	}
 }
+
 @keyframes dot-fade {
 	0% {
 		opacity: 1;
@@ -327,7 +290,7 @@ cf-chat-response {
 
 @keyframes moveIn {
 	0% {
-	  transform:scale(0,0) translateY(30px);
+	  transform:scale(0001,0001) translateY(60px);
 	  opacity:0;
 	}
 	

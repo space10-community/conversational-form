@@ -1027,17 +1027,24 @@ var cf;
             }
         };
         ControlElements.prototype.animateElementsIn = function () {
-            if (this.elements) {
+            var _this = this;
+            if (this.elements.length > 0) {
                 this.resize();
-                var elements = this.getElements();
-                if (elements.length > 0) {
-                    if (!this.el.classList.contains("animate-in"))
-                        this.el.classList.add("animate-in");
-                    for (var i = 0; i < elements.length; i++) {
-                        var element = elements[i];
-                        element.animateIn();
-                    }
-                }
+                // this.el.style.transition = 'height 0.35s ease-out 0.2s';
+                setTimeout(function () {
+                    _this.list.style.height = _this.list.scrollHeight + 'px';
+                    var elements = _this.getElements();
+                    setTimeout(function () {
+                        if (elements.length > 0) {
+                            if (!_this.el.classList.contains("animate-in"))
+                                _this.el.classList.add("animate-in");
+                            for (var i = 0; i < elements.length; i++) {
+                                var element = elements[i];
+                                element.animateIn();
+                            }
+                        }
+                    }, 500);
+                }, 200);
             }
         };
         ControlElements.prototype.getElements = function () {
@@ -1140,6 +1147,8 @@ var cf;
             this.infoElement.classList.remove("show");
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
+            // this.el.style.transition = 'height 0.35s ease-out 0.2s';
+            this.list.style.height = '0px';
         };
         ControlElements.prototype.getElement = function (index) {
             return this.elements[index];
@@ -4636,14 +4645,12 @@ var cf;
             configurable: true
         });
         ChatResponse.prototype.animateIn = function () {
-            //console.log(this);
+            //TODO: listen for transitionend and set to height:auto
             var _this = this;
             requestAnimationFrame(function () {
                 var height = _this.el.scrollHeight;
                 _this.el.style.height = '0px';
                 requestAnimationFrame(function () {
-                    _this.el.style.position = 'relative';
-                    _this.el.style.visibility = 'visible';
                     _this.el.style.height = height + 'px';
                     _this.el.classList.add('show');
                 });
@@ -4651,16 +4658,6 @@ var cf;
         };
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
-                //this.el.offsetWidth;
-                // console.log('visible',this.el);
-                // setTimeout(() => {
-                // 	if(value) {
-                // 		this.animateIn();
-                // 	} else {
-                // 		this.el.classList.remove("show");
-                // 	}
-                // },100);
-                //setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
             },
             enumerable: true,
             configurable: true
@@ -4779,7 +4776,6 @@ var cf;
             var responseContains = innerResponse.indexOf("contains-image") != -1;
             if (responseContains)
                 this.textEl.classList.add("contains-image");
-            // if(this.response != innerResponse){
             // now set it
             if (this.isRobotResponse) {
                 this.textEl.innerHTML = "";
@@ -4791,20 +4787,21 @@ var cf;
                 }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
-                var _loop_1 = function (i_2) {
+                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
                     var str = chainedResponses[i_2];
+                    this.textEl.innerHTML += "<p>" + str + "</p>";
+                }
+                var _loop_1 = function (i_3) {
                     setTimeout(function () {
                         _this.tryClearThinking();
-                        _this.textEl.innerHTML += "<p>" + str + "</p>";
                         var p = _this.textEl.getElementsByTagName("p");
-                        p[p.length - 1].offsetWidth;
-                        p[p.length - 1].classList.add("show");
+                        p[i_3].classList.add("show");
                         _this.scrollTo();
-                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
+                    }, chainedResponses.length > 1 && i_3 > 0 ? robotInitResponseTime + ((i_3 + 1) * this_1.uiOptions.robot.chainedResponseTime) : 0);
                 };
                 var this_1 = this;
-                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
-                    _loop_1(i_2);
+                for (var i_3 = 0; i_3 < chainedResponses.length; i_3++) {
+                    _loop_1(i_3);
                 }
                 this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
@@ -4824,6 +4821,7 @@ var cf;
                 this.tryClearThinking();
                 this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
                 var p = this.textEl.getElementsByTagName("p");
+                console.log('first');
                 p[p.length - 1].offsetWidth;
                 p[p.length - 1].classList.add("show");
                 this.scrollTo();
@@ -4862,32 +4860,6 @@ var cf;
                 this.el.removeAttribute("thinking");
             }
         };
-        //t = current time
-        //b = start value
-        //c = change in value
-        //d = duration
-        ChatResponse.prototype.easeInOutQuad = function (t, b, c, d) {
-            t /= d / 2;
-            if (t < 1)
-                return c / 2 * t * t + b;
-            t--;
-            return -c / 2 * (t * (t - 2) - 1) + b;
-        };
-        ;
-        ChatResponse.prototype.scrollToAnimate = function (to, duration) {
-            var _this = this;
-            var element = this.container.parentElement;
-            var start = element.scrollTop, change = to - start, currentTime = 0, increment = 20;
-            var animateScroll = function () {
-                currentTime += increment;
-                var val = _this.easeInOutQuad(currentTime, start, change, duration);
-                element.scrollTop = val;
-                if (currentTime < duration) {
-                    setTimeout(animateScroll, increment);
-                }
-            };
-            animateScroll();
-        };
         ChatResponse.prototype.setToThinking = function () {
             var canShowThinking = (this.isRobotResponse && this.uiOptions.robot.robotResponseTime !== 0) || (!this.isRobotResponse && this.cfReference.uiOptions.user.showThinking && !this._tag.skipUserInput);
             if (canShowThinking) {
@@ -4904,12 +4876,9 @@ var cf;
         * add one self to the chat list
         */
         ChatResponse.prototype.addSelf = function () {
-            var _this = this;
             if (this.el.parentNode != this.container) {
                 this.container.appendChild(this.el);
-                setTimeout(function () {
-                    _this.animateIn();
-                }, 100);
+                this.animateIn();
             }
         };
         /**
@@ -5021,6 +4990,8 @@ var cf;
         ChatList.prototype.onInputHeightChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+            // this.input.controlElements.el.style.transition = "height 2s ease-out";
+            // this.input.controlElements.el.style.height = this.input.controlElements.el.scrollHeight + 'px';
             this.onInputElementChanged();
         };
         ChatList.prototype.onInputKeyChange = function (event) {
@@ -5072,7 +5043,7 @@ var cf;
             var cfHeight = this.cfReference.el.offsetHeight;
             var inputHeight = this.input.height;
             var listHeight = cfHeight - inputHeight;
-            this.el.style.height = listHeight + "px";
+            //this.el.style.height = listHeight + "px";
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             var _this = this;
