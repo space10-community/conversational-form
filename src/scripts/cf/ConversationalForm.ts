@@ -75,6 +75,9 @@ namespace cf {
 
 		// optional, Whenther to suppress console.log, default true
 		suppressLog?:boolean;
+
+		// Prevent submit on Enter keypress: https://github.com/space10-community/conversational-form/issues/270
+		preventSubmitOnEnter?:boolean;
 	}
 
 	// CUI formless options
@@ -89,6 +92,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 		public static suppressLog: boolean = true;
+		public static preventSubmitOnEnter: boolean = false;
 
 		private cdnPath: string = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
 		/**
@@ -118,6 +122,7 @@ namespace cf {
 		public el: HTMLElement;
 		public chatList: ChatList;
 		public uiOptions: IUserInterfaceOptions;
+		public preventSubmitOnEnter: boolean;
 
 		private context: HTMLElement;
 		private formEl: HTMLFormElement;
@@ -141,6 +146,9 @@ namespace cf {
 
 			if(typeof options.suppressLog === 'boolean')
 				ConversationalForm.suppressLog = options.suppressLog;
+
+			if(typeof options.preventSubmitOnEnter === 'boolean')
+				this.preventSubmitOnEnter = options.preventSubmitOnEnter;
 
 			if(!ConversationalForm.suppressLog) console.log('Conversational Form > version:', this.version);
 			if(!ConversationalForm.suppressLog) console.log('Conversational Form > options:', options);

@@ -429,6 +429,11 @@ namespace cf {
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 
+			// If submit is prevented by option 'preventSubmitOnEnter'
+			if (this.cfReference.preventSubmitOnEnter === true && this.inputElement.hasAttribute('rows') && parseInt(this.inputElement.getAttribute('rows')) > 1) {
+				return;
+			}
+
 			// prevent textarea line breaks
 			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey){
 				event.preventDefault();
@@ -487,6 +492,7 @@ namespace cf {
 
 			if((event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == Dictionary.keyCodes["space"]){
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
+					if (this.cfReference.preventSubmitOnEnter === true) return;
 					event.preventDefault();
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
