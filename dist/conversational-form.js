@@ -4379,6 +4379,10 @@ var cf;
             // if any meta keys, then ignore
             if (event.keyCode == cf.Dictionary.keyCodes["shift"])
                 this.shiftIsDown = true;
+            // If submit is prevented by option 'preventSubmitOnEnter'
+            if (this.cfReference.preventSubmitOnEnter === true && this.inputElement.hasAttribute('rows') && parseInt(this.inputElement.getAttribute('rows')) > 1) {
+                return;
+            }
             // prevent textarea line breaks
             if (event.keyCode == cf.Dictionary.keyCodes["enter"] && !event.shiftKey) {
                 event.preventDefault();
@@ -4428,6 +4432,8 @@ var cf;
             var value = this.getFlowDTO();
             if ((event.keyCode == cf.Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == cf.Dictionary.keyCodes["space"]) {
                 if (event.keyCode == cf.Dictionary.keyCodes["enter"] && this.active) {
+                    if (this.cfReference.preventSubmitOnEnter === true)
+                        return;
                     event.preventDefault();
                     this.onEnterOrSubmitButtonSubmit();
                 }
@@ -5497,7 +5503,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
-            this.version = "0.9.81";
+            this.version = "0.9.90";
             this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
@@ -5507,6 +5513,8 @@ var cf;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             if (typeof options.suppressLog === 'boolean')
                 ConversationalForm.suppressLog = options.suppressLog;
+            if (typeof options.preventSubmitOnEnter === 'boolean')
+                this.preventSubmitOnEnter = options.preventSubmitOnEnter;
             if (!ConversationalForm.suppressLog)
                 console.log('Conversational Form > version:', this.version);
             if (!ConversationalForm.suppressLog)
@@ -5981,6 +5989,7 @@ var cf;
         ConversationalForm.animationsEnabled = true;
         ConversationalForm.illustrateAppFlow = true;
         ConversationalForm.suppressLog = true;
+        ConversationalForm.preventSubmitOnEnter = false;
         ConversationalForm.hasAutoInstantiated = false;
         return ConversationalForm;
     }());
