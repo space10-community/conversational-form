@@ -1,0 +1,18 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Appearance' %}
+{% set page_slug = '/appearance/' %}
+
+{% block page %}
+    <h1 id="appearance">{{page_title}}</h1>
+    <p>When altering the apperance of Conversational Form you have two options:
+    	<ul>
+    		<li>Overriding styles</li>
+    		<li>Compile (SCSS) your own theme and disable CSS load using the option <code>loadExternalStyleSheet</code> to false when instantiating your Conversational Form.</li>
+    	</ul>
+    </p>
+    <h2 id="example-overriding-styles">Example - Overriding styles</h2>
+	<p data-height="480" data-theme-id="light" data-slug-hash="baeKWg" data-default-tab="css,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - CSS override theming" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/baeKWg/">Conversational Forms - CSS override theming</a> by SPACE10 (<a href="https://codepen.io/space10">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+{% endblock %}
