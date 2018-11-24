@@ -363,6 +363,11 @@ namespace cf {
 				this.el.classList.remove("hide-input");
 			}
 
+			// Set rows attribute if present
+			if ((<InputTag> this._currentTag).rows && (<InputTag> this._currentTag).rows > 1) {
+				this.inputElement.setAttribute('rows', (<InputTag> this._currentTag).rows.toString());
+			}
+
 			if(UserInputElement.hideUserInputOnNoneTextInput){
 				// toggle userinput hide
 				if(this.controlElements.active){
@@ -424,6 +429,11 @@ namespace cf {
 			if(event.keyCode == Dictionary.keyCodes["shift"])
 				this.shiftIsDown = true;
 
+			// If submit is prevented by option 'preventSubmitOnEnter'
+			if (this.cfReference.preventSubmitOnEnter === true && this.inputElement.hasAttribute('rows') && parseInt(this.inputElement.getAttribute('rows')) > 1) {
+				return;
+			}
+
 			// prevent textarea line breaks
 			if(event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey){
 				event.preventDefault();
@@ -482,6 +492,7 @@ namespace cf {
 
 			if((event.keyCode == Dictionary.keyCodes["enter"] && !event.shiftKey) || event.keyCode == Dictionary.keyCodes["space"]){
 				if(event.keyCode == Dictionary.keyCodes["enter"] && this.active){
+					if (this.cfReference.preventSubmitOnEnter === true) return;
 					event.preventDefault();
 					this.onEnterOrSubmitButtonSubmit();
 				}else{
@@ -602,6 +613,7 @@ namespace cf {
 
 		private resetValue(){
 			this.inputElement.value = "";
+			if (this.inputElement.hasAttribute('rows')) this.inputElement.setAttribute('rows', '1');
 			this.onInputChange();
 		}
 

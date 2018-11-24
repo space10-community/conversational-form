@@ -1,0 +1,57 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Validation' %}
+{% set page_slug = '/functionality/validation/' %}
+
+{% block page %}
+    <h1 id="validation">{{page_title}}</h1>
+    <p>Validate a submitted value before continuing the form flow using javascript.</p>
+	<ul>
+		<li>OBS. eval is used.</li>
+		<li>Asyncronous, so a value can be validated through a server</li>
+		<li>three parameters is passed to the method
+			<ul>
+				<li>dto: FlowDTO</li>
+				<li>success: () => void //callback</li>
+				<li>error: (optionalErrorMessage?: string) => void //callback</li>
+			</ul>
+		</li>
+	</ul>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-validation="window.lastnameCheck" /></code></pre>
+    <pre><code class="language-javascript" data-lang="html">var lastnameCheck = function(dto, success, error){
+    console.log("testValidation, dto:", dto, success, error);
+    if(dto.text.toLowerCase().indexOf("holmes") != -1)
+        return success();
+    return error();
+};</code></pre>
+
+	<h2 id="validate-using-flowstepcallback">Using flowStepCallback</h2>
+	<pre><code class="language-javascript" data-lang="html">var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+    formEl: document.getElementById("form"),
+    context: document.getElementById("cf-context"),
+    flowStepCallback: function(dto, success, error){
+        
+        if(dto.tag.id == "firstname"){
+            if(dto.tag.value.toLowerCase() === "sherlock"){
+                return success();
+            }else{
+                return error();
+            }
+            //conversationalForm.stop("Stopping form, but added value");
+        }else if(dto.tag.name == "gender"){
+            if(dto.tag.value[0] === "male"){
+                return success();
+            }else{
+                return error();
+            }
+        }
+
+        return success();
+    }
+});</code></pre>
+
+    <h2 id="validation-example">Example using both validation strategies</h2>
+    <p data-height="436" data-theme-id="light" data-slug-hash="ypOwGN" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Validation" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/ypOwGN/">Conversational Forms - Validation</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+{% endblock %}

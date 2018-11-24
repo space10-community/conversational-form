@@ -17,11 +17,11 @@
   <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
     <li class="nav-item dropdown">
       <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{ versions[0].label }}
+        v{{currentVersion}}
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
         {% for key, version in versions %}
-        	<a class="dropdown-item{% if key == 0 %} active{% endif %}" href="{{root_path}}../{{ version.path }}/">{{ version.label }}</a>
+        	<a class="dropdown-item{% if version.path == currentVersion %} active{% endif %}" href="{{root_path}}../{{ version.path }}/">{{ version.label }}</a>
         {% endfor %}
       </div>
     </li>
