@@ -33,13 +33,20 @@ describe('Check input type=text', function() {
 				"name": "second-tag",
 				"id": "second-tag",
 				"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
+			},
+			{
+				"tag": "input",
+				"type": "text",
+				"name": "third-tag",
+				"id": "third-tag",
+				"cf-questions": "dummy tag"
 			}
 		]
 	});
 
 	it('Should be able to through all', function(done) {
 		expect(instance.tags).not.toBeNull();
-		expect(instance.tags.length).toBe(2);
+		expect(instance.tags.length).toBe(3);
 		expect(instance.tags[0].type).toBe("group");
 		expect(instance.tags[0].domElement).not.toBeNull();
 

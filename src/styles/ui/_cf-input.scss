@@ -107,6 +107,10 @@ cf-input {
 		&:-ms-input-placeholder {
 			color: currentColor;
 		}
+
+		&:not([rows='1']) {
+			height: auto !important;
+		}
 	}
 	
 	// hide input
@@ -340,7 +344,9 @@ cf-input-button.cf-input-button {
 /**
 * Show submit button for groups when input is hidden
 */
-cf-input[tag-type="group"].hide-input {
+cf-input[tag-type="file"].hide-input,
+cf-input[tag-type="group"].hide-input,
+cf-input[tag-type="select"].hide-input {
 	cf-input-button {
 		display: block;
 		left: 0;

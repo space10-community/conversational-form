@@ -1,0 +1,94 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'DOM element attributes' %}
+{% set page_slug = '/dom-element-attributes/' %}
+
+{% block page %}
+    <h1 id="dom-element-attributes">{{page_title}}</h1>
+    
+    <h2 id="form-attributes">Form-tag attributes</h2>
+    <h3 id="cf-context">cf-context</h3>
+    <p>If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute cf-context to an element, otherwise the ConversationalForm will be appended to the body element.</p>
+	<pre><code class="language-html" data-lang="html">&lt;div cf-context></pre></code>
+
+	<h3 id="cf-prevent-autofocus">cf-prevent-autofocus</h3>
+	<p>If you don't want to have the UserTextInput to auto focus.</p>
+	<pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form cf-prevent-autofocus></pre></code>
+
+	<h3 id="cf-no-animation">cf-no-animation</h3>
+	<p>Disables animations completly.</p>
+	<pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form cf-no-animation></pre></code>
+
+	<h2 id="form-field-attributes">Form-field attributes</h2>
+	<h3 id="cf-questions">cf-questions</h3>
+	<p>Map questions directly to a tag. You can seperate with || to allow for more questions, app will shuffle questions.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your name?||Please tell me your name." /></pre></code>
+	<p>seperate with && to allow for chained questions.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="Hello?&&Please tell me your name." /></pre></code>
+
+	<h2 id="cf-input-placeholder">cf-input-placeholder</h2>
+	<p>Tag specific, set the placeholder text on the UserTextInput field.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-input-placeholder="Should include http" /></pre></code>
+
+	<h2 id="one-way-binding">{One way value-binding} with cf-questions</h2>
+	<p>For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.</p>
+	<p>Using the {previous-answer} mapping:</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your firstname?" />
+&lt;input type="text" cf-questions="Hello {previous-answer}, what is your lastname?"></pre></code>
+
+	<p>Using the ID attribute, this will loop through all submitted tags and map:</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your first name?" id="firstname" />
+&lt;input type="text" cf-questions="What is your last name?" id="lastname" />
+&lt;input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?" /></pre></code>
+
+	<p>previous input could be a select:option list with countries.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="So you want to travel to {previous-answer}" /></pre></code>
+
+	<h2 id="cf-label">cf-label</h2>
+	<p>Add a label to the field. Field must be of type "radio" or "checkbox".</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="radio" cf-label="Subscribe to newsletter" /></pre></code>
+
+	<h2 id="cf-validation">cf-validation</h2>
+	<p>Validate a submitted value before continuing the form flow using javascript.</p>
+	<ul>
+		<li>OBS. eval is used.</li>
+		<li>Asyncronous, so a value can be validated through a server</li>
+		<li>three parameters is passed to the method
+			<ul>
+				<li>dto: FlowDTO</li>
+				<li>success: () => void //callback</li>
+				<li>error: (optionalErrorMessage?: string) => void //callback</li>
+			</ul>
+		</li>
+	</ul>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-validation="window.validateFunction" ..</code></pre>
+
+    <h2 id="cf-error">cf-error</h2>
+	<p>Map error messages directly to a tag. The messages can be seperated by | to allow for more error messages. The app will shuffle between given messages.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-error="Text is wrong wrong|Input is not right" /></pre></code>
+
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#dom-element-attributes">{{page_title}}</a></li>
+		
+		<li class="toc-entry toc-h2"><a href="#form-attributes">Form-tag attributes</a>
+			<ul>
+				<li class="toc-entry toc-h3"><a href="#cf-context">cf-context</a></li>
+				<li class="toc-entry toc-h3"><a href="#cf-prevent-autofocus">cf-prevent-autofocus</a></li>
+				<li class="toc-entry toc-h3"><a href="#cf-no-animation">cf-no-animation</a></li>
+			</ul>
+		</li>
+
+		<li class="toc-entry toc-h2"><a href="#form-field-attributes">Form-field attributes</a></li>
+		<ul>
+			<li class="toc-entry toc-h3"><a href="#cf-questions">cf-questions</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-input-placeholder">cf-input-placeholder</a></li>
+			<li class="toc-entry toc-h3"><a href="#one-way-binding">{One way value-binding} with cf-questions</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-label">cf-label</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-validation">cf-validation</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-error">cf-error</a></li>
+		</ul>
+	</ul>
+{% endblock %}

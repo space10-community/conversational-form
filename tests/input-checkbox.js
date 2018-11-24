@@ -26,6 +26,14 @@ describe('Check input type=text', function() {
 						"name": "checkbox-buttons-1",
 						"value":"check-right",
 						"cf-label": "checkbox-2"
+					},
+					{
+						"tag": "input",
+						"type": "checkbox",
+						"required": "required",
+						"name": "checkbox-buttons-2",
+						"value":"check-right",
+						"cf-label": "checkbox-3"
 					}
 				]
 			},
@@ -41,7 +49,7 @@ describe('Check input type=text', function() {
 
 	it('Should be able to through all', function(done) {
 		expect(instance.tags).not.toBeNull();
-		expect(instance.tags.length).toBe(2);
+		expect(instance.tags.length).toBe(3);
 		expect(instance.tags[0].type).toBe("group");
 		expect(instance.tags[0].id).toBe("checkboxes");
 		expect(instance.tags[0].domElement).not.toBeNull();
