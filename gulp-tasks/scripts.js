@@ -1,17 +1,17 @@
 var typescript = require('gulp-typescript');
 var flatten = require('gulp-flatten');
 var changed = require('gulp-changed');
-var gutil = require('gulp-util');
+// var gutil = require('gulp-util');
+var log = require('fancy-log');
 var livereload = require('gulp-livereload');
-var notify = require("gulp-notify");
+// var notify = require("gulp-notify");
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 
 function swallowError(error) {
 	// If you want details of the error in the console
-	gutil.log(error.toString());
-	gutil.beep();
+	log.error(error.toString());
 	this.emit('end');
 }
 
@@ -38,7 +38,7 @@ global.gulp.task('typescript-form', function() {
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("Typescript compiled."));
+		// .pipe(notify("Typescript compiled."));
 
 	return stream
 });
@@ -53,7 +53,7 @@ global.gulp.task('scripts-form', ['typescript-form'], function() {
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("Scripts compiled."));
+		// .pipe(notify("Scripts compiled."));
 
 	return stream
 });
@@ -139,7 +139,7 @@ global.gulp.task('typescript-docs', function() {
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("Typescript compiled."));
+		// .pipe(notify("Typescript compiled."));
 
 	return stream
 });
@@ -187,7 +187,7 @@ global.gulp.task('typescript-examples', function() {
 		.on('error', swallowError)
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("Typescript compiled."));
+		// .pipe(notify("Typescript compiled."));
 
 	return stream
 });
