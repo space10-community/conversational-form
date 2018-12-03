@@ -1,6 +1,6 @@
 var changed = require('gulp-changed');
 var livereload = require('gulp-livereload');
-var notify = require("gulp-notify");
+// var notify = require("gulp-notify");
 
 global.gulp.task('copy-images', function() {
 	var src = global.srcFolder+"/images/**/*";
@@ -10,7 +10,7 @@ global.gulp.task('copy-images', function() {
 		.pipe(global.gulp.dest(dst))
 		.pipe(changed(dst))
 		.pipe(livereload())
-		.pipe(notify("Files copied."));
+		// .pipe(notify("Files copied."));
 
 	return stream;
 });
