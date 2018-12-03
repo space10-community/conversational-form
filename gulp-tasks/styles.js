@@ -1,8 +1,9 @@
 var flatten = require('gulp-flatten');
 var changed = require('gulp-changed');
-var gutil = require('gulp-util');
+// var gutil = require('gulp-util');
+var log = require('fancy-log');
 var livereload = require('gulp-livereload');
-var notify = require("gulp-notify");
+// var notify = require("gulp-notify");
 var concat = require('gulp-concat');
 var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
@@ -12,8 +13,7 @@ const autoprefixer = require('gulp-autoprefixer');
 
 function swallowError(error) {
 	// If you want details of the error in the console
-	gutil.log(error.toString());
-	gutil.beep();
+	log.error(error.toString());
 	this.emit('end');
 }
 
@@ -55,7 +55,7 @@ global.gulp.task('sass-form', function () {
 		.pipe(autoprefixer({ browsers: ['> 1%']}))
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		.pipe(notify("CSS compiled."));
+		// .pipe(notify("CSS compiled."));
 
 	return stream;
 });
