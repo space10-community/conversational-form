@@ -1,9 +1,9 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
+name: Bug report
+about: Create a report to help us improve
 title: ''
-labels: ''
-assignees: ''
+labels: bug
+assignees: jenssogaard
 
 ---
 
