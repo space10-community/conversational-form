@@ -62,14 +62,28 @@ namespace cf {
 
 		private animateIn() {
 			
-			//TODO: listen for transitionend and set to height:auto
-
+			
 			requestAnimationFrame(() => { 
 				var height = this.el.scrollHeight;
 				this.el.style.height = '0px';
 				requestAnimationFrame(() => { 
 					this.el.style.height = height + 'px';
 					this.el.classList.add('show');
+
+					// Listen for transitionend and set to height:auto
+					try {
+						const sm = window.getComputedStyle(document.querySelectorAll('p.show')[0]);
+						const cssAnimationTime: number = +sm.animationDuration.replace('s', ''); // format '0.234234xs
+						const cssAnimationDelayTime: number = +sm.animationDelay.replace('s', '');
+						setTimeout(() => {
+							this.el.style.height = 'auto';
+						}, (cssAnimationTime + cssAnimationDelayTime) * 1000);
+					} catch(err) {
+						// Fallback method. Assuming animations do not take longer than 1000ms
+						setTimeout(() => {
+							this.el.style.height = 'auto';
+						}, 1000);
+					}
 				});
 			});
 		}
@@ -180,12 +194,10 @@ namespace cf {
 				innerResponse = newStr;
 			}
 
+			// if robot, then check linked response for binding values
 			if(this.responseLink && this.isRobotResponse){
-				// if robot, then check linked response for binding values
-				
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-
 			}
 
 			if(this.isRobotResponse){
@@ -207,8 +219,6 @@ namespace cf {
 						}
 					}
 				}
-				// add more..
-				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}
 
 			// check if response contains an image as answer
@@ -222,26 +232,39 @@ namespace cf {
 					if(!this.uiOptions) this.uiOptions = this.cfReference.uiOptions; // On edit uiOptions are empty, so this mitigates the problem. Not ideal.
 
 					let robotInitResponseTime: number = this.uiOptions.robot.robotResponseTime;
-					if(robotInitResponseTime != 0){
+					if (robotInitResponseTime != 0){
 						this.setToThinking();
 					}
 
 					// robot response, allow for && for multiple responses
 					var chainedResponses: Array<string> = innerResponse.split("&&");
-					for (let i = 0; i < chainedResponses.length; i++) {
-						let str: string = <string>chainedResponses[i];
-						this.textEl.innerHTML += "<p>" + str + "</p>";
-					}
 					
-					for (let i = 0; i < chainedResponses.length; i++) {
-						setTimeout(() =>{
-
-							this.tryClearThinking();
-							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+					if(robotInitResponseTime === 0){
+						for (let i = 0; i < chainedResponses.length; i++) {
+							let str: string = <string>chainedResponses[i];
+							this.textEl.innerHTML += "<p>" + str + "</p>";
+						}
+						for (let i = 0; i < chainedResponses.length; i++) {
+							setTimeout(() =>{
+								this.tryClearThinking();
+								const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 								p[i].classList.add("show");
 								this.scrollTo();
 
-						},chainedResponses.length > 1 && i > 0 ? robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime) : 0);
+							},chainedResponses.length > 1 && i > 0 ? robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime) : 0);
+						}	
+					} else {					
+						for (let i = 0; i < chainedResponses.length; i++) {
+							const revealAfter = robotInitResponseTime + (i * this.uiOptions.robot.chainedResponseTime);
+							let str: string = <string>chainedResponses[i];
+							setTimeout(() =>{
+								this.tryClearThinking();
+								this.textEl.innerHTML += "<p>" + str + "</p>";
+								const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+								p[i].classList.add("show");
+								this.scrollTo();
+							}, revealAfter);
+						}
 					}
 
 
@@ -260,18 +283,15 @@ namespace cf {
 						}
 						
 					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
-				}else{
+				} else {
 					// user response, act normal
 					this.tryClearThinking();
 
 					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
-					console.log('first');
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
-			
 					this.scrollTo();
-					
 				}
 				
 				this.parsedResponse = innerResponse;
@@ -279,7 +299,13 @@ namespace cf {
 			// }
 
 			// value set, so add element, if not added
-			this.addSelf();
+			if (this.uiOptions.robot.robotResponseTime === 0){
+				this.addSelf();
+			} else {
+				setTimeout(() => {
+					this.addSelf();
+				}, 0);
+			}
 
 			// bounce
 			this.textEl.removeAttribute("value-added");
@@ -289,8 +315,7 @@ namespace cf {
 			}, 0);
 			
 			this.checkForEditMode();
-			
-			
+
 			// update response
 			// remove the double ampersands if present
 			this.response = innerResponse.split("&&").join(" ");
