@@ -35,7 +35,7 @@ namespace cf {
 		private infoElement: HTMLElement;
 		private currentControlElement: IControlElement;
 
-		private animateInFromReponseTimer: number = 0;
+		private animateInFromResponseTimer: any;
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
 		private columnIndex: number = 0;
@@ -178,11 +178,11 @@ namespace cf {
 		}
 
 		private onChatReponsesUpdated(event:CustomEvent){
-			clearTimeout(this.animateInFromReponseTimer);
+			clearTimeout(this.animateInFromResponseTimer);
 
 			// only show when user response
 			if(!(<any> event.detail).currentResponse.isRobotResponse){
-				this.animateInFromReponseTimer = setTimeout(() => {
+				this.animateInFromResponseTimer = setTimeout(() => {
 					this.animateElementsIn();
 				}, this.cfReference.uiOptions.controlElementsInAnimationDelay);
 			}
@@ -369,6 +369,7 @@ namespace cf {
 			if(this.elements.length > 0){
 				this.resize();		
 				// this.el.style.transition = 'height 0.35s ease-out 0.2s';
+				this.list.style.height = '0px';
 				setTimeout(() => {
 					this.list.style.height = this.list.scrollHeight + 'px';
 					const elements: Array<IControlElement> = this.getElements();
@@ -377,15 +378,17 @@ namespace cf {
 						if(elements.length > 0){
 							if(!this.el.classList.contains("animate-in"))
 								this.el.classList.add("animate-in");
-							
+
 							for (let i = 0; i < elements.length; i++) {
 								let element: ControlElement = <ControlElement>elements[i];
 								element.animateIn();
 							}
+							
 						}
-					}, 500);
-				},200); 
 
+						document.querySelector('.scrollableInner').classList.remove('scroll');
+					}, 300);
+				}, 200); 
 			}
 		}
 

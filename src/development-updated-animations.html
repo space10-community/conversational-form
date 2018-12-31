@@ -185,9 +185,13 @@
 			
 				<form id="cf-form" style="visibility: hidden;">
 
-					<input type="text" cf-questions="What is your name?" name="name" value="John Doe">
-					<input type="text" cf-questions="Great {name}&&Where are you from?" name="location" value="United States of America">
-					
+					<input type="text" cf-questions="What is your name?" name="name1" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name2" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name3" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name4" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name5" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name6" value="John Doe">
+
 					<fieldset>
 						<label for="tmnj">Do you like Teenage Mutant Ninja Turtles?</label>
 						<select cf-questions="Do you like Teenage Mutant Ninja Turtles?" name="tmnj" class="form-control">
@@ -196,6 +200,9 @@
 						</select>
 					</fieldset>
 
+					<input type="text" cf-questions="What is your name?" name="name" value="John Doe">
+					<input type="text" cf-questions="Great {name}&&Where are you from?" name="location" value="United States of America">
+					
 					<select name="car">
 						<option>Toyota</option>
 						<option>Mercedes</option>
@@ -220,12 +227,12 @@
 
 			<button class="pause" onClick="javascript:pause();">Pause/Resume</button>
 			<p>&nbsp;</p>
-			<div id="cf-context" role="cf-context" cf-context style="height: 600px; width: 400px; border: 1px solid #999;">
+			<div id="cf-context" role="cf-context" cf-context style="height: 400px; width: 400px; border: 1px solid #999;">
 				
 			</div>
 
 		<script>
-				window.paused = false;
+				window.paused = true;
 				var answerAfter = 2500;
 
 				function pause() {

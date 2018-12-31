@@ -35,7 +35,7 @@ namespace cf {
 		private image: string;
 		private container: HTMLElement;
 		private _tag: ITag;
-		private readyTimer: number = 0;
+		private readyTimer: any;
 		private responseLink: ChatResponse; // robot reference from use
 		private onReadyCallback: () => void;
 
@@ -60,8 +60,17 @@ namespace cf {
 				this.el.classList.remove("disabled");
 		}
 
+		/**
+		 * We depend on scroll in a column-reverse flex container. This is where Edge and Firefox comes up short
+		 */
+		private hasFlexBug():boolean {
+			return this.cfReference.el.classList.contains('browser-firefox') || this.cfReference.el.classList.contains('browser-edge');
+		}
+
 		private animateIn() {
-			
+			const outer:HTMLElement = document.querySelector('scrollable');
+			const inner:HTMLElement = document.querySelector('.scrollableInner');
+			if (this.hasFlexBug()) inner.classList.remove('scroll');
 			
 			requestAnimationFrame(() => { 
 				var height = this.el.scrollHeight;
@@ -69,7 +78,7 @@ namespace cf {
 				requestAnimationFrame(() => { 
 					this.el.style.height = height + 'px';
 					this.el.classList.add('show');
-
+					
 					// Listen for transitionend and set to height:auto
 					try {
 						const sm = window.getComputedStyle(document.querySelectorAll('p.show')[0]);
@@ -77,12 +86,21 @@ namespace cf {
 						const cssAnimationDelayTime: number = +sm.animationDelay.replace('s', '');
 						setTimeout(() => {
 							this.el.style.height = 'auto';
-						}, (cssAnimationTime + cssAnimationDelayTime) * 1000);
+
+							if (this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+								inner.classList.add('scroll');
+								inner.scrollTop = inner.scrollHeight;
+							}
+						}, (cssAnimationTime + cssAnimationDelayTime) * 1500);
 					} catch(err) {
 						// Fallback method. Assuming animations do not take longer than 1000ms
 						setTimeout(() => {
+							if (this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+								inner.classList.add('scroll');
+								inner.scrollTop = inner.scrollHeight;
+							}
 							this.el.style.height = 'auto';
-						}, 1000);
+						}, 3000);
 					}
 				});
 			});

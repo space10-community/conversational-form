@@ -358,6 +358,12 @@ cf-input[tag-type="select"].hide-input {
 		margin-bottom: $cf-input-field-height;
 	}
 }
+
+cf-input-control-elements {
+	// border: 1px solid yellow;
+	// margin-bottom: 10px;
+}
+
 cf-input[error=""].hide-input {
 	cf-input-button {
 		.cf-icon-progress {
