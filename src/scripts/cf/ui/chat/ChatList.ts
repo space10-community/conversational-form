@@ -58,6 +58,9 @@ namespace cf {
 			const dto: FlowDTO = (<InputKeyChangeDTO> event.detail).dto;
 			ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
 
+			// this.input.controlElements.el.style.transition = "height 2s ease-out";
+			// this.input.controlElements.el.style.height = this.input.controlElements.el.scrollHeight + 'px';
+
 			this.onInputElementChanged();
 		}
 
@@ -92,6 +95,7 @@ namespace cf {
 		* on control elements resize
 		*/
 		private onControlElementsResized(event: Event): void {
+
 			ConversationalForm.illustrateFlow(this, "receive", ControlElementsEvents.ON_RESIZE);
 			let responseToScrollTo: ChatResponse = this.currentResponse;
 			if(responseToScrollTo){
@@ -117,7 +121,7 @@ namespace cf {
 			const cfHeight: number = this.cfReference.el.offsetHeight;
 			const inputHeight: number = this.input.height;
 			const listHeight: number = cfHeight - inputHeight;
-			this.el.style.height = listHeight + "px";
+			//this.el.style.height = listHeight + "px";
 		}
 
 		private onFlowUpdate(event: CustomEvent){
@@ -214,7 +218,6 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
 					detail: this
 				}));
-
 				chatResponse.show();
 			}, 0);
 		}
@@ -273,7 +276,7 @@ namespace cf {
 		}
 
 		public createResponse(isRobotResponse: boolean, currentTag: ITag, value: string = null) : ChatResponse{
-			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector("scrollable");
+			const scrollable: HTMLElement = <HTMLElement> this.el.querySelector(".scrollableInner");
 			const response: ChatResponse = new ChatResponse({
 				// image: null,
 				cfReference: this.cfReference,
@@ -297,7 +300,9 @@ namespace cf {
 
 		public getTemplate () : string {
 			return `<cf-chat type='pluto'>
-						<scrollable></scrollable>
+						<scrollable>
+							<div class="scrollableInner"></div>
+						</scrollable>
 					</cf-chat>`;
 		}
 

@@ -437,6 +437,8 @@ namespace cf {
 			this.el.id = "conversational-form";
 			this.el.className = "conversational-form";
 
+			this.addBrowserTypes(this.el);
+
 			if(ConversationalForm.animationsEnabled)
 				this.el.classList.add("conversational-form--enable-animation");
 
@@ -490,6 +492,11 @@ namespace cf {
 		private onUserAnswerClicked(event: CustomEvent): void {
 			const tag: ITag | ITagGroup = event.detail;
 			this.flowManager.editTag(tag);
+		}
+
+		private addBrowserTypes(el:Element):void {
+			if (navigator.userAgent.indexOf('Firefox') > -1) el.classList.add('browser-firefox');
+			if (/Edge/.test(navigator.userAgent)) el.classList.add('browser-edge');
 		}
 
 		/**

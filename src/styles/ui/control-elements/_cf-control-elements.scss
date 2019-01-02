@@ -11,6 +11,8 @@ cf-input-control-elements {
 	visibility: hidden;
 	height: auto;
 
+	margin-bottom: 10px;
+
 	.cf-button {
 		margin-bottom: 10px;
 		display: inline-block;
@@ -44,7 +46,7 @@ cf-input-control-elements {
 cf-list, cf-list-button {
 	will-change: height;
 	.conversational-form--enable-animation & {
-		transition: height $cf-anim-time * 0.5 $cf-ease-easeOut;
+		transition: height $cf-anim-time * .5 $cf-ease-easeOut;
 	}
 }
 
