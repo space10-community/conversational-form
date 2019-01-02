@@ -55,8 +55,8 @@ namespace cf {
 		// prevents the initial auto focus on UserInput
 		preventAutoFocus?: boolean;
 
-		// optional horizontal scroll accerlation value, 0-1
-		scrollAccerlation?: number;
+		// optional horizontal scroll acceleration value, 0-1
+		scrollAcceleration?: number;
 
 		// allow for a global validation method, asyncronous, so a value can be validated through a server, call success || error
 		flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
@@ -172,8 +172,8 @@ namespace cf {
 				this.loadExternalStyleSheet = false;
 			}
 
-			if(!isNaN(options.scrollAccerlation))
-				ScrollController.accerlation = options.scrollAccerlation;
+			if(!isNaN(options.scrollAcceleration))
+				ScrollController.acceleration = options.scrollAcceleration;
 			
 			this.preventAutoStart = options.preventAutoStart;
 			this.preventAutoAppend = options.preventAutoAppend;
