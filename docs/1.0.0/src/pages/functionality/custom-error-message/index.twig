@@ -1,0 +1,18 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Custom error messages' %}
+{% set page_slug = '/functionality/custom-error-message/' %}
+
+
+{% block page %}
+    <h1 id="custom-error-message">{{page_title}}</h1>
+    <p>Map error messages directly to a tag. The messages can be seperated by | to allow for more error messages. The app will shuffle between given messages.</p>
+
+    <pre><code class="language-html">&lt;input type="text" cf-error="Text is wrong wrong|Input is not right" /></code></pre>
+
+    <h2 id="questions-example">Example</h2>
+    <p>Submit with no input. to see the error</p>
+    <p data-height="265" data-theme-id="light" data-slug-hash="ppyYpM" data-default-tab="html,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Custom error message" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/ppyYpM/">Conversational Forms - Custom error message</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+	
+{% endblock %}

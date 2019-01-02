@@ -1471,7 +1471,7 @@ var cf;
             // normalise startX
             this.startX += (this.startXTarget - this.startX) * 0.2;
             // animate accerlaration
-            this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.accerlation + 0.1, 1) : ScrollController.accerlation);
+            this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.acceleration + 0.1, 1) : ScrollController.acceleration);
             var accDamping = 0.25;
             this.inputAccerlationTarget *= accDamping;
             // animate directions
@@ -1483,9 +1483,9 @@ var cf;
             this.xTarget += this.inputAccerlation * 0.05;
             // bounce back when over
             if (this.xTarget > 0)
-                this.xTarget += (0 - this.xTarget) * cf.Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
+                this.xTarget += (0 - this.xTarget) * cf.Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
             if (this.xTarget < this.max)
-                this.xTarget += (this.max - this.xTarget) * cf.Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
+                this.xTarget += (this.max - this.xTarget) * cf.Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
             this.x += (this.xTarget - this.x) * 0.4;
             // toggle visibility on nav arrows
             var xRounded = Math.round(this.x);
@@ -1563,7 +1563,7 @@ var cf;
             this.max = (this.listWidth - this.visibleAreaWidth) * -1;
             this.render();
         };
-        ScrollController.accerlation = 0.1;
+        ScrollController.acceleration = 0.1;
         return ScrollController;
     }());
     cf.ScrollController = ScrollController;
@@ -5609,8 +5609,8 @@ var cf;
             if (this.isDevelopment || options.loadExternalStyleSheet == false) {
                 this.loadExternalStyleSheet = false;
             }
-            if (!isNaN(options.scrollAccerlation))
-                cf_1.ScrollController.accerlation = options.scrollAccerlation;
+            if (!isNaN(options.scrollAcceleration))
+                cf_1.ScrollController.acceleration = options.scrollAcceleration;
             this.preventAutoStart = options.preventAutoStart;
             this.preventAutoAppend = options.preventAutoAppend;
             if (!options.formEl)

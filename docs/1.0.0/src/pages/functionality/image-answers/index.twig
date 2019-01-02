@@ -1,0 +1,21 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Image answers' %}
+{% set page_slug = '/functionality/image-answers/' %}
+
+{% block page %}
+    <h1 id="image-answers">{{page_title}}</h1>
+    <p>Use images for checkbox and radio buttons using the cf-image attribute.</p>
+    
+	<pre><code class="language-html" data-lang="html">&lt;form id="form" cf-form>
+	&lt;div class="radio-control" >
+		&lt;input cf-label="AI" type="radio" cf-image="https://cdn.space10.io/media/1134/1.png" name="image-preference" tabindex="1" value="0">
+		&lt;input cf-label="Meatball" type="radio" cf-image="https://cdn.space10.io/media/1119/labs-2-1.jpg" name="image-preference" tabindex="2" value="1">
+	&lt;/div>
+&lt;/form></code></pre>
+
+	<h2 id="image-answers-example">Example</h2>
+	<p data-height="500" data-theme-id="light" data-slug-hash="zpqbaB" data-default-tab="html,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Image answers" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/zpqbaB/">Conversational Forms - Image answers</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+	
+{% endblock %}
