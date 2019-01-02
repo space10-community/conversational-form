@@ -35,8 +35,6 @@
 	} else {
 		root.conversationalform = factory(cf.ConversationalForm);
 	}
-	}(window, function(conversationalform) {
-		// module code here....
-		return cf.ConversationalForm || conversationalform;
-	}
-));
+}(window, function(conversationalform) {
+	return cf;
+}));
