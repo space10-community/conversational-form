@@ -150,6 +150,7 @@ namespace cf {
 			"robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
 			"input": "Please write some text.",
 			"text": "Please write some text.",
+			"textarea": "Please write some text.",
 			"checkbox": "Select as many as you want.",
 			"name": "What's your name?",
 			"email": "Need your e-mail.",
