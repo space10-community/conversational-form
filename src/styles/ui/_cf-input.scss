@@ -108,8 +108,30 @@ cf-input {
 			color: currentColor;
 		}
 
-		&:not([rows='1']) {
-			height: auto !important;
+		transition: all $cf-anim-time/2.4 !important;
+
+		&[rows='1'] {
+			height: $cf-input-field-height !important;
+		}
+
+		&[rows="2"] {
+			height: $cf-input-field-height * 2 !important;
+		}
+
+		&[rows="3"] {
+			height: $cf-input-field-height * 3 !important;
+		}
+
+		&[rows="4"] {
+			height: $cf-input-field-height * 4 !important;
+		}
+
+		&[rows="5"] {
+			height: $cf-input-field-height * 5 !important;
+		}
+
+		&[rows="6"] {
+			height: $cf-input-field-height * 6 !important;
 		}
 	}
 	
