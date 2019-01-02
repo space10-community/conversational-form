@@ -108,8 +108,30 @@ cf-input {
 			color: currentColor;
 		}
 
-		&:not([rows='1']) {
-			height: auto !important;
+		transition: all $cf-anim-time/2.4 !important;
+
+		&[rows='1'] {
+			height: $cf-input-field-height !important;
+		}
+
+		&[rows="2"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 1) !important;
+		}
+
+		&[rows="3"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 2) !important;
+		}
+
+		&[rows="4"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 3) !important;
+		}
+
+		&[rows="5"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 4) !important;
+		}
+
+		&[rows="6"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 5) !important;
 		}
 	}
 	
@@ -358,6 +380,12 @@ cf-input[tag-type="select"].hide-input {
 		margin-bottom: $cf-input-field-height;
 	}
 }
+
+cf-input-control-elements {
+	// border: 1px solid yellow;
+	// margin-bottom: 10px;
+}
+
 cf-input[error=""].hide-input {
 	cf-input-button {
 		.cf-icon-progress {

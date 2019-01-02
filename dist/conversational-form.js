@@ -733,7 +733,6 @@ var cf;
     };
     var ControlElements = /** @class */ (function () {
         function ControlElements(options) {
-            this.animateInFromReponseTimer = 0;
             this.ignoreKeyboardInput = false;
             this.rowIndex = -1;
             this.columnIndex = 0;
@@ -857,10 +856,10 @@ var cf;
         };
         ControlElements.prototype.onChatReponsesUpdated = function (event) {
             var _this = this;
-            clearTimeout(this.animateInFromReponseTimer);
+            clearTimeout(this.animateInFromResponseTimer);
             // only show when user response
             if (!event.detail.currentResponse.isRobotResponse) {
-                this.animateInFromReponseTimer = setTimeout(function () {
+                this.animateInFromResponseTimer = setTimeout(function () {
                     _this.animateElementsIn();
                 }, this.cfReference.uiOptions.controlElementsInAnimationDelay);
             }
@@ -1027,17 +1026,26 @@ var cf;
             }
         };
         ControlElements.prototype.animateElementsIn = function () {
-            if (this.elements) {
+            var _this = this;
+            if (this.elements.length > 0) {
                 this.resize();
-                var elements = this.getElements();
-                if (elements.length > 0) {
-                    if (!this.el.classList.contains("animate-in"))
-                        this.el.classList.add("animate-in");
-                    for (var i = 0; i < elements.length; i++) {
-                        var element = elements[i];
-                        element.animateIn();
-                    }
-                }
+                // this.el.style.transition = 'height 0.35s ease-out 0.2s';
+                this.list.style.height = '0px';
+                setTimeout(function () {
+                    _this.list.style.height = _this.list.scrollHeight + 'px';
+                    var elements = _this.getElements();
+                    setTimeout(function () {
+                        if (elements.length > 0) {
+                            if (!_this.el.classList.contains("animate-in"))
+                                _this.el.classList.add("animate-in");
+                            for (var i = 0; i < elements.length; i++) {
+                                var element = elements[i];
+                                element.animateIn();
+                            }
+                        }
+                        document.querySelector('.scrollableInner').classList.remove('scroll');
+                    }, 300);
+                }, 200);
             }
         };
         ControlElements.prototype.getElements = function () {
@@ -1140,6 +1148,8 @@ var cf;
             this.infoElement.classList.remove("show");
             this.el.classList.remove("one-row");
             this.el.classList.remove("two-row");
+            // this.el.style.transition = 'height 0.35s ease-out 0.2s';
+            this.list.style.height = '0px';
         };
         ControlElements.prototype.getElement = function (index) {
             return this.elements[index];
@@ -4608,7 +4618,6 @@ var cf;
         __extends(ChatResponse, _super);
         function ChatResponse(options) {
             var _this = _super.call(this, options) || this;
-            _this.readyTimer = 0;
             _this.container = options.container;
             _this.uiOptions = options.cfReference.uiOptions;
             _this._tag = options.tag;
@@ -4641,11 +4650,52 @@ var cf;
             enumerable: true,
             configurable: true
         });
+        /**
+         * We depend on scroll in a column-reverse flex container. This is where Edge and Firefox comes up short
+         */
+        ChatResponse.prototype.hasFlexBug = function () {
+            return this.cfReference.el.classList.contains('browser-firefox') || this.cfReference.el.classList.contains('browser-edge');
+        };
+        ChatResponse.prototype.animateIn = function () {
+            var _this = this;
+            var outer = document.querySelector('scrollable');
+            var inner = document.querySelector('.scrollableInner');
+            if (this.hasFlexBug())
+                inner.classList.remove('scroll');
+            requestAnimationFrame(function () {
+                var height = _this.el.scrollHeight;
+                _this.el.style.height = '0px';
+                requestAnimationFrame(function () {
+                    _this.el.style.height = height + 'px';
+                    _this.el.classList.add('show');
+                    // Listen for transitionend and set to height:auto
+                    try {
+                        var sm = window.getComputedStyle(document.querySelectorAll('p.show')[0]);
+                        var cssAnimationTime = +sm.animationDuration.replace('s', ''); // format '0.234234xs
+                        var cssAnimationDelayTime = +sm.animationDelay.replace('s', '');
+                        setTimeout(function () {
+                            _this.el.style.height = 'auto';
+                            if (_this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+                                inner.classList.add('scroll');
+                                inner.scrollTop = inner.scrollHeight;
+                            }
+                        }, (cssAnimationTime + cssAnimationDelayTime) * 1500);
+                    }
+                    catch (err) {
+                        // Fallback method. Assuming animations do not take longer than 1000ms
+                        setTimeout(function () {
+                            if (_this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+                                inner.classList.add('scroll');
+                                inner.scrollTop = inner.scrollHeight;
+                            }
+                            _this.el.style.height = 'auto';
+                        }, 3000);
+                    }
+                });
+            });
+        };
         Object.defineProperty(ChatResponse.prototype, "visible", {
             set: function (value) {
-                var _this = this;
-                this.el.offsetWidth;
-                setTimeout(function () { return value ? _this.el.classList.add("show") : _this.el.classList.remove("show"); }, 100);
             },
             enumerable: true,
             configurable: true
@@ -4665,10 +4715,10 @@ var cf;
             this.onReadyCallback = resolve;
         };
         ChatResponse.prototype.setValue = function (dto) {
+            // if(!this.visible){
+            // 	this.visible = true;
+            // }
             if (dto === void 0) { dto = null; }
-            if (!this.visible) {
-                this.visible = true;
-            }
             var isThinking = this.el.hasAttribute("thinking");
             if (!dto) {
                 this.setToThinking();
@@ -4734,8 +4784,8 @@ var cf;
                 }
                 innerResponse = newStr;
             }
+            // if robot, then check linked response for binding values
             if (this.responseLink && this.isRobotResponse) {
-                // if robot, then check linked response for binding values
                 // one way data binding values:
                 innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
             }
@@ -4757,14 +4807,11 @@ var cf;
                         }
                     }
                 }
-                // add more..
-                // innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
             }
             // check if response contains an image as answer
             var responseContains = innerResponse.indexOf("contains-image") != -1;
             if (responseContains)
                 this.textEl.classList.add("contains-image");
-            // if(this.response != innerResponse){
             // now set it
             if (this.isRobotResponse) {
                 this.textEl.innerHTML = "";
@@ -4776,20 +4823,40 @@ var cf;
                 }
                 // robot response, allow for && for multiple responses
                 var chainedResponses = innerResponse.split("&&");
-                var _loop_1 = function (i_2) {
-                    var str = chainedResponses[i_2];
-                    setTimeout(function () {
-                        _this.tryClearThinking();
-                        _this.textEl.innerHTML += "<p>" + str + "</p>";
-                        var p = _this.textEl.getElementsByTagName("p");
-                        p[p.length - 1].offsetWidth;
-                        p[p.length - 1].classList.add("show");
-                        _this.scrollTo();
-                    }, robotInitResponseTime + ((i_2 + 1) * this_1.uiOptions.robot.chainedResponseTime));
-                };
-                var this_1 = this;
-                for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
-                    _loop_1(i_2);
+                if (robotInitResponseTime === 0) {
+                    for (var i_2 = 0; i_2 < chainedResponses.length; i_2++) {
+                        var str = chainedResponses[i_2];
+                        this.textEl.innerHTML += "<p>" + str + "</p>";
+                    }
+                    var _loop_1 = function (i_3) {
+                        setTimeout(function () {
+                            _this.tryClearThinking();
+                            var p = _this.textEl.getElementsByTagName("p");
+                            p[i_3].classList.add("show");
+                            _this.scrollTo();
+                        }, chainedResponses.length > 1 && i_3 > 0 ? robotInitResponseTime + ((i_3 + 1) * this_1.uiOptions.robot.chainedResponseTime) : 0);
+                    };
+                    var this_1 = this;
+                    for (var i_3 = 0; i_3 < chainedResponses.length; i_3++) {
+                        _loop_1(i_3);
+                    }
+                }
+                else {
+                    var _loop_2 = function (i_4) {
+                        var revealAfter = robotInitResponseTime + (i_4 * this_2.uiOptions.robot.chainedResponseTime);
+                        var str = chainedResponses[i_4];
+                        setTimeout(function () {
+                            _this.tryClearThinking();
+                            _this.textEl.innerHTML += "<p>" + str + "</p>";
+                            var p = _this.textEl.getElementsByTagName("p");
+                            p[i_4].classList.add("show");
+                            _this.scrollTo();
+                        }, revealAfter);
+                    };
+                    var this_2 = this;
+                    for (var i_4 = 0; i_4 < chainedResponses.length; i_4++) {
+                        _loop_2(i_4);
+                    }
                 }
                 this.readyTimer = setTimeout(function () {
                     if (_this.onReadyCallback)
@@ -4816,7 +4883,14 @@ var cf;
             this.parsedResponse = innerResponse;
             // }
             // value set, so add element, if not added
-            this.addSelf();
+            if (this.uiOptions.robot.robotResponseTime === 0) {
+                this.addSelf();
+            }
+            else {
+                setTimeout(function () {
+                    _this.addSelf();
+                }, 0);
+            }
             // bounce
             this.textEl.removeAttribute("value-added");
             setTimeout(function () {
@@ -4833,7 +4907,7 @@ var cf;
             var h = this.el.offsetHeight;
             if (!this.container && this.el)
                 this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-            this.container.scrollTop = y + h + this.container.scrollTop;
+            this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
         };
         ChatResponse.prototype.checkForEditMode = function () {
             if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
@@ -4865,6 +4939,7 @@ var cf;
         ChatResponse.prototype.addSelf = function () {
             if (this.el.parentNode != this.container) {
                 this.container.appendChild(this.el);
+                this.animateIn();
             }
         };
         /**
@@ -4976,6 +5051,8 @@ var cf;
         ChatList.prototype.onInputHeightChange = function (event) {
             var dto = event.detail.dto;
             cf.ConversationalForm.illustrateFlow(this, "receive", event.type, dto);
+            // this.input.controlElements.el.style.transition = "height 2s ease-out";
+            // this.input.controlElements.el.style.height = this.input.controlElements.el.scrollHeight + 'px';
             this.onInputElementChanged();
         };
         ChatList.prototype.onInputKeyChange = function (event) {
@@ -5027,7 +5104,7 @@ var cf;
             var cfHeight = this.cfReference.el.offsetHeight;
             var inputHeight = this.input.height;
             var listHeight = cfHeight - inputHeight;
-            this.el.style.height = listHeight + "px";
+            //this.el.style.height = listHeight + "px";
         };
         ChatList.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -5163,7 +5240,7 @@ var cf;
         };
         ChatList.prototype.createResponse = function (isRobotResponse, currentTag, value) {
             if (value === void 0) { value = null; }
-            var scrollable = this.el.querySelector("scrollable");
+            var scrollable = this.el.querySelector(".scrollableInner");
             var response = new cf.ChatResponse({
                 // image: null,
                 cfReference: this.cfReference,
@@ -5181,7 +5258,7 @@ var cf;
             return response;
         };
         ChatList.prototype.getTemplate = function () {
-            return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable></scrollable>\n\t\t\t\t\t</cf-chat>";
+            return "<cf-chat type='pluto'>\n\t\t\t\t\t\t<scrollable>\n\t\t\t\t\t\t\t<div class=\"scrollableInner\"></div>\n\t\t\t\t\t\t</scrollable>\n\t\t\t\t\t</cf-chat>";
         };
         ChatList.prototype.dealloc = function () {
             this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
@@ -5764,6 +5841,7 @@ var cf;
             this.el = document.createElement("div");
             this.el.id = "conversational-form";
             this.el.className = "conversational-form";
+            this.addBrowserTypes(this.el);
             if (ConversationalForm.animationsEnabled)
                 this.el.classList.add("conversational-form--enable-animation");
             // add conversational form to context
@@ -5804,6 +5882,12 @@ var cf;
         ConversationalForm.prototype.onUserAnswerClicked = function (event) {
             var tag = event.detail;
             this.flowManager.editTag(tag);
+        };
+        ConversationalForm.prototype.addBrowserTypes = function (el) {
+            if (navigator.userAgent.indexOf('Firefox') > -1)
+                el.classList.add('browser-firefox');
+            if (/Edge/.test(navigator.userAgent))
+                el.classList.add('browser-edge');
         };
         /**
         * @name addTag
