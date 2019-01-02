@@ -215,6 +215,7 @@ namespace cf {
 				robotData: options.dictionaryRobot,
 				userImage: options.userImage,
 				robotImage: options.robotImage,
+				version: this.version
 			});
 
 			this.context = options.context ? options.context : document.body;

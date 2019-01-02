@@ -20,25 +20,35 @@ namespace cf {
 		robotData?: Object;
 		userImage: string;
 		robotImage: string;
+		version: string;
 	}
 	// class
 	export class Dictionary{
 		private static instance: Dictionary;
+		private version: string;
 
 		constructor(options?: IDictionaryOptions){
 			Dictionary.instance = this;
+
+			this.version = options.version;
 
 			// overwrite data if defined 
 			if(options && options.data)
 				this.data = this.validateAndSetNewData(options.data, this.data);
 
 			// overwrite user image
-			if(options.userImage)
+			if (options.userImage) {
 				this.data["user-image"] = options.userImage;
+			} else {
+				this.data['user-image'] = `https://cdn.jsdelivr.net/npm/conversational-form@${this.version}/src/images/human.png`;
+			}
 			
 			// overwrite robot image
-			if(options.robotImage)
+			if (options.robotImage) {
 				this.robotData["robot-image"] = options.robotImage;
+			} else {
+				this.robotData['robot-image'] = `https://cdn.jsdelivr.net/npm/conversational-form@${this.version}/src/images/robot.png`;
+			}
 			
 			// overwrite robot questions if defined
 			if(options && options.robotData)
@@ -126,7 +136,7 @@ namespace cf {
 
 		// can be overwrittenMicrophone error
 		protected data: any = {
-			"user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
+			"user-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
 			"entry-not-found": "Dictionary item not found.",
 			"awaiting-mic-permission": "Awaiting mic permission",
 			"user-audio-reponse-invalid": "I didn't get that, try again.",
@@ -147,7 +157,7 @@ namespace cf {
 
 		// can be overwriten
 		protected robotData: any = {
-			"robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
+			"robot-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
 			"input": "Please write some text.",
 			"text": "Please write some text.",
 			"textarea": "Please write some text.",
