@@ -1569,6 +1569,44 @@ var cf;
     cf.ScrollController = ScrollController;
 })(cf || (cf = {}));
 
+/// <reference path="../logic/FlowManager.ts"/>
+// namespace
+var cf;
+(function (cf) {
+    // interface
+    // class
+    var ProgressBar = /** @class */ (function () {
+        function ProgressBar(options) {
+            var _this = this;
+            this.flowUpdateCallback = this.onFlowUpdate.bind(this);
+            this.eventTarget = options.eventTarget;
+            this.eventTarget.addEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+            this.eventTarget.addEventListener(cf.FlowEvents.FORM_SUBMIT, function () { return _this.setWidth(100); }, false);
+            this.el = document.createElement("div");
+            this.el.className = "cf-progressBar";
+            this.bar = document.createElement("div");
+            this.bar.className = 'bar';
+            this.el.appendChild(this.bar);
+            setTimeout(function () { return _this.init(); }, 800);
+        }
+        ProgressBar.prototype.init = function () {
+            this.el.classList.add('show');
+        };
+        ProgressBar.prototype.onFlowUpdate = function (event) {
+            this.setWidth(event.detail.step / event.detail.maxSteps * 100);
+        };
+        ProgressBar.prototype.setWidth = function (percentage) {
+            this.bar.style.width = percentage + "%";
+        };
+        ProgressBar.prototype.dealloc = function () {
+            this.eventTarget.removeEventListener(cf.FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false);
+            this.flowUpdateCallback = null;
+        };
+        return ProgressBar;
+    }());
+    cf.ProgressBar = ProgressBar;
+})(cf || (cf = {}));
+
 /// <reference path="../logic/Helpers.ts"/>
 // namespace
 var cf;
@@ -5284,6 +5322,7 @@ var cf;
         USER_INPUT_INVALID: "cf-flow-user-input-invalid",
         //	detail: string
         FLOW_UPDATE: "cf-flow-update",
+        FORM_SUBMIT: "cf-form-submit",
     };
     // class
     var FlowManager = /** @class */ (function () {
@@ -5527,6 +5566,7 @@ var cf;
             if (this.maxSteps > 0) {
                 if (this.step == this.maxSteps) {
                     // console.warn("We are at the end..., submit click")
+                    this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FORM_SUBMIT, {}));
                     this.cfReference.doSubmitForm();
                 }
                 else {
@@ -5551,7 +5591,9 @@ var cf;
                 _this.eventTarget.dispatchEvent(new CustomEvent(cf.FlowEvents.FLOW_UPDATE, {
                     detail: {
                         tag: _this.currentTag,
-                        ignoreExistingTag: _this.ignoreExistingTags
+                        ignoreExistingTag: _this.ignoreExistingTags,
+                        step: _this.step,
+                        maxSteps: _this.maxSteps
                     }
                 }));
             }, 0);
@@ -5565,6 +5607,7 @@ var cf;
 /// <reference path="ui/inputs/UserTextInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
+/// <reference path="ui/ProgressBar.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/CfRobotMessageTag.ts"/>
@@ -5590,6 +5633,8 @@ var cf;
             this.cdnPath = this.cdnPath.split("{version}").join(this.version);
             if (typeof options.suppressLog === 'boolean')
                 ConversationalForm.suppressLog = options.suppressLog;
+            if (typeof options.showProgressBar === 'boolean')
+                ConversationalForm.showProgressBar = options.showProgressBar;
             if (typeof options.preventSubmitOnEnter === 'boolean')
                 this.preventSubmitOnEnter = options.preventSubmitOnEnter;
             if (!ConversationalForm.suppressLog)
@@ -5863,6 +5908,10 @@ var cf;
                 eventTarget: this.eventTarget,
                 cfReference: this
             });
+            if (ConversationalForm.showProgressBar) {
+                var progressBar = new cf_1.ProgressBar(this);
+                innerWrap.appendChild(progressBar.el);
+            }
             this.chatList.addInput(this.userInput);
             innerWrap.appendChild(this.userInput.el);
             this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this);
@@ -6073,6 +6122,7 @@ var cf;
         ConversationalForm.animationsEnabled = true;
         ConversationalForm.illustrateAppFlow = true;
         ConversationalForm.suppressLog = true;
+        ConversationalForm.showProgressBar = false;
         ConversationalForm.preventSubmitOnEnter = false;
         ConversationalForm.hasAutoInstantiated = false;
         return ConversationalForm;
