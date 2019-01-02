@@ -25,7 +25,6 @@ describe('Test progressbar', function() {
 	it('ProgressBar should be visible and be at 50%', function(done) {
 		instance.remapTagsAndStartFrom(2);
 		setTimeout(function() {
-			console.log('XXXX', instance.flowManager.step, instance.flowManager.maxSteps)
 			expect(div.querySelector('.cf-progressBar').classList).toContain('show');
 			expect(div.querySelector('.cf-progressBar .bar').style.width).toEqual('50%');
       done();

@@ -1,6 +1,7 @@
 /// <reference path="ui/inputs/UserTextInput.ts"/>
 /// <reference path="ui/chat/ChatList.ts"/>
 /// <reference path="logic/FlowManager.ts"/>
+/// <reference path="ui/ProgressBar.ts"/>
 /// <reference path="logic/EventDispatcher.ts"/>
 /// <reference path="form-tags/Tag.ts"/>
 /// <reference path="form-tags/CfRobotMessageTag.ts"/>
@@ -76,6 +77,9 @@ namespace cf {
 		// optional, Whenther to suppress console.log, default true
 		suppressLog?:boolean;
 
+		// Show progressbar
+		showProgressBar?:boolean;
+
 		// Prevent submit on Enter keypress: https://github.com/space10-community/conversational-form/issues/270
 		preventSubmitOnEnter?:boolean;
 	}
@@ -92,6 +96,7 @@ namespace cf {
 		public static animationsEnabled: boolean = true;
 		public static illustrateAppFlow: boolean = true;
 		public static suppressLog: boolean = true;
+		public static showProgressBar: boolean = false;
 		public static preventSubmitOnEnter: boolean = false;
 
 		private cdnPath: string = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
@@ -146,6 +151,9 @@ namespace cf {
 
 			if(typeof options.suppressLog === 'boolean')
 				ConversationalForm.suppressLog = options.suppressLog;
+			
+			if(typeof options.showProgressBar === 'boolean')
+				ConversationalForm.showProgressBar = options.showProgressBar;
 
 			if(typeof options.preventSubmitOnEnter === 'boolean')
 				this.preventSubmitOnEnter = options.preventSubmitOnEnter;
@@ -466,6 +474,11 @@ namespace cf {
 				eventTarget: this.eventTarget,
 				cfReference: this
 			});
+
+			if (ConversationalForm.showProgressBar) {
+				const progressBar = new ProgressBar(this);
+				innerWrap.appendChild(progressBar.el);
+			}
 
 			this.chatList.addInput(this.userInput);
 
