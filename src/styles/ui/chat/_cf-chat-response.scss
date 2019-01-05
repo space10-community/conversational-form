@@ -10,13 +10,13 @@
 cf-chat-response {
 	max-width: 80%;
 	@media (min-width: $cf-breakpoint-medium) {
-		max-width: 50%;
+		max-width: 70%;
 	}
 	min-width: 120px;
 	position: relative;
 	backface-visibility: hidden;
-	padding-left: $cf-avatar-area + 10px;
-	padding-top: 16px;
+	padding-left: $cf-avatar-area + 14px;
+	margin-top: 20px;
 	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
 	margin-right: auto;
@@ -52,8 +52,8 @@ cf-chat-response {
 		margin-right: 0px;
 		margin-left: auto;
 		padding-left: 0;
-		padding-right: calc(#{$cf-avatar-area} + 10px);
-		color: $cf-color-chat-response-user-text;
+		padding-right: calc(#{$cf-avatar-area} + 14px);
+		color: lighten($cf-color-secondary, 90%);
 
 		thumb {
 			left: auto;
@@ -228,7 +228,9 @@ cf-chat-response {
 		height: $cf-avatar-area;
 		border-radius: 50%;
 		background: $cf-avatar-background;
-		background-size: cover;
+		// background-size: cover;
+		background-size: $cf-avatar-size;
+		background-repeat: no-repeat;
 		background-position: 50% 50%;
 		opacity: 0;
 		overflow: hidden;

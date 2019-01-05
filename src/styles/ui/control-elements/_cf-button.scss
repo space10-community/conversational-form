@@ -3,10 +3,10 @@
 .cf-button { //use class because we share the styling on different elements
 	background: white;
 	cursor: pointer;
-	border: 1px solid rgba($cf-color-primary, .1);
+	border: 1px solid rgba($cf-color-primary, 1);
 	
 	border-radius: calc(#{$cf-chat-response-border-radius} * 1.2);
-	color: $cf-color-chat-response-user-text;
+	color: $cf-color-primary;
 	line-height: 1;
 	user-select: none;
 	overflow: hidden;
@@ -58,14 +58,15 @@
 		// TODO
 		&:not(&[selected="selected"]),
 		&:not([checked="checked"]) {
-		 	background: rgba($cf-color-primary, .1);
+			background: rgba($cf-color-primary, .05);
 		}
 	}
 
 	&[selected="selected"], &[checked="checked"] {
 		// TODO
 		&:not(:focus):not(:hover):not(.highlight) {
-		 	background: rgba($cf-color-primary, .1);
+			color: $cf-color-secondary;
+		 	background: $cf-color-primary;
 		}
 	}
 	
