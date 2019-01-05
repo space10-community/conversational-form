@@ -3,7 +3,7 @@
 .cf-button.cf-checkbox-button {
 	&:hover, &.highlight, &:focus {
 		cf-checkbox {
-			background: $cf-color-chat-response-user-text;
+			background: darken($cf-color-primary, 2);
 		}
 	}
 
@@ -59,6 +59,8 @@
 	}
 	
 	&[checked="checked"], &[selected="selected"] {
+		background: white !important;
+		color: $cf-color-primary !important;
 		cf-checkbox {
 			background: rgba($cf-color-chat-response-user-bg, 0);
 

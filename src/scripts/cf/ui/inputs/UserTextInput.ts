@@ -61,7 +61,7 @@ namespace cf {
 
 		constructor(options: IUserInputOptions){
 			super(options);
-
+			
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
@@ -206,13 +206,23 @@ namespace cf {
 
 			// safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
 			const oldHeight: number = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10));
-			this.inputElement.style.height = "0px";
+			this.inputElement.style.height = '0px';
+			// console.log(this.inputElement.style.height, this.inputElement.style);
 			this.inputElement.style.height = (this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight) + "px";
 
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.HEIGHT_CHANGE);
 			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
 				detail: this.inputElement.scrollHeight
 			}));
+		}
+
+		private resetInputHeight() {
+			console.log('resetInputHeight', this.inputElement.getAttribute('rows'))
+			if (this.inputElement.getAttribute('rows') === '1'){
+				this.inputElement.style.height = this.initialInputHeight + 'px';
+			} else {
+				this.inputElement.style.height = '0px';
+			}
 		}
 
 		protected inputInvalid(event: CustomEvent){
@@ -379,9 +389,11 @@ namespace cf {
 				}
 			}
 
+			this.resetInputHeight();
+
 			setTimeout(() => {
 				this.onInputChange();
-			}, 150);
+			}, 300);
 		}
 
 		private onControlElementProgressChange(event: CustomEvent){

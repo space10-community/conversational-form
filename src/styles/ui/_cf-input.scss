@@ -53,7 +53,7 @@ cf-input {
 		user-select: auto !important;
 
 		&:focus, &:active {
-			box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+			box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
 		}
 		
 		border-radius: $cf-input-field-border-radius;
@@ -73,7 +73,7 @@ cf-input {
 		color: $cf-color-input-text;
 		will-change: box-shadow, background, color, transform, opacity;
 		background: white;
-		box-shadow: 0px 0px 1px rgba(0,0,0,0.15);
+		box-shadow: 0px 0px 1px rgba(0,0,0,0.35);
 		opacity: 0;
 		transform: translateY(40px) rotateX(-40deg);
 
@@ -111,8 +111,13 @@ cf-input {
 		transition: all $cf-anim-time/2.4 !important;
 
 		&[rows='1'] {
-			height: $cf-input-field-height !important;
+			min-height: $cf-input-field-height !important;
 		}
+		
+		&:not([rows="1"]) {
+			transition-delay: $cf-anim-time * 1.2 !important;
+		}
+		
 
 		&[rows="2"] {
 			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 1) !important;
