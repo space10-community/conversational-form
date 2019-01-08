@@ -27,7 +27,7 @@ function swallowError(error) {
 
 global.gulp.task('sass-form-build', ['sass-form'], function(){
 	var src = [
-		global.buildFolder + "main.css"
+		global.buildFolder + "conversational-form.css"
 	]
 
 	var stream = global.gulp.src(src)
