@@ -107,8 +107,8 @@ requirejs(["conversational-form"], function(conversationalForm) {
 
     <h2 id="use-with-various-es6-module-bundlers"></a>Use with various ES6 module bundlers</h2>
     <p>like <a href="https://github.com/webpack/webpack" target="_blank">Webpack</a> and <a href="https://github.com/rollup/rollup" target="_blank">Rollup</a></p>
-    <pre><code class="language-javascript" data-lang="javascript">import cf from 'conversational-form';
-    var cfInstance = cf.startTheConversation({
+    <pre><code class="language-javascript" data-lang="javascript">import { ConversationalForm, EventDispatcher } from 'conversational-form';
+    var cfInstance = ConversationalForm.startTheConversation({
     formEl: document.getElementById("form")
 });</code></pre>
 

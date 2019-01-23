@@ -18,12 +18,12 @@
 	<meta name="twitter:creator" content="@space10_journal">
 	<meta name="twitter:title" content="Turning web forms into conversations"/>
 	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
-	<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/docs/0.9.80/assets/share_img.jpg" />
+	<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/docs/1.0.0/assets/share_img.jpg" />
 
 	<!-- Open Graph data -->
 	<meta property="og:title" content="Turning web forms into conversations"/>
 	<meta property="og:type" content="article"/>
-	<meta property="og:image" content="https://space10-community.github.io/conversational-form/docs/0.9.80/assets/share_img.jpg" />
+	<meta property="og:image" content="https://space10-community.github.io/conversational-form/docs/1.0.0/assets/share_img.jpg" />
 
 				
 	<link href="../assets/prism.css" rel="stylesheet" />
@@ -69,10 +69,12 @@
   <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
     <li class="nav-item dropdown">
       <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        v0.9.80
+        v1.0.0
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
-                	<a class="dropdown-item active" href="../../0.9.80/">v0.9.80</a>
+                	<a class="dropdown-item active" href="../../1.0.0/">v1.0.0</a>
+                	<a class="dropdown-item" href="../../0.9.90/">v0.9.90</a>
+                	<a class="dropdown-item" href="../../0.9.80/">v0.9.80</a>
                 	<a class="dropdown-item" href="../../0.9.71/">v0.9.71</a>
                 	<a class="dropdown-item" href="../../0.9.70/">v0.9.70</a>
               </div>
@@ -134,7 +136,7 @@
     <p>Turning web forms into conversations. Conversational Form is an open-source concept by <a href="https://space10.io/" target="_blank">SPACE10</a> to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.</p>
     
     <h2 id="include-conversationalform-in-your-page">Include ConversationalForm in your page</h2>
-    <pre><code class="language-html" data-lang="html">&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@0.9.80/dist/conversational-form.min.js" crossorigin>&lt;/script></code></pre>
+    <pre><code class="language-html" data-lang="html">&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@1.0.0/dist/conversational-form.min.js" crossorigin>&lt;/script></code></pre>
     
     <p>ConversationalForm will automatically look through the DOM for a form element with the attibute cf-form, and auto-instantiate.</p>
     <pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form ...></code></pre>
@@ -233,8 +235,8 @@ requirejs(["conversational-form"], function(conversationalForm) {
 
     <h2 id="use-with-various-es6-module-bundlers"></a>Use with various ES6 module bundlers</h2>
     <p>like <a href="https://github.com/webpack/webpack" target="_blank">Webpack</a> and <a href="https://github.com/rollup/rollup" target="_blank">Rollup</a></p>
-    <pre><code class="language-javascript" data-lang="javascript">import cf from 'conversational-form';
-    var cfInstance = cf.startTheConversation({
+    <pre><code class="language-javascript" data-lang="javascript">import { ConversationalForm, EventDispatcher } from 'conversational-form';
+    var cfInstance = ConversationalForm.startTheConversation({
     formEl: document.getElementById("form")
 });</code></pre>
 
