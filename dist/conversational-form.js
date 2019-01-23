@@ -1616,7 +1616,7 @@ var cf;
         function Dictionary(options) {
             // can be overwrittenMicrophone error
             this.data = {
-                "user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
+                "user-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
                 "entry-not-found": "Dictionary item not found.",
                 "awaiting-mic-permission": "Awaiting mic permission",
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
@@ -1636,9 +1636,10 @@ var cf;
             };
             // can be overwriten
             this.robotData = {
-                "robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
+                "robot-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
                 "input": "Please write some text.",
                 "text": "Please write some text.",
+                "textarea": "Please write some text.",
                 "checkbox": "Select as many as you want.",
                 "name": "What's your name?",
                 "email": "Need your e-mail.",
@@ -1650,15 +1651,24 @@ var cf;
                 "general": "General1||General2||General3.."
             };
             Dictionary.instance = this;
+            this.version = options.version;
             // overwrite data if defined 
             if (options && options.data)
                 this.data = this.validateAndSetNewData(options.data, this.data);
             // overwrite user image
-            if (options.userImage)
+            if (options.userImage) {
                 this.data["user-image"] = options.userImage;
+            }
+            else {
+                this.data['user-image'] = "https://cdn.jsdelivr.net/npm/conversational-form@" + this.version + "/src/images/human.png";
+            }
             // overwrite robot image
-            if (options.robotImage)
+            if (options.robotImage) {
                 this.robotData["robot-image"] = options.robotImage;
+            }
+            else {
+                this.robotData['robot-image'] = "https://cdn.jsdelivr.net/npm/conversational-form@" + this.version + "/src/images/robot.png";
+            }
             // overwrite robot questions if defined
             if (options && options.robotData)
                 this.robotData = this.validateAndSetNewData(options.robotData, this.robotData);
@@ -4243,12 +4253,22 @@ var cf;
                 return;
             // safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
             var oldHeight = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10));
-            this.inputElement.style.height = "0px";
+            this.inputElement.style.height = '0px';
+            // console.log(this.inputElement.style.height, this.inputElement.style);
             this.inputElement.style.height = (this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight) + "px";
             cf.ConversationalForm.illustrateFlow(this, "dispatch", cf.UserInputEvents.HEIGHT_CHANGE);
             this.eventTarget.dispatchEvent(new CustomEvent(cf.UserInputEvents.HEIGHT_CHANGE, {
                 detail: this.inputElement.scrollHeight
             }));
+        };
+        UserTextInput.prototype.resetInputHeight = function () {
+            console.log('resetInputHeight', this.inputElement.getAttribute('rows'));
+            if (this.inputElement.getAttribute('rows') === '1') {
+                this.inputElement.style.height = this.initialInputHeight + 'px';
+            }
+            else {
+                this.inputElement.style.height = '0px';
+            }
         };
         UserTextInput.prototype.inputInvalid = function (event) {
             var _this = this;
@@ -4389,9 +4409,10 @@ var cf;
                     this.el.classList.remove("hide-input");
                 }
             }
+            this.resetInputHeight();
             setTimeout(function () {
                 _this.onInputChange();
-            }, 150);
+            }, 300);
         };
         UserTextInput.prototype.onControlElementProgressChange = function (event) {
             var status = event.detail;
@@ -5681,6 +5702,7 @@ var cf;
                 robotData: options.dictionaryRobot,
                 userImage: options.userImage,
                 robotImage: options.robotImage,
+                version: this.version
             });
             this.context = options.context ? options.context : document.body;
             this.tags = options.tags;
@@ -6177,8 +6199,6 @@ else {
 	} else {
 		root.conversationalform = factory(cf.ConversationalForm);
 	}
-	}(window, function(conversationalform) {
-		// module code here....
-		return cf.ConversationalForm || conversationalform;
-	}
-));
+}(window, function(conversationalform) {
+	return cf;
+}));
