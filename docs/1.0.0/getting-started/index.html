@@ -149,89 +149,22 @@
         
 });</code></pre>
 
-    <h2 id="self-instantiate-with-vanilla-javascript"></a>Self-instantiate with vanilla Javascript</h2>
+    <h2 id="self-instantiate-with-vanilla-javascript">Self-instantiate with vanilla Javascript</h2>
     <p>Only parameter <code>formEl</code> is mandatory for the object you pass to the constructor. See full list of <a href="../options/">ConversationalFormOptions</a>.</p>
     <pre><code class="language-javascript" data-lang="javascript">new cf.ConversationalForm({
     // HTMLFormElement
     formEl/*: HTMLFormElement;*/
 });</code></pre>
 
-    <h2 id="react"></a>React</h2>
-    <pre><code class="language-javascript" data-lang="javascript">class Hello extends React.Component {
-    constructor(props) {
-        super(props);
-        this.cf = null; // <-- Conversational Form ref
-    }
-    componentDidMount(){
-        // add Conversational Form info
-        this.refs.name.setAttribute('cf-questions', "Your name?");
-        this.refs.email.setAttribute('cf-questions', "Your email?");
-        this.refs.description.setAttribute('cf-questions', "What is description?");
-
-        this.cf = window.cf.ConversationalForm.startTheConversation({
-            formEl: this.refs.form,
-            context: document.getElementById("cf-context"),
-            flowStepCallback: function(dto, success, error){
-                success();
-            },
-            submitCallback: function(){
-                // this callback could also be added to the React.createElement it self...
-                alert("You made it!")
-                console.log("Form submitted...");
-            }
-        });
-    }
-    render() {
-        return React.createElement('form', {
-            id: "form",
-            ref: "form",
-            className: 'form'
-        },
-            React.createElement('input', {
-                type: 'text',
-                ref: "name",
-                placeholder: 'Name (required)',
-                defaultValue: this.props.name,
-            }),
-            React.createElement('input', {
-                type: 'email',
-                ref: "email",
-                placeholder: 'Email',
-                defaultValue: this.props.email,
-            }),
-            React.createElement('textarea', {
-                placeholder: 'Description',
-                ref: "description",
-                defaultValue: this.props.description,
-            }),
-            React.createElement('button', {type: 'submit'}, "Submit")
-        )
-    }
-};
-
-ReactDOM.render(React.createElement(Hello, {
-    name: "Input name..",
-    email: "Input email..",
-    description: "Input description..",
-}), document.getElementsByClassName('form-outer')[0]);</code></pre>
+    <h2 id="react">React</h2>
+    <iframe src="https://stackblitz.com/edit/react-conversational-form-example?ctl=1&embed=1&file=myForm.js" width="100%" height="500" frameBorder="0"></iframe>
     
-    <h2 id="requirejs"></a>RequireJS</h2>
-    <pre><code class="language-javascript">requirejs.config({
-  baseUrl: 'js',
-  paths: {
-    conversationalform: 'conversational-form'
-  }
-});
+    <h2 id="vue">Vue</h2>
+    <iframe src="https://stackblitz.com/edit/vue-conversational-form-example?ctl=1&embed=1&file=myForm.js" width="100%" height="500" frameBorder="0"></iframe>
 
-requirejs(["conversational-form"], function(conversationalForm) {
-  console.log("Conversational Form loaded with requirejs:", conversationalForm);
-
-  // start the conversation
-  var conversationalForm = conversationalForm.startTheConversation({
-    formEl: document.getElementById("form"),
-    context: document.getElementById("cf-context")
-  });
-});</code></pre>
+    <h2 id="angular">Angular</h2>
+    <iframe src="https://stackblitz.com/edit/angular-conversational-form-example?ctl=1&embed=1&file=src/app/form.component.ts" width="100%" height="500" frameBorder="0"></iframe>
+    
 
     <h2 id="use-with-various-es6-module-bundlers"></a>Use with various ES6 module bundlers</h2>
     <p>like <a href="https://github.com/webpack/webpack" target="_blank">Webpack</a> and <a href="https://github.com/rollup/rollup" target="_blank">Rollup</a></p>
@@ -254,14 +187,15 @@ requirejs(["conversational-form"], function(conversationalForm) {
 		<li class="toc-entry toc-h2"><a href="#include-conversationalform-in-your-page">Include ConversationalForm in your page</a></li>
 		<li class="toc-entry toc-h2"><a href="#instantiate-with-jquery">Instantiate with jQuery</a></li>
 		<li class="toc-entry toc-h2"><a href="#self-instantiate-with-vanilla-javascript">Self-instantiate with vanilla Javascript</a>
-    <li class="toc-entry toc-h2"><a href="#reactjs">React</a></li>
-    <li class="toc-entry toc-h2"><a href="#requirejs">RequireJS</a></li>
-		<li class="toc-entry toc-h2"><a href="#use-with-various-es6-module-bundlers">Use with various ES6 module bundlers</a></li>
-		<li class="toc-entry toc-h2"><a href="#include-conversational-form-in-your-project">Include Conversational Form in your project</a>
-			<ul>
-				<li class="toc-entry toc-h3"><a href="#npm">NPM</a></li>
-			</ul>
-		</li>
+        <li class="toc-entry toc-h2"><a href="#react">React</a></li>
+        <li class="toc-entry toc-h2"><a href="#vue">Vue</a></li>
+        <li class="toc-entry toc-h2"><a href="#angular">Angular</a></li>
+        <li class="toc-entry toc-h2"><a href="#use-with-various-es6-module-bundlers">Use with various ES6 module bundlers</a></li>
+        <li class="toc-entry toc-h2"><a href="#include-conversational-form-in-your-project">Include Conversational Form in your project</a>
+            <ul>
+                <li class="toc-entry toc-h3"><a href="#npm">NPM</a></li>
+            </ul>
+        </li>
 	</ul>
 			</div>
 		</div>
