@@ -7,12 +7,66 @@
     <h1 id="appearance">{{page_title}}</h1>
     <p>When altering the apperance of Conversational Form you have two options:
     	<ul>
+			<li>Use one of our pre-built themes</li>
+    		<li>Compile (SCSS) to build your own theme</li>
     		<li>Overriding styles</li>
-    		<li>Compile (SCSS) your own theme and disable CSS load using the option <code>loadExternalStyleSheet</code> to false when instantiating your Conversational Form.</li>
     	</ul>
-    </p>
+	</p>
+	
+    <h2 id="prebuilt">Pre-built themes</h2>
+	<p>All pre-built themes and scss sources can be found here: <a href="https://github.com/space10-community/cf-themes">github.com/space10-community/cf-themes</a></p>
+	<p>To load an alternative CSS file you must disable the default theme using the loadExternalStyleSheet-option, by setting it to false. How you load the theme CSS is up to you: style tag, webpack...</p>
+	<div class="row">
+		<div class="col-xs-12 col-md-4">
+				<ul>
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/default-theme.html" target="_blank">Default theme</a>
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/space10-theme.html" target="_blank">SPACE10, used on the CF landingpage</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-space10.min.css" target="_blank">cf-space10.min.css</a>)
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/cf-red.html" target="_blank">Red</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-red.min.css" target="_blank">cf-red.min.css</a>)
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/cf-greeen.html" target="_blank">Green</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-green.min.css" target="_blank">cf-green.min.css</a>)
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/cf-irisblue.html" target="_blank">Blue</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-blue.min.css" target="_blank">cf-blue.min.css</a>)
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/cf-purple.html" target="_blank">Purple</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-purple.min.css" target="_blank">cf-purple.min.css</a>)
+					</li>	
+					<li>
+						<a href="https://space10-community.github.io/cf-themes/ikea-theme.html" target="_blank">Blue, IKEA inspired theme</a>
+						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-ikea.min.css" target="_blank">cf-irisblue.min.css</a>)
+					</li>	
+				</ul>
+		</div>
+		<div class="col-xs-12 col-md-8">
+			<img src="../assets/cf-themes.gif" style="border: 1px solid #c1c1c1; max-width: 100%;" />
+		</div>
+	</div>
+
+	<h2 id="compile">Compile your own theme</h2>
+	<p>You can use our <a href="https://github.com/space10-community/cf-themes">themes repository</a> to easily create your own theme.</p>
+	<p>The steps are as follows:
+		<ol>
+			<li>Clone the repository.</li>
+			<li>Run <pre class="inline">$ npm install</pre> to install dependencies (Conversational Form).</li>
+			<li>Add your own theme.scss in /themes (see list of variables <a href="https://github.com/space10-community/conversational-form/blob/master/src/styles/_cf-variables.scss">here</a>.</li>
+			<li>Copy space10-theme.html and replace the .css refence to match to name of the theme file you just created.</li>
+			<li>Time to start building: <pre class="inline">$ gulp watch</pre>. Output will be in the /build folder.</li>
+		</ol>
+	<p>
+
     <h2 id="example-overriding-styles">Example - Overriding styles</h2>
-	<p data-height="480" data-theme-id="light" data-slug-hash="baeKWg" data-default-tab="css,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - CSS override theming" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/baeKWg/">Conversational Forms - CSS override theming</a> by SPACE10 (<a href="https://codepen.io/space10">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+	<p data-preview="true" data-height="480" data-theme-id="light" data-slug-hash="baeKWg" data-default-tab="css,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - CSS override theming" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/baeKWg/">Conversational Forms - CSS override theming</a> by SPACE10 (<a href="https://codepen.io/space10">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 
 {% endblock %}
