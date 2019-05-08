@@ -82,6 +82,8 @@ namespace cf {
 
 		// Prevent submit on Enter keypress: https://github.com/space10-community/conversational-form/issues/270
 		preventSubmitOnEnter?:boolean;
+
+		animationsEnabled?:boolean;
 	}
 
 	// CUI formless options
@@ -206,7 +208,15 @@ namespace cf {
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
 				ConversationalForm.animationsEnabled = false;
-
+			
+			if (
+				typeof options.animationsEnabled === 'boolean'
+				&& options.animationsEnabled === false
+			) {
+				ConversationalForm.animationsEnabled = false;
+				this.formEl.setAttribute("cf-no-animation", "");
+			}
+			
 			if(options.preventAutoFocus || this.formEl.getAttribute("cf-prevent-autofocus") == "")
 				UserInputElement.preventAutoFocus = true;
 

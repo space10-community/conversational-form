@@ -109,6 +109,10 @@ cf-input {
 		}
 
 		transition: all $cf-anim-time/2.4 !important;
+		
+		&[no-animations] {
+			transition: none !important;
+		}
 
 		&[rows='1'] {
 			min-height: $cf-input-field-height !important;

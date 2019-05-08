@@ -259,7 +259,8 @@
 		    window.onload = function(){
 		    		var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 		            formEl: document.getElementById("cf-form"),
-		            context: document.getElementById("cf-context"),
+								context: document.getElementById("cf-context"),
+								animationsEnabled: true,
 		            // hideUserInputOnNoneTextInput: true,
 		            submitCallback: function() {
                   conversationalForm.addRobotChatResponse(
