@@ -71,6 +71,10 @@ namespace cf {
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 
+			if (!ConversationalForm.animationsEnabled) {
+				this.inputElement.setAttribute('no-animations', '');
+			}
+
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
 				el: <HTMLElement> this.el.getElementsByTagName("cf-input-control-elements")[0],
