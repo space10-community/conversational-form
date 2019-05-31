@@ -198,12 +198,11 @@ namespace cf {
 				UserInputElement.hideUserInputOnNoneTextInput = true;
 			}
 
-			// TODO: can be a string when added as formless..
-			// this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
 			this.submitCallback = options.submitCallback;
 			if(this.submitCallback && typeof this.submitCallback === "string"){
-				// a submit callback method added to json, so use eval to evaluate method
-				this.submitCallback = eval(this.submitCallback);
+				// Must be a string on window, rewritten to avoid unsafe eval() calls
+				const fn = (window as any)[this.submitCallback];
+				this.submitCallback = fn;
 			}
 
 			if(this.formEl.getAttribute("cf-no-animation") == "")
