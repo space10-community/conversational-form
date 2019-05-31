@@ -188,10 +188,10 @@ namespace cf {
 			if(options.questions)
 				this.questions = options.questions;
 
-			// custom tag validation
+			// custom tag validation - must be a method on window to avoid unsafe eval() calls
 			if(this.domElement.getAttribute("cf-validation")){
-				// set it through an attribute, danger land with eval
-				this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+				const fn = (window as any)[this.domElement.getAttribute("cf-validation")];
+				this.validationCallback = fn;
 			}
 
 			// reg ex pattern is set on the Tag, so use it in our validation

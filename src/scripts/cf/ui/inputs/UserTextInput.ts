@@ -221,7 +221,6 @@ namespace cf {
 		}
 
 		private resetInputHeight() {
-			console.log('resetInputHeight', this.inputElement.getAttribute('rows'))
 			if (this.inputElement.getAttribute('rows') === '1'){
 				this.inputElement.style.height = this.initialInputHeight + 'px';
 			} else {
