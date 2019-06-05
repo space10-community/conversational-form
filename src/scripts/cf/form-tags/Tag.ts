@@ -426,15 +426,36 @@ namespace cf {
 				isValid = false;
 			}
 
+			const isMaxMinValueValid = this.validateMaxMinValue(valueText);
+			if (!isMaxMinValueValid) isValid = false;
+
 			if(isValid){
 				// we cannot set the dom element value when type is file
 				if(this.type != "file")
 					this.domElement.value = valueText;
-			}else{
-				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}
 
 			return isValid;
+		}
+
+		/**
+		 * Validates value against tag max and min attributes
+		 *
+		 * @private
+		 * @param {string} value
+		 * @returns {boolean}
+		 * @memberof Tag
+		 */
+		private validateMaxMinValue(value:string):boolean {
+			if (!value) return true;
+
+			const parsedValue:Number = parseInt(value, 10);
+			const minValue: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
+			const maxValue: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+			if (minValue !== -1 && parsedValue < minValue) return false;
+			if (maxValue !== -1 && parsedValue > maxValue) return false;
+
+			return true;
 		}
 
 		protected getLabel(): string{
