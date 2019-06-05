@@ -73,6 +73,24 @@ describe('Validate tag attributes', function() {
 		]
 	});
 
+	var instancePhone = window.cf.ConversationalForm.startTheConversation({
+		"options": {
+			formEl: document.createElement("form"),
+			"submitCallback": function(){
+
+			}
+		},
+		"tags": [
+			{
+				"tag": "input",
+				"type": "tel",
+				"name": "telWithPattern",
+				"pattern": "[0-9]{3}-[0-9]{3}-[0-9]{4}",
+				"required": true
+			},
+		]
+	});
+
 	it('max+min-length test', function(done) {
 		// under min
 		var isValid = instance.tags[0].setTagValueAndIsValid({text: "0123"});
@@ -131,6 +149,25 @@ describe('Validate tag attributes', function() {
 
 		// < max
 		var isValid = instanceMaxValue.tags[0].setTagValueAndIsValid({text: "2"});
+		expect(isValid).toBe(true);
+
+		done();
+	});
+
+	it('tel with pattern', function(done) {
+		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123123"});
+		expect(isValid).toBe(false);
+
+		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123 123 1234"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123 123 123"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123 123 1234"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123-123-1234"});
 		expect(isValid).toBe(true);
 
 		done();

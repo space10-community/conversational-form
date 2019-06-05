@@ -208,9 +208,9 @@
 <body>
 	
 	<form id="cf-form" style="visibility: hidden;">
-        <input type="number" min="3" max="5" required cf-error="Must be between 3 and 5" name="test11" cf-questions="Is this req. number between 3 and 5?" />
-        <input type="password" name="test1" cf-questions="Is this password?" />
-        <input type="tel" name="test3" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" cf-questions="Is this phone?" />
+        <input type="number" min="3" max="5" required cf-error="Must be between 3 and 5" name="numValTest" cf-questions="Is this req. number between 3 and 5?" />
+        <input type="password" name="pwdTest" cf-questions="Is this password?" minlength="8" required cf-error="Please provide a password to continue (min. 8 chars.)" />
+        <input type="tel" name="telTest" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" cf-questions="Your phone #? (format: 123-456-7890)" required />
         <input type="text" name="test1" cf-questions="Is this text?" />
         <input type="email" name="test2" cf-questions="Is this email?" />
 
