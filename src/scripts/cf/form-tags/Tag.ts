@@ -197,11 +197,6 @@ namespace cf {
 			// reg ex pattern is set on the Tag, so use it in our validation
 			if(this.domElement.getAttribute("pattern"))
 				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
-			
-			// if(this.type == "email" && !this.pattern){
-			// 	// set a standard e-mail pattern for email type input
-			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-			// }
 
 			if(this.type != "group" && ConversationalForm.illustrateAppFlow){
 				if(!ConversationalForm.suppressLog) console.log('Conversational Form > Tag registered:', this.type, this);
@@ -403,6 +398,16 @@ namespace cf {
 			// validation
 			let isValid: boolean = true;
 			let valueText: string = dto.text;
+
+
+			if (
+				this.domElement.hasAttribute('type')
+				&& this.domElement.getAttribute('type') === 'email'
+				&& !this.pattern
+				&& valueText.length > 0
+			) {
+				this.pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			}
 
 			if(this.pattern){
 				isValid = this.pattern.test(valueText);
