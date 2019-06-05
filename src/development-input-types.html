@@ -208,11 +208,13 @@
 <body>
 	
 	<form id="cf-form" style="visibility: hidden;">
+        <input type="email" name="emailReqTest" cf-questions="Your email?" />
+        <input type="email" name="emailReqTest2" cf-questions="Your email? (required)" required />
         <input type="number" min="3" max="5" required cf-error="Must be between 3 and 5" name="numValTest" cf-questions="Is this req. number between 3 and 5?" />
-        <input type="password" name="pwdTest" cf-questions="Is this password?" minlength="8" required cf-error="Please provide a password to continue (min. 8 chars.)" />
-        <input type="tel" name="telTest" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" cf-questions="Your phone #? (format: 123-456-7890)" required />
-        <input type="text" name="test1" cf-questions="Is this text?" />
-        <input type="email" name="test2" cf-questions="Is this email?" />
+        <input type="number" value="4" min="3" max="5" required cf-error="Must be between 3 and 5" name="numValTest" cf-questions="Is this req. number between 3 and 5?" />
+        <input type="password" value='1234566788QWERTY' name="pwdTest" cf-questions="Is this password?" minlength="8" required cf-error="Please provide a password to continue (min. 8 chars.)" />
+        <input type="tel" value="123-456-7890" name="telTest" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" cf-questions="Your phone #? (format: 123-456-7890)" required />
+        <textarea name="testTexttArea" rows="3" cf-questions="Is this multiline textarea??"></textarea>
 
 		<input type="text" cf-questions="What is your name?" name="name1122" value="Teenage Mental Ninja Turtlewee uhe whu huerwihiu werhuierwuh reh uierh uireh uirewhu irwehiu efwhiu  hiurwh er hwuirwreihuwrehiu">
 		<fieldset>

@@ -91,6 +91,56 @@ describe('Validate tag attributes', function() {
 		]
 	});
 
+	var instanceEmail = window.cf.ConversationalForm.startTheConversation({
+		"options": {
+			formEl: document.createElement("form"),
+			"submitCallback": function(){
+
+			}
+		},
+		"tags": [
+			{
+				"tag": "input",
+				"type": "email",
+				"name": "email",
+			},
+		]
+	});
+
+	var instanceEmailRequired = window.cf.ConversationalForm.startTheConversation({
+		"options": {
+			formEl: document.createElement("form"),
+			"submitCallback": function(){
+
+			}
+		},
+		"tags": [
+			{
+				"tag": "input",
+				"type": "email",
+				"name": "email",
+				"required": true,
+			},
+		]
+	});
+
+	var instanceEmailWithCustomPattern = window.cf.ConversationalForm.startTheConversation({
+		"options": {
+			formEl: document.createElement("form"),
+			"submitCallback": function(){
+
+			}
+		},
+		"tags": [
+			{
+				"tag": "input",
+				"type": "email",
+				"name": "email",
+				"pattern": "[0-9]{3}-[0-9]{3}-[0-9]{4}",
+			},
+		]
+	});
+
 	it('max+min-length test', function(done) {
 		// under min
 		var isValid = instance.tags[0].setTagValueAndIsValid({text: "0123"});
@@ -168,6 +218,69 @@ describe('Validate tag attributes', function() {
 		expect(isValid).toBe(false);
 		
 		var isValid = instancePhone.tags[0].setTagValueAndIsValid({text: "123-123-1234"});
+		expect(isValid).toBe(true);
+
+		done();
+	});
+	
+	it('email', function(done) {
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: ""});
+		expect(isValid).toBe(true);
+		
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens@"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard.x"});
+		expect(isValid).toBe(false);
+
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard.com"});
+		expect(isValid).toBe(true);
+
+		done();
+	});
+
+	it('email required', function(done) {
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: ""});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: "jens"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: "jens@"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard.x"});
+		expect(isValid).toBe(false);
+
+		var isValid = instanceEmailRequired.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard.com"});
+		expect(isValid).toBe(true);
+
+		done();
+	});
+	
+	it('email with custom pattern', function(done) {
+		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "jens"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "jens@"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard"});
+		expect(isValid).toBe(false);
+		
+		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "jens@jenssogaard.x"});
+		expect(isValid).toBe(false);
+
+		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "123-456-7890"});
 		expect(isValid).toBe(true);
 
 		done();
