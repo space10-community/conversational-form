@@ -26,7 +26,7 @@ namespace cf {
 		private onInputBlurCallback: () => void;
 		private onOriginalTagChangedCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
-		private errorTimer: number = 0;
+		private errorTimer: ReturnType<typeof setTimeout>;
 		private initialInputHeight: number = 0;
 		private shiftIsDown: boolean = false;
 		private keyUpCallback: () => void;
@@ -275,20 +275,22 @@ namespace cf {
 			}
 		}
 
+		/**
+		 * TODO: handle detect input/textarea in a simpler way - too conditional heavy
+		 *
+		 * @private
+		 * @memberof UserTextInput
+		 */
 		private checkForCorrectInputTag(){
-			// handle password natively
-			const currentType: String = this.inputElement.getAttribute("type");
-			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
-			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
-			const isCurrentInputTypeTextAreaButNewTagNumberOrEmail: boolean = (this._currentTag.type == "email" && currentType != "email") || (this._currentTag.type == "number" && currentType != "number");
-
+			const tagName:String = this.tagType(this._currentTag);
+			
 			// remove focus and blur events, because we want to create a new element
-			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+			if(this.inputElement && this.inputElement.tagName !== tagName){
 				this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
 				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			}
 
-			if(isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeTextAreaButNewTagNumberOrEmail){
+			if(tagName === 'INPUT'){
 				// change to input
 				const input = document.createElement("input");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
@@ -297,13 +299,7 @@ namespace cf {
 				input.setAttribute("autocomplete", "new-password");
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
-
-				if(this._currentTag.type === "number" || this._currentTag.type === "email"){
-					// if field is type number or email then add type to user input
-					this.inputElement.type = this._currentTag.type;
-					input.setAttribute("type", this._currentTag.type);
-				}
-			}else if(isCurrentInputTypeInputButNewTagNotPassword){
+			}else if (this.inputElement && this.inputElement.tagName !== tagName){
 				// change to textarea
 				const textarea = document.createElement("textarea");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
@@ -314,7 +310,7 @@ namespace cf {
 			}
 
 			// add focus and blur events to newly created input element
-			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+			if(this.inputElement && this.inputElement.tagName !== tagName){
 				this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 				this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 			}
@@ -325,6 +321,28 @@ namespace cf {
 			}
 
 			this.setFocusOnInput();
+		}
+
+		tagType(inputElement: ITag): String {
+
+			if (
+				!inputElement.domElement
+				|| !inputElement.domElement.tagName
+			) {
+				return 'TEXTAREA';
+			}
+
+			if (
+				inputElement.domElement.tagName === 'TEXTAREA'
+				|| (
+					inputElement.domElement.hasAttribute('rows')
+					&& parseInt(inputElement.domElement.getAttribute('rows'), 10) > 1
+				)
+			) return 'TEXTAREA';
+			
+			if (inputElement.domElement.tagName === 'INPUT') return 'INPUT';
+			
+			return 'TEXTAREA'; // TODO
 		}
 
 		protected onFlowUpdate(event: CustomEvent){
@@ -342,7 +360,7 @@ namespace cf {
 			this.checkForCorrectInputTag()
 
 			// set input field to type password if the dom input field is that, covering up the input
-			var isInputSpecificType: boolean = ["password", "number", "email"].indexOf(this._currentTag.type) !== -1;
+			var isInputSpecificType: boolean = ["password", "number", "email", "tel"].indexOf(this._currentTag.type) !== -1;
 			this.inputElement.setAttribute("type", isInputSpecificType ? this._currentTag.type : "input");
 
 			clearTimeout(this.errorTimer);
@@ -366,7 +384,7 @@ namespace cf {
 				this.buildControlElements([this._currentTag]);
 			}
 
-			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
+			if (this._currentTag.defaultValue) {
 				this.inputElement.value = this._currentTag.defaultValue.toString();
 			}
 
@@ -671,7 +689,6 @@ namespace cf {
 				</cf-input-control-elements>
 
 				<textarea type='input' tabindex="1" rows="1"></textarea>
-
 			</cf-input>
 			`;
 		}
