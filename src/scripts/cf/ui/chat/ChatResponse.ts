@@ -317,7 +317,10 @@ namespace cf {
 			// }
 
 			// value set, so add element, if not added
-			if (this.uiOptions.robot.robotResponseTime === 0){
+			if (
+				this.uiOptions.robot
+				&& this.uiOptions.robot.robotResponseTime === 0
+			) {
 				this.addSelf();
 			} else {
 				setTimeout(() => {
@@ -345,7 +348,14 @@ namespace cf {
 			const h: number = this.el.offsetHeight;
 
 			if(!this.container && this.el) this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-			this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
+			
+			if (
+				this.container
+				&& this.container.parentElement
+				&& this.container.parentElement.scrollHeight
+			) {
+				this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
+			}
 		}
 
 		private checkForEditMode(){
