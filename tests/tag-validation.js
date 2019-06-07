@@ -140,6 +140,23 @@ describe('Validate tag attributes', function() {
 			},
 		]
 	});
+	
+	var instanceTextRequired = window.cf.ConversationalForm.startTheConversation({
+		"options": {
+			formEl: document.createElement("form"),
+			"submitCallback": function(){
+
+			}
+		},
+		"tags": [
+			{
+				"tag": "input",
+				"type": "text",
+				"name": "firstname",
+				"required": true,
+			},
+		]
+	});
 
 	it('max+min-length test', function(done) {
 		// under min
@@ -224,9 +241,12 @@ describe('Validate tag attributes', function() {
 	});
 	
 	it('email', function(done) {
+		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "inputting something but regrets"});
+		expect(isValid).toBe(false);
+
 		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: ""});
 		expect(isValid).toBe(true);
-		
+
 		var isValid = instanceEmail.tags[0].setTagValueAndIsValid({text: "jens"});
 		expect(isValid).toBe(false);
 		
@@ -281,6 +301,16 @@ describe('Validate tag attributes', function() {
 		expect(isValid).toBe(false);
 
 		var isValid = instanceEmailWithCustomPattern.tags[0].setTagValueAndIsValid({text: "123-456-7890"});
+		expect(isValid).toBe(true);
+
+		done();
+	});
+	
+	it('text required', function(done) {
+		var isValid = instanceTextRequired.tags[0].setTagValueAndIsValid({text: ""});
+		expect(isValid).toBe(false);
+	
+		var isValid = instanceTextRequired.tags[0].setTagValueAndIsValid({text: "Jens"});
 		expect(isValid).toBe(true);
 
 		done();
