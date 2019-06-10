@@ -290,13 +290,28 @@ namespace cf {
 				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			}
 
+			this.removeAttribute('autocomplete');
+			this.removeAttribute('list');
+
 			if(tagName === 'INPUT'){
 				// change to input
 				const input = document.createElement("input");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
 					input.setAttribute(item.name, item.value);
 				});
-				input.setAttribute("autocomplete", "new-password");
+
+				if (this.inputElement.type === 'password') {
+					input.setAttribute("autocomplete", "new-password");
+				}
+
+				if (this._currentTag.domElement.hasAttribute('autocomplete')) {
+					input.setAttribute('autocomplete', this._currentTag.domElement.getAttribute('autocomplete'));
+				}
+
+				if (this._currentTag.domElement.hasAttribute('list')) {
+					input.setAttribute('list', this._currentTag.domElement.getAttribute('list'));
+				}
+				
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
 			}else if (this.inputElement && this.inputElement.tagName !== tagName){
@@ -321,6 +336,20 @@ namespace cf {
 			}
 
 			this.setFocusOnInput();
+		}
+
+		/**
+		 * Removes attribute on input element if attribute is present
+		 *
+		 * @private
+		 * @param {string} attribute
+		 * @memberof UserTextInput
+		 */
+		private removeAttribute(attribute:string):void {
+			if (this.inputElement
+				&& this.inputElement.hasAttribute(attribute)) {
+				this.inputElement.removeAttribute(attribute);
+			}
 		}
 
 		tagType(inputElement: ITag): String {
