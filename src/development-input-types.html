@@ -206,8 +206,17 @@
 
 
 <body>
+
+    <datalist id="browsers">
+        <option value="Internet Explorer">
+        <option value="Firefox">
+        <option value="Chrome">
+        <option value="Opera">
+        <option value="Safari">
+    </datalist>
 	
 	<form id="cf-form" style="visibility: hidden;">
+        <input type="text" name="browsers" list="browsers" cf-questions="Your browser?" />
         <input type="email" name="emailReqTest" cf-questions="Your email?" />
         <textarea name="testmultirows2" rows="3"></textarea>
         <input type="email" value="werew@werew.com" name="emailReqTest2" cf-questions="Your email? (required)" required />
