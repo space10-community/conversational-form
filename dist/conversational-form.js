@@ -1616,7 +1616,7 @@ var cf;
         function Dictionary(options) {
             // can be overwrittenMicrophone error
             this.data = {
-                "user-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
+                "user-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjMzAzMDMwIi8+CjxwYXRoIGQ9Ik0xMDAgNTVMMTM4Ljk3MSAxMjIuNUg2MS4wMjg5TDEwMCA1NVoiIGZpbGw9IiNFNUU2RUEiLz4KPC9zdmc+Cg==',
                 "entry-not-found": "Dictionary item not found.",
                 "awaiting-mic-permission": "Awaiting mic permission",
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
@@ -1636,7 +1636,7 @@ var cf;
             };
             // can be overwriten
             this.robotData = {
-                "robot-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
+                "robot-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjRTVFNkVBIi8+CjxyZWN0IHg9IjY2IiB5PSI2NiIgd2lkdGg9IjY4IiBoZWlnaHQ9IjY4IiBmaWxsPSIjMzAzMDMwIi8+Cjwvc3ZnPgo=',
                 "input": "Please write some text.",
                 "text": "Please write some text.",
                 "textarea": "Please write some text.",
@@ -1660,14 +1660,14 @@ var cf;
                 this.data["user-image"] = options.userImage;
             }
             else {
-                this.data['user-image'] = "https://cdn.jsdelivr.net/npm/conversational-form@" + this.version + "/src/images/human.png";
+                this.data['user-image'] = this.data['user-image'];
             }
             // overwrite robot image
             if (options.robotImage) {
                 this.robotData["robot-image"] = options.robotImage;
             }
             else {
-                this.robotData['robot-image'] = "https://cdn.jsdelivr.net/npm/conversational-form@" + this.version + "/src/images/robot.png";
+                this.robotData['robot-image'] = this.robotData['robot-image'];
             }
             // overwrite robot questions if defined
             if (options && options.robotData)
@@ -1786,18 +1786,14 @@ var cf;
             // questions array
             if (options.questions)
                 this.questions = options.questions;
-            // custom tag validation
+            // custom tag validation - must be a method on window to avoid unsafe eval() calls
             if (this.domElement.getAttribute("cf-validation")) {
-                // set it through an attribute, danger land with eval
-                this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+                var fn = window[this.domElement.getAttribute("cf-validation")];
+                this.validationCallback = fn;
             }
             // reg ex pattern is set on the Tag, so use it in our validation
             if (this.domElement.getAttribute("pattern"))
                 this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
-            // if(this.type == "email" && !this.pattern){
-            // 	// set a standard e-mail pattern for email type input
-            // 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-            // }
             if (this.type != "group" && cf.ConversationalForm.illustrateAppFlow) {
                 if (!cf.ConversationalForm.suppressLog)
                     console.log('Conversational Form > Tag registered:', this.type, this);
@@ -2103,6 +2099,21 @@ var cf;
             // validation
             var isValid = true;
             var valueText = dto.text;
+            if (this.domElement.hasAttribute('type')
+                && this.domElement.getAttribute('type') === 'email'
+                && !this.pattern
+                && valueText.length > 0) {
+                this.pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            }
+            else if (
+            // When NOT required: Reset in the event user already typed something, and now they clear their input and want to submit nothing ==> remove pattern previously applied
+            this.domElement.hasAttribute('type')
+                && this.domElement.getAttribute('type') === 'email'
+                && this.pattern
+                && valueText.length === 0
+                && !this.required) {
+                this.pattern = null;
+            }
             if (this.pattern) {
                 isValid = this.pattern.test(valueText);
             }
@@ -2119,15 +2130,35 @@ var cf;
             if (max != -1 && valueText.length > max) {
                 isValid = false;
             }
+            var isMaxMinValueValid = this.validateMaxMinValue(valueText);
+            if (!isMaxMinValueValid)
+                isValid = false;
             if (isValid) {
                 // we cannot set the dom element value when type is file
                 if (this.type != "file")
                     this.domElement.value = valueText;
             }
-            else {
-                // throw new Error("cf-: value:string is not valid. Value: "+value);
-            }
             return isValid;
+        };
+        /**
+         * Validates value against tag max and min attributes
+         *
+         * @private
+         * @param {string} value
+         * @returns {boolean}
+         * @memberof Tag
+         */
+        Tag.prototype.validateMaxMinValue = function (value) {
+            if (!value)
+                return true;
+            var parsedValue = parseInt(value, 10);
+            var minValue = parseInt(this.domElement.getAttribute("min"), 10) || -1;
+            var maxValue = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+            if (minValue !== -1 && parsedValue < minValue)
+                return false;
+            if (maxValue !== -1 && parsedValue > maxValue)
+                return false;
+            return true;
         };
         Tag.prototype.getLabel = function () {
             if (!this._label)
@@ -4107,7 +4138,6 @@ var cf;
         __extends(UserTextInput, _super);
         function UserTextInput(options) {
             var _this = _super.call(this, options) || this;
-            _this.errorTimer = 0;
             _this.initialInputHeight = 0;
             _this.shiftIsDown = false;
             //acts as a fallback for ex. shadow dom implementation
@@ -4119,6 +4149,9 @@ var cf;
             _this.onInputBlurCallback = _this.onInputBlur.bind(_this);
             _this.inputElement.addEventListener('focus', _this.onInputFocusCallback, false);
             _this.inputElement.addEventListener('blur', _this.onInputBlurCallback, false);
+            if (!cf.ConversationalForm.animationsEnabled) {
+                _this.inputElement.setAttribute('no-animations', '');
+            }
             //<cf-input-control-elements> is defined in the ChatList.ts
             _this.controlElements = new cf.ControlElements({
                 el: _this.el.getElementsByTagName("cf-input-control-elements")[0],
@@ -4262,7 +4295,6 @@ var cf;
             }));
         };
         UserTextInput.prototype.resetInputHeight = function () {
-            console.log('resetInputHeight', this.inputElement.getAttribute('rows'));
             if (this.inputElement.getAttribute('rows') === '1') {
                 this.inputElement.style.height = this.initialInputHeight + 'px';
             }
@@ -4311,33 +4343,40 @@ var cf;
                 this.inputElement.setAttribute("placeholder", cf.Dictionary.get("group-placeholder"));
             }
         };
+        /**
+         * TODO: handle detect input/textarea in a simpler way - too conditional heavy
+         *
+         * @private
+         * @memberof UserTextInput
+         */
         UserTextInput.prototype.checkForCorrectInputTag = function () {
-            // handle password natively
-            var currentType = this.inputElement.getAttribute("type");
-            var isCurrentInputTypeTextAreaButNewTagPassword = this._currentTag.type == "password" && currentType != "password";
-            var isCurrentInputTypeInputButNewTagNotPassword = this._currentTag.type != "password" && currentType == "password";
-            var isCurrentInputTypeTextAreaButNewTagNumberOrEmail = (this._currentTag.type == "email" && currentType != "email") || (this._currentTag.type == "number" && currentType != "number");
+            var tagName = this.tagType(this._currentTag);
             // remove focus and blur events, because we want to create a new element
-            if (this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)) {
+            if (this.inputElement && this.inputElement.tagName !== tagName) {
                 this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
                 this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
             }
-            if (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeTextAreaButNewTagNumberOrEmail) {
+            this.removeAttribute('autocomplete');
+            this.removeAttribute('list');
+            if (tagName === 'INPUT') {
                 // change to input
                 var input_1 = document.createElement("input");
                 Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
                     input_1.setAttribute(item.name, item.value);
                 });
-                input_1.setAttribute("autocomplete", "new-password");
+                if (this.inputElement.type === 'password') {
+                    input_1.setAttribute("autocomplete", "new-password");
+                }
+                if (this._currentTag.domElement.hasAttribute('autocomplete')) {
+                    input_1.setAttribute('autocomplete', this._currentTag.domElement.getAttribute('autocomplete'));
+                }
+                if (this._currentTag.domElement.hasAttribute('list')) {
+                    input_1.setAttribute('list', this._currentTag.domElement.getAttribute('list'));
+                }
                 this.inputElement.parentNode.replaceChild(input_1, this.inputElement);
                 this.inputElement = input_1;
-                if (this._currentTag.type === "number" || this._currentTag.type === "email") {
-                    // if field is type number or email then add type to user input
-                    this.inputElement.type = this._currentTag.type;
-                    input_1.setAttribute("type", this._currentTag.type);
-                }
             }
-            else if (isCurrentInputTypeInputButNewTagNotPassword) {
+            else if (this.inputElement && this.inputElement.tagName !== tagName) {
                 // change to textarea
                 var textarea_1 = document.createElement("textarea");
                 Array.prototype.slice.call(this.inputElement.attributes).forEach(function (item) {
@@ -4347,7 +4386,7 @@ var cf;
                 this.inputElement = textarea_1;
             }
             // add focus and blur events to newly created input element
-            if (this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)) {
+            if (this.inputElement && this.inputElement.tagName !== tagName) {
                 this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
                 this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
             }
@@ -4356,6 +4395,32 @@ var cf;
                 this.initialInputHeight = this.inputElement.offsetHeight;
             }
             this.setFocusOnInput();
+        };
+        /**
+         * Removes attribute on input element if attribute is present
+         *
+         * @private
+         * @param {string} attribute
+         * @memberof UserTextInput
+         */
+        UserTextInput.prototype.removeAttribute = function (attribute) {
+            if (this.inputElement
+                && this.inputElement.hasAttribute(attribute)) {
+                this.inputElement.removeAttribute(attribute);
+            }
+        };
+        UserTextInput.prototype.tagType = function (inputElement) {
+            if (!inputElement.domElement
+                || !inputElement.domElement.tagName) {
+                return 'TEXTAREA';
+            }
+            if (inputElement.domElement.tagName === 'TEXTAREA'
+                || (inputElement.domElement.hasAttribute('rows')
+                    && parseInt(inputElement.domElement.getAttribute('rows'), 10) > 1))
+                return 'TEXTAREA';
+            if (inputElement.domElement.tagName === 'INPUT')
+                return 'INPUT';
+            return 'TEXTAREA'; // TODO
         };
         UserTextInput.prototype.onFlowUpdate = function (event) {
             var _this = this;
@@ -4368,7 +4433,7 @@ var cf;
             // replace textarea and visa versa
             this.checkForCorrectInputTag();
             // set input field to type password if the dom input field is that, covering up the input
-            var isInputSpecificType = ["password", "number", "email"].indexOf(this._currentTag.type) !== -1;
+            var isInputSpecificType = ["password", "number", "email", "tel"].indexOf(this._currentTag.type) !== -1;
             this.inputElement.setAttribute("type", isInputSpecificType ? this._currentTag.type : "input");
             clearTimeout(this.errorTimer);
             this.el.removeAttribute("error");
@@ -4385,7 +4450,7 @@ var cf;
             else {
                 this.buildControlElements([this._currentTag]);
             }
-            if (this._currentTag.type == "text" || this._currentTag.type == "email") {
+            if (this._currentTag.defaultValue) {
                 this.inputElement.value = this._currentTag.defaultValue.toString();
             }
             if (this._currentTag.skipUserInput === true) {
@@ -4642,7 +4707,7 @@ var cf;
         };
         // override
         UserTextInput.prototype.getTemplate = function () {
-            return this.customTemplate || "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\n\t\t\t</cf-input>\n\t\t\t";
+            return this.customTemplate || "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\t\t\t</cf-input>\n\t\t\t";
         };
         return UserTextInput;
     }(cf.UserInputElement));
@@ -4942,7 +5007,8 @@ var cf;
             this.parsedResponse = innerResponse;
             // }
             // value set, so add element, if not added
-            if (this.uiOptions.robot.robotResponseTime === 0) {
+            if (this.uiOptions.robot
+                && this.uiOptions.robot.robotResponseTime === 0) {
                 this.addSelf();
             }
             else {
@@ -4966,7 +5032,11 @@ var cf;
             var h = this.el.offsetHeight;
             if (!this.container && this.el)
                 this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-            this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
+            if (this.container
+                && this.container.parentElement
+                && this.container.parentElement.scrollHeight) {
+                this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
+            }
         };
         ChatResponse.prototype.checkForEditMode = function () {
             if (!this.isRobotResponse && !this.el.hasAttribute("thinking")) {
@@ -5686,15 +5756,19 @@ var cf;
             if (options.hideUserInputOnNoneTextInput === true) {
                 cf_1.UserInputElement.hideUserInputOnNoneTextInput = true;
             }
-            // TODO: can be a string when added as formless..
-            // this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
             this.submitCallback = options.submitCallback;
             if (this.submitCallback && typeof this.submitCallback === "string") {
-                // a submit callback method added to json, so use eval to evaluate method
-                this.submitCallback = eval(this.submitCallback);
+                // Must be a string on window, rewritten to avoid unsafe eval() calls
+                var fn = window[this.submitCallback];
+                this.submitCallback = fn;
             }
             if (this.formEl.getAttribute("cf-no-animation") == "")
                 ConversationalForm.animationsEnabled = false;
+            if (typeof options.animationsEnabled === 'boolean'
+                && options.animationsEnabled === false) {
+                ConversationalForm.animationsEnabled = false;
+                this.formEl.setAttribute("cf-no-animation", "");
+            }
             if (options.preventAutoFocus || this.formEl.getAttribute("cf-prevent-autofocus") == "")
                 cf_1.UserInputElement.preventAutoFocus = true;
             this.dictionary = new cf_1.Dictionary({
@@ -6185,19 +6259,23 @@ else {
 
 		return new cf.ConversationalForm(options);
 	};
+	
+	$.fn.eventDispatcher = function () {
+		return new cf.EventDispatcher();
+	};
+
+	$.fn.cf = cf;
 }));
 
 // requirejs/amd plugin
 (function (root, factory) {
 	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
 	if(typeof define === "function" && define.amd) {
-		define(["conversational-form"], function(conversationalform){
-			return (root.conversationalform = factory(conversationalform));
+		define(["conversational-form"], function(cf){
+			return (root.conversationalform = factory(cf));
 		});
-	} else if(typeof module === "object" && module.exports) {
-		module.exports = (root.conversationalform = factory(require("conversational-form")));
 	} else {
-		root.conversationalform = factory(cf.ConversationalForm);
+		root.conversationalform = factory(cf);
 	}
 }(window, function(conversationalform) {
 	return cf;

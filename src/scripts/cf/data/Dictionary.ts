@@ -40,14 +40,14 @@ namespace cf {
 			if (options.userImage) {
 				this.data["user-image"] = options.userImage;
 			} else {
-				this.data['user-image'] = `https://cdn.jsdelivr.net/npm/conversational-form@${this.version}/src/images/human.png`;
+				this.data['user-image'] = this.data['user-image'];
 			}
 			
 			// overwrite robot image
 			if (options.robotImage) {
 				this.robotData["robot-image"] = options.robotImage;
 			} else {
-				this.robotData['robot-image'] = `https://cdn.jsdelivr.net/npm/conversational-form@${this.version}/src/images/robot.png`;
+				this.robotData['robot-image'] = this.robotData['robot-image'];
 			}
 			
 			// overwrite robot questions if defined
@@ -136,7 +136,7 @@ namespace cf {
 
 		// can be overwrittenMicrophone error
 		protected data: any = {
-			"user-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
+			"user-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjMzAzMDMwIi8+CjxwYXRoIGQ9Ik0xMDAgNTVMMTM4Ljk3MSAxMjIuNUg2MS4wMjg5TDEwMCA1NVoiIGZpbGw9IiNFNUU2RUEiLz4KPC9zdmc+Cg==',
 			"entry-not-found": "Dictionary item not found.",
 			"awaiting-mic-permission": "Awaiting mic permission",
 			"user-audio-reponse-invalid": "I didn't get that, try again.",
@@ -157,7 +157,7 @@ namespace cf {
 
 		// can be overwriten
 		protected robotData: any = {
-			"robot-image": 'https://cdn.jsdelivr.net/npm/conversational-form@latest/src/images/robot.png',
+			"robot-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjRTVFNkVBIi8+CjxyZWN0IHg9IjY2IiB5PSI2NiIgd2lkdGg9IjY4IiBoZWlnaHQ9IjY4IiBmaWxsPSIjMzAzMDMwIi8+Cjwvc3ZnPgo=',
 			"input": "Please write some text.",
 			"text": "Please write some text.",
 			"textarea": "Please write some text.",

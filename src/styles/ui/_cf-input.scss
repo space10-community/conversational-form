@@ -23,16 +23,11 @@ cf-input {
 			transform: scale(1, 1);
 		}
 	}
-	
-	// Jens: Hmm, this is set right below?!
-	/*input {
-		padding: 5px 5px 5px 15px;
-	}*/
 
 	input, textarea {
 		resize: none;
 		overflow: hidden;
-		padding: calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc(#{$cf-input-field-height} - 6px) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
+		padding: calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) #{$cf-input-field-height} calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
 	}
 	
 	input, textarea {
@@ -213,13 +208,17 @@ cf-input {
 		}
 	}
 	
-	&[tag-type="file"] cf-input-button.cf-input-button, cf-input-button.cf-input-button.loading {
+	&[tag-type="file"] cf-input-button.cf-input-button.loading {
 		&:after {
 			content: "";
 			display: block;
-			width: 100%;
-			height: 100%;
-		
+			position: relative;
+			left: calc(50% - (#{$cf-input-field-height} / 4));
+			top: calc(50% - (#{$cf-input-field-height} / 4));
+			
+			width: $cf-input-field-height / 2;
+			height: $cf-input-field-height / 2;
+			
 			border: 1px solid rgba(#b9bcbe, 50%);
 			border-radius: 50%;
 			border-left: 0;
@@ -246,21 +245,22 @@ cf-input {
 }
 
 cf-input-button.cf-input-button {
-	width: $cf-input-field-height - 16;
-	height: $cf-input-field-height - 16;
-	background: $cf-input-submit-background;
+	width: $cf-input-field-height;
+	// height: $cf-input-field-height;
+	height: calc(100% - 10px);
+	background: $cf-color-primary;
 	position: absolute;
 	overflow: hidden;
-	right: 8px;
-	bottom: 8px;
+	right: 0;
+	bottom: 0;
 	z-index: 3;
 	cursor: pointer;
-	border-radius: 50%;
+	border-radius: 0;
 	will-change: background, border;
 	transform-origin: 50% 50%;
 	transform: scale(0, 0);
 	backface-visibility: hidden;
-	border: 1px solid lighten($cf-color-chat-response-user-text, 95%);
+	border: none;
 
 	.conversational-form--enable-animation & {
 		transition: background $cf-anim-time * 0.5 $cf-ease-easeOut, border $cf-anim-time * 0.5 $cf-ease-easeOut, transform $cf-anim-time * 0.5 $cf-ease-easeOutBack 0s;
@@ -360,7 +360,7 @@ cf-input-button.cf-input-button {
 	
 	&:hover, &:focus {
 		background: $cf-color-chat-response-user-bg;
-		border: 1px solid lighten($cf-color-chat-response-user-text, 75%);
+		border: 0;
 		&:after {
 			opacity: 0;
 		}
@@ -375,6 +375,15 @@ cf-input-button.cf-input-button {
 /**
 * Show submit button for groups when input is hidden
 */
+
+cf-input[tag-type="file"],
+cf-input[tag-type="group"],
+cf-input[tag-type="select"] {
+	cf-input-button.cf-input-button {
+		height: $cf-input-field-height;
+	}
+}
+
 cf-input[tag-type="file"].hide-input,
 cf-input[tag-type="group"].hide-input,
 cf-input[tag-type="select"].hide-input {
