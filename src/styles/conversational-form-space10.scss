@@ -1,0 +1,33 @@
+@import "./mixins/cf-mixins";
+
+$cf-color-background: #fff;
+$cf-color-primary: #303030;
+$cf-color-secondary: #E5E6EA;
+$cf-input-icon-color: $cf-color-secondary;
+
+$cf-avatar-size: 100%;
+
+@import "./conversational-form";
+
+
+cf-input-button.cf-input-button {
+	border: none;
+	border-radius: 0;
+	background: $cf-color-primary;
+	height: $cf-input-field-height;
+	width: $cf-input-field-height;
+	bottom: 0;
+	right: 0;
+}
+
+cf-input-button.cf-input-button:hover, cf-input-button.cf-input-button:focus {
+	border: 0;
+}
+
+cf-input[tag-type="file"] cf-input-button.cf-input-button:after, cf-input cf-input-button.cf-input-button.loading:after {
+	width: $cf-input-field-height / 2;
+	height: $cf-input-field-height / 2;
+	position: relative;
+	left: calc(50% - (#{$cf-input-field-height} / 4));
+	top: calc(50% - (#{$cf-input-field-height} / 4));
+}
