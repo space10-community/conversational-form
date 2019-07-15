@@ -4,8 +4,8 @@ cf-info {
 	position: absolute;
 	pointer-events: none;
 	z-index: 0;
-	left: 2px;
-	top: 6px;
+	left: 0;
+	top: 8px;
 	height: auto;
 	width: 100%;
 	text-overflow: ellipsis;
@@ -14,18 +14,15 @@ cf-info {
 	overflow: hidden;
 	display: block;
 	transform: translateY(-115%);
-	color: $cf-color-input-text;
-	opacity: 0;
+	color: invert($cf-color-background);
+	opacity: 1;
 	will-change: opacity;
+	font-size: max(10px, $cf-base-font-size - 6);
 
 	&.show {
 		opacity: 1;
 		.conversational-form--enable-animation & {
 			transition: opacity $cf-anim-time $cf-ease-easeOut;
 		}
-	}
-
-	strong {
-		font-weight: 900;
 	}
 }
