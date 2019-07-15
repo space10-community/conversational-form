@@ -2,14 +2,25 @@
 
 $introDelay: 0.4s;
 
+scrollable {
+	border: 1px solid red;
+}
+cf-input {
+	border: 1px solid blue;
+}
+
 cf-input {
 	display: block;
-	position: relative;
+	// position: relative;
 	width: 100%;
 	height: auto;
 	margin-bottom: 20px;
 	margin-top: 0px;
 	flex: 0 0 auto;
+
+	@media (max-width: $cf-breakpoint-medium) {
+		margin-bottom: 14px;
+	}
 
 	&.animate-in {
 		input, textarea {
@@ -27,7 +38,7 @@ cf-input {
 	input, textarea {
 		resize: none;
 		overflow: hidden;
-		padding: calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) #{$cf-input-field-height} calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
+		padding: calc((#{$cf-input-field-height} - 4px - #{$cf-input-font-size})/2) #{$cf-input-field-height} calc((#{$cf-input-field-height} - 4px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
 	}
 	
 	input, textarea {
@@ -48,7 +59,7 @@ cf-input {
 		user-select: auto !important;
 
 		&:focus, &:active {
-			box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+			box-shadow: 0px 0px 6px rgba(0,0,0,0.3);
 		}
 		
 		border-radius: $cf-input-field-border-radius;
@@ -61,6 +72,10 @@ cf-input {
 		// styling
 		font-family: $cf-font-family;
 		font-size: $cf-input-font-size;
+
+		// @media (max-width: $cf-breakpoint-medium) {
+		// 	font-size: $cf-input-font-size-mobile;
+		// }
 
 		width: 100%;
 		height: $cf-input-field-height;

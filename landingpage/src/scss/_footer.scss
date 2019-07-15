@@ -1,0 +1,47 @@
+footer {
+  @include container;
+
+  margin-bottom: 2rem;
+
+  @include respond-below('sm') {
+    margin-bottom: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  p {
+    font-size: 0.75rem;
+    line-height: 20px;
+
+    &:nth-child(1) {
+      @include column(2, 1);
+
+      @include respond-below('md') {
+        @include column(12, 1);
+      }
+
+      @include respond-below('sm') {
+        margin-bottom: 3rem;
+      }
+    }
+
+    &:nth-child(2) {
+      @include column(2, 9);
+
+      @include respond-below('md') {
+        @include column(6, 1);
+      }
+    }
+
+    &:nth-child(3) {
+      @include column(2, 11);
+
+      @include respond-below('md') {
+        @include column(6, 7);
+      }
+    }
+  }
+}

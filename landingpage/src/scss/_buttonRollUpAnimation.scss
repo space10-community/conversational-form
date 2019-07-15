@@ -1,0 +1,29 @@
+$rollOverButton--height: 51px !default;
+$rollOverButton--animTime: .2s;
+
+.btnRollUpAnim {
+  box-sizing: border-box;
+  overflow: hidden;
+  height: $rollOverButton--height;
+
+  span {
+    display: block;
+    line-height: $rollOverButton--height;
+    transition: $rollOverButton--animTime;
+    will-change: margin-top;
+
+    &:nth-of-type(1) {
+      margin-top: 0em;
+    }
+  }
+
+  &:hover {
+    span:nth-child(1) {
+      margin-top: -$rollOverButton--height;
+    }
+
+    span:nth-child(2) {
+      margin-top: 0px;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+$container-max-width: 1340px;
+$color-background: #1c1c1e;
+$color-primary: #fefefe;
+
+// Breakpoints
+$breakpoints: (
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1620px,
+);
+
+// Grid
+$container-max-width: 1340px;
+
+$gridOffset: 36px;
+$gridMargin: 28px;
+$gridOffset-md: 16px;
+$gridMargin-md: 16px;
+$gridMargin-sm: 2px;
+
+$grids: (
+  'default': (
+    layout: 12,
+    gutter: 40px,
+    outerGutter: 82px,
+    maxWidth: $container-max-width,
+  ),
+  'lg': (
+    layout: 12,
+    gutter: 20px,
+    outerGutter: 44px,
+    breakpoint: 'max-width: #{map-get($breakpoints, lg)}',
+  ),
+  'md': (
+    layout: 12,
+    gutter: 20px,
+    outerGutter: 44px,
+    breakpoint: 'max-width: #{map-get($breakpoints, md)}',
+  ),
+  'sm': (
+    layout: 12,
+    gutter: 20px,
+    outerGutter: 20px,
+    breakpoint: 'max-width: #{map-get($breakpoints, sm)}',
+  ),
+);
