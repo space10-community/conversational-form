@@ -1,0 +1,77 @@
+/*
+ * CSS Grid mixins. Requires $grids config map
+ *
+ */
+@mixin conditionalBreakpoint($breakpoint: false) {
+  @if ($breakpoint) {
+    @media only screen and (#{$breakpoint}) {
+      @content;
+    }
+  }
+
+  @else {
+    @content;
+  }
+}
+
+@mixin container($hasOuterGutter: true) {
+  display: grid;
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+
+  @each $name, $grid in $grids {
+    $breakpoint: if(map-has-key($grid, breakpoint), map-get($grid, breakpoint), false);
+
+    @include conditionalBreakpoint($breakpoint) {
+      grid-template-columns: repeat(#{map-get($grid, layout)}, 1fr);
+      // grid-template-rows: auto;
+      grid-gap: map-get($grid, gutter);
+      max-width: if(map-has-key($grid, maxWidth), map-get($grid, maxWidth), none);
+      background: map-get($grid, background);
+      padding-left: if($hasOuterGutter, map-get($grid, outerGutter), 0);
+      padding-right: if($hasOuterGutter, map-get($grid, outerGutter), 0);
+    }
+  }
+}
+
+@mixin column($cols, $startCol: 0) {
+  grid-column-start: $startCol;
+  grid-column-end: span $cols;
+}
+
+@mixin gridGutter() {
+  $hasOuterGutter: true;
+
+  @each $name, $grid in $grids {
+    $breakpoint: if(map-has-key($grid, breakpoint), map-get($grid, breakpoint), false);
+
+    @include conditionalBreakpoint($breakpoint) {
+      padding-left: if($hasOuterGutter, map-get($grid, outerGutter), 0);
+      padding-right: if($hasOuterGutter, map-get($grid, outerGutter), 0);
+    }
+  }
+}
+
+@mixin resetGridGutter() {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@function get-column-width($cols, $base: 12) {
+  @return calc((100% / #{$base} * #{$cols}));
+}
+
+@function get-column-width-vw($cols, $base: 12) {
+  @return calc((100vw / #{$base} * #{$cols}) - #{map-get(map-get($grids, 'default'), gutter)});
+}
+
+@function get-gutter($grid: 'default') {
+  @return map-get(map-get($grids, $grid), gutter);
+}
+
+@mixin centerBlock() {
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -15,3 +15,5 @@ docs/build/styles/cf/ui/section-form.css
 docs/build/styles/cf/ui/section-info.css
 docs/build/styles/cf/ui/sticky-menu.css
 docs/build/styles/cf/ui/switch.css
+landingpage/src/.cache/*
+landingpage/src/dist/*

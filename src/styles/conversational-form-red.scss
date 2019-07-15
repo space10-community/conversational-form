@@ -1,0 +1,14 @@
+@import "./mixins/cf-mixins";
+
+$cf-color-primary: #ff3233;
+$cf-color-secondary: #e8e9eb;
+
+@import "./conversational-form";
+
+cf-chat-response.robot thumb {
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='" + encodecolor($cf-color-secondary) + "'/%3E%3Crect x='66' y='66' width='68' height='68' fill='" + encodecolor($cf-color-primary) + "'/%3E%3C/svg%3E%0A") !important;
+}
+
+cf-chat-response.user thumb {
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='" + encodecolor($cf-color-primary) + "'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='" + encodecolor($cf-color-secondary) + "'/%3E%3C/svg%3E%0A") !important;
+}

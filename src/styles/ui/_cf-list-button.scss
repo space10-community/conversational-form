@@ -32,14 +32,14 @@ cf-list-button {
 
 	@media (min-width: $cf-breakpoint-medium){
 		&:hover:nth-child(1) {
-			background: linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%);
+			background: linear-gradient(to left, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 75%);
 			&:after {
 				animation: cf-arrow-left $cf-anim-time $cf-ease-easeInOut;
 			}
 		}
 
 		&:hover:nth-child(2) {
-			background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 75%);
+			background: linear-gradient(to right, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 75%);
 			&:after {
 				animation: cf-arrow-right $cf-anim-time $cf-ease-easeInOut;
 			}
@@ -70,11 +70,11 @@ cf-list-button {
 		left: 0px;
 
 		&:before {
-			background: linear-gradient(to left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+			background: linear-gradient(to left, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 100%);
 		}
 
 		&:after {
-			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor($cf-color-primary) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29' %3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon transform='translate%2829.000000, 54.000000%29 rotate%28-180.000000%29 translate%28-29.000000, -54.000000%29 ' points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor(invert($cf-color-background)) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29' %3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon transform='translate%2829.000000, 54.000000%29 rotate%28-180.000000%29 translate%28-29.000000, -54.000000%29 ' points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
 		}
 	}
 	
@@ -82,11 +82,11 @@ cf-list-button {
 		right: 0px;
 
 		&:before {
-			background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+			background: linear-gradient(to right, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 100%);
 		}
 
 		&:after {
-			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor($cf-color-primary) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29'%3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e"); 
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor(invert($cf-color-background)) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29'%3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e"); 
 		}
 	}
 	

@@ -21,24 +21,22 @@
 
 		return new cf.ConversationalForm(options);
 	};
-	
-	$.fn.eventDispatcher = function () {
-		return new cf.EventDispatcher();
-	};
-
-	$.fn.cf = cf;
 }));
 
 // requirejs/amd plugin
 (function (root, factory) {
 	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
 	if(typeof define === "function" && define.amd) {
-		define(["conversational-form"], function(cf){
-			return (root.conversationalform = factory(cf));
+		define(["conversational-form"], function(conversationalform){
+			return (root.conversationalform = factory(conversationalform));
 		});
+	} else if(typeof module === "object" && module.exports) {
+		module.exports = (root.conversationalform = factory(require("conversational-form")));
 	} else {
-		root.conversationalform = factory(cf);
+		root.conversationalform = factory(cf.ConversationalForm);
 	}
-}(window, function(conversationalform) {
-	return cf;
-}));
+	}(window, function(conversationalform) {
+		// module code here....
+		return cf;
+	}
+));
