@@ -8,27 +8,30 @@
 
 
 cf-chat-response {
-	max-width: 80%;
+	max-width: 90%;
 	@media (min-width: $cf-breakpoint-medium) {
 		max-width: 70%;
 	}
 	min-width: 120px;
 	position: relative;
 	backface-visibility: hidden;
-	padding-left: $cf-avatar-area + 14px;
+	padding-left: $cf-avatar-area + 12px;
 	margin-top: 20px;
 	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
 	margin-right: auto;
 	word-break: break-all;
 	display:flex;
-	
 	flex-shrink:0;
 	flex-grow:1;
 	position: absolute;
 	visibility: hidden;
 	will-change:height;
 	transition:height $cf-anim-time * 0.45 $cf-ease-easeOut;
+
+	@media (max-width: $cf-breakpoint-medium) {
+		padding-left: ($cf-avatar-area / 1.4) + 12px;
+	}
 
 	&.show {
 		position: relative;
@@ -39,10 +42,10 @@ cf-chat-response {
 		cursor: pointer;
 
 		&:hover {
-			color: darken($cf-color-chat-response-default-text, 25%);
+			// color: darken($cf-color-chat-response-default-text, 75%);
 
 			text > p {
-				background: lighten($cf-color-chat-response-user-bg, 50%);
+				background: darken($cf-color-chat-response-user-bg, 8%);
 			}
 		}
 	}
@@ -54,6 +57,10 @@ cf-chat-response {
 		padding-left: 0;
 		padding-right: calc(#{$cf-avatar-area} + 14px);
 		color: lighten($cf-color-secondary, 90%);
+
+		@media (max-width: $cf-breakpoint-medium) {
+			padding-right: ($cf-avatar-area / 1.4) + 12px;
+		}
 
 		thumb {
 			left: auto;
@@ -134,11 +141,15 @@ cf-chat-response {
 		}
 
 		> p {
+			display: inline-block; // wrap container around text;
 			margin: 0px;
 			padding: 0px;
 			background: $cf-color-chat-response-default-bg;
-			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
-			display: inline-block; // wrap container around text;
+			padding: relativeValue(9px) relativeValue(14px) relativeValue(9px) relativeValue(14px);
+
+			@media (max-width: $cf-breakpoint-medium) {
+				padding: relativeValue(6px) relativeValue(11px) relativeValue(7px) relativeValue(11px);
+			}
 
 			.conversational-form--enable-animation & {
 				will-change: transform,opacity;
@@ -168,7 +179,7 @@ cf-chat-response {
 				}
 
 				&:not(:first-child) {
-					margin-top: relativeValue(3px);
+					margin-top: relativeValue(4px);
 				}
 			}
 			//--------------------
@@ -237,6 +248,11 @@ cf-chat-response {
 		transform-origin: 50% 50%;
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			width: $cf-avatar-area / 1.26;
+			height: $cf-avatar-area / 1.26;
+		}
 		
 		.conversational-form--enable-animation & {
 			transition: transform $cf-anim-time * 0.35 $cf-ease-easeOut, opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
