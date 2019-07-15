@@ -1,0 +1,29 @@
+{
+  "extends": "airbnb-base",
+  "parser": "babel-eslint",
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "no-console": 0,
+    "quotes": ["error", "single"],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "ignore"
+      }
+    ],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+  },
+  "globals": {
+    "fetch": false,
+    "browser": true,
+    "window": true,
+    "document": true,
+    "Image": true
+  }
+}

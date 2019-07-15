@@ -1,0 +1,85 @@
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  // height: 160px;
+  overflow:hidden;
+
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 62px;
+  line-height: 62px;
+  letter-spacing: -0.79px;
+  color: #666769;
+  margin-top: 14px;
+
+  @include respond-below('sm') {
+    font-size: 42px;
+  }
+
+  &__container {
+    overflow: hidden;
+    height: 72px;
+
+    &__text {
+      // display: inline;
+      // float: left;
+      margin: 0;
+    }
+
+    &__list {
+      margin-top: 0;
+      text-align: center;
+      list-style: none;
+
+      animation-name: change;
+      animation-duration: 16s;
+      animation-delay: 2.6s;
+
+      &__item {
+        margin:0;
+
+        // animation-name: opacity;
+        // animation-duration: 8s;
+        // animation-delay: 2.6s;
+      }
+    }
+  }
+}
+
+@keyframes opacity {
+  0%, 12.66%, 100% { opacity: 1; }
+  16.66%, 18.32% { opacity: 0.5; }
+  18.32%, 29.32% { opacity: 1; }
+  33.32%, 45.98% { opacity: 1; }
+  49.98%, 62.64% { opacity: 1; }
+  66.64%, 79.3% { opacity: 1; }
+  83.3%, 95.96% { opacity: 1; }
+}
+
+@keyframes change {
+  0%, 12.66%, 100% { transform:translate3d(0,0,0); }
+  16.66%, 29.32% { transform:translate3d(0,-25%,0); }
+  33.32%, 45.98% { transform:translate3d(0,-50%,0); }
+  49.98%, 62.64% { transform:translate3d(0,-75%,0); }
+  66.64%, 79.3% { transform:translate3d(0,-50%,0); }
+  83.3%, 95.96% { transform:translate3d(0,-25%,0); }
+}
+
+// 6 is the number of animation.
+// Here, there are 4 lines :
+
+// 1 to 2
+// 2 to 3
+// 3 to 4
+// 4 to 3
+// 3 to 2
+// 2 to 1
+
+// 6x + 6y = 100 (100% duration)
+
+// HERE :
+// y = 4 -> Animation between two lines
+// x = 12.66 -> Time spent on a line
+
+// You can define a value and calculate the other if you want change speed or the number of lines
