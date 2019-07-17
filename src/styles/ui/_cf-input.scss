@@ -15,6 +15,10 @@ cf-input {
 		margin-bottom: 14px;
 	}
 
+	.inputWrapper {
+		position: relative;
+	}
+
 	&.animate-in {
 		input, textarea {
 			transition-delay: 0s, 0s, 0s, $introDelay, $introDelay;
@@ -254,8 +258,8 @@ cf-input {
 
 cf-input-button.cf-input-button {
 	width: $cf-input-field-height;
-	// height: $cf-input-field-height;
-	height: calc(100% - 10px);
+	height: 100%;
+	// height: calc(100% - 10px);
 	background: $cf-color-primary;
 	position: absolute;
 	overflow: hidden;
