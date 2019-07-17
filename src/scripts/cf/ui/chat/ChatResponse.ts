@@ -305,7 +305,16 @@ namespace cf {
 					// user response, act normal
 					this.tryClearThinking();
 
-					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+					const hasImage = innerResponse.indexOf('<img') > -1;
+					const imageRegex = new RegExp('<img[^>]*?>', 'g');
+					const imageTag = innerResponse.match(imageRegex);
+					if (hasImage && imageTag) {
+						innerResponse = innerResponse.replace(imageTag[0], '');
+						this.textEl.innerHTML = `<p class="hasImage">${imageTag}<span>${innerResponse}</span></p>`;
+					} else {
+						this.textEl.innerHTML = `<p>${innerResponse}</p>`;
+					}
+
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");

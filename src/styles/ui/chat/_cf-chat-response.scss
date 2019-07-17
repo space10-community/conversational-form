@@ -163,6 +163,24 @@ cf-chat-response {
 				}
 			}
 
+			// User response containing an image
+			&.hasImage {
+				padding: 0;
+				overflow: hidden;
+				background: none; // To avoid background color being vaguely visible behind image
+				
+				img {
+					margin: 0;
+					padding: 0;
+				}
+
+				> span {
+					display: block;
+					padding: 5px 6px 6px 18px;
+					background: $cf-color-chat-response-user-bg;
+				}
+			}
+
 			// border radius rules
 			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
 			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
