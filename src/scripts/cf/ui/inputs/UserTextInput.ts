@@ -109,7 +109,7 @@ namespace cf {
 				eventTarget: this.eventTarget
 			});
 
-			this.el.appendChild(this.submitButton.el);
+			this.el.querySelector('div').appendChild(this.submitButton.el);
 
 			// setup microphone support, audio
 			if(options.microphoneInputObj){
@@ -716,8 +716,9 @@ namespace cf {
 					<cf-list>
 					</cf-list>
 				</cf-input-control-elements>
-
-				<textarea type='input' tabindex="1" rows="1"></textarea>
+				<div class="inputWrapper">
+					<textarea type='input' tabindex="1" rows="1"></textarea>
+				</div>
 			</cf-input>
 			`;
 		}
