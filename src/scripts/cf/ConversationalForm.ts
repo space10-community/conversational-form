@@ -182,9 +182,9 @@ namespace cf {
 			
 			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
 			
-			/* if(this.isDevelopment || options.loadExternalStyleSheet == false){
+			if(this.isDevelopment || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
-			} */
+			}
 
 			if(typeof options.theme === 'string')
 				this.theme = options.theme;
