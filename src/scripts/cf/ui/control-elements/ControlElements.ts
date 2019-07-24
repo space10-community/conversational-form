@@ -387,6 +387,12 @@ namespace cf {
 						}
 
 						document.querySelector('.scrollableInner').classList.remove('scroll');
+
+						// Check if chatlist is scrolled to the bottom - if not we need to do it manually (pertains to Chrome)
+						const scrollContainer:HTMLElement = document.querySelector('scrollable');
+						if (scrollContainer.scrollTop < scrollContainer.scrollHeight) {
+							scrollContainer.scrollTop = scrollContainer.scrollHeight;
+						}
 					}, 300);
 				}, 200); 
 			}
