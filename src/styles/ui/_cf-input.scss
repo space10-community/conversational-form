@@ -10,6 +10,7 @@ cf-input {
 	margin-bottom: 20px;
 	margin-top: 0px;
 	flex: 0 0 auto;
+	background: $cf-color-background;
 
 	@media (max-width: $cf-breakpoint-medium) {
 		margin-bottom: 14px;

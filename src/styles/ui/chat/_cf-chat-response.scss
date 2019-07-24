@@ -16,7 +16,7 @@ cf-chat-response {
 	position: relative;
 	backface-visibility: hidden;
 	padding-left: $cf-avatar-area + 12px;
-	margin-top: 20px;
+	margin-top: 8px;
 	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
 	margin-right: auto;
@@ -28,6 +28,7 @@ cf-chat-response {
 	visibility: hidden;
 	will-change:height;
 	transition:height $cf-anim-time * 0.45 $cf-ease-easeOut;
+	padding-bottom: 12px;
 
 	@media (max-width: $cf-breakpoint-medium) {
 		padding-left: ($cf-avatar-area / 1.4) + 12px;
