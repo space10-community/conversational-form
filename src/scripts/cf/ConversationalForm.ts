@@ -255,9 +255,6 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			// Set path for development
-			if (this.isDevelopment) this.cdnPath = '../dist/';
-
 			switch(this.theme) {
 				case 'dark':
 					this.theme = 'conversational-form-dark.min.css';
@@ -276,6 +273,14 @@ namespace cf {
 					break;
 				default:
 					this.theme = 'conversational-form.min.css';
+			}
+
+			if (this.isDevelopment) {
+				// Set path for development
+				this.cdnPath = '../build/';
+
+				// strip .min from filename since we do not have minified css in build
+				this.theme = this.theme.replace('.min', '');
 			}
 
 			if(this.loadExternalStyleSheet){
