@@ -10,8 +10,8 @@ cf-input-control-elements {
 	user-select: none;
 	visibility: hidden;
 	height: auto;
-
-	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 
 	.cf-button {
 		margin-bottom: 10px;
@@ -39,6 +39,18 @@ cf-input-control-elements {
 		cf-list {
 			white-space: normal;
 			height: auto;
+		}
+	}
+
+	&.animate-in {
+		cf-list:last-of-type {
+			min-height: 56px;
+		}
+	}
+	
+	&.two-row.animate-in {
+		cf-list:last-of-type {
+			min-height: 112px;
 		}
 	}
 }
