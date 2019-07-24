@@ -1,7 +1,7 @@
 @import "../../_cf-variables";
 
 .cf-button.cf-checkbox-button {
-	&:hover, &.highlight, &:focus {
+	&:hover, &:focus {
 		cf-checkbox {
 			background: $cf-color-primary;
 			
