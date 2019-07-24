@@ -1044,6 +1044,11 @@ var cf;
                             }
                         }
                         document.querySelector('.scrollableInner').classList.remove('scroll');
+                        // Check if chatlist is scrolled to the bottom - if not we need to do it manually (pertains to Chrome)
+                        var scrollContainer = document.querySelector('scrollable');
+                        if (scrollContainer.scrollTop < scrollContainer.scrollHeight) {
+                            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+                        }
                     }, 300);
                 }, 200);
             }
@@ -1622,12 +1627,12 @@ var cf;
                 "user-audio-reponse-invalid": "I didn't get that, try again.",
                 "microphone-terminal-error": "Audio input not supported",
                 "input-placeholder": "Type your answer here ...",
-                "group-placeholder": "Type to filter list ...",
+                "group-placeholder": "Type to filter ...",
                 "input-placeholder-error": "Your input is not correct ...",
                 "input-placeholder-required": "Input is required ...",
                 "input-placeholder-file-error": "File upload failed ...",
                 "input-placeholder-file-size-error": "File size too big ...",
-                "input-no-filter": "No results found for <strong>{input-value}</strong>",
+                "input-no-filter": "No results found for ‛{input-value}‛",
                 "user-reponse-and": " and ",
                 "user-reponse-missing": "Missing input ...",
                 "user-reponse-missing-group": "Nothing selected ...",
@@ -4176,7 +4181,7 @@ var cf;
             _this.submitButton = new cf.UserInputSubmitButton({
                 eventTarget: _this.eventTarget
             });
-            _this.el.appendChild(_this.submitButton.el);
+            _this.el.querySelector('div').appendChild(_this.submitButton.el);
             // setup microphone support, audio
             if (options.microphoneInputObj) {
                 _this.microphoneObj = options.microphoneInputObj;
@@ -4707,7 +4712,7 @@ var cf;
         };
         // override
         UserTextInput.prototype.getTemplate = function () {
-            return this.customTemplate || "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\n\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\t\t\t</cf-input>\n\t\t\t";
+            return this.customTemplate || "<cf-input>\n\t\t\t\t<cf-info></cf-info>\n\t\t\t\t<cf-input-control-elements>\n\t\t\t\t\t<cf-list-button direction=\"prev\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list-button direction=\"next\">\n\t\t\t\t\t</cf-list-button>\n\t\t\t\t\t<cf-list>\n\t\t\t\t\t</cf-list>\n\t\t\t\t</cf-input-control-elements>\n\t\t\t\t<div class=\"inputWrapper\">\n\t\t\t\t\t<textarea type='input' tabindex=\"1\" rows=\"1\"></textarea>\n\t\t\t\t</div>\n\t\t\t</cf-input>\n\t\t\t";
         };
         return UserTextInput;
     }(cf.UserInputElement));
@@ -4998,7 +5003,16 @@ var cf;
             else {
                 // user response, act normal
                 this.tryClearThinking();
-                this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+                var hasImage = innerResponse.indexOf('<img') > -1;
+                var imageRegex = new RegExp('<img[^>]*?>', 'g');
+                var imageTag = innerResponse.match(imageRegex);
+                if (hasImage && imageTag) {
+                    innerResponse = innerResponse.replace(imageTag[0], '');
+                    this.textEl.innerHTML = "<p class=\"hasImage\">" + imageTag + "<span>" + innerResponse + "</span></p>";
+                }
+                else {
+                    this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+                }
                 var p = this.textEl.getElementsByTagName("p");
                 p[p.length - 1].offsetWidth;
                 p[p.length - 1].classList.add("show");
@@ -5307,6 +5321,12 @@ var cf;
                 // this.currentUserResponse.setToThinking??
                 this.currentResponse = this.responses[this.responses.length - 1];
                 this.onListUpdate(this.currentUserResponse);
+                // When editing an answer we scroll the prev response in view
+                setTimeout(function () {
+                    if (typeof responseUserWantsToEdit.el.scrollIntoView !== 'function')
+                        return;
+                    responseUserWantsToEdit.el.scrollIntoView({ behavior: "smooth", block: "end" });
+                }, 800);
             }
         };
         ChatList.prototype.onListUpdate = function (chatResponse) {
@@ -5718,6 +5738,7 @@ var cf;
             this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
+            this.theme = 'light';
             this.preventAutoAppend = false;
             this.preventAutoStart = false;
             window.ConversationalForm = this;
@@ -5745,6 +5766,8 @@ var cf;
             if (this.isDevelopment || options.loadExternalStyleSheet == false) {
                 this.loadExternalStyleSheet = false;
             }
+            if (typeof options.theme === 'string')
+                this.theme = options.theme;
             if (!isNaN(options.scrollAcceleration))
                 cf_1.ScrollController.acceleration = options.scrollAcceleration;
             this.preventAutoStart = options.preventAutoStart;
@@ -5814,11 +5837,36 @@ var cf;
             configurable: true
         });
         ConversationalForm.prototype.init = function () {
+            switch (this.theme) {
+                case 'dark':
+                    this.theme = 'conversational-form-dark.min.css';
+                    break;
+                case 'green':
+                    this.theme = 'conversational-form-green.min.css';
+                    break;
+                case 'blue':
+                    this.theme = 'conversational-form-irisblue.min.css';
+                    break;
+                case 'purple':
+                    this.theme = 'conversational-form-purple.min.css';
+                    break;
+                case 'red':
+                    this.theme = 'conversational-form-red.min.css';
+                    break;
+                default:
+                    this.theme = 'conversational-form.min.css';
+            }
+            if (this.isDevelopment) {
+                // Set path for development
+                this.cdnPath = '../build/';
+                // strip .min from filename since we do not have minified css in build
+                this.theme = this.theme.replace('.min', '');
+            }
             if (this.loadExternalStyleSheet) {
                 // not in development/examples, so inject production css
                 var head = document.head || document.getElementsByTagName("head")[0];
                 var style = document.createElement("link");
-                var githubMasterUrl = this.cdnPath + "conversational-form.min.css";
+                var githubMasterUrl = this.cdnPath + this.theme;
                 style.type = "text/css";
                 style.media = "all";
                 style.setAttribute("rel", "stylesheet");
@@ -6259,24 +6307,22 @@ else {
 
 		return new cf.ConversationalForm(options);
 	};
-	
-	$.fn.eventDispatcher = function () {
-		return new cf.EventDispatcher();
-	};
-
-	$.fn.cf = cf;
 }));
 
 // requirejs/amd plugin
 (function (root, factory) {
 	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
 	if(typeof define === "function" && define.amd) {
-		define(["conversational-form"], function(cf){
-			return (root.conversationalform = factory(cf));
+		define(["conversational-form"], function(conversationalform){
+			return (root.conversationalform = factory(conversationalform));
 		});
+	} else if(typeof module === "object" && module.exports) {
+		module.exports = (root.conversationalform = factory(require("conversational-form")));
 	} else {
-		root.conversationalform = factory(cf);
+		root.conversationalform = factory(cf.ConversationalForm);
 	}
-}(window, function(conversationalform) {
-	return cf;
-}));
+	}(window, function(conversationalform) {
+		// module code here....
+		return cf;
+	}
+));

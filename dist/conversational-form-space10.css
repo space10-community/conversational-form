@@ -2,6 +2,9 @@
 /**
  * Source: https://gist.github.com/certainlyakey/e9c0d8f5c87ff47e3d5b
  */
+/**
+ * Source: https://gist.github.com/certainlyakey/e9c0d8f5c87ff47e3d5b
+ */
 /*
     Globals
 */
@@ -1205,3 +1208,22 @@ cf-upload-file-progress {
       transition: width 0.15s linear, border-radius 0.375s cubic-bezier(0.215, 0.61, 0.355, 1); }
     cf-upload-file-progress cf-upload-file-progress-bar.loaded {
       border-radius: 7px 7px 7px 7px; }
+
+cf-input-button.cf-input-button {
+  border: none;
+  border-radius: 0;
+  background: #303030;
+  height: 60px;
+  width: 60px;
+  bottom: 0;
+  right: 0; }
+
+cf-input-button.cf-input-button:hover, cf-input-button.cf-input-button:focus {
+  border: 0; }
+
+cf-input[tag-type="file"] cf-input-button.cf-input-button:after, cf-input cf-input-button.cf-input-button.loading:after {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  left: calc(50% - (60px / 4));
+  top: calc(50% - (60px / 4)); }
