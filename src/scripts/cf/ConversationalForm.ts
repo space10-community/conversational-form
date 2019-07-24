@@ -46,6 +46,9 @@ namespace cf {
 
 		// can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.
 		loadExternalStyleSheet?: boolean;
+		
+		// Theme
+		theme?: String;
 
 		// prevent auto appending of Conversational Form, append it yourself.
 		preventAutoAppend?: boolean;
@@ -140,6 +143,7 @@ namespace cf {
 		private flowManager: FlowManager;
 		private isDevelopment: boolean = false;
 		private loadExternalStyleSheet: boolean = true;
+		private theme: String = 'light';
 		private preventAutoAppend: boolean = false;
 		private preventAutoStart: boolean = false;
 		
@@ -178,9 +182,12 @@ namespace cf {
 			
 			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
 			
-			if(this.isDevelopment || options.loadExternalStyleSheet == false){
+			/* if(this.isDevelopment || options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
-			}
+			} */
+
+			if(typeof options.theme === 'string')
+				this.theme = options.theme;
 
 			if(!isNaN(options.scrollAcceleration))
 				ScrollController.acceleration = options.scrollAcceleration;
@@ -248,12 +255,34 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			
+			// Set path for development
+			if (this.isDevelopment) this.cdnPath = '../dist/';
+
+			switch(this.theme) {
+				case 'dark':
+					this.theme = 'conversational-form-dark.min.css';
+					break;
+				case 'green':
+					this.theme = 'conversational-form-green.min.css';
+					break;
+				case 'blue':
+					this.theme = 'conversational-form-irisblue.min.css';
+					break;
+				case 'purple':
+					this.theme = 'conversational-form-purple.min.css';
+					break;
+				case 'red':
+					this.theme = 'conversational-form-red.min.css';
+					break;
+				default:
+					this.theme = 'conversational-form.min.css';
+			}
+
 			if(this.loadExternalStyleSheet){
 				// not in development/examples, so inject production css
 				const head: HTMLHeadElement = document.head || document.getElementsByTagName("head")[0];
 				const style: HTMLStyleElement = document.createElement("link");
-				const githubMasterUrl: string = this.cdnPath + "conversational-form.min.css";
+				const githubMasterUrl: string = this.cdnPath + this.theme;
 				style.type = "text/css";
 				style.media = "all";
 				style.setAttribute("rel", "stylesheet");
