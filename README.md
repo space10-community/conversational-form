@@ -14,7 +14,7 @@ Conversational Form is an open-source concept by [SPACE10](https://www.space10.i
 
 ## Quick Start
 
-Include ConversationalForm in your page:
+Include Conversational Form in your page:
 
 ```html
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@1.0.0/dist/conversational-form.min.js" crossorigin></script>
@@ -24,7 +24,7 @@ Or download the latest release:
 - Install with npm: ````npm install conversational-form````
 - Install with yarn: ````yarn add conversational-form````
 
-ConversationalForm will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
+Conversational Form will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form>
 ...
