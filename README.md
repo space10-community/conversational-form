@@ -9,7 +9,7 @@ Conversational Form is an open-source concept by [SPACE10](https://www.space10.i
 	<a href="https://space10-community.github.io/conversational-form/docs/1.0.0/"><strong>Explore Conversational Form docs »</strong></a>
 </p>
 <p align="center">
-	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif" />
+	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/development/docs/1.0.0/assets/cf-demo.gif" />
 </p>
 
 ## Quick Start
