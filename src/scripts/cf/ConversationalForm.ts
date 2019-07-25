@@ -182,7 +182,7 @@ namespace cf {
 			
 			this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById("conversational-form-development");
 			
-			if(this.isDevelopment || options.loadExternalStyleSheet == false){
+			if(options.loadExternalStyleSheet == false){
 				this.loadExternalStyleSheet = false;
 			}
 
@@ -293,9 +293,6 @@ namespace cf {
 				style.setAttribute("rel", "stylesheet");
 				style.setAttribute("href", githubMasterUrl);
 				head.appendChild(style);
-			}else{
-				// expect styles to be in the document
-				this.isDevelopment = true;
 			}
 
 			// set context position to relative, else we break out of the box
