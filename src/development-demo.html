@@ -199,7 +199,8 @@
 			height: 620px; 
 			width: 480px; 
             margin: auto;
-            
+			border: 1px solid #999;
+			box-sizing: border-box;
 		}
 	</style>
 </head>
@@ -209,8 +210,8 @@
 	
 	<form id="cf-form" style="visibility: hidden;">
 
-		<input type="text" cf-questions="Hi there&&What is your name?" name="name" cf-placeholder="Your name">
-		<input type="text" cf-questions="Awesome, {name}. Would you mind telling me where you live?" name="country" cf-placeholder="Country of residence">
+		<input type="text" cf-questions="Hi there&&What is your name?" name="name" cf-placeholder="Your name" value="Filippa">
+		<input type="text" cf-questions="Awesome, {name}. Would you mind telling me where you live?" name="country" value="United States" cf-placeholder="Country of residence">
         <fieldset>
 			<label for="tmnj">Thank you. Are you ready to learn more about Conversational Form?</label>
 			<select cf-questions="Thank you. Are you ready to learn more about Conversational Form?" name="tmnj" class="form-control">
@@ -237,7 +238,7 @@
 					"Check the dev console for FormatData output."
 					);
 				},
-				theme: 'dark'
+				theme: 'green'
 			});
 		};
 	</script>
