@@ -207,12 +207,6 @@ namespace cf {
 				this.currentResponse = this.responses[this.responses.length - 1];
 
 				this.onListUpdate(this.currentUserResponse);
-
-				// When editing an answer we scroll the prev response in view
-				setTimeout(() => {
-					if (typeof responseUserWantsToEdit.el.scrollIntoView !== 'function') return;
-					responseUserWantsToEdit.el.scrollIntoView({behavior: "smooth", block: "end"});
-				}, 800);
 			}
 		}
 
