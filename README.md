@@ -31,8 +31,6 @@ Conversational Form will automatically look through the DOM for a form element w
 </form>
 ```
 
-[jsbin](https://jsbin.com/vopuxukaze/edit?html,js,output)
-
 Read the [Getting started](https://space10-community.github.io/conversational-form/docs/1.0.0/getting-started/) page for information on the framework contents, options, templates, examples and more.
 
 ## Status
