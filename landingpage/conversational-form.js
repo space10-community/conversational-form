@@ -4761,7 +4761,7 @@ var cf;
         });
         Object.defineProperty(ChatResponse.prototype, "added", {
             get: function () {
-                return !!this.el.parentNode.parentNode;
+                return !!this.el || !!this.el.parentNode || !!this.el.parentNode.parentNode;
             },
             enumerable: true,
             configurable: true
