@@ -19,10 +19,20 @@ Include Conversational Form in your page:
 ```html
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@1.0.0/dist/conversational-form.min.js" crossorigin></script>
 ```
-Or download the latest release:
+Or download/install the latest release:
 - Clone the repo: ````git clone https://github.com/space10-community/conversational-form.git````
 - Install with npm: ````npm install conversational-form````
 - Install with yarn: ````yarn add conversational-form````
+
+Manually instantiating Conversational Form
+```
+import { ConversationalForm } from 'conversational-form';
+
+const cfInstance = new ConversationalForm({
+    formEl: formElement,
+    context: targetElement,
+});
+```
 
 Conversational Form will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
 ```html
