@@ -137,48 +137,22 @@
     	<ul>
 			<li>Use one of our pre-built themes</li>
     		<li>Compile (SCSS) to build your own theme</li>
-    		<li>Overriding styles</li>
+    		<li>Overriding CSS</li>
     	</ul>
 	</p>
 	
     <h2 id="prebuilt">Pre-built themes</h2>
-	<p>All pre-built themes and scss sources can be found here: <a href="https://github.com/space10-community/cf-themes">github.com/space10-community/cf-themes</a></p>
-	<p>To load an alternative CSS file you must disable the default theme using the loadExternalStyleSheet-option, by setting it to false. How you load the theme CSS is up to you: style tag, webpack...</p>
 	<div class="row">
-		<div class="col-xs-12 col-md-4">
-				<ul>
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/default-theme.html" target="_blank">Default theme</a>
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/space10-theme.html" target="_blank">SPACE10, used on the CF landingpage</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-space10.min.css" target="_blank">cf-space10.min.css</a>)
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/cf-red.html" target="_blank">Red</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-red.min.css" target="_blank">cf-red.min.css</a>)
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/cf-greeen.html" target="_blank">Green</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-green.min.css" target="_blank">cf-green.min.css</a>)
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/cf-irisblue.html" target="_blank">Blue</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-blue.min.css" target="_blank">cf-blue.min.css</a>)
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/cf-purple.html" target="_blank">Purple</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-purple.min.css" target="_blank">cf-purple.min.css</a>)
-					</li>	
-					<li>
-						<a href="https://space10-community.github.io/cf-themes/ikea-theme.html" target="_blank">Blue, IKEA inspired theme</a>
-						(<a href="https://cdn.jsdelivr.net/gh/space10-community/cf-themes@.0.0.1/build/cf-ikea.min.css" target="_blank">cf-irisblue.min.css</a>)
-					</li>	
-				</ul>
-		</div>
 		<div class="col-xs-12 col-md-8">
+			<p>We have bundled six themes with v1.0.0: light (default), dark, red, green, blue, purple.</p>
+			<p>The theme can be set using the 'theme' option when instantiating CF - as shown in the StackBlitz-example below.</p>
+		</div>
+		<div class="col-xs-12 col-md-4">
 			<img src="../assets/cf-themes.gif" style="border: 1px solid #c1c1c1; max-width: 100%;" />
 		</div>
+	</div>
+	<div class="mt-4">
+		<iframe src="https://stackblitz.com/edit/react-conversational-form-example-themes?embed=1&file=myForm.js" width="100%" height="500" frameBorder="0"></iframe>
 	</div>
 
 	<h2 id="compile">Compile your own theme</h2>
