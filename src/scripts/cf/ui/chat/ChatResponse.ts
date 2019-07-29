@@ -46,7 +46,7 @@ namespace cf {
 		}
 
 		public get added() : boolean {
-			return !!this.el.parentNode.parentNode;
+			return !!this.el || !!this.el.parentNode || !!this.el.parentNode.parentNode;
 		}
 
 		public get disabled() : boolean {
