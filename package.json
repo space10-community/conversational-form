@@ -1,6 +1,6 @@
 {
   "name": "conversational-form",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Turning web forms into conversations",
   "main": "dist/conversational-form.js",
   "directories": {
