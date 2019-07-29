@@ -1,0 +1,46 @@
+{
+  "name": "converational-form-landingpage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html --out-dir ../ --public-url /conversational-form/landingpage/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "stage": "rm -f dist/*; parcel build index.html --public-url /v1/landingpage/; scp -r dist/* ssh root@176.58.127.120:/home/nginx/domains/cf.staging.space10.io/public/v1/landingpage"
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "outDirPattern": "**",
+        "staticPath": "./node_modules/conversational-form/dist"
+      },
+      {
+        "outDirPattern": "**",
+        "staticPath": "./static"
+      }
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.5.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "parcel-bundler": "^1.12.3",
+    "parcel-plugin-eslint": "^1.0.7",
+    "sass": "^1.21.0"
+  },
+  "dependencies": {
+    "conversational-form": "^0.9.90",
+    "eslint-plugin-import": "^2.17.3",
+    "gsap": "^2.1.3",
+    "loadcss": "0.0.2",
+    "parcel-plugin-static-files-copy": "^2.1.2",
+    "reset-css": "^4.0.1"
+  }
+}

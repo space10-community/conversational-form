@@ -481,6 +481,7 @@
 					// window.cf.cfInstance.startTheConversation(str);
 
 					// add callback hooks..
+					json.options.loadExternalStyleSheet = false;
 					json.options.submitCallback = onFormlessSubmitted.bind(window);
 					json.options.flowStepCallback = onStepCallback.bind(window);
 					

@@ -10,6 +10,8 @@ cf-input-control-elements {
 	user-select: none;
 	visibility: hidden;
 	height: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
 
 	.cf-button {
 		margin-bottom: 10px;
@@ -39,12 +41,24 @@ cf-input-control-elements {
 			height: auto;
 		}
 	}
+
+	&.animate-in {
+		cf-list:last-of-type {
+			min-height: 56px;
+		}
+	}
+	
+	&.two-row.animate-in {
+		cf-list:last-of-type {
+			min-height: 112px;
+		}
+	}
 }
 
 cf-list, cf-list-button {
 	will-change: height;
 	.conversational-form--enable-animation & {
-		transition: height $cf-anim-time * 0.5 $cf-ease-easeOut;
+		transition: height $cf-anim-time * .5 $cf-ease-easeOut;
 	}
 }
 
@@ -52,6 +66,10 @@ cf-list, cf-list-button {
 cf-input[tag-type="file"] {
 	cf-list {
 		cursor: default;
+	}
+	
+	cf-input-control-elements {
+		margin-bottom: 0;
 	}
 }
 

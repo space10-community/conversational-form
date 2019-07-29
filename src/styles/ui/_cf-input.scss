@@ -10,6 +10,15 @@ cf-input {
 	margin-bottom: 20px;
 	margin-top: 0px;
 	flex: 0 0 auto;
+	background: $cf-color-background;
+
+	@media (max-width: $cf-breakpoint-medium) {
+		margin-bottom: 14px;
+	}
+
+	.inputWrapper {
+		position: relative;
+	}
 
 	&.animate-in {
 		input, textarea {
@@ -23,16 +32,11 @@ cf-input {
 			transform: scale(1, 1);
 		}
 	}
-	
-	// Jens: Hmm, this is set right below?!
-	/*input {
-		padding: 5px 5px 5px 15px;
-	}*/
 
 	input, textarea {
 		resize: none;
 		overflow: hidden;
-		padding: calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc(#{$cf-input-field-height} - 6px) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
+		padding: calc((#{$cf-input-field-height} - 4px - #{$cf-input-font-size})/2) #{$cf-input-field-height} calc((#{$cf-input-field-height} - 4px - #{$cf-input-font-size})/2) calc((#{$cf-input-field-height} - 2px - #{$cf-input-font-size})/2);
 	}
 	
 	input, textarea {
@@ -53,7 +57,7 @@ cf-input {
 		user-select: auto !important;
 
 		&:focus, &:active {
-			box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+			box-shadow: 0px 0px 6px rgba(0,0,0,0.3);
 		}
 		
 		border-radius: $cf-input-field-border-radius;
@@ -67,13 +71,17 @@ cf-input {
 		font-family: $cf-font-family;
 		font-size: $cf-input-font-size;
 
+		// @media (max-width: $cf-breakpoint-medium) {
+		// 	font-size: $cf-input-font-size-mobile;
+		// }
+
 		width: 100%;
 		height: $cf-input-field-height;
 		min-height: $cf-input-field-height;
 		color: $cf-color-input-text;
 		will-change: box-shadow, background, color, transform, opacity;
 		background: white;
-		box-shadow: 0px 0px 1px rgba(0,0,0,0.15);
+		box-shadow: 0px 0px 1px rgba(0,0,0,0.35);
 		opacity: 0;
 		transform: translateY(40px) rotateX(-40deg);
 
@@ -108,8 +116,39 @@ cf-input {
 			color: currentColor;
 		}
 
-		&:not([rows='1']) {
-			height: auto !important;
+		transition: all $cf-anim-time/2.4 !important;
+		
+		&[no-animations] {
+			transition: none !important;
+		}
+
+		&[rows='1'] {
+			min-height: $cf-input-field-height !important;
+		}
+		
+		&:not([rows="1"]) {
+			transition-delay: $cf-anim-time * 1.2 !important;
+		}
+		
+
+		&[rows="2"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 1) !important;
+		}
+
+		&[rows="3"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 2) !important;
+		}
+
+		&[rows="4"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 3) !important;
+		}
+
+		&[rows="5"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 4) !important;
+		}
+
+		&[rows="6"] {
+			min-height: $cf-input-field-height + (($cf-input-font-size+2) * 5) !important;
 		}
 	}
 	
@@ -182,13 +221,17 @@ cf-input {
 		}
 	}
 	
-	&[tag-type="file"] cf-input-button.cf-input-button, cf-input-button.cf-input-button.loading {
+	&[tag-type="file"] cf-input-button.cf-input-button.loading {
 		&:after {
 			content: "";
 			display: block;
-			width: 100%;
-			height: 100%;
-		
+			position: relative;
+			left: calc(50% - (#{$cf-input-field-height} / 4));
+			top: calc(50% - (#{$cf-input-field-height} / 4));
+			
+			width: $cf-input-field-height / 2;
+			height: $cf-input-field-height / 2;
+			
 			border: 1px solid rgba(#b9bcbe, 50%);
 			border-radius: 50%;
 			border-left: 0;
@@ -215,21 +258,22 @@ cf-input {
 }
 
 cf-input-button.cf-input-button {
-	width: $cf-input-field-height - 16;
-	height: $cf-input-field-height - 16;
-	background: $cf-input-submit-background;
+	width: $cf-input-field-height;
+	height: 100%;
+	// height: calc(100% - 10px);
+	background: $cf-color-primary;
 	position: absolute;
 	overflow: hidden;
-	right: 8px;
-	bottom: 8px;
+	right: 0;
+	bottom: 0;
 	z-index: 3;
 	cursor: pointer;
-	border-radius: 50%;
+	border-radius: 0;
 	will-change: background, border;
 	transform-origin: 50% 50%;
 	transform: scale(0, 0);
 	backface-visibility: hidden;
-	border: 1px solid lighten($cf-color-chat-response-user-text, 95%);
+	border: none;
 
 	.conversational-form--enable-animation & {
 		transition: background $cf-anim-time * 0.5 $cf-ease-easeOut, border $cf-anim-time * 0.5 $cf-ease-easeOut, transform $cf-anim-time * 0.5 $cf-ease-easeOutBack 0s;
@@ -329,7 +373,7 @@ cf-input-button.cf-input-button {
 	
 	&:hover, &:focus {
 		background: $cf-color-chat-response-user-bg;
-		border: 1px solid lighten($cf-color-chat-response-user-text, 75%);
+		border: 0;
 		&:after {
 			opacity: 0;
 		}
@@ -344,6 +388,15 @@ cf-input-button.cf-input-button {
 /**
 * Show submit button for groups when input is hidden
 */
+
+cf-input[tag-type="file"],
+cf-input[tag-type="group"],
+cf-input[tag-type="select"] {
+	cf-input-button.cf-input-button {
+		height: $cf-input-field-height;
+	}
+}
+
 cf-input[tag-type="file"].hide-input,
 cf-input[tag-type="group"].hide-input,
 cf-input[tag-type="select"].hide-input {
@@ -358,6 +411,12 @@ cf-input[tag-type="select"].hide-input {
 		margin-bottom: $cf-input-field-height;
 	}
 }
+
+cf-input-control-elements {
+	// border: 1px solid yellow;
+	// margin-bottom: 10px;
+}
+
 cf-input[error=""].hide-input {
 	cf-input-button {
 		.cf-icon-progress {

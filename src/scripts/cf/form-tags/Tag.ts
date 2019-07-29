@@ -188,20 +188,15 @@ namespace cf {
 			if(options.questions)
 				this.questions = options.questions;
 
-			// custom tag validation
+			// custom tag validation - must be a method on window to avoid unsafe eval() calls
 			if(this.domElement.getAttribute("cf-validation")){
-				// set it through an attribute, danger land with eval
-				this.validationCallback = eval(this.domElement.getAttribute("cf-validation"));
+				const fn = (window as any)[this.domElement.getAttribute("cf-validation")];
+				this.validationCallback = fn;
 			}
 
 			// reg ex pattern is set on the Tag, so use it in our validation
 			if(this.domElement.getAttribute("pattern"))
 				this.pattern = new RegExp(this.domElement.getAttribute("pattern"));
-			
-			// if(this.type == "email" && !this.pattern){
-			// 	// set a standard e-mail pattern for email type input
-			// 	this.pattern = new RegExp("^[^@]+@[^@]+\.[^@]+$");
-			// }
 
 			if(this.type != "group" && ConversationalForm.illustrateAppFlow){
 				if(!ConversationalForm.suppressLog) console.log('Conversational Form > Tag registered:', this.type, this);
@@ -404,6 +399,24 @@ namespace cf {
 			let isValid: boolean = true;
 			let valueText: string = dto.text;
 
+			if (
+				this.domElement.hasAttribute('type')
+				&& this.domElement.getAttribute('type') === 'email'
+				&& !this.pattern
+				&& valueText.length > 0
+			) {
+				this.pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			} else if (
+				// When NOT required: Reset in the event user already typed something, and now they clear their input and want to submit nothing ==> remove pattern previously applied
+				this.domElement.hasAttribute('type')
+				&& this.domElement.getAttribute('type') === 'email'
+				&& this.pattern
+				&& valueText.length === 0
+				&& !this.required
+			) {
+				this.pattern = null;
+			}
+
 			if(this.pattern){
 				isValid = this.pattern.test(valueText);
 			}
@@ -426,15 +439,36 @@ namespace cf {
 				isValid = false;
 			}
 
+			const isMaxMinValueValid = this.validateMaxMinValue(valueText);
+			if (!isMaxMinValueValid) isValid = false;
+
 			if(isValid){
 				// we cannot set the dom element value when type is file
 				if(this.type != "file")
 					this.domElement.value = valueText;
-			}else{
-				// throw new Error("cf-: value:string is not valid. Value: "+value);
 			}
 
 			return isValid;
+		}
+
+		/**
+		 * Validates value against tag max and min attributes
+		 *
+		 * @private
+		 * @param {string} value
+		 * @returns {boolean}
+		 * @memberof Tag
+		 */
+		private validateMaxMinValue(value:string):boolean {
+			if (!value) return true;
+
+			const parsedValue:Number = parseInt(value, 10);
+			const minValue: number = parseInt(this.domElement.getAttribute("min"), 10) || -1;
+			const maxValue: number = parseInt(this.domElement.getAttribute("max"), 10) || -1;
+			if (minValue !== -1 && parsedValue < minValue) return false;
+			if (maxValue !== -1 && parsedValue > maxValue) return false;
+
+			return true;
 		}
 
 		protected getLabel(): string{

@@ -4,9 +4,9 @@ cf-upload-file-ui {
 	display: block;
 	width: 100%;
 	height: $cf-input-field-height;
-	position: absolute;
+	position: relative;
 	top: 0px;
-	padding-right: 30px;
+	// padding-right: 30px;
 	color: $cf-color-chat-response-user-text;
 
 	opacity: 0;
@@ -32,12 +32,12 @@ cf-upload-file-text {
 	width: auto;
 	height: 100%;
 	// max-width 40%
-	padding-left: 40px;
-	padding-right: 30px;
+	// padding-left: 40px;
+	padding-right: 20px;
 	padding-top: 17px;
 	position: relative;
 	color: currentColor;
-	max-width: 50%;
+	width: 50%;
 	text-overflow: ellipsis;
 	overflow: hidden;
 
@@ -49,7 +49,7 @@ cf-upload-file-text {
 		left: 23px;
 		width: 10px;
 		height: 14px;
-		background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate%28-756.000000, -549.000000%29' fill='" + encodecolor($cf-color-primary) + "'%3e%3cg transform='translate%28736.000000, 127.000000%29'%3e%3cg transform='translate%280.000000, 406.000000%29'%3e%3cpolygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+		background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate(-756.000000, -549.000000)' fill='" + $cf-color-secondary + "'%3e%3cg transform='translate(736.000000, 127.000000)'%3e%3cg transform='translate(0.000000, 406.000000)'%3e%3cpolygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
 		background-repeat: no-repeat;
 		background-size: 10px 14px;
 	}
@@ -60,7 +60,8 @@ cf-upload-file-progress {
 	height: 100%;
 	overflow: hidden;
 	position: relative;
-	padding-right: 30px;
+	float: right;
+	width: 50%;
 
 	&:after {
 		content: "";
@@ -82,7 +83,7 @@ cf-upload-file-progress {
 		will-change: width, border-radius;
 		background: currentColor;
 		z-index: 2;
-		border-radius: 7px 0px 0px 7px;
+		border-radius: 7px;
 		.conversational-form--enable-animation & {
 			transition: width $cf-anim-time * 0.2 linear, border-radius $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}

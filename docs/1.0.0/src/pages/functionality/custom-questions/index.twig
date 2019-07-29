@@ -1,0 +1,38 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Custom questions' %}
+{% set page_slug = '/functionality/custom-questions/' %}
+
+
+{% block page %}
+    <h1 id="dynamic-questions">{{page_title}}</h1>
+
+    <pre><code class="language-javascript">&lt;input type="text" cf-questions="Type your name here..." /></code></pre>
+    <p>Use two pipe characters as seperator if you want to randomize the questions as used in the example below.</p>
+    <pre><code class="language-javascript">&lt;form id="form" cf-form>
+    &lt;input type="text" cf-questions="This text is from the attribute cf-questions (1/2)||This text is from the attribute cf-questions (2/2)" />
+&lt;/form></code></pre>
+
+    <h3 id="questions-example">Example - randomly selecting between two questions</h3>
+    <p data-height="265" data-theme-id="light" data-slug-hash="vpGPge" data-default-tab="html,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Randomly selecting between two questions" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/vpGPge/">Conversational Forms - Randomly selecting between two questions</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+    <h2 id="one-way-binding">{One way value-binding} with cf-questions</h2>
+    <p>For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.</p>
+    <p>Using the {previous-answer} mapping:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your firstname?" />
+&lt;input type="text" cf-questions="Hello {previous-answer}, what is your lastname?"></pre></code>
+
+    <p>Using the ID attribute, this will loop through all submitted tags and map:</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your first name?" id="firstname" />
+&lt;input type="text" cf-questions="What is your last name?" id="lastname" />
+&lt;input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?" /></pre></code>
+
+    <p>previous input could be a select:option list with countries.</p>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="So you want to travel to {previous-answer}" /></pre></code>
+
+    <h3 id="one-way-binding-example">Example - {One way value-binding}</h3>
+    <p data-height="345" data-theme-id="light" data-slug-hash="eyZXBO" data-default-tab="html,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - One way value-binding" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/eyZXBO/">Conversational Forms - One way value-binding</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+	
+{% endblock %}

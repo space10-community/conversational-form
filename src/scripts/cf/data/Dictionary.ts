@@ -20,25 +20,35 @@ namespace cf {
 		robotData?: Object;
 		userImage: string;
 		robotImage: string;
+		version: string;
 	}
 	// class
 	export class Dictionary{
 		private static instance: Dictionary;
+		private version: string;
 
 		constructor(options?: IDictionaryOptions){
 			Dictionary.instance = this;
+
+			this.version = options.version;
 
 			// overwrite data if defined 
 			if(options && options.data)
 				this.data = this.validateAndSetNewData(options.data, this.data);
 
 			// overwrite user image
-			if(options.userImage)
+			if (options.userImage) {
 				this.data["user-image"] = options.userImage;
+			} else {
+				this.data['user-image'] = this.data['user-image'];
+			}
 			
 			// overwrite robot image
-			if(options.robotImage)
+			if (options.robotImage) {
 				this.robotData["robot-image"] = options.robotImage;
+			} else {
+				this.robotData['robot-image'] = this.robotData['robot-image'];
+			}
 			
 			// overwrite robot questions if defined
 			if(options && options.robotData)
@@ -126,18 +136,18 @@ namespace cf {
 
 		// can be overwrittenMicrophone error
 		protected data: any = {
-			"user-image": "https://cf-4053.kxcdn.com/conversational-form/human.png",
+			"user-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjMzAzMDMwIi8+CjxwYXRoIGQ9Ik0xMDAgNTVMMTM4Ljk3MSAxMjIuNUg2MS4wMjg5TDEwMCA1NVoiIGZpbGw9IiNFNUU2RUEiLz4KPC9zdmc+Cg==',
 			"entry-not-found": "Dictionary item not found.",
 			"awaiting-mic-permission": "Awaiting mic permission",
 			"user-audio-reponse-invalid": "I didn't get that, try again.",
 			"microphone-terminal-error": "Audio input not supported",
 			"input-placeholder": "Type your answer here ...",
-			"group-placeholder": "Type to filter list ...",
+			"group-placeholder": "Type to filter ...",
 			"input-placeholder-error": "Your input is not correct ...",
 			"input-placeholder-required": "Input is required ...",
 			"input-placeholder-file-error": "File upload failed ...",
 			"input-placeholder-file-size-error": "File size too big ...",
-			"input-no-filter": "No results found for <strong>{input-value}</strong>",
+			"input-no-filter": "No results found for ‛{input-value}‛",
 			"user-reponse-and": " and ",
 			"user-reponse-missing": "Missing input ...",
 			"user-reponse-missing-group": "Nothing selected ...",
@@ -147,9 +157,10 @@ namespace cf {
 
 		// can be overwriten
 		protected robotData: any = {
-			"robot-image": "https://cf-4053.kxcdn.com/conversational-form/robot.png",
+			"robot-image": 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMTAwIiBmaWxsPSIjRTVFNkVBIi8+CjxyZWN0IHg9IjY2IiB5PSI2NiIgd2lkdGg9IjY4IiBoZWlnaHQ9IjY4IiBmaWxsPSIjMzAzMDMwIi8+Cjwvc3ZnPgo=',
 			"input": "Please write some text.",
 			"text": "Please write some text.",
+			"textarea": "Please write some text.",
 			"checkbox": "Select as many as you want.",
 			"name": "What's your name?",
 			"email": "Need your e-mail.",

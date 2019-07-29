@@ -1,6 +1,6 @@
 {
   "name": "conversational-form",
-  "version": "0.9.90",
+  "version": "1.0.0",
   "description": "Turning web forms into conversations",
   "main": "dist/conversational-form.js",
   "directories": {
@@ -15,6 +15,13 @@
     "email": "felix.nielsen@rwatgg.dk",
     "url": "http://rwatgg.dk"
   },
+  "contributors": [
+    {
+      "name": "Jens Soegaard",
+      "email": "jens@jenssogaard.com",
+      "url": "https://jenssogaard.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/space10-community/conversational-form/issues"

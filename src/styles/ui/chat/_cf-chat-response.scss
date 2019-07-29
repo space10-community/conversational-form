@@ -6,52 +6,62 @@
 	}
 }
 
+
 cf-chat-response {
-	display: table;
-	max-width: 80%;
+	max-width: 90%;
 	@media (min-width: $cf-breakpoint-medium) {
-		max-width: 50%;
+		max-width: 70%;
 	}
 	min-width: 120px;
-	width: auto;
 	position: relative;
 	backface-visibility: hidden;
-	padding-left: calc(#{$cf-avatar-area} + 10px);
-	padding-top: 16px;
+	padding-left: $cf-avatar-area + 12px;
+	margin-top: 8px;
 	color: $cf-color-chat-response-default-text;
 	margin-left: 0px;
 	margin-right: auto;
 	word-break: break-all;
+	display:flex;
+	flex-shrink:0;
+	flex-grow:1;
+	position: absolute;
+	visibility: hidden;
+	will-change:height;
+	transition:height $cf-anim-time * 0.45 $cf-ease-easeOut;
+	padding-bottom: 12px;
 
+	@media (max-width: $cf-breakpoint-medium) {
+		padding-left: ($cf-avatar-area / 1.4) + 12px;
+	}
+
+	&.show {
+		position: relative;
+		visibility: visible;
+	}
+	
 	&.can-edit {
 		cursor: pointer;
 
 		&:hover {
-			color: darken($cf-color-chat-response-default-text, 25%);
+			// color: darken($cf-color-chat-response-default-text, 75%);
 
 			text > p {
-				background: lighten($cf-color-chat-response-user-bg, 50%);
-			}
-		}
-	}
-
-	&.robot {
-		text > p {
-			opacity: 0;
-			will-change: opacity;
-			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0.2s;
-			&.show {
-				opacity: 1;
+				background: darken($cf-color-chat-response-user-bg, 8%);
 			}
 		}
 	}
 
 	&.user {
+		justify-content: flex-end;
 		margin-right: 0px;
 		margin-left: auto;
 		padding-left: 0;
-		padding-right: calc(#{$cf-avatar-area} + 10px);
-		color: $cf-color-chat-response-user-text;
+		padding-right: calc(#{$cf-avatar-area} + 14px);
+		color: lighten($cf-color-secondary, 90%);
+
+		@media (max-width: $cf-breakpoint-medium) {
+			padding-right: ($cf-avatar-area / 1.4) + 12px;
+		}
 
 		thumb {
 			left: auto;
@@ -59,9 +69,7 @@ cf-chat-response {
 		}
 		
 		text {
-			transform-origin: 100% 0%;
-			transform: translateY(-10px) translateX(-10px) scale(0.001, 0.001);
-
+			
 			> p {
 				background: $cf-color-chat-response-user-bg;
 				border-radius: $cf-chat-response-border-radius 0px $cf-chat-response-border-radius $cf-chat-response-border-radius;
@@ -70,6 +78,18 @@ cf-chat-response {
 			}
 		}
 
+		&.peak-thumb {
+			thumb {
+				transform: scale(1, 1) translateY(0px);
+				opacity: 1;
+				.conversational-form--enable-animation & {
+					transition-delay: 0.2s, 0.2s, 0.2s;
+				}
+			}
+		}
+	}
+
+	&.robot {
 		&.peak-thumb {
 			thumb {
 				transform: scale(1, 1) translateY(0px);
@@ -98,19 +118,13 @@ cf-chat-response {
 
 	text {
 		user-select: none;
-		display: block;
-		overflow: hidden;
+		display: inline-block;
 		position: relative;
 		min-height: 40px;
-		opacity: 0;
+		height:auto;
 		white-space: pre-wrap;
 		word-break: normal;
-		transform-origin: 0% 0%;
-		transform: translateY(-10px) translateX(10px) scale(0.001, 0.001);
-		will-change: transform, opacity, background;
-		backface-visibility: hidden;
-		height: auto;
-		
+
 		> div {
 			display: inline-block;
 		}
@@ -128,11 +142,45 @@ cf-chat-response {
 		}
 
 		> p {
+			display: inline-block; // wrap container around text;
 			margin: 0px;
 			padding: 0px;
 			background: $cf-color-chat-response-default-bg;
-			padding: relativeValue(12px) relativeValue(24px) relativeValue(12px) relativeValue(24px);
-			display: table; // wrap container around text;
+			padding: relativeValue(9px) relativeValue(14px) relativeValue(9px) relativeValue(14px);
+
+			@media (max-width: $cf-breakpoint-medium) {
+				padding: relativeValue(6px) relativeValue(11px) relativeValue(7px) relativeValue(11px);
+			}
+
+			.conversational-form--enable-animation & {
+				will-change: transform,opacity;
+				transform:scale(0,0) translateY(30px);
+				opacity:0;
+			}
+
+			&.show {
+				.conversational-form--enable-animation & {
+					animation:moveIn $cf-anim-time * 0.35 forwards $cf-anim-time * 0.5 $cf-ease-easeOut;
+				}
+			}
+
+			// User response containing an image
+			&.hasImage {
+				padding: 0;
+				overflow: hidden;
+				background: none; // To avoid background color being vaguely visible behind image
+				
+				img {
+					margin: 0;
+					padding: 0;
+				}
+
+				> span {
+					display: block;
+					padding: 5px 6px 6px 18px;
+					background: $cf-color-chat-response-user-bg;
+				}
+			}
 
 			// border radius rules
 			border-radius: 0px $cf-chat-response-border-radius $cf-chat-response-border-radius $cf-chat-response-border-radius;
@@ -150,7 +198,7 @@ cf-chat-response {
 				}
 
 				&:not(:first-child) {
-					margin-top: relativeValue(3px);
+					margin-top: relativeValue(4px);
 				}
 			}
 			//--------------------
@@ -196,7 +244,7 @@ cf-chat-response {
 			display: inline-block;
 			margin-right: relativeValue(7px);
 			g {
-				fill: $cf-color-primary;
+				fill: $cf-color-secondary;
 			}
 		}
 	}
@@ -210,15 +258,23 @@ cf-chat-response {
 		height: $cf-avatar-area;
 		border-radius: 50%;
 		background: $cf-avatar-background;
-		background-size: cover;
+		// background-size: cover;
+		background-size: $cf-avatar-size;
+		background-repeat: no-repeat;
 		background-position: 50% 50%;
 		opacity: 0;
 		overflow: hidden;
 		transform-origin: 50% 50%;
 		transform: scale(0.001, 0.001) translateY(50px);
 		will-change: transform, opacity;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			width: $cf-avatar-area / 1.26;
+			height: $cf-avatar-area / 1.26;
+		}
+		
 		.conversational-form--enable-animation & {
-			transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25, opacity $cf-anim-time * 0.5 $cf-ease-easeOut $cf-anim-time * 0.25;
+			transition: transform $cf-anim-time * 0.35 $cf-ease-easeOut, opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
 		}
 
 		// Centered text, e.g. initials.
@@ -237,36 +293,8 @@ cf-chat-response {
 			}
 		}
 	}
-	
-	&.show {
-		text {
-			.conversational-form--enable-animation & {
-				transition: transform $cf-anim-time * 0.5 $cf-ease-easeOut 0s, opacity $cf-anim-time * 0.5 $cf-ease-easeOut 0s;
-			}
-
-			transform: translateY(0px) translateX(0px) scale(1, 1);
-			opacity: 1;
-			.conversational-form--enable-animation & {
-				transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut, $cf-ease-easeOut;
-				transition-delay: $cf-anim-time * 0.25, $cf-anim-time * 0.25, 0s;
-			}
-
-			&[value-added] {
-				will-change: auto;
-			}
-		}
-	}
-	
-	&.show.robot {
-		thumb {
-			transform: scale(1, 1) translateY(0px);
-			opacity: 1;
-			.conversational-form--enable-animation & {
-				transition-delay: 0.2s, 0.2s, 0.2s;
-			}
-		}
-	}
 }
+
 @keyframes dot-fade {
 	0% {
 		opacity: 1;
@@ -294,5 +322,17 @@ cf-chat-response {
 	100% {
 		transform: scale(1, 1);
 		opacity: 1;
+	}
+}
+
+@keyframes moveIn {
+	0% {
+	  transform:scale(0001,0001) translateY(60px);
+	  opacity:0;
+	}
+	
+	100% {
+	  transform:scale(1,1) translateY(0px);
+	  opacity:1;
 	}
 }

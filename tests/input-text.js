@@ -10,7 +10,8 @@ describe('Check input type=text', function() {
 				"name": "first-tag",
 				"id": "first-tag",
 				"value": "test",
-				"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22"
+				"cf-questions": "Prefilled1&&with follow-up1&&with follow-up11||Prefilled2&&with follow-up2&&with follow-up22",
+				"list": "browsers"
 			},
 			{
 				"tag": "input",
@@ -48,5 +49,11 @@ describe('Check input type=text', function() {
 
 		// testing getFormData
 		expect(instance.getFormData(true)["first-tag"]).toBe("Hello world");
+
+		// input attribute list
+		var hasListAttribute = instance.userInput.inputElement.hasAttribute('list');
+		var listAttributeValue = instance.userInput.inputElement.getAttribute('list');
+		expect(hasListAttribute).toBe(true);
+		expect(listAttributeValue).toBe('browsers');
 	});
 });

@@ -185,9 +185,15 @@
 			
 				<form id="cf-form" style="visibility: hidden;">
 
-					<input type="text" cf-questions="What is your name?" name="name" value="John Doe">
-					<input type="text" cf-questions="Great {name}&&Where are you from?" name="location" value="United States of America">
-					
+					<input type="text" cf-questions="What is your name?" name="name1" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name2" value="John Doe">
+					<textarea name="testmultirows" id="testmultirows" rows="2"></textarea>
+					<input type="text" cf-questions="What is your name?" name="name3" value="John Doe">
+					<textarea name="testmultirows" id="testmultirows" rows="3"></textarea>
+					<input type="text" cf-questions="What is your name?" name="name4" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name5" value="John Doe">
+					<input type="text" cf-questions="What is your name?" name="name6" value="John Doe">
+
 					<fieldset>
 						<label for="tmnj">Do you like Teenage Mutant Ninja Turtles?</label>
 						<select cf-questions="Do you like Teenage Mutant Ninja Turtles?" name="tmnj" class="form-control">
@@ -196,6 +202,9 @@
 						</select>
 					</fieldset>
 
+					<input type="text" cf-questions="What is your name?" name="name" value="John Doe">
+					<input type="text" cf-questions="Great {name}&&Where are you from?" name="location" value="United States of America">
+					
 					<select name="car">
 						<option>Toyota</option>
 						<option>Mercedes</option>
@@ -220,22 +229,22 @@
 
 			<button class="pause" onClick="javascript:pause();">Pause/Resume</button>
 			<p>&nbsp;</p>
-			<div id="cf-context" role="cf-context" cf-context style="height: 600px; width: 400px; border: 1px solid #999;">
+			<div id="cf-context" role="cf-context" cf-context style="height: 400px; width: 400px; border: 1px solid #999;">
 				
 			</div>
 
 		<script>
-				window.paused = false;
-				var answerAfter = 3000;
+				window.paused = true;
+				var answerAfter = 2500;
 
 				function pause() {
     			window.paused = !window.paused;
     			if (window.paused === false) submitAnswer();
     		}
 
-    		setTimeout(function() {
-					submitAnswer();		    			
-    		}, answerAfter);
+    		// setTimeout(function() {
+			// 		submitAnswer();		    			
+    		// }, answerAfter);
 
     		function submitAnswer() {
     			if (window.paused === true) return;
@@ -250,7 +259,8 @@
 		    window.onload = function(){
 		    		var conversationalForm = window.cf.ConversationalForm.startTheConversation({
 		            formEl: document.getElementById("cf-form"),
-		            context: document.getElementById("cf-context"),
+								context: document.getElementById("cf-context"),
+								animationsEnabled: true,
 		            // hideUserInputOnNoneTextInput: true,
 		            submitCallback: function() {
                   conversationalForm.addRobotChatResponse(

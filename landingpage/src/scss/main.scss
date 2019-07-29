@@ -1,0 +1,166 @@
+@import './variables';
+@import './media-queries';
+@import './css-grid';
+@import './header';
+@import './footer';
+@import './headline';
+@import './_buttonRollUpAnimation.scss';
+
+html,
+body {
+    background-color: $color-background;
+    color: #FEFFFF;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    line-height: 18px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wrapper {
+  opacity: 0;
+  will-change: opacity;
+  max-width: 1340px;
+  margin: auto;
+}
+
+.row {
+  @include container();
+}
+
+header {
+  opacity: 0;
+  will-change: opacity;
+
+  a {
+    display: inline-block;
+    text-decoration: none;
+  }
+}
+
+h1 {
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 62px;
+  line-height: 104px;
+  letter-spacing: -0.79px;
+  text-align: center;
+  color: $color-primary;
+
+  margin-top: 11rem;
+  margin-bottom: 9rem;
+
+  @include respond-below('md') {
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  @include respond-below('sm') {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    font-size: 42px;
+    line-height: 84px;
+  }
+
+  opacity: 0;
+  will-change: opacity;
+
+  > span:nth-child(1) {
+    z-index: 10;
+    // background: $color-background;
+  }
+
+  > span {
+    position: relative;
+    top: 8px;
+  }
+}
+
+
+.form {
+  height: 0;
+  visibility: hidden;
+}
+
+.cf {
+  opacity: 0;
+  will-change: opacity;
+  height: 600px;
+  max-width: 720px;
+  margin: auto;
+
+  @include respond-below('md') {
+    width: 70%;
+  }
+
+  @include respond-below('sm') {
+    width: 92%;
+  }
+
+  .conversational-form {
+    border: 1px solid #2F2F2F;
+    border-radius: 13px;
+  }
+}
+
+main {
+  div.about {
+    opacity: 0;
+    will-change: opacity;
+
+    @include column(8, 3);
+
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-top: 9rem;
+    margin-bottom: 8rem;
+
+    @include respond-below('md') {
+      margin-top: 4rem;
+      margin-bottom: 4rem;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    @include respond-below('sm') {
+      @include column(10, 2);
+    }
+
+    p {
+      font-size: 1.125rem;
+      text-align: center;
+      line-height: 22px;
+
+      @include respond-below('sm') {
+        font-size: 0.88rem;
+        line-height: 21px;
+      }
+
+      strong {
+        font-weight: bold;
+      }
+
+      &:first-child {
+        margin-bottom: 3.4rem;
+
+        @include respond-below('sm') {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a.button {
+      display: inline-block;
+      border: 1px solid #FFFFFF;
+      border-radius: 26px;
+      color: #fff;
+      text-decoration: none;
+      width: 176px;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Appearance' %}
+{% set page_slug = '/appearance/' %}
+
+{% block page %}
+    <h1 id="appearance">{{page_title}}</h1>
+    <p>When altering the apperance of Conversational Form you have two options:
+    	<ul>
+			<li>Use one of our pre-built themes</li>
+    		<li>Compile (SCSS) to build your own theme</li>
+    		<li>Overriding CSS</li>
+    	</ul>
+	</p>
+	
+    <h2 id="prebuilt">Pre-built themes</h2>
+	<div class="row">
+		<div class="col-xs-12 col-md-8">
+			<p>We have bundled six themes with v1.0.0: light (default), dark, red, green, blue, purple.</p>
+			<p>The theme can be set using the 'theme' option when instantiating CF - as shown in the StackBlitz-example below.</p>
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<img src="../assets/cf-themes.gif" style="border: 1px solid #c1c1c1; max-width: 100%;" />
+		</div>
+	</div>
+	<div class="mt-4">
+		<iframe src="https://stackblitz.com/edit/react-conversational-form-example-themes?embed=1&file=myForm.js" width="100%" height="500" frameBorder="0"></iframe>
+	</div>
+
+	<h2 id="compile">Compile your own theme</h2>
+	<iframe src="https://stackblitz.com/edit/react-conversational-form-with-custom-theme-example?embed=1&file=myForm.scss&hideExplorer=1" width="100%" height="500" frameBorder="0"></iframe>
+	
+    <h2 id="example-overriding-styles">Example - Overriding styles</h2>
+	<p data-preview="true" data-height="480" data-theme-id="light" data-slug-hash="baeKWg" data-default-tab="css,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - CSS override theming" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/baeKWg/">Conversational Forms - CSS override theming</a> by SPACE10 (<a href="https://codepen.io/space10">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+
+
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#appearance">{{page_title}}</a></li>
+		<li class="toc-entry toc-h2"><a href="#prebuilt">Pre-built themes</a></li>
+		<li class="toc-entry toc-h2"><a href="#compile">Compile your own theme</a></li>
+		<li class="toc-entry toc-h2"><a href="#scss-theme">Default scss - try it</a>
+        <li class="toc-entry toc-h2"><a href="#example-overriding-styles">Example - Overriding styles</a></li>
+	</ul>
+{% endblock %}

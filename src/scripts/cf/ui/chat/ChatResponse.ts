@@ -35,7 +35,7 @@ namespace cf {
 		private image: string;
 		private container: HTMLElement;
 		private _tag: ITag;
-		private readyTimer: number = 0;
+		private readyTimer: any;
 		private responseLink: ChatResponse; // robot reference from use
 		private onReadyCallback: () => void;
 
@@ -46,7 +46,7 @@ namespace cf {
 		}
 
 		public get added() : boolean {
-			return !!this.el.parentNode.parentNode;
+			return !!this.el || !!this.el.parentNode || !!this.el.parentNode.parentNode;
 		}
 
 		public get disabled() : boolean {
@@ -60,9 +60,54 @@ namespace cf {
 				this.el.classList.remove("disabled");
 		}
 
+		/**
+		 * We depend on scroll in a column-reverse flex container. This is where Edge and Firefox comes up short
+		 */
+		private hasFlexBug():boolean {
+			return this.cfReference.el.classList.contains('browser-firefox') || this.cfReference.el.classList.contains('browser-edge');
+		}
+
+		private animateIn() {
+			const outer:HTMLElement = document.querySelector('scrollable');
+			const inner:HTMLElement = document.querySelector('.scrollableInner');
+			if (this.hasFlexBug()) inner.classList.remove('scroll');
+			
+			requestAnimationFrame(() => { 
+				var height = this.el.scrollHeight;
+				this.el.style.height = '0px';
+				requestAnimationFrame(() => { 
+					this.el.style.height = height + 'px';
+					this.el.classList.add('show');
+					
+					// Listen for transitionend and set to height:auto
+					try {
+						const sm = window.getComputedStyle(document.querySelectorAll('p.show')[0]);
+						const cssAnimationTime: number = +sm.animationDuration.replace('s', ''); // format '0.234234xs
+						const cssAnimationDelayTime: number = +sm.animationDelay.replace('s', '');
+						setTimeout(() => {
+							this.el.style.height = 'auto';
+
+							if (this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+								inner.classList.add('scroll');
+								inner.scrollTop = inner.scrollHeight;
+							}
+						}, (cssAnimationTime + cssAnimationDelayTime) * 1500);
+					} catch(err) {
+						// Fallback method. Assuming animations do not take longer than 1000ms
+						setTimeout(() => {
+							if (this.hasFlexBug() && inner.scrollHeight > outer.offsetHeight) {
+								inner.classList.add('scroll');
+								inner.scrollTop = inner.scrollHeight;
+							}
+							this.el.style.height = 'auto';
+						}, 3000);
+					}
+				});
+			});
+		}
+
 		public set visible(value: boolean){
-			this.el.offsetWidth;
-			setTimeout(() => value ? this.el.classList.add("show") : this.el.classList.remove("show"), 100);
+
 		}
 
 		public get strippedSesponse():string{
@@ -85,9 +130,10 @@ namespace cf {
 		}
 
 		public setValue(dto: FlowDTO = null){
-			if(!this.visible){
-				this.visible = true;
-			}
+			
+			// if(!this.visible){
+			// 	this.visible = true;
+			// }
 
 			const isThinking: boolean = this.el.hasAttribute("thinking");
 
@@ -122,8 +168,10 @@ namespace cf {
 		}
 
 		public show(){
+			
 			this.visible = true;
 			this.disabled = false;
+
 			if(!this.response){
 				this.setToThinking();
 			}else{
@@ -161,16 +209,13 @@ namespace cf {
 				for (let i = 0; i < innerResponse.length; i++) {
 					newStr += "*";
 				}
-
 				innerResponse = newStr;
 			}
 
+			// if robot, then check linked response for binding values
 			if(this.responseLink && this.isRobotResponse){
-				// if robot, then check linked response for binding values
-				
 				// one way data binding values:
 				innerResponse = innerResponse.split("{previous-answer}").join(this.responseLink.parsedResponse);
-
 			}
 
 			if(this.isRobotResponse){
@@ -192,17 +237,12 @@ namespace cf {
 						}
 					}
 				}
-
-				// add more..
-				// innerResponse = innerResponse.split("{...}").join(this.responseLink.parsedResponse);
 			}
 
 			// check if response contains an image as answer
 			const responseContains: boolean = innerResponse.indexOf("contains-image") != -1;
 			if(responseContains)
 				this.textEl.classList.add("contains-image");
-
-			// if(this.response != innerResponse){
 				// now set it
 				if(this.isRobotResponse){
 					this.textEl.innerHTML = "";
@@ -210,25 +250,41 @@ namespace cf {
 					if(!this.uiOptions) this.uiOptions = this.cfReference.uiOptions; // On edit uiOptions are empty, so this mitigates the problem. Not ideal.
 
 					let robotInitResponseTime: number = this.uiOptions.robot.robotResponseTime;
-					if(robotInitResponseTime != 0){
+					if (robotInitResponseTime != 0){
 						this.setToThinking();
 					}
 
 					// robot response, allow for && for multiple responses
 					var chainedResponses: Array<string> = innerResponse.split("&&");
-					for (let i = 0; i < chainedResponses.length; i++) {
-						let str: string = <string>chainedResponses[i];
-						setTimeout(() =>{
-							this.tryClearThinking();
-
+					
+					if(robotInitResponseTime === 0){
+						for (let i = 0; i < chainedResponses.length; i++) {
+							let str: string = <string>chainedResponses[i];
 							this.textEl.innerHTML += "<p>" + str + "</p>";
-							const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
-							p[p.length - 1].offsetWidth;
-							p[p.length - 1].classList.add("show");
+						}
+						for (let i = 0; i < chainedResponses.length; i++) {
+							setTimeout(() =>{
+								this.tryClearThinking();
+								const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+								p[i].classList.add("show");
+								this.scrollTo();
 
-							this.scrollTo();
-						}, robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime));
+							},chainedResponses.length > 1 && i > 0 ? robotInitResponseTime + ((i + 1) * this.uiOptions.robot.chainedResponseTime) : 0);
+						}	
+					} else {					
+						for (let i = 0; i < chainedResponses.length; i++) {
+							const revealAfter = robotInitResponseTime + (i * this.uiOptions.robot.chainedResponseTime);
+							let str: string = <string>chainedResponses[i];
+							setTimeout(() =>{
+								this.tryClearThinking();
+								this.textEl.innerHTML += "<p>" + str + "</p>";
+								const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
+								p[i].classList.add("show");
+								this.scrollTo();
+							}, revealAfter);
+						}
 					}
+
 
 					this.readyTimer = setTimeout(() => {
 						if(this.onReadyCallback)
@@ -243,25 +299,43 @@ namespace cf {
 								this._tag.skipUserInput = false; // to avoid nextStep being fired again as this would make the flow jump too far when editing a response
 							},this.uiOptions.robot.chainedResponseTime);
 						}
-
+						
 					}, robotInitResponseTime + (chainedResponses.length * this.uiOptions.robot.chainedResponseTime));
-				}else{
+				} else {
 					// user response, act normal
 					this.tryClearThinking();
 
-					this.textEl.innerHTML = "<p>" + innerResponse + "</p>";
+					const hasImage = innerResponse.indexOf('<img') > -1;
+					const imageRegex = new RegExp('<img[^>]*?>', 'g');
+					const imageTag = innerResponse.match(imageRegex);
+					if (hasImage && imageTag) {
+						innerResponse = innerResponse.replace(imageTag[0], '');
+						this.textEl.innerHTML = `<p class="hasImage">${imageTag}<span>${innerResponse}</span></p>`;
+					} else {
+						this.textEl.innerHTML = `<p>${innerResponse}</p>`;
+					}
+
 					const p: NodeListOf<HTMLElement> = this.textEl.getElementsByTagName("p");
 					p[p.length - 1].offsetWidth;
 					p[p.length - 1].classList.add("show");
-
 					this.scrollTo();
 				}
-
+				
 				this.parsedResponse = innerResponse;
+
 			// }
 
 			// value set, so add element, if not added
-			this.addSelf();
+			if (
+				this.uiOptions.robot
+				&& this.uiOptions.robot.robotResponseTime === 0
+			) {
+				this.addSelf();
+			} else {
+				setTimeout(() => {
+					this.addSelf();
+				}, 0);
+			}
 
 			// bounce
 			this.textEl.removeAttribute("value-added");
@@ -269,7 +343,7 @@ namespace cf {
 				this.textEl.setAttribute("value-added", "");
 				this.el.classList.add("peak-thumb");
 			}, 0);
-
+			
 			this.checkForEditMode();
 
 			// update response
@@ -278,12 +352,19 @@ namespace cf {
 		}
 		
 		public scrollTo(){
+
 			const y: number = this.el.offsetTop;
 			const h: number = this.el.offsetHeight;
 
 			if(!this.container && this.el) this.container = this.el; // On edit this.container is empty so this is a fix to reassign it. Not ideal, but...
-
-			this.container.scrollTop = y + h + this.container.scrollTop;
+			
+			if (
+				this.container
+				&& this.container.parentElement
+				&& this.container.parentElement.scrollHeight
+			) {
+				this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight;
+			}
 		}
 
 		private checkForEditMode(){
@@ -320,6 +401,7 @@ namespace cf {
 		private addSelf(): void {
 			if(this.el.parentNode != this.container){
 				this.container.appendChild(this.el);
+				this.animateIn();
 			}
 		}
 
@@ -375,7 +457,6 @@ namespace cf {
 
 			super.dealloc();
 		}
-
 		// template, can be overwritten ...
 		public getTemplate () : string {
 			return `<cf-chat-response class="` + (this.isRobotResponse ? "robot" : "user") + `">

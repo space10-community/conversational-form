@@ -1,0 +1,58 @@
+header {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  background: $color-background;
+
+  @include container(false);
+
+  @include respond-below('sm') {
+    font-size: .75rem;
+    position: static;
+  }
+
+  div {
+    margin: auto;
+
+    &:nth-child(1) {
+      @include column(2,4);
+
+      @include respond-below('sm') {
+        @include column(4,1);
+
+        padding-left: 1.4rem;
+      }
+    }
+
+    &:nth-child(2) {
+      @include column(2,6);
+
+      @include respond-below('sm') {
+        @include column(4,5);
+      }
+    }
+
+    &:nth-child(3) {
+      @include column(2,8);
+
+      @include respond-below('sm') {
+        @include column(4,9);
+
+        padding-right: 1.4rem;
+      }
+    }
+  }
+
+  a {
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    color: $color-primary;
+    padding: 0 1rem;
+
+    @include respond-below('md') {
+      padding: 0;
+    }
+  }
+}

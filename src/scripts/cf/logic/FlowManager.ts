@@ -24,6 +24,7 @@ namespace cf {
 		USER_INPUT_INVALID: "cf-flow-user-input-invalid",
 		//	detail: string
 		FLOW_UPDATE: "cf-flow-update",
+		FORM_SUBMIT: "cf-form-submit",
 		//	detail: ITag | ITagGroup
 	}
 
@@ -322,6 +323,7 @@ namespace cf {
 			if(this.maxSteps > 0){
 				if(this.step == this.maxSteps){
 					// console.warn("We are at the end..., submit click")
+					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FORM_SUBMIT, {}));
 					this.cfReference.doSubmitForm();
 				}else{
 					this.step %= this.maxSteps;
@@ -347,7 +349,9 @@ namespace cf {
 				this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
 					detail: {
 						tag: this.currentTag,
-						ignoreExistingTag: this.ignoreExistingTags
+						ignoreExistingTag: this.ignoreExistingTags,
+						step: this.step,
+						maxSteps: this.maxSteps
 					}
 				}));
 			}, 0);
