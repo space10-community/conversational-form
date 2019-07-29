@@ -3,9 +3,16 @@
 		"preventAutoAppend": true,
 		"preventAutoFocus": false,
 		"hideUserInputOnNoneStandardInput": false,
-		"submitCallback": "window.onFormlessSubmited"
+		"submitCallback": "onFormlessSubmited"
 	},
 	"tags": [
+		{
+			"tag": "input",
+			"type": "text",
+			"required": "required",
+			"cf-questions": "This field uses window.testValidation",
+			"cf-validation": "customValidation"
+		},
 		{
 			"tag": "cf-robot-message",
 			"cf-questions": "Så er der formless bajer"
@@ -20,7 +27,8 @@
 					"tag": "option",
 					"name": "option-dropdown-1",
 					"cf-label": "option-1",
-					"value": "-1"
+					"value": "-1",
+					"cf-validation": "customValidation"
 				},
 				{
 					"tag": "option",
@@ -179,9 +187,7 @@
 			"tag": "input",
 			"type": "text",
 			"required": "required",
-			"cf-questions": "This field uses window.testValidation",
-			"cf-validation": "window.testValidation",
-			"cf-error": "Check the window.testValidation method"
+			"cf-questions": "This field uses window.testValidation"
 		}
 	]
 }

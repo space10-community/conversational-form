@@ -1,0 +1,89 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Public API' %}
+{% set page_slug = '/public-api/' %}
+
+{% block page %}
+    <h1 id="public-api">{{page_title}}</h1>
+    <p>When instantiating ConversationalForm a reference to the instance will be available in window scope.</p>
+    
+	<pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm</code></pre>
+	
+	<p>Be aware that if you create mutiple Conversational Forms within one page then the reference will be overwritten with latest created. Use windo.ConversationalForm[form["cf-create-id"]]?` or just manually instantiate the form and user the returned instance.</p>
+	
+	<table class="table compact">
+    	<thead>
+    		<tr>
+    			<th scope="col">Method</th>
+    			<th scope="col">Description</th>
+    			<th scope="col">Code</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td id="addTags">addTags</td>
+    			<td>Add tags to the form, see examples/formless.html for how this can be achived.</td>
+    			<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.addTags(
+	tagsData/*: Array<DataTag>*/, 
+	addAfterCurrentStep/*: boolean = true*/, 
+	atIndex/*: number = -1*/);</pre></code></td>
+    		</tr>
+			<tr>
+    			<td id="addTags">focus</td>
+    			<td>Sets focus on Conversational Form.</td>
+    			<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.focus();</pre></code></td>
+    		</tr>
+    		<tr>
+    			<td id="focus">focus</td>
+    			<td>Sets focus on Conversational Form.</td>
+    			<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.focus();</pre></code></td>
+    		</tr>
+    		<tr>
+    			<td id="addRobotChatResponse">addRobotChatResponse</td>
+				<td>add a robot reponse, this you would usually do at the end of a process.</td>
+				<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.addRobotChatResponse(
+	"You have reached the end of the form!"
+);</pre></code></td>
+    		</tr>
+			<tr>
+				<td id="addUserChatResponse">addUserChatResponse</td>
+				<td>add a user reponse. The opposite of the above.</td>
+				<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.addUserChatResponse(
+	"Hello from user."
+);</pre></code></td>
+			</tr>
+			<tr>
+				<td id="remove">remove</td>
+				<td>remove the ConversationalForm by calling:</td>
+				<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.remove();</pre></code></td>
+			</tr>	
+			<tr>
+				<td id="getFormData">getFormData</td>
+				<td>get the FormData object of mapped form element, pass in true to get a serialized object back (JSON).</td>
+				<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.getFormData(serialized);</pre></code></td>
+			</tr>
+			<tr>
+				<td id="remapTagsAndStartFrom">remapTagsAndStartFrom</td>
+				<td>remap registered tags and start flow from {index} possible to ignore existing tags, to allow for the flow to just "happen".</td>
+				<td><pre><code class="language-javascript" data-lang="javascript">window.ConversationalForm.remapTagsAndStartFrom(
+	index, 
+	setCurrentTagValue, 
+	ignoreExistingTags
+);</pre></code></td>
+			</tr>
+    	</tbody>
+    </table>
+
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#public-api">{{page_title}}</a></li>
+		<li class="toc-entry toc-h2"><a href="#addTags">addTags</a></li>
+		<li class="toc-entry toc-h2"><a href="#focus">focus</a></li>
+		<li class="toc-entry toc-h2"><a href="#addRobotChatResponse">addRobotChatResponse</a></li>
+		<li class="toc-entry toc-h2"><a href="#remove">remove</a></li>
+		<li class="toc-entry toc-h2"><a href="#getFormData">getFormData</a></li>
+		<li class="toc-entry toc-h2"><a href="#remapTagsAndStartFrom">remapTagsAndStartFrom</a></li>
+	</ul>
+{% endblock %}

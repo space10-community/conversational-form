@@ -26,7 +26,7 @@ namespace cf {
 		private onInputBlurCallback: () => void;
 		private onOriginalTagChangedCallback: () => void;
 		private onControlElementProgressChangeCallback: () => void;
-		private errorTimer: number = 0;
+		private errorTimer: ReturnType<typeof setTimeout>;
 		private initialInputHeight: number = 0;
 		private shiftIsDown: boolean = false;
 		private keyUpCallback: () => void;
@@ -61,7 +61,7 @@ namespace cf {
 
 		constructor(options: IUserInputOptions){
 			super(options);
-
+			
 			this.cfReference = options.cfReference;
 			this.eventTarget = options.eventTarget;
 			this.inputElement = this.el.getElementsByTagName("textarea")[0];
@@ -70,6 +70,10 @@ namespace cf {
 			this.onInputBlurCallback = this.onInputBlur.bind(this);
 			this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 			this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
+
+			if (!ConversationalForm.animationsEnabled) {
+				this.inputElement.setAttribute('no-animations', '');
+			}
 
 			//<cf-input-control-elements> is defined in the ChatList.ts
 			this.controlElements = new ControlElements({
@@ -105,7 +109,7 @@ namespace cf {
 				eventTarget: this.eventTarget
 			});
 
-			this.el.appendChild(this.submitButton.el);
+			this.el.querySelector('div').appendChild(this.submitButton.el);
 
 			// setup microphone support, audio
 			if(options.microphoneInputObj){
@@ -206,13 +210,22 @@ namespace cf {
 
 			// safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
 			const oldHeight: number = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10));
-			this.inputElement.style.height = "0px";
+			this.inputElement.style.height = '0px';
+			// console.log(this.inputElement.style.height, this.inputElement.style);
 			this.inputElement.style.height = (this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight) + "px";
 
 			ConversationalForm.illustrateFlow(this, "dispatch", UserInputEvents.HEIGHT_CHANGE);
 			this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
 				detail: this.inputElement.scrollHeight
 			}));
+		}
+
+		private resetInputHeight() {
+			if (this.inputElement.getAttribute('rows') === '1'){
+				this.inputElement.style.height = this.initialInputHeight + 'px';
+			} else {
+				this.inputElement.style.height = '0px';
+			}
 		}
 
 		protected inputInvalid(event: CustomEvent){
@@ -262,35 +275,46 @@ namespace cf {
 			}
 		}
 
+		/**
+		 * TODO: handle detect input/textarea in a simpler way - too conditional heavy
+		 *
+		 * @private
+		 * @memberof UserTextInput
+		 */
 		private checkForCorrectInputTag(){
-			// handle password natively
-			const currentType: String = this.inputElement.getAttribute("type");
-			const isCurrentInputTypeTextAreaButNewTagPassword: boolean = this._currentTag.type == "password" && currentType != "password";
-			const isCurrentInputTypeInputButNewTagNotPassword: boolean = this._currentTag.type != "password" && currentType == "password";
-			const isCurrentInputTypeTextAreaButNewTagNumberOrEmail: boolean = (this._currentTag.type == "email" && currentType != "email") || (this._currentTag.type == "number" && currentType != "number");
-
+			const tagName:String = this.tagType(this._currentTag);
+			
 			// remove focus and blur events, because we want to create a new element
-			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+			if(this.inputElement && this.inputElement.tagName !== tagName){
 				this.inputElement.removeEventListener('focus', this.onInputFocusCallback, false);
 				this.inputElement.removeEventListener('blur', this.onInputBlurCallback, false);
 			}
 
-			if(isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeTextAreaButNewTagNumberOrEmail){
+			this.removeAttribute('autocomplete');
+			this.removeAttribute('list');
+
+			if(tagName === 'INPUT'){
 				// change to input
 				const input = document.createElement("input");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
 					input.setAttribute(item.name, item.value);
 				});
-				input.setAttribute("autocomplete", "new-password");
+
+				if (this.inputElement.type === 'password') {
+					input.setAttribute("autocomplete", "new-password");
+				}
+
+				if (this._currentTag.domElement.hasAttribute('autocomplete')) {
+					input.setAttribute('autocomplete', this._currentTag.domElement.getAttribute('autocomplete'));
+				}
+
+				if (this._currentTag.domElement.hasAttribute('list')) {
+					input.setAttribute('list', this._currentTag.domElement.getAttribute('list'));
+				}
+				
 				this.inputElement.parentNode.replaceChild(input, this.inputElement);
 				this.inputElement = input;
-
-				if(this._currentTag.type === "number" || this._currentTag.type === "email"){
-					// if field is type number or email then add type to user input
-					this.inputElement.type = this._currentTag.type;
-					input.setAttribute("type", this._currentTag.type);
-				}
-			}else if(isCurrentInputTypeInputButNewTagNotPassword){
+			}else if (this.inputElement && this.inputElement.tagName !== tagName){
 				// change to textarea
 				const textarea = document.createElement("textarea");
 				Array.prototype.slice.call(this.inputElement.attributes).forEach((item: any) => {
@@ -301,7 +325,7 @@ namespace cf {
 			}
 
 			// add focus and blur events to newly created input element
-			if(this.inputElement && (isCurrentInputTypeTextAreaButNewTagPassword || isCurrentInputTypeInputButNewTagNotPassword)){
+			if(this.inputElement && this.inputElement.tagName !== tagName){
 				this.inputElement.addEventListener('focus', this.onInputFocusCallback, false);
 				this.inputElement.addEventListener('blur', this.onInputBlurCallback, false);
 			}
@@ -312,6 +336,42 @@ namespace cf {
 			}
 
 			this.setFocusOnInput();
+		}
+
+		/**
+		 * Removes attribute on input element if attribute is present
+		 *
+		 * @private
+		 * @param {string} attribute
+		 * @memberof UserTextInput
+		 */
+		private removeAttribute(attribute:string):void {
+			if (this.inputElement
+				&& this.inputElement.hasAttribute(attribute)) {
+				this.inputElement.removeAttribute(attribute);
+			}
+		}
+
+		tagType(inputElement: ITag): String {
+
+			if (
+				!inputElement.domElement
+				|| !inputElement.domElement.tagName
+			) {
+				return 'TEXTAREA';
+			}
+
+			if (
+				inputElement.domElement.tagName === 'TEXTAREA'
+				|| (
+					inputElement.domElement.hasAttribute('rows')
+					&& parseInt(inputElement.domElement.getAttribute('rows'), 10) > 1
+				)
+			) return 'TEXTAREA';
+			
+			if (inputElement.domElement.tagName === 'INPUT') return 'INPUT';
+			
+			return 'TEXTAREA'; // TODO
 		}
 
 		protected onFlowUpdate(event: CustomEvent){
@@ -329,7 +389,7 @@ namespace cf {
 			this.checkForCorrectInputTag()
 
 			// set input field to type password if the dom input field is that, covering up the input
-			var isInputSpecificType: boolean = ["password", "number", "email"].indexOf(this._currentTag.type) !== -1;
+			var isInputSpecificType: boolean = ["password", "number", "email", "tel"].indexOf(this._currentTag.type) !== -1;
 			this.inputElement.setAttribute("type", isInputSpecificType ? this._currentTag.type : "input");
 
 			clearTimeout(this.errorTimer);
@@ -353,7 +413,7 @@ namespace cf {
 				this.buildControlElements([this._currentTag]);
 			}
 
-			if(this._currentTag.type == "text" || this._currentTag.type == "email"){
+			if (this._currentTag.defaultValue) {
 				this.inputElement.value = this._currentTag.defaultValue.toString();
 			}
 
@@ -379,9 +439,11 @@ namespace cf {
 				}
 			}
 
+			this.resetInputHeight();
+
 			setTimeout(() => {
 				this.onInputChange();
-			}, 150);
+			}, 300);
 		}
 
 		private onControlElementProgressChange(event: CustomEvent){
@@ -654,9 +716,9 @@ namespace cf {
 					<cf-list>
 					</cf-list>
 				</cf-input-control-elements>
-
-				<textarea type='input' tabindex="1" rows="1"></textarea>
-
+				<div class="inputWrapper">
+					<textarea type='input' tabindex="1" rows="1"></textarea>
+				</div>
 			</cf-input>
 			`;
 		}

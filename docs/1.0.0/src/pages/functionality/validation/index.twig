@@ -1,0 +1,75 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Validation' %}
+{% set page_slug = '/functionality/validation/' %}
+
+{% block page %}
+    <h1 id="validation">{{page_title}}</h1>
+    
+    <p>Native validation is, to a great extent, supported by Conversational Form.</p>
+    <ul>
+        <li><code class="language-javascript" data-lang="html">required</code> attribute</li>
+        <li><code class="language-javascript" data-lang="html">minlength</code> and <code class="language-javascript" data-lang="html">maxlength</code> attribute</li>
+        <li><code class="language-javascript" data-lang="html">min</code> and <code class="language-javascript" data-lang="html">max</code> attribute</li>
+        <li><code class="language-javascript" data-lang="html">pattern</code> attribute</li>
+        <li>input types: text, tel, email, number etc.</li>
+        <li>if type email then emailregex.com js-pattern is applied</li>
+    </ul>
+
+    <p class="codepen" data-height="365" data-theme-id="0" data-default-tab="html,result" data-user="space10" data-slug-hash="QXLJNr" style="height: 365px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Conversational Forms - native validation (v1.0.0 feature)">
+    
+    <h2 id="error-message">Custom error message</h2>
+    <p>You can use the cf-error attribute to define a custom error message when a field is not valid</p>
+
+    <h2 id="javascript-validation">Validating using javascript</h2>
+    <p>Validate a submitted value before continuing the form flow using javascript.</p>
+	<ul>
+        <li>v1.0.0 and up: No use of eval(). All validation functions must be on window</li>
+        <li>Do not include window in the cf-validation attribute value</li>
+		<li>Asyncronous, so a value can be validated through a server</li>
+		<li>three parameters is passed to the method
+			<ul>
+				<li>dto: FlowDTO</li>
+				<li>success: () => void //callback</li>
+				<li>error: (optionalErrorMessage?: string) => void //callback</li>
+			</ul>
+		</li>
+	</ul>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-validation="lastnameCheck" /></code></pre>
+    <pre><code class="language-javascript" data-lang="html">var lastnameCheck = function(dto, success, error){
+    console.log("testValidation, dto:", dto, success, error);
+    if(dto.text.toLowerCase().indexOf("holmes") != -1)
+        return success();
+    return error();
+};</code></pre>
+
+	<h2 id="validate-using-flowstepcallback">Using flowStepCallback</h2>
+	<pre><code class="language-javascript" data-lang="html">var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+    formEl: document.getElementById("form"),
+    context: document.getElementById("cf-context"),
+    flowStepCallback: function(dto, success, error){
+        
+        if(dto.tag.id == "firstname"){
+            if(dto.tag.value.toLowerCase() === "sherlock"){
+                return success();
+            }else{
+                return error();
+            }
+            //conversationalForm.stop("Stopping form, but added value");
+        }else if(dto.tag.name == "gender"){
+            if(dto.tag.value[0] === "male"){
+                return success();
+            }else{
+                return error();
+            }
+        }
+
+        return success();
+    }
+});</code></pre>
+
+    <h2 id="validation-example">Example using both validation strategies</h2>
+    <p data-height="436" data-theme-id="light" data-slug-hash="ypOwGN" data-default-tab="js,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Validation" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/ypOwGN/">Conversational Forms - Validation</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+{% endblock %}

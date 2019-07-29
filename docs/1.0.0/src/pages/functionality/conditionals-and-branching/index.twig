@@ -1,0 +1,63 @@
+{% extends "../../../layout.twig" %}
+
+{% set page_title = 'Conditionals and branching' %}
+{% set page_slug = '/functionality/conditionals-and-branching/' %}
+
+{% block page %}
+    <h1 id="conditionals-and-branching-intro">{{page_title}}</h1>
+    <p>Setup conditional flows, show only a tag if certain conditionals from other tags are meet.</p>
+    <p>Conditionals must be set on tag-level, adding them on eg. fieldset-tag does nothing.</p>
+	
+    <h2 id="simple-conditional">A simple conditional</h2>
+	<p>Setup some initial radio buttons</p>
+	<pre><code class="language-html" data-lang="html">&lt;fieldset cf-questions="Ready to try a conditional flow?">
+	&lt;input type="radio" name="cfc-intro" id="intro-yes" value="yes">
+	&lt;label for="intro-yes">Yes</label>
+
+	&lt;input type="radio" name="cfc-intro" id="intro-no" value="no">
+	&lt;label for="intro-no">No thanks</label>
+&lt;/fieldset></code></pre>
+	
+	<p>Then add a new tag with <code>cf-conditional-</code> + attribute <code>name</code> -&gt; ex.: <code>&lt;input type="text" cf-conditional-[input-name]="...</code></p>
+	<pre><code class="language-html" data-lang="html">&lt;!--this input tag shows only if radio button with value yes was clicked-->
+&lt;input
+	type="text"
+	cf-questions="Question to ask.."
+	cf-conditional-cfc-intro="yes" /> &lt;!-- here we do the mapping --></code></pre>
+
+	<h2 id="multiple-conditions">Multiple conditions</h2>
+	<p>Add multiple conditions to a tag.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input
+	type="text"
+	cf-questions="Question to ask.."
+	cf-conditional-cfc-hello="world"
+	cf-conditional-cfc-world="hello" /></code></pre>
+
+	<h2 id="multiple-values-for-condition">Multiple values for condition</h2>
+	<p>Add multiple values for a condition.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input
+	type="text"
+	cf-questions="Question to ask.."
+	cf-conditional-cfc-intro="yes||no" /> &lt;!-- multiple values --></code></pre>
+
+	<h2 id="regular-expression">Regular expression</h2>
+	<pre><code class="language-html" data-lang="html">&lt;input
+	type="text"
+	cf-questions="Question to ask.."
+	cf-conditional-cfc-intro="^yes$" /> &lt;!-- regexp --></code></pre>
+
+	<h2 id="example">Example</h2>
+	<p data-height="391" data-theme-id="light" data-slug-hash="JMXzGX" data-default-tab="html,result" data-user="space10" data-embed-version="2" data-pen-title="Conversational Forms - Conditionals and branching" class="codepen">See the Pen <a href="https://codepen.io/space10/pen/JMXzGX/">Conversational Forms - Conditionals and branching</a> by SPACE10 (<a href="https://codepen.io/jenssog">@space10</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+	
+{% endblock %}
+
+{% block toc %}
+	<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#conditionals-and-branching-intro">Conditionals and branching</a></li>
+		<li class="toc-entry toc-h2"><a href="#simple-conditional">Simple conditional</a></li>
+		<li class="toc-entry toc-h2"><a href="#multiple-conditions">Multiple conditions</a></li>
+		<li class="toc-entry toc-h2"><a href="#multiple-values-for-condition">Multiple values for condition</a></li>
+		<li class="toc-entry toc-h2"><a href="#regular-expression">Regular expressions</a></li>
+		<li class="toc-entry toc-h2"><a href="#example">Example</a></li>
+	</ul>
+{% endblock %}

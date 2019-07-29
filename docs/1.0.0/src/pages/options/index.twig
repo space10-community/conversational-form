@@ -1,0 +1,168 @@
+{% extends "../../layout.twig" %}
+
+{% set page_title = 'Options' %}
+{% set page_slug = '/options/' %}
+
+
+{% block page %}
+    <h1 id="options">Options</h1>
+    <p>Below is a list of possible options.</p>
+
+    <table class="table options-table compact">
+    	<thead>
+    		<tr>
+    			<th scope="col">Option</th>
+    			<th scope="col">Type</th>
+    			<th scope="col">Default</th>
+    			<th scope="col">Description</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td>formEl</td>
+    			<td>HTMLFormElement</td>
+    			<td></td>
+    			<td>Required. The Form element.</td>
+    		</tr>
+    		<tr>
+    			<td>context</td>
+    			<td>HTMLElement</td>
+    			<td>document.body</td>
+    			<td>Context (HTMLElement) of where to append the ConversationalForm (see also cf-context attribute)</td>
+    		</tr>
+    		<tr>
+    			<td>tags</td>
+    			<td>Array</td>
+    			<td></td>
+    			<td>Pass in custom tags (when auto-instantiation of ConversationalForm is disabled)</td>
+    		</tr>
+    		<tr>
+    			<td>theme</td>
+    			<td>string</td>
+    			<td>light</td>
+    			<td>Can be either: light, dark, red, green, blue, purple</td>
+    		</tr>
+    		<tr>
+    			<td>dictionaryData</td>
+    			<td>Object</td>
+    			<td></td>
+    			<td>Overwrite the default user Dictionary items</td>
+    		</tr>
+    		<tr>
+    			<td>dictionaryRobot</td>
+    			<td>boolean</td>
+    			<td>true</td>
+    			<td>Can be set to false to allow for loading and packaging of Conversational Form styles within a larger project.</td>
+    		</tr>
+            <tr>
+                <td>userImage</td>
+                <td>base64, image url or a string beginning with "text:" (eg. "text:JD") (max 3 characters)</td>
+                <td></td>
+                <td>Add a custom user image or short text string, without overwritting the user dictionary.</td>
+            </tr>
+            <tr>
+                <td>robotImage</td>
+                <td>base64, image url or a string beginning with "text:" (eg. "text:JD") (max 3 characters)</td>
+                <td></td>
+                <td>Add a custom robot image or short text string, without overwritting the robot dictionary.</td>
+            </tr>
+    		<tr>
+    			<td>submitCallback</td>
+    			<td>Object</td>
+    			<td>void</td>
+    			<td>Custom submit callback if button[type=submit] || form.submit() is not wanted.</td>
+    		</tr>
+    		<tr>
+    			<td>loadExternalStyleSheet</td>
+    			<td>boolean</td>
+    			<td>true</td>
+    			<td>If set to false, the default Conversational Form stylesheet will not be loaded.</td>
+    		</tr>
+    		<tr>
+    			<td>preventAutoAppend</td>
+    			<td>boolean</td>
+    			<td>false</td>
+    			<td>Prevent auto appending of Conversational Form, append it yourself.</td>
+    		</tr>
+    		<tr>
+    			<td>preventAutoStart</td>
+    			<td>boolean</td>
+    			<td>false</td>
+    			<td>Start the form in your own time, {cf-instance}.start(), exclude cf-form from form tag</td>
+    		</tr>
+			<tr>
+    			<td>preventAutoFocus</td>
+    			<td>boolean</td>
+    			<td>false</td>
+    			<td>Prevents the initial auto focus set on the UserInput.</td>
+    		</tr>
+    		<tr>
+    			<td>scrollAcceleration</td>
+    			<td>number</td>
+    			<td>0.1</td>
+    			<td>Optional horizontal scroll acceleration value, 0-1</td>
+    		</tr>
+    		<tr>
+    			<td>flowStepCallback</td>
+    			<td>Object</td>
+    			<td>(dto: FlowDTO, success: () => void, error: () => void) => void</td>
+    			<td>Allow for a global validation method, asyncronous, so a value can be validated through a server, call success() or error()</td>
+    		</tr>
+    		<tr>
+    			<td>eventDispatcher</td>
+    			<td>cf.EventDispatcher</td>
+    			<td></td>
+    			<td>Optional event dispatcher, has to be an instance of cf.EventDispatcher, see <a href="../events/">Events</a> for more info.</td>
+    		</tr>
+    		<tr>
+    			<td>microphoneInput</td>
+    			<td>IUserInput</td>
+    			<td></td>
+    			<td>Optional, set microphone input, future, add other custom inputs, ex. VR, see <a href="../functionality/voice/">voice-section</a> and examples.</td>
+    		</tr>
+			<tr>
+    			<td>hideUserInputOnNoneTextInput</td>
+    			<td>boolean</td>
+    			<td>false</td>
+    			<td>Optional, hide UserInputField when radio, checkbox, select input fields are active.</td>
+    		</tr>
+    		<tr>
+    			<td>userInterfaceOptions</td>
+    			<td>cf.UserInterfaceOptions</td>
+    			<td></td>
+    			<td>Optional, parameters for the User Interface of Conversational Form, set here to show thinking dots or not, set delay time in-between robot responses.
+                    <pre><code class="language-javascript" data-lang="javascript">userInterfaceOptions:{
+    controlElementsInAnimationDelay: 250,
+    robot: {
+        robotResponseTime: 0,
+        chainedResponseTime: 400
+    },
+    user:{
+        showThinking: true,
+        showThumb: true
+    }
+}</code></pre>
+                </td>
+    		</tr>
+            <tr>
+                <td>suppressLog</td>
+                <td>Boolean</td>
+                <td>true</td>
+                <td>By default log messages form CF is suppressed. Set to true and get some additional info. Recommended for development.</td>
+			</tr>
+			<tr>
+                <td>showProgressBar</td>
+                <td>Boolean</td>
+                <td>false</td>
+                <td>Shows thin progressbar in the top of the chat container.</td>
+			</tr>
+			<tr>
+                <td>animationsEnabled</td>
+                <td>Boolean</td>
+                <td>true</td>
+                <td>Set to false to disable animations.</td>
+            </tr>
+    	  </tbody>
+    </table>
+
+{% endblock %}

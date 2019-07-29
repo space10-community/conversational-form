@@ -27,11 +27,11 @@ function swallowError(error) {
 
 global.gulp.task('sass-form-build', ['sass-form'], function(){
 	var src = [
-		global.buildFolder + "conversational-form.css"
+		global.buildFolder + "conversational-form*.css"
 	]
 
 	var stream = global.gulp.src(src)
-		.pipe(concat('conversational-form.css'))
+		// .pipe(concat('conversational-form.css'))
 		.pipe(global.gulp.dest(global.distFolder))
 		.pipe(cleanCSS())
 		.pipe(rename({suffix: '.min'}))
@@ -46,7 +46,7 @@ global.gulp.task('sass-form-build', ['sass-form'], function(){
  */
 global.gulp.task('sass-form', function () {
 	var src = [
-		global.srcFolder + "/styles/conversational-form.scss"
+		global.srcFolder + "/styles/conversational-form*.scss"
 	]
 	var dst = global.buildFolder;
 

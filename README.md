@@ -1,39 +1,47 @@
 # Conversational Form
 
-**Turning web forms into conversations.** Conversational Form is an open-source concept by [SPACE10](https://www.space10.io) to easily turn any form element on a web page into a conversational form interface. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
+Conversational Form is an open-source concept by [SPACE10](https://www.space10.io) to easily turn your content into conversations. It features conversational replacement of all input elements, reusable variables from previous questions and complete customization and control over the styling.
 
 <p align="center">
 	<a href="https://medium.com/conversational-interfaces/introducing-the-conversational-form-c3166eb2ee2f#.yq5axcfcq"><strong>Learn why we did it</strong></a>
 </p>
 <p align="center">
-	<a href="https://space10-community.github.io/conversational-form/docs/0.9.90/"><strong>Explore Conversational Form docs »</strong></a>
+	<a href="https://space10-community.github.io/conversational-form/docs/1.0.0/"><strong>Explore Conversational Form docs »</strong></a>
 </p>
 <p align="center">
-	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/master/docs/0.9.70/assets/readme-cf.gif" />
+	<img src="https://raw.githubusercontent.com/space10-community/conversational-form/develop/docs/1.0.0/assets/cf-demo.gif" />
 </p>
 
 ## Quick Start
 
-Include ConversationalForm in your page:
+Include Conversational Form in your page:
 
 ```html
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@0.9.90/dist/conversational-form.min.js" crossorigin></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/space10-community/conversational-form@1.0.0/dist/conversational-form.min.js" crossorigin></script>
 ```
-Or download the latest release:
+Or download/install the latest release:
 - Clone the repo: ````git clone https://github.com/space10-community/conversational-form.git````
 - Install with npm: ````npm install conversational-form````
 - Install with yarn: ````yarn add conversational-form````
 
-ConversationalForm will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
+Manually instantiating Conversational Form
+```
+import { ConversationalForm } from 'conversational-form';
+
+const cfInstance = new ConversationalForm({
+    formEl: formElement,
+    context: targetElement,
+});
+```
+
+Conversational Form will automatically look through the DOM for a form element with the attribute `cf-form`, and auto-instantiate.
 ```html
 <form id="my-form-element" cf-form>
 ...
 </form>
 ```
 
-[jsbin](https://jsbin.com/vopuxukaze/edit?html,js,output)
-
-Read the [Getting started](https://space10-community.github.io/conversational-form/docs/0.9.90/getting-started/) page for information on the framework contents, options, templates and examples and more.
+Read the [Getting started](https://space10-community.github.io/conversational-form/docs/1.0.0/getting-started/) page for information on the framework contents, options, templates, examples and more.
 
 ## Status
 [![npm version](https://img.shields.io/npm/v/conversational-form.svg)](https://www.npmjs.com/package/conversational-form)

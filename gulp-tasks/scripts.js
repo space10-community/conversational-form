@@ -74,6 +74,7 @@ global.gulp.task('scripts-form-build', ['scripts-form'], function(){
 		global.buildFolder + "cf/ui/control-elements/ControlElement.js",
 		global.buildFolder + "cf/ui/control-elements/ControlElements.js",
 		global.buildFolder + "cf/ui/ScrollController.js",
+		global.buildFolder + "cf/ui/ProgressBar.js",
 		global.buildFolder + "cf/data/Dictionary.js",
 		global.buildFolder + "cf/form-tags/Tag.js",
 		global.buildFolder + "cf/form-tags/TagGroup.js",

@@ -11,7 +11,7 @@ namespace cf {
 
 	}
 	export class ScrollController{
-		public static accerlation: number = 0.1;
+		public static acceleration: number = 0.1;
 
 		private eventTarget: EventDispatcher;
 		private interactionListener: HTMLElement;
@@ -111,7 +111,7 @@ namespace cf {
 			this.startX += (this.startXTarget - this.startX) * 0.2;
 
 			// animate accerlaration
-			this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.accerlation + 0.1, 1) : ScrollController.accerlation);
+			this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.acceleration + 0.1, 1) : ScrollController.acceleration);
 			const accDamping: number = 0.25;
 			this.inputAccerlationTarget *= accDamping;
 
@@ -127,10 +127,10 @@ namespace cf {
 
 			// bounce back when over
 			if(this.xTarget > 0)
-				this.xTarget += (0 - this.xTarget) * Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
+				this.xTarget += (0 - this.xTarget) * Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
 
 			if(this.xTarget < this.max)
-				this.xTarget += (this.max - this.xTarget) * Helpers.lerp(ScrollController.accerlation, 0.3, 0.8);
+				this.xTarget += (this.max - this.xTarget) * Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
 
 			this.x += (this.xTarget - this.x) * 0.4;
 

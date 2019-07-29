@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>DOM element attributes | Conversational Form</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+	<link rel="icon" href="../assets/favicon.ico">
+
+	<link rel="publisher" href="http://space10.io/"/>
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+	<meta name="twitter:creator" content="@space10_journal">
+	<meta name="twitter:title" content="Turning web forms into conversations"/>
+	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+	<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/docs/1.0.0/assets/share_img.jpg" />
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Turning web forms into conversations"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:image" content="https://space10-community.github.io/conversational-form/docs/1.0.0/assets/share_img.jpg" />
+
+				
+	<link href="../assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../css/style.css">
+	
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+	<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script src="../assets/prism.js"></script>
+	<script src="../js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	</head>
+<body>
+	<header class="navbar fixed-top navbar-expand flex-column flex-md-row cfdoc-navbar navbar-dark bg-dark">
+  <a class="cf-navbar-logo mr-0 mr-md-2" href="../getting-started/" aria-label="Conversational Form">
+    <svg width="203" height="32" viewBox="0 0 203 32" xmlns="http://www.w3.org/2000/svg"><title>logo</title><g fill="none" fill-rule="evenodd"><g><circle fill="#EBEBEB" cx="16" cy="16" r="16"/><path fill="#222" d="M8.381 8.381h15.238v15.238H8.381z"/></g><path d="M57.112 14.112a2.051 2.051 0 0 0-.288-.792c-.15-.24-.336-.45-.56-.632a2.611 2.611 0 0 0-1.648-.576c-.565 0-1.045.11-1.44.328a2.719 2.719 0 0 0-.96.88 3.856 3.856 0 0 0-.536 1.256c-.112.47-.168.955-.168 1.456 0 .48.056.947.168 1.4.112.453.29.861.536 1.224.245.363.565.653.96.872.395.219.875.328 1.44.328.768 0 1.368-.235 1.8-.704.432-.47.696-1.088.792-1.856h2.432a5.808 5.808 0 0 1-.496 1.936 4.637 4.637 0 0 1-1.056 1.472c-.437.405-.95.715-1.536.928a5.628 5.628 0 0 1-1.936.32c-.875 0-1.661-.152-2.36-.456a5.057 5.057 0 0 1-1.768-1.256 5.56 5.56 0 0 1-1.104-1.88A6.9 6.9 0 0 1 49 16.032c0-.853.128-1.645.384-2.376a5.707 5.707 0 0 1 1.104-1.912c.48-.544 1.07-.97 1.768-1.28.699-.31 1.485-.464 2.36-.464.63 0 1.224.09 1.784.272a4.83 4.83 0 0 1 1.504.792A4.28 4.28 0 0 1 59 12.352c.288.512.47 1.099.544 1.76h-2.432zm5.766 3.456c0 .33.032.653.096.968.064.315.173.597.328.848.155.25.36.45.616.6.256.15.576.224.96.224s.707-.075.968-.224c.261-.15.47-.35.624-.6.155-.25.264-.533.328-.848a4.964 4.964 0 0 0 0-1.944 2.49 2.49 0 0 0-.328-.848 1.82 1.82 0 0 0-.624-.6c-.261-.155-.584-.232-.968-.232s-.704.077-.96.232a1.842 1.842 0 0 0-.616.6 2.49 2.49 0 0 0-.328.848c-.064.32-.096.645-.096.976zm-2.272 0c0-.661.101-1.261.304-1.8.203-.539.49-.997.864-1.376a3.872 3.872 0 0 1 1.344-.88c.523-.208 1.11-.312 1.76-.312.65 0 1.24.104 1.768.312.528.208.979.501 1.352.88.373.379.661.837.864 1.376.203.539.304 1.139.304 1.8s-.101 1.259-.304 1.792c-.203.533-.49.99-.864 1.368-.373.379-.824.67-1.352.872a4.9 4.9 0 0 1-1.768.304c-.65 0-1.237-.101-1.76-.304a3.78 3.78 0 0 1-1.344-.872 3.887 3.887 0 0 1-.864-1.368c-.203-.533-.304-1.13-.304-1.792zm9.782-4.144h2.16v1.152h.048c.288-.48.661-.83 1.12-1.048a3.239 3.239 0 0 1 1.408-.328c.608 0 1.107.083 1.496.248.39.165.696.395.92.688.224.293.381.65.472 1.072.09.421.136.888.136 1.4v5.088h-2.272v-4.672c0-.683-.107-1.192-.32-1.528-.213-.336-.592-.504-1.136-.504-.619 0-1.067.184-1.344.552-.277.368-.416.973-.416 1.816v4.336h-2.272v-8.272zm13.814 8.272h-2.528l-2.832-8.272h2.384l1.744 5.648h.032l1.744-5.648h2.256l-2.8 8.272zm9.062-5.024c-.107-.576-.296-1.013-.568-1.312-.272-.299-.685-.448-1.24-.448-.363 0-.664.061-.904.184s-.432.275-.576.456a1.67 1.67 0 0 0-.304.576 2.608 2.608 0 0 0-.104.544h3.696zm-3.696 1.44c.032.736.219 1.27.56 1.6.341.33.832.496 1.472.496.459 0 .853-.115 1.184-.344.33-.23.533-.472.608-.728h2c-.32.992-.81 1.701-1.472 2.128-.661.427-1.461.64-2.4.64-.65 0-1.237-.104-1.76-.312a3.66 3.66 0 0 1-1.328-.888 3.997 3.997 0 0 1-.84-1.376 5.037 5.037 0 0 1-.296-1.76c0-.619.101-1.195.304-1.728.203-.533.49-.995.864-1.384.373-.39.819-.696 1.336-.92a4.284 4.284 0 0 1 1.72-.336c.704 0 1.317.136 1.84.408.523.272.952.637 1.288 1.096.336.459.579.981.728 1.568.15.587.203 1.2.16 1.84h-5.968zm7.062-4.688h2.16v1.536h.032a2.83 2.83 0 0 1 1.056-1.272c.235-.155.485-.275.752-.36.267-.085.544-.128.832-.128.15 0 .315.027.496.08v2.112a4.364 4.364 0 0 0-.816-.08c-.416 0-.768.07-1.056.208-.288.139-.52.328-.696.568-.176.24-.301.52-.376.84-.075.32-.112.667-.112 1.04v3.728H96.63v-8.272zm7.734 5.584a1.246 1.246 0 0 0 .544 1.064c.16.112.344.195.552.248.208.053.424.08.648.08.16 0 .328-.019.504-.056.176-.037.336-.096.48-.176.144-.08.264-.187.36-.32a.84.84 0 0 0 .144-.504c0-.341-.227-.597-.68-.768-.453-.17-1.085-.341-1.896-.512-.33-.075-.653-.163-.968-.264a3.308 3.308 0 0 1-.84-.4 1.945 1.945 0 0 1-.592-.624c-.15-.25-.224-.557-.224-.92 0-.533.104-.97.312-1.312a2.3 2.3 0 0 1 .824-.808 3.613 3.613 0 0 1 1.152-.416c.427-.08.864-.12 1.312-.12.448 0 .883.043 1.304.128.421.085.797.23 1.128.432.33.203.605.472.824.808.219.336.35.76.392 1.272h-2.16c-.032-.437-.197-.733-.496-.888-.299-.155-.65-.232-1.056-.232-.128 0-.267.008-.416.024-.15.016-.285.05-.408.104a.84.84 0 0 0-.312.232.613.613 0 0 0-.128.408c0 .203.075.368.224.496.15.128.344.232.584.312.24.08.515.152.824.216.31.064.624.133.944.208.33.075.653.165.968.272.315.107.595.248.84.424s.443.395.592.656c.15.261.224.584.224.968 0 .544-.11 1-.328 1.368a2.625 2.625 0 0 1-.856.888 3.509 3.509 0 0 1-1.208.472 7.04 7.04 0 0 1-2.792-.008 3.716 3.716 0 0 1-1.224-.48 2.745 2.745 0 0 1-.88-.888c-.23-.368-.355-.83-.376-1.384h2.16zm6.486-3.04c.032-.533.165-.976.4-1.328.235-.352.533-.635.896-.848.363-.213.77-.365 1.224-.456.453-.09.91-.136 1.368-.136.416 0 .837.03 1.264.088.427.059.816.173 1.168.344.352.17.64.408.864.712.224.304.336.707.336 1.208v4.304c0 .373.021.73.064 1.072.043.341.117.597.224.768h-2.304a3.26 3.26 0 0 1-.16-.8 2.96 2.96 0 0 1-1.28.784c-.49.15-.992.224-1.504.224-.395 0-.763-.048-1.104-.144a2.528 2.528 0 0 1-.896-.448 2.085 2.085 0 0 1-.6-.768c-.144-.31-.216-.677-.216-1.104 0-.47.083-.856.248-1.16.165-.304.379-.547.64-.728.261-.181.56-.317.896-.408.336-.09.675-.163 1.016-.216.341-.053.677-.096 1.008-.128.33-.032.624-.08.88-.144.256-.064.459-.157.608-.28.15-.123.219-.301.208-.536 0-.245-.04-.44-.12-.584a.882.882 0 0 0-.32-.336 1.259 1.259 0 0 0-.464-.16 3.797 3.797 0 0 0-.568-.04c-.448 0-.8.096-1.056.288-.256.192-.405.512-.448.96h-2.272zm5.248 1.68a1.02 1.02 0 0 1-.36.2 3.677 3.677 0 0 1-.464.12 7.11 7.11 0 0 1-.52.08 9.551 9.551 0 0 0-.544.08c-.17.032-.339.075-.504.128a1.49 1.49 0 0 0-.432.216c-.123.09-.221.205-.296.344a1.107 1.107 0 0 0-.112.528c0 .203.037.373.112.512a.859.859 0 0 0 .304.328c.128.08.277.136.448.168.17.032.347.048.528.048.448 0 .795-.075 1.04-.224.245-.15.427-.328.544-.536.117-.208.19-.419.216-.632.027-.213.04-.384.04-.512v-.848zm6.662-4.224h1.664v1.52h-1.664v4.096c0 .384.064.64.192.768s.384.192.768.192c.128 0 .25-.005.368-.016.117-.01.23-.027.336-.048v1.76a5.406 5.406 0 0 1-.64.064c-.235.01-.464.016-.688.016-.352 0-.685-.024-1-.072a2.358 2.358 0 0 1-.832-.28 1.482 1.482 0 0 1-.568-.592c-.139-.256-.208-.592-.208-1.008v-4.88h-1.376v-1.52h1.376v-2.48h2.272v2.48zm4.838-1.28h-2.272v-1.872h2.272v1.872zm-2.272 1.28h2.272v8.272h-2.272v-8.272zm5.83 4.144c0 .33.032.653.096.968.064.315.173.597.328.848.155.25.36.45.616.6.256.15.576.224.96.224s.707-.075.968-.224c.261-.15.47-.35.624-.6.155-.25.264-.533.328-.848a4.964 4.964 0 0 0 0-1.944 2.49 2.49 0 0 0-.328-.848 1.82 1.82 0 0 0-.624-.6c-.261-.155-.584-.232-.968-.232s-.704.077-.96.232a1.842 1.842 0 0 0-.616.6 2.49 2.49 0 0 0-.328.848c-.064.32-.096.645-.096.976zm-2.272 0c0-.661.101-1.261.304-1.8.203-.539.49-.997.864-1.376a3.872 3.872 0 0 1 1.344-.88c.523-.208 1.11-.312 1.76-.312.65 0 1.24.104 1.768.312.528.208.979.501 1.352.88.373.379.661.837.864 1.376.203.539.304 1.139.304 1.8s-.101 1.259-.304 1.792c-.203.533-.49.99-.864 1.368-.373.379-.824.67-1.352.872a4.9 4.9 0 0 1-1.768.304c-.65 0-1.237-.101-1.76-.304a3.78 3.78 0 0 1-1.344-.872 3.887 3.887 0 0 1-.864-1.368c-.203-.533-.304-1.13-.304-1.792zm9.782-4.144h2.16v1.152h.048c.288-.48.661-.83 1.12-1.048a3.239 3.239 0 0 1 1.408-.328c.608 0 1.107.083 1.496.248.39.165.696.395.92.688.224.293.381.65.472 1.072.09.421.136.888.136 1.4v5.088h-2.272v-4.672c0-.683-.107-1.192-.32-1.528-.213-.336-.592-.504-1.136-.504-.619 0-1.067.184-1.344.552-.277.368-.416.973-.416 1.816v4.336h-2.272v-8.272zm9.142 2.544c.032-.533.165-.976.4-1.328.235-.352.533-.635.896-.848.363-.213.77-.365 1.224-.456.453-.09.91-.136 1.368-.136.416 0 .837.03 1.264.088.427.059.816.173 1.168.344.352.17.64.408.864.712.224.304.336.707.336 1.208v4.304c0 .373.021.73.064 1.072.043.341.117.597.224.768h-2.304a3.26 3.26 0 0 1-.16-.8 2.96 2.96 0 0 1-1.28.784c-.49.15-.992.224-1.504.224-.395 0-.763-.048-1.104-.144a2.528 2.528 0 0 1-.896-.448 2.085 2.085 0 0 1-.6-.768c-.144-.31-.216-.677-.216-1.104 0-.47.083-.856.248-1.16.165-.304.379-.547.64-.728.261-.181.56-.317.896-.408.336-.09.675-.163 1.016-.216.341-.053.677-.096 1.008-.128.33-.032.624-.08.88-.144.256-.064.459-.157.608-.28.15-.123.219-.301.208-.536 0-.245-.04-.44-.12-.584a.882.882 0 0 0-.32-.336 1.259 1.259 0 0 0-.464-.16 3.797 3.797 0 0 0-.568-.04c-.448 0-.8.096-1.056.288-.256.192-.405.512-.448.96h-2.272zm5.248 1.68a1.02 1.02 0 0 1-.36.2 3.677 3.677 0 0 1-.464.12 7.11 7.11 0 0 1-.52.08 9.551 9.551 0 0 0-.544.08c-.17.032-.339.075-.504.128a1.49 1.49 0 0 0-.432.216c-.123.09-.221.205-.296.344a1.107 1.107 0 0 0-.112.528c0 .203.037.373.112.512a.859.859 0 0 0 .304.328c.128.08.277.136.448.168.17.032.347.048.528.048.448 0 .795-.075 1.04-.224.245-.15.427-.328.544-.536.117-.208.19-.419.216-.632.027-.213.04-.384.04-.512v-.848zm3.846-7.376h2.272v11.424h-2.272V10.272zm8.252 0h8.032v2.112h-5.52v2.64h4.784v1.952h-4.784v4.72h-2.512V10.272zm11.014 7.296c0 .33.032.653.096.968.064.315.173.597.328.848.155.25.36.45.616.6.256.15.576.224.96.224s.707-.075.968-.224c.261-.15.47-.35.624-.6.155-.25.264-.533.328-.848a4.964 4.964 0 0 0 0-1.944 2.49 2.49 0 0 0-.328-.848 1.82 1.82 0 0 0-.624-.6c-.261-.155-.584-.232-.968-.232s-.704.077-.96.232a1.842 1.842 0 0 0-.616.6 2.49 2.49 0 0 0-.328.848c-.064.32-.096.645-.096.976zm-2.272 0c0-.661.101-1.261.304-1.8.203-.539.49-.997.864-1.376a3.872 3.872 0 0 1 1.344-.88c.523-.208 1.11-.312 1.76-.312.65 0 1.24.104 1.768.312.528.208.979.501 1.352.88.373.379.661.837.864 1.376.203.539.304 1.139.304 1.8s-.101 1.259-.304 1.792c-.203.533-.49.99-.864 1.368-.373.379-.824.67-1.352.872a4.9 4.9 0 0 1-1.768.304c-.65 0-1.237-.101-1.76-.304a3.78 3.78 0 0 1-1.344-.872 3.887 3.887 0 0 1-.864-1.368c-.203-.533-.304-1.13-.304-1.792zm9.782-4.144h2.16v1.536h.032a2.83 2.83 0 0 1 1.056-1.272c.235-.155.485-.275.752-.36.267-.085.544-.128.832-.128.15 0 .315.027.496.08v2.112a4.364 4.364 0 0 0-.816-.08c-.416 0-.768.07-1.056.208-.288.139-.52.328-.696.568-.176.24-.301.52-.376.84-.075.32-.112.667-.112 1.04v3.728h-2.272v-8.272zm6.038 0h2.144v1.12h.032a3.235 3.235 0 0 1 1.08-.992c.421-.235.904-.352 1.448-.352.523 0 1 .101 1.432.304.432.203.76.56.984 1.072a3.521 3.521 0 0 1 1-.96c.421-.277.92-.416 1.496-.416.437 0 .843.053 1.216.16.373.107.693.277.96.512s.475.541.624.92c.15.379.224.835.224 1.368v5.536h-2.272v-4.688c0-.277-.01-.539-.032-.784a1.664 1.664 0 0 0-.176-.64 1.066 1.066 0 0 0-.424-.432c-.187-.107-.44-.16-.76-.16s-.579.061-.776.184a1.333 1.333 0 0 0-.464.48 1.922 1.922 0 0 0-.224.672c-.037.25-.056.504-.056.76v4.608H194.9v-4.64c0-.245-.005-.488-.016-.728a2.043 2.043 0 0 0-.136-.664 1.021 1.021 0 0 0-.4-.488c-.187-.123-.461-.184-.824-.184-.107 0-.248.024-.424.072a1.407 1.407 0 0 0-.512.272 1.589 1.589 0 0 0-.424.576c-.117.25-.176.579-.176.984v4.8h-2.272v-8.272z" fill="#FFF"/></g></svg>
+  </a>
+
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav cfddoc-navbar-nav flex-row">
+      <li>
+        <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#cfdoc-links" aria-controls="cfdoc-links" aria-expanded="false" aria-label="Toggle docs navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+
+          </button>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <li class="nav-item dropdown">
+      <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cfdoc-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        v1.0.0
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cfdoc-versions">
+                	<a class="dropdown-item active" href="../../1.0.0/">v1.0.0</a>
+                	<a class="dropdown-item" href="../../0.9.90/">v0.9.90</a>
+                	<a class="dropdown-item" href="../../0.9.80/">v0.9.80</a>
+                	<a class="dropdown-item" href="../../0.9.71/">v0.9.71</a>
+                	<a class="dropdown-item" href="../../0.9.70/">v0.9.70</a>
+              </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="https://github.com/space10-community/conversational-form" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg class="navbar-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 499.36" focusable="false"><title>GitHub</title><path d="M256 0C114.64 0 0 114.61 0 256c0 113.09 73.34 209 175.08 242.9 12.8 2.35 17.47-5.56 17.47-12.34 0-6.08-.22-22.18-.35-43.54-71.2 15.49-86.2-34.34-86.2-34.34-11.64-29.57-28.42-37.45-28.42-37.45-23.27-15.84 1.73-15.55 1.73-15.55 25.69 1.81 39.21 26.38 39.21 26.38 22.84 39.12 59.92 27.82 74.5 21.27 2.33-16.54 8.94-27.82 16.25-34.22-56.84-6.43-116.6-28.43-116.6-126.49 0-27.95 10-50.8 26.35-68.69-2.63-6.48-11.42-32.5 2.51-67.75 0 0 21.49-6.88 70.4 26.24a242.65 242.65 0 0 1 128.18 0c48.87-33.13 70.33-26.24 70.33-26.24 14 35.25 5.18 61.27 2.55 67.75 16.41 17.9 26.31 40.75 26.31 68.69 0 98.35-59.85 120-116.88 126.32 9.19 7.9 17.38 23.53 17.38 47.41 0 34.22-.31 61.83-.31 70.23 0 6.85 4.61 14.81 17.6 12.31C438.72 464.97 512 369.08 512 256.02 512 114.62 397.37 0 256 0z" fill="#fff" fill-rule="evenodd"></path></svg>
+      </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " href="https://space10.io/" target="_blank">
+          <svg width="73" height="12" viewBox="0 0 73 12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>space10</title><defs><path id="a" d="M11.894 9.996H0V0h11.894v9.996z"/><path id="c" d="M0 0h11.8v9.146H0z"/></defs><g fill="none" fill-rule="evenodd"><g transform="rotate(90 4.996 4.996)"><mask id="b" fill="#fff"><use xlink:href="#a"/></mask><path d="M7.818 7.003c1.343-.065 1.775-.902 1.775-2.174 0-.901-.32-1.835-1.167-1.835-1.008 0-1.2 1.642-1.663 3.3-.464 1.641-1.2 3.364-3.294 3.364C.976 9.658 0 7.131 0 4.973 0 2.688 1.103.385 3.677.37v2.994c-1.038-.049-1.375.934-1.375 1.852 0 .644.224 1.448.975 1.448.88 0 1.04-1.657 1.504-3.332C5.244 1.675 6.01 0 8.074 0c2.894 0 3.82 2.48 3.82 5.007 0 2.639-1.15 4.974-4.076 4.99V7.003z" fill="#FFF" mask="url(#b)"/></g><path d="M11.37 0h5.458c2.14 0 4.153.974 4.153 3.677 0 2.83-1.626 3.933-4.153 3.933h-2.463v3.806H11.37V0zm2.995 5.308h2.013c.932 0 1.609-.383 1.609-1.424 0-1.07-.692-1.503-1.61-1.503h-2.012v2.927zM24.718 0h3.042l4.298 11.416h-3.124l-.708-2.046H24.22l-.725 2.046h-3.075L24.718 0zm.193 7.163h2.607l-1.27-3.997h-.033L24.91 7.163zM40.14 4.318c-.16-1.152-1.061-1.76-2.318-1.76-1.932 0-2.671 1.695-2.671 3.39s.74 3.39 2.671 3.39c1.402 0 2.206-.799 2.319-2.11h2.994c-.161 2.94-2.335 4.668-5.248 4.668-3.478 0-5.731-2.64-5.731-5.949C32.156 2.64 34.409 0 37.887 0c2.48 0 5.168 1.567 5.248 4.318H40.14zM44.891 0h9.16v2.38h-6.166v2h5.635v2.303h-5.635v2.174h6.327v2.559h-9.32zM55.088 4.3V2.303c1.576.032 3.203-.543 3.316-2.302h2.27v11.416h-2.898V4.3h-2.688z" fill="#FFF"/><g transform="rotate(90 36.267 36.267)"><mask id="d" fill="#fff"><use xlink:href="#c"/></mask><path d="M5.89 9.146C2.822 9.146 0 7.954 0 4.665 0 1.275 2.821 0 5.89 0c3.072 0 5.91 1.275 5.91 4.665 0 3.289-2.838 4.481-5.91 4.481m0-6.53c-1.5 0-3.614.105-3.614 1.966 0 1.794 2.114 1.947 3.615 1.947 1.502 0 3.63-.153 3.63-1.947 0-1.861-2.128-1.966-3.63-1.966" fill="#FFF" mask="url(#d)"/></g></g></svg>
+        </a>
+    </li>
+  </ul>
+
+  <a class="btn btn-secondary d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="https://github.com/space10-community/conversational-form/archive/master.zip">Download</a>
+</header>
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+								<nav class="cfdoc-links collapse" id="cfdoc-links">
+																																				<div class="toc-item">
+							<a class="toc-link" href="../getting-started/">Getting started</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../options/">Options</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../appearance/">Appearance</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../public-api/">Public API</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../events/">Events</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../functionality/autocomplete/">Functionality</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../integrations/">Integrations</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../localization/">Localization</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../build-the-source/">Build the source</a>
+													</div>
+																																				<div class="toc-item">
+							<a class="toc-link" href="../credits/">Credits</a>
+													</div>
+										
+				</nav>
+			</div>
+			
+			<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" role="main">
+				    <h1 id="dom-element-attributes">DOM element attributes</h1>
+    
+    <h2 id="form-attributes">Form-tag attributes</h2>
+    <h3 id="cf-context">cf-context</h3>
+    <p>If you want to have the ConversationalForm appended to a certain element (when auto-instantiating) then add attribute cf-context to an element, otherwise the ConversationalForm will be appended to the body element.</p>
+	<pre><code class="language-html" data-lang="html">&lt;div cf-context></pre></code>
+
+	<h3 id="cf-prevent-autofocus">cf-prevent-autofocus</h3>
+	<p>If you don't want to have the UserTextInput to auto focus.</p>
+	<pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form cf-prevent-autofocus></pre></code>
+
+	<h3 id="cf-no-animation">cf-no-animation</h3>
+	<p>Disables animations completly.</p>
+	<pre><code class="language-html" data-lang="html">&lt;form id="my-form-element" cf-form cf-no-animation></pre></code>
+
+	<h2 id="form-field-attributes">Form-field attributes</h2>
+	<h3 id="cf-questions">cf-questions</h3>
+	<p>Map questions directly to a tag. You can seperate with || to allow for more questions, app will shuffle questions.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your name?||Please tell me your name." /></pre></code>
+	<p>seperate with && to allow for chained questions.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="Hello?&&Please tell me your name." /></pre></code>
+
+	<h2 id="cf-input-placeholder">cf-input-placeholder</h2>
+	<p>Tag specific, set the placeholder text on the UserTextInput field.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-input-placeholder="Should include http" /></pre></code>
+
+	<h2 id="one-way-binding">{One way value-binding} with cf-questions</h2>
+	<p>For cui-questions, add {previous-answer} to insert the value from the previous user-answer, you are also able to reference the input ID.</p>
+	<p>Using the {previous-answer} mapping:</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your firstname?" />
+&lt;input type="text" cf-questions="Hello {previous-answer}, what is your lastname?"></pre></code>
+
+	<p>Using the ID attribute, this will loop through all submitted tags and map:</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="What is your first name?" id="firstname" />
+&lt;input type="text" cf-questions="What is your last name?" id="lastname" />
+&lt;input type="text" cf-questions="Hi {firstname} {lastname}, please tell me your email?" /></pre></code>
+
+	<p>previous input could be a select:option list with countries.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-questions="So you want to travel to {previous-answer}" /></pre></code>
+
+	<h2 id="cf-label">cf-label</h2>
+	<p>Add a label to the field. Field must be of type "radio" or "checkbox".</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="radio" cf-label="Subscribe to newsletter" /></pre></code>
+
+	<h2 id="cf-validation">cf-validation</h2>
+	<p>Validate a submitted value before continuing the form flow using javascript.</p>
+	<ul>
+		<li>OBS. eval is used.</li>
+		<li>Asyncronous, so a value can be validated through a server</li>
+		<li>three parameters is passed to the method
+			<ul>
+				<li>dto: FlowDTO</li>
+				<li>success: () => void //callback</li>
+				<li>error: (optionalErrorMessage?: string) => void //callback</li>
+			</ul>
+		</li>
+	</ul>
+    <pre><code class="language-html" data-lang="html">&lt;input type="text" cf-validation="window.validateFunction" ..</code></pre>
+
+    <h2 id="cf-error">cf-error</h2>
+	<p>Map error messages directly to a tag. The messages can be seperated by | to allow for more error messages. The app will shuffle between given messages.</p>
+	<pre><code class="language-html" data-lang="html">&lt;input type="text" cf-error="Text is wrong wrong|Input is not right" /></pre></code>
+
+			</main>
+			
+			<div class="d-none d-xl-block col-xl-2 cfdoc-toc">
+					<ul class="section-nav">
+		<li class="toc-entry toc-h2"><a href="#dom-element-attributes">DOM element attributes</a></li>
+		
+		<li class="toc-entry toc-h2"><a href="#form-attributes">Form-tag attributes</a>
+			<ul>
+				<li class="toc-entry toc-h3"><a href="#cf-context">cf-context</a></li>
+				<li class="toc-entry toc-h3"><a href="#cf-prevent-autofocus">cf-prevent-autofocus</a></li>
+				<li class="toc-entry toc-h3"><a href="#cf-no-animation">cf-no-animation</a></li>
+			</ul>
+		</li>
+
+		<li class="toc-entry toc-h2"><a href="#form-field-attributes">Form-field attributes</a></li>
+		<ul>
+			<li class="toc-entry toc-h3"><a href="#cf-questions">cf-questions</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-input-placeholder">cf-input-placeholder</a></li>
+			<li class="toc-entry toc-h3"><a href="#one-way-binding">{One way value-binding} with cf-questions</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-label">cf-label</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-validation">cf-validation</a></li>
+			<li class="toc-entry toc-h3"><a href="#cf-error">cf-error</a></li>
+		</ul>
+	</ul>
+			</div>
+		</div>
+
+			</body>
+</html>

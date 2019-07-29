@@ -1,27 +1,40 @@
 @import "../../_cf-variables";
 
 .cf-button { //use class because we share the styling on different elements
-	background: white;
+	background: $cf-color-background;
 	cursor: pointer;
-	border: 1px solid rgba($cf-color-primary, .1);
-	
-	border-radius: calc(#{$cf-chat-response-border-radius} * 1.2);
-	color: $cf-color-chat-response-user-text;
+	border: 1px solid rgba($cf-color-primary, 1);
+	border-radius: calc(#{$cf-chat-response-border-radius} * .88);
+	color: $cf-color-primary;
 	line-height: 1;
 	user-select: none;
 	overflow: hidden;
 	transform: translateZ(0px); // <-- safari...;
+	font-size: $cf-base-font-size - 2;
+	
+	@media (max-width: $cf-breakpoint-medium) {
+		font-size: $cf-mobile-font-size - 2;
+	}
 
 	> div {
-		padding: 12px 24px;
+		position: relative;
+		margin: 12px 22px;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			margin: 10px 22px;
+		}
 	}
 
 	&.has-image {
-		max-width: 180px;
-	}
-	
-	> div {
-		position: relative;
+		max-width: 160px;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			max-width: 132px;
+		}
+
+		> div {
+			margin: 8px 22px 10px 22px;
+		}
 	}
 
 	transform-origin: 0% 100%;
@@ -58,14 +71,16 @@
 		// TODO
 		&:not(&[selected="selected"]),
 		&:not([checked="checked"]) {
-		 	background: rgba($cf-color-primary, .1);
+			background: $cf-color-primary;
+			color: $cf-color-secondary;
 		}
 	}
 
 	&[selected="selected"], &[checked="checked"] {
 		// TODO
 		&:not(:focus):not(:hover):not(.highlight) {
-		 	background: rgba($cf-color-primary, .1);
+			color: $cf-color-secondary;
+		 	background: $cf-color-primary;
 		}
 	}
 	

@@ -35,7 +35,7 @@ namespace cf {
 		private infoElement: HTMLElement;
 		private currentControlElement: IControlElement;
 
-		private animateInFromReponseTimer: number = 0;
+		private animateInFromResponseTimer: any;
 		private ignoreKeyboardInput: boolean = false;
 		private rowIndex: number = -1;
 		private columnIndex: number = 0;
@@ -178,11 +178,11 @@ namespace cf {
 		}
 
 		private onChatReponsesUpdated(event:CustomEvent){
-			clearTimeout(this.animateInFromReponseTimer);
+			clearTimeout(this.animateInFromResponseTimer);
 
 			// only show when user response
 			if(!(<any> event.detail).currentResponse.isRobotResponse){
-				this.animateInFromReponseTimer = setTimeout(() => {
+				this.animateInFromResponseTimer = setTimeout(() => {
 					this.animateElementsIn();
 				}, this.cfReference.uiOptions.controlElementsInAnimationDelay);
 			}
@@ -365,19 +365,36 @@ namespace cf {
 		}
 
 		public animateElementsIn(){
-			if(this.elements){
-				this.resize();
+		
+			if(this.elements.length > 0){
+				this.resize();		
+				// this.el.style.transition = 'height 0.35s ease-out 0.2s';
+				this.list.style.height = '0px';
+				setTimeout(() => {
+					this.list.style.height = this.list.scrollHeight + 'px';
+					const elements: Array<IControlElement> = this.getElements();
 
-				const elements: Array<IControlElement> = this.getElements();
-				if(elements.length > 0){
-					if(!this.el.classList.contains("animate-in"))
-						this.el.classList.add("animate-in");
-					
-					for (let i = 0; i < elements.length; i++) {
-						let element: ControlElement = <ControlElement>elements[i];
-						element.animateIn();
-					}
-				}
+					setTimeout(() => {
+						if(elements.length > 0){
+							if(!this.el.classList.contains("animate-in"))
+								this.el.classList.add("animate-in");
+
+							for (let i = 0; i < elements.length; i++) {
+								let element: ControlElement = <ControlElement>elements[i];
+								element.animateIn();
+							}
+							
+						}
+
+						document.querySelector('.scrollableInner').classList.remove('scroll');
+
+						// Check if chatlist is scrolled to the bottom - if not we need to do it manually (pertains to Chrome)
+						const scrollContainer:HTMLElement = document.querySelector('scrollable');
+						if (scrollContainer.scrollTop < scrollContainer.scrollHeight) {
+							scrollContainer.scrollTop = scrollContainer.scrollHeight;
+						}
+					}, 300);
+				}, 200); 
 			}
 		}
 
@@ -492,6 +509,9 @@ namespace cf {
 
 			this.el.classList.remove("one-row");
 			this.el.classList.remove("two-row");
+
+			// this.el.style.transition = 'height 0.35s ease-out 0.2s';
+			this.list.style.height = '0px';
 		}
 
 		public getElement(index: number):IControlElement | OptionsList{

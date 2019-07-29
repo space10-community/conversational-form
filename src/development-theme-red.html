@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	
+	<script
+	type="text/javascript"
+	src="../build/bower_components/promise-polyfill/promise.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/bower_components/custom-event-polyfill/custom-event-polyfill.js"
+	></script>
+	
+	<script
+	id="conversational-form-development" 
+	type="text/javascript"
+	src="../build/cf/ConversationalForm.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/parsing/TagsParser.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ConversationalForm.plugin.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/logic/Helpers.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/logic/EventDispatcher.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/interfaces/IUserInterfaceOptions.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/BasicElement.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/ProgressBar.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/ControlElement.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/ControlElements.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/ScrollController.js"
+	></script>
+	
+	<script 
+	type="text/javascript"
+	src="../build/cf/data/Dictionary.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/Tag.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/TagGroup.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/InputTag.js"
+	></script>
+
+	<script
+		type="text/javascript"
+		src="../build/cf/form-tags/CfRobotMessageTag.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/SelectTag.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/ButtonTag.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/form-tags/OptionTag.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/Button.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/RadioButton.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/CheckboxButton.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/OptionButton.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/OptionsList.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/control-elements/UploadFileUI.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/interfaces/IUserInput.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/interfaces/IUserInputElement.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/inputs/UserInputElement.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/inputs/UserTextInput.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/logic/MicrophoneBridge.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/inputs/UserInputSubmitButton.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/chat/ChatResponse.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/ui/chat/ChatList.js"
+	></script>
+	
+	<script
+	type="text/javascript"
+	src="../build/cf/logic/FlowManager.js"
+	></script>
+	
+	<style>
+		form {
+			height: 0;
+		}
+		body {
+			height: 100%;
+			background: #777;
+			padding-top: 110px
+		}
+		#cf-context {
+			height: 700px; 
+			width: 500px; 
+			margin: auto;
+		}
+	</style>
+</head>
+
+
+<body>
+	
+	<form id="cf-form" style="visibility: hidden;">
+
+		<cf-robot-message cf-questions="robot 1"></cf-robot-message>
+		<cf-robot-message cf-questions="robot 2"></cf-robot-message>
+		<cf-robot-message cf-questions="robot 3"></cf-robot-message>
+
+		<input type="text" cf-questions="What is your name?" name="name1122" value="Teenage Mental Ninja Turtlewee uhe whu huerwihiu werhuierwuh reh uierh uireh uirewhu irwehiu efwhiu  hiurwh er hwuirwreihuwrehiu">
+		<fieldset>
+			<label>
+				<input cf-questions="Checkboxes, not required." type="checkbox" name="checkboxes" id="checkboxes-1" value="developer">
+				Developer
+			</label>
+			<label>
+				<input type="checkbox" name="checkboxes" id="checkboxes-2" value="designer">
+				Designer
+			</label>
+			</div>
+			<label>
+				<input type="checkbox" name="checkboxes" id="checkboxes-3" value="curious-mind">
+				Curious mind
+			</label>
+		</fieldset>
+		
+		<fieldset>
+			<label for="tmnj">Do you like Teenage Mutant Ninja Turtles?</label>
+			<select cf-questions="Do you like Teenage Mutant Ninja Turtles?" name="tmnj" class="form-control">
+				<option>Yes</option>
+				<option>No</option>
+			</select>
+		</fieldset>
+		
+		<input type="text" cf-questions="What is your name?" name="name1" value="Teenage Mental Ninja Turtle">
+		<input type="text" cf-questions="Where do you live?" name="name2" value="On the internet">
+		<textarea name="testmultirows" id="testmultirows" rows="2"></textarea>
+		<input type="text" cf-questions="What is your name?" name="name3" value="John Doe">
+		<textarea name="testmultirows" id="testmultirows" rows="3"></textarea>
+		<input type="text" cf-questions="What is your name?" rows="2" name="name4" value="John Doe">
+		<input type="text" cf-questions="What is your name?" name="name5" value="John Doe">
+		<input type="text" cf-questions="What is your name?" name="name6" value="John Doe">
+		
+		
+		<input type="text" cf-questions="What is your name?" name="name" value="John Doe">
+		<input type="text" cf-questions="Great {name}&&Where are you from?" name="location" value="United States of America">
+		
+		<select name="car">
+			<option>Toyota</option>
+			<option>Mercedes</option>
+			<option>Mazda</option>
+			<option>GMC</option>
+			<option>Audi</option>
+			<option>Lada</option>
+			<option>Jeep</option>
+			<option>Ford</option>
+			<option>Subaru</option>
+			<option>Hyundai</option>
+			<option>BMW</option>
+		</select>
+		
+		<div class="radio-control" >
+			<input cf-label="AI" type="radio" cf-image="https://space10io-zhjgfejx8sl.netdna-ssl.com/content/uploads/2016/10/julesslutsky1-400x265.jpg" name="image-preference" tabindex="1" value="0">
+			<input cf-label="Meatball" type="radio" cf-image="https://space10io-zhjgfejx8sl.netdna-ssl.com/content/uploads/2015/12/tomorrows_meatball_08-400x265.jpg" name="image-preference" tabindex="2" value="1" checked="checked">
+		</div>
+		
+		
+	</form>
+	
+	<div id="cf-context" role="cf-context" cf-context>
+		
+	</div>
+	
+	<script>
+		window.onload = function(){
+			var conversationalForm = window.cf.ConversationalForm.startTheConversation({
+				formEl: document.getElementById("cf-form"),
+				context: document.getElementById("cf-context"),
+				showProgressBar: true,
+				submitCallback: function() {
+					conversationalForm.addRobotChatResponse(
+					"Check the dev console for FormatData output."
+					);
+				},
+				theme: 'red'
+			});
+		};
+	</script>
+</body>
+
+</html>

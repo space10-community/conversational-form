@@ -37,6 +37,6 @@
 	}
 	}(window, function(conversationalform) {
 		// module code here....
-		return cf.ConversationalForm || conversationalform;
+		return cf;
 	}
 ));

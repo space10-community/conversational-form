@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>{{ page_title }} | {{ title }}</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface.">
+	<meta name="keywords" content="conversational interfaces, conversational form, interface, bot, cui">
+	<link rel="icon" href="{{root_path}}assets/favicon.ico">
+
+	<link rel="publisher" href="http://space10.io/"/>
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="https://github.com/space10-community/conversational-form"/>
+	<meta name="twitter:creator" content="@space10_journal">
+	<meta name="twitter:title" content="Turning web forms into conversations"/>
+	<meta name="twitter:description" content="Conversational Form is an open-source concept by SPACE10 to easily turn any form element on a web page into a conversational form interface."/>
+	<meta name="twitter:image" content="https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/assets/share_img.jpg" />
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Turning web forms into conversations"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:image" content="https://space10-community.github.io/conversational-form/docs/{{nextVersion}}/assets/share_img.jpg" />
+
+	{% if page_slug|split('/')|length == 4 %}
+		{% set root_path = "../../" %}
+	{% else %}
+		{% set root_path = "../" %}
+	{% endif %}
+
+	<link href="{{root_path}}assets/prism.css" rel="stylesheet" />
+	<link rel="stylesheet" href="{{root_path}}css/style.css">
+	
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+	<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<script src="{{root_path}}assets/prism.js"></script>
+	<script src="{{root_path}}js/documentation.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-69941652-17"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-69941652-17');
+	</script>
+
+	{% block head %}{% endblock %}
+</head>
+<body>
+	{% include "navbar.twig" %}
+
+	<div class="container-fluid">
+		<div class="row flex-xl-nowrap">
+			<div class="col-12 col-md-3 col-xl-2 cfdoc-sidebar">
+				{% set _links = [
+					{
+						path: "/getting-started/", 
+						label: 'Getting started'
+					},
+					{
+						path: "/options/", 
+						label: 'Options'
+					},
+					{
+						path: "/appearance/", 
+						label: 'Appearance'
+					},
+					{
+						path: "/public-api/", 
+						label: 'Public API',
+					},
+					{
+						path: "/events/", 
+						label: 'Events',
+					},
+					{
+						path: "/functionality/", 
+						override_path: "/functionality/autocomplete/",
+						label: 'Functionality',
+						children : [
+							{
+								path: "/functionality/autocomplete/", 
+								label: 'Native autocomplete support',
+							},
+							{
+								path: "/functionality/conditionals-and-branching/", 
+								label: 'Conditionals and branching',
+							},
+							{
+								path: "/functionality/custom-placeholder/", 
+								label: 'Custom placeholder text',
+							},
+							{
+								path: "/functionality/custom-questions/", 
+								label: 'Custom questions',
+							},
+							{
+								path: "/functionality/labels-on-radio-checkbox/",
+								label: 'Custom label for radio and checkbox'
+							},
+							{
+								path: "/functionality/custom-error-message/",
+								label: 'Custom error message'
+							},
+							{
+								path: "/functionality/flowStepCallback/", 
+								label: 'flowStepCallback',
+							},
+							{
+								path: "/functionality/formless/", 
+								label: 'Formless',
+							},
+							{
+								path: "/functionality/image-answers/", 
+								label: 'Image answers',
+							},
+							{
+								path: "/functionality/cf-robot-message/", 
+								label: 'Robot message-tag',
+							},
+							{
+								path: "/functionality/submit-callback/", 
+								label: 'Submit callback',
+							},
+							{
+								path: "/functionality/validation/", 
+								label: 'Validation',
+							},
+							{
+								path: "/functionality/value-piping/", 
+								label: 'Value piping',
+							},
+							{
+								path: "/functionality/voice/", 
+								label: 'Voice',
+							}
+						]
+					},
+					{
+						path: "/integrations/", 
+						label: 'Integrations',
+					},
+					{
+						path: "/localization/", 
+						label: 'Localization',
+					},
+					{
+						path: "/build-the-source/", 
+						label: 'Build the source',
+					},
+					{
+						path: "/credits/", 
+						label: 'Credits',
+					}
+				] %}
+				<nav class="cfdoc-links collapse" id="cfdoc-links">
+					{% for link in _links %}
+						{% if link.path in page_slug %}
+							{% set _classes = " active" %}
+						{% endif %}
+						{% if link.override_path %}
+							{% set _path = link.override_path %}
+						{% else %}
+							{% set _path = link.path %}
+						{% endif %}
+						<div class="toc-item{{ _classes }}">
+							<a class="toc-link" href="{{root_path}}{{_path[1:]}}">{{link.label}}</a>
+							{% if link.children and link.path in page_slug  %}
+								<ul class="nav cfdoc-sidenav">
+								{% for child in link.children %}
+									{% if child.path in page_slug %}
+										{% set _classes = " active" %}
+									{% else %}
+										{% set _classes = "" %}
+									{% endif %}
+									<li>
+										<a class="{{_classes}}" href="{{root_path}}{{ child.path[1:] }}">{{ child.label }}</a>
+									</li>
+								{% endfor %}			
+								</ul>
+							{% endif %}
+						</div>
+					{% endfor %}
+					{# <hr> #}
+				</nav>
+			</div>
+			
+			<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" role="main">
+				{% block page %}{% endblock %}
+			</main>
+			
+			<div class="d-none d-xl-block col-xl-2 cfdoc-toc">
+				{% block toc %}{% endblock %}
+			</div>
+		</div>
+
+		{% block footer %}{% endblock %}
+	</body>
+</html>
