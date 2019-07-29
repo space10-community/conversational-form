@@ -1,8 +1,7 @@
-import { ConversationalForm } from 'conversational-form';
+import { ConversationalForm, FlowEvents, EventDispatcher } from 'conversational-form';
 import {
   TweenLite,
 } from 'gsap/TweenMax';
-// import { Power3 } from 'gsap/EasePack';
 import loadcss from 'loadcss';
 import Tracking from './tracking';
 import 'reset-css';
@@ -58,8 +57,6 @@ function changeTheme(themeName) {
     return s;
   });
 }
-
-window.changeTheme = changeTheme;
 
 function animateIn() {
   console.log('animateIn');
@@ -136,20 +133,28 @@ function animateIn() {
 function init() {
   loadThemes();
   preloadFormImages();
-
   Tracking.registerAllExternalLinks();
 
   const wrapperEl = document.querySelector('.wrapper');
   const formEl = document.querySelector('.form');
   const cfEl = document.querySelector('.cf');
+  const dispatcher = new EventDispatcher();
 
-  // eslint-disable-next-line no-unused-vars
+  // We manually stop form execution if users bails on us
+  dispatcher.addEventListener(FlowEvents.FLOW_UPDATE, (event) => {
+    if (event.detail.tag.name === 'ending') {
+      window.ConversationalForm.flowManager.stop();
+      document.querySelector('#conversational-form').style['pointer-events'] = 'none';
+    }
+  }, false);
+
   const cfInstance = new ConversationalForm({
     formEl,
     context: cfEl,
     loadExternalStyleSheet: false,
     preventAutoFocus: true,
     preventAutoStart: true,
+    eventDispatcher: dispatcher,
     submitCallback: () => {
       const formDataSerialized = cfInstance.getFormData(true);
       console.log('done', formDataSerialized);
@@ -193,7 +198,6 @@ function init() {
     1,
     {
       opacity: 1,
-      // ease: Power1,
       delay: animTime / 2,
       onComplete: animateIn,
     },
