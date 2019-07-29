@@ -4761,7 +4761,7 @@ var cf;
         });
         Object.defineProperty(ChatResponse.prototype, "added", {
             get: function () {
-                return !!this.el.parentNode.parentNode;
+                return !!this.el || !!this.el.parentNode || !!this.el.parentNode.parentNode;
             },
             enumerable: true,
             configurable: true
@@ -5321,12 +5321,6 @@ var cf;
                 // this.currentUserResponse.setToThinking??
                 this.currentResponse = this.responses[this.responses.length - 1];
                 this.onListUpdate(this.currentUserResponse);
-                // When editing an answer we scroll the prev response in view
-                setTimeout(function () {
-                    if (typeof responseUserWantsToEdit.el.scrollIntoView !== 'function')
-                        return;
-                    responseUserWantsToEdit.el.scrollIntoView({ behavior: "smooth", block: "end" });
-                }, 800);
             }
         };
         ChatList.prototype.onListUpdate = function (chatResponse) {
