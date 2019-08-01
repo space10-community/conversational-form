@@ -53,7 +53,7 @@ class Tracking {
     if (this.hasGtag()) {
       const a = document.querySelectorAll('a[href^="http"]:not([hastracking])');
       for (let i = 0; i < a.length; i += 1) {
-        if (a[i].href !== '' && a[i].href.indexOf(window.location.host) === -1) {
+        if (a[i].href !== '') {
           a[i].setAttribute('hastracking', 'true');
           a[i].onclick = (function ct(_this, href) {
             return function track() {
