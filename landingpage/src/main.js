@@ -16,7 +16,7 @@ const themes = [
   'conversational-form-red.min.css',
   'conversational-form-green.min.css',
 ];
-let currentTheme = null;
+let currentTheme = themes[0];
 
 function preloadFormImages() {
   const images = [].slice.call(document.querySelectorAll('form *[cf-image]'));
@@ -48,17 +48,21 @@ function loadThemes() {
 function changeTheme(themeName) {
   if (currentTheme === themeName) return;
 
-  console.log('changeTheme', themeName);
+  console.log('changeTheme', currentTheme, themeName);
   const stylesheets = [].slice.call(document.styleSheets);
   stylesheets.map((s, i) => {
-    if (i > 0 && document.styleSheets[i].disabled === false) {
+    if (
+      document.styleSheets[i].disabled === false
+      && document.styleSheets[i].href.indexOf('conversational-form') > -1
+    ) {
+      console.log('disable theme', document.styleSheets[i].href);
       document.styleSheets[i].disabled = true;
     } else if (document.styleSheets[i].href.indexOf(themeName) > -1) {
       document.styleSheets[i].disabled = false;
       currentTheme = themeName;
       console.log('enable theme', document.styleSheets[i].href);
     }
-    console.log('theme', i, document.styleSheets[i].href, document.styleSheets[i].disabled);
+    // console.log('theme', i, document.styleSheets[i].href, document.styleSheets[i].disabled);
 
     return s;
   });
