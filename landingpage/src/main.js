@@ -33,10 +33,11 @@ function loadThemes() {
     const stylesheets = [].slice.call(document.styleSheets);
     stylesheets.map((s, i) => {
       console.log(i, s.href);
+      const filename = s.href.substring(s.href.lastIndexOf('/') + 1);
       if (
-        s.href.indexOf('conversational-form') > -1
-        && s.href.indexOf(themes[0]) === -1
-        && s.href.indexOf('main.') === -1
+        filename.indexOf('conversational-form') > -1
+        && filename.indexOf(themes[0]) === -1
+        && filename.indexOf('main.') === -1
       ) {
         document.styleSheets[i].disabled = true;
       }
@@ -51,25 +52,25 @@ function changeTheme(themeName) {
   console.log('changeTheme', currentTheme, themeName);
   const stylesheets = [].slice.call(document.styleSheets);
   stylesheets.map((s, i) => {
+    const filename = s.href.substring(s.href.lastIndexOf('/') + 1);
+    console.log('t', filename);
     if (
       document.styleSheets[i].disabled === false
-      && document.styleSheets[i].href.indexOf('conversational-form') > -1
+      && filename.indexOf('conversational-form') > -1
     ) {
       console.log('disable theme', document.styleSheets[i].href);
       document.styleSheets[i].disabled = true;
-    } else if (document.styleSheets[i].href.indexOf(themeName) > -1) {
+    } else if (filename.indexOf(themeName) > -1) {
       document.styleSheets[i].disabled = false;
       currentTheme = themeName;
       console.log('enable theme', document.styleSheets[i].href);
     }
-    // console.log('theme', i, document.styleSheets[i].href, document.styleSheets[i].disabled);
 
     return s;
   });
 }
 
 function animateIn() {
-  console.log('animateIn');
   const headerEl = document.querySelector('header');
   const headlineEl = document.querySelector('h1');
   const cfEl = document.querySelector('.cf');
@@ -178,8 +179,6 @@ function init() {
       }
     },
     flowStepCallback: (dto, success) => {
-      console.log('fsc', dto.tag.name, dto.tag.value);
-
       Tracking.event('conversational form example', dto.tag.name, dto.tag.value);
 
       if (dto.tag.name === 'theme') changeTheme(dto.tag.value[0]);
