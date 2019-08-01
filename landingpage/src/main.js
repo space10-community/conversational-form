@@ -36,6 +36,7 @@ function loadThemes() {
       if (
         s.href.indexOf('conversational-form') > -1
         && s.href.indexOf(themes[0]) === -1
+        && s.href.indexOf('main.') === -1
       ) {
         document.styleSheets[i].disabled = true;
       }
