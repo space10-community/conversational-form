@@ -258,7 +258,6 @@ namespace cf {
 		}
 
 		public init(): ConversationalForm{
-			console.log(this.options)
 			switch(this.theme) {
 				case 'dark':
 					this.theme = 'conversational-form-dark.min.css';
