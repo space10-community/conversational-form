@@ -460,7 +460,9 @@ namespace cf {
 
 			if(this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]){
 				this.ignoreKeyboardInput = true;
-				this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
+				if (!this.cfReference.options.preventAutoFocus) {
+					this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
+				}
 			}else{
 				this.resetTabList();
 			}
