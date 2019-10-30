@@ -117,13 +117,15 @@ cf-chat-response {
 	}
 
 	text {
-		user-select: none;
-		display: inline-block;
+		display: flex;
+		flex-flow: column;
+		align-items: start;
 		position: relative;
 		min-height: 40px;
 		height:auto;
 		white-space: pre-wrap;
 		word-break: normal;
+		user-select: none;
 
 		> div {
 			display: inline-block;
