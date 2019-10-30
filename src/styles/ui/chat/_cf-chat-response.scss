@@ -258,8 +258,8 @@ cf-chat-response {
 		height: $cf-avatar-area;
 		border-radius: 50%;
 		background: $cf-avatar-background;
-		// background-size: cover;
-		background-size: $cf-avatar-size;
+		background-size: cover;
+		// background-size: $cf-avatar-size;
 		background-repeat: no-repeat;
 		background-position: 50% 50%;
 		opacity: 0;
