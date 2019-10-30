@@ -132,6 +132,7 @@ namespace cf {
 		public el: HTMLElement;
 		public chatList: ChatList;
 		public uiOptions: IUserInterfaceOptions;
+		public options:ConversationalFormOptions;
 		public preventSubmitOnEnter: boolean;
 
 		private context: HTMLElement;
@@ -251,25 +252,38 @@ namespace cf {
 			this.uiOptions = Helpers.extendObject(UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
 			// console.log('this.uiOptions:', this.uiOptions);
 
+			this.options = options;
+
 			this.init();
 		}
 
 		public init(): ConversationalForm{
+			console.log(this.options)
 			switch(this.theme) {
 				case 'dark':
 					this.theme = 'conversational-form-dark.min.css';
+					if (!this.options.robotImage) this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%233A3A3C'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%23E5E6EA'/%3E%3C/svg%3E%0A");
+					if (!this.options.userImage) this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E5E6EA'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%233A3A3C'/%3E%3C/svg%3E%0A");
 					break;
 				case 'green':
 					this.theme = 'conversational-form-green.min.css';
+					if (!this.options.robotImage) this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23EEEFF0'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%2300BF75'/%3E%3C/svg%3E%0A");
+					if (!this.options.userImage) this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%2300BF75'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23EEEFF0'/%3E%3C/svg%3E%0A");
 					break;
 				case 'blue':
 					this.theme = 'conversational-form-irisblue.min.css';
+					if (!this.options.robotImage) this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E8E9EB'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%2300C2DF'/%3E%3C/svg%3E%0A");
+					if (!this.options.userImage) this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%2300C2DF'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23E8E9EB'/%3E%3C/svg%3E%0A");
 					break;
 				case 'purple':
 					this.theme = 'conversational-form-purple.min.css';
+					if (!this.options.robotImage) this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23EEEFF0'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%235A1DE4'/%3E%3C/svg%3E%0A");
+					if (!this.options.userImage) this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%235A1DE4'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23EEEFF0'/%3E%3C/svg%3E%0A");
 					break;
 				case 'red':
 					this.theme = 'conversational-form-red.min.css';
+					if (!this.options.robotImage) this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E8E9EB'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%23FF3233'/%3E%3C/svg%3E%0A");
+					if (!this.options.userImage) this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23FF3233'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23E8E9EB'/%3E%3C/svg%3E%0A");
 					break;
 				default:
 					this.theme = 'conversational-form.min.css';
@@ -367,9 +381,9 @@ namespace cf {
 		public updateDictionaryValue(id:string, type: string, value: string){
 			Dictionary.set(id, type, value);
 
-			if(["robot-image", "user-image"].indexOf(id) != -1){
-				this.chatList.updateThumbnail(id == "robot-image", value);
-			}
+			// if(["robot-image", "user-image"].indexOf(id) != -1){
+			// 	this.chatList.updateThumbnail(id == "robot-image", value);
+			// }
 		}
 
 		public getFormData(serialized: boolean = false): FormData | any{
