@@ -703,16 +703,18 @@ cf-chat-response {
   cf-chat-response[thinking] text thinking {
     display: block; }
   cf-chat-response text {
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-    display: inline-block;
+    display: flex;
+    flex-flow: column;
+    align-items: start;
     position: relative;
     min-height: 40px;
     height: auto;
     white-space: pre-wrap;
-    word-break: normal; }
+    word-break: normal;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none; }
     cf-chat-response text > div {
       display: inline-block; }
     cf-chat-response text thinking span:nth-child(1) {
@@ -806,7 +808,7 @@ cf-chat-response {
     height: 50px;
     border-radius: 50%;
     background: #E5E6EA;
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     opacity: 0;

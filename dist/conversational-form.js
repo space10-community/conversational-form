@@ -1107,7 +1107,9 @@ var cf;
             }
             if (this.tableableRows[this.rowIndex] && this.tableableRows[this.rowIndex][this.columnIndex]) {
                 this.ignoreKeyboardInput = true;
-                this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
+                if (!this.cfReference.options.preventAutoFocus) {
+                    this.tableableRows[this.rowIndex][this.columnIndex].focus = true;
+                }
             }
             else {
                 this.resetTabList();
@@ -5728,7 +5730,7 @@ var cf;
 (function (cf_1) {
     var ConversationalForm = /** @class */ (function () {
         function ConversationalForm(options) {
-            this.version = "1.0.1";
+            this.version = "1.0.2";
             this.cdnPath = "https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/";
             this.isDevelopment = false;
             this.loadExternalStyleSheet = true;
@@ -5808,6 +5810,7 @@ var cf;
             // set the ui options
             this.uiOptions = cf_1.Helpers.extendObject(cf_1.UserInterfaceDefaultOptions, options.userInterfaceOptions || {});
             // console.log('this.uiOptions:', this.uiOptions);
+            this.options = options;
             this.init();
         }
         Object.defineProperty(ConversationalForm.prototype, "createId", {
@@ -5834,18 +5837,38 @@ var cf;
             switch (this.theme) {
                 case 'dark':
                     this.theme = 'conversational-form-dark.min.css';
+                    if (!this.options.robotImage)
+                        this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%233A3A3C'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%23E5E6EA'/%3E%3C/svg%3E%0A");
+                    if (!this.options.userImage)
+                        this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E5E6EA'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%233A3A3C'/%3E%3C/svg%3E%0A");
                     break;
                 case 'green':
                     this.theme = 'conversational-form-green.min.css';
+                    if (!this.options.robotImage)
+                        this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23EEEFF0'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%2300BF75'/%3E%3C/svg%3E%0A");
+                    if (!this.options.userImage)
+                        this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%2300BF75'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23EEEFF0'/%3E%3C/svg%3E%0A");
                     break;
                 case 'blue':
                     this.theme = 'conversational-form-irisblue.min.css';
+                    if (!this.options.robotImage)
+                        this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E8E9EB'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%2300C2DF'/%3E%3C/svg%3E%0A");
+                    if (!this.options.userImage)
+                        this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%2300C2DF'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23E8E9EB'/%3E%3C/svg%3E%0A");
                     break;
                 case 'purple':
                     this.theme = 'conversational-form-purple.min.css';
+                    if (!this.options.robotImage)
+                        this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23EEEFF0'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%235A1DE4'/%3E%3C/svg%3E%0A");
+                    if (!this.options.userImage)
+                        this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%235A1DE4'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23EEEFF0'/%3E%3C/svg%3E%0A");
                     break;
                 case 'red':
                     this.theme = 'conversational-form-red.min.css';
+                    if (!this.options.robotImage)
+                        this.updateDictionaryValue('robot-image', 'robot', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23E8E9EB'/%3E%3Crect x='66' y='66' width='68' height='68' fill='%23FF3233'/%3E%3C/svg%3E%0A");
+                    if (!this.options.userImage)
+                        this.updateDictionaryValue('user-image', 'user', "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23FF3233'/%3E%3Cpath d='M100 55L138.971 122.5H61.0289L100 55Z' fill='%23E8E9EB'/%3E%3C/svg%3E%0A");
                     break;
                 default:
                     this.theme = 'conversational-form.min.css';
@@ -5916,9 +5939,9 @@ var cf;
         */
         ConversationalForm.prototype.updateDictionaryValue = function (id, type, value) {
             cf_1.Dictionary.set(id, type, value);
-            if (["robot-image", "user-image"].indexOf(id) != -1) {
-                this.chatList.updateThumbnail(id == "robot-image", value);
-            }
+            // if(["robot-image", "user-image"].indexOf(id) != -1){
+            // 	this.chatList.updateThumbnail(id == "robot-image", value);
+            // }
         };
         ConversationalForm.prototype.getFormData = function (serialized) {
             if (serialized === void 0) { serialized = false; }
