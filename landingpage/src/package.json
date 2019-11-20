@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "parcel index.html",
     "build": "parcel build index.html --out-dir ../ --public-url /conversational-form/landingpage/",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "stage": "rm -f dist/*; parcel build index.html --public-url /v1/landingpage/; scp -r dist/* ssh root@176.58.127.120:/home/nginx/domains/cf.staging.space10.io/public/v1/landingpage"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "staticFiles": {
     "staticPath": [
