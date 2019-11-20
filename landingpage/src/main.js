@@ -147,6 +147,7 @@ function animateIn() {
 
 function init() {
   loadThemes();
+  preloadFormImages();
   Tracking.registerAllExternalLinks();
 
   const wrapperEl = document.querySelector('.wrapper');
