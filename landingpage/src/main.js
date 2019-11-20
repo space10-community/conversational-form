@@ -24,28 +24,6 @@ function preloadFormImages() {
   images.map(el => (new Image()).src = el.getAttribute('cf-image'));
 }
 
-function loadThemes() {
-  console.log('loadThemes');
-
-  loadcss(themes.map(t => `./${t}`), (links) => {
-    links.forEach(link => console.log(link));
-
-    const stylesheets = [].slice.call(document.styleSheets);
-    stylesheets.map((s, i) => {
-      console.log(i, s.href);
-      const filename = s.href.substring(s.href.lastIndexOf('/') + 1);
-      if (
-        filename.indexOf('conversational-form') > -1
-        && filename.indexOf(themes[0]) === -1
-        && filename.indexOf('main.') === -1
-      ) {
-        document.styleSheets[i].disabled = true;
-      }
-      return s;
-    });
-  });
-}
-
 function changeTheme(themeName) {
   if (currentTheme === themeName) return;
 
@@ -53,7 +31,7 @@ function changeTheme(themeName) {
   const stylesheets = [].slice.call(document.styleSheets);
   stylesheets.map((s, i) => {
     const filename = s.href.substring(s.href.lastIndexOf('/') + 1);
-    console.log('t', filename);
+    // console.log('t', filename);
     if (
       document.styleSheets[i].disabled === false
       && filename.indexOf('conversational-form') > -1
@@ -67,6 +45,32 @@ function changeTheme(themeName) {
     }
 
     return s;
+  });
+}
+
+function loadThemes() {
+  console.log('loadThemes');
+
+  const totalThemes = themes.length;
+
+  loadcss(themes.map(t => `./${t}`), () => {
+    const stylesheets = [].slice.call(document.styleSheets);
+    stylesheets.map((s, i) => {
+      // console.log(i, s.href);
+      const filename = s.href.substring(s.href.lastIndexOf('/') + 1);
+      if (
+        filename.indexOf('conversational-form') > -1
+        && filename.indexOf(themes[0]) === -1
+        && filename.indexOf('main.') === -1
+      ) {
+        document.styleSheets[i].disabled = true;
+      }
+
+      console.log('loaded', i);
+      if (totalThemes === i) changeTheme(themes[0]);
+
+      return s;
+    });
   });
 }
 
@@ -143,8 +147,6 @@ function animateIn() {
 
 function init() {
   loadThemes();
-  changeTheme(themes[1]);
-  preloadFormImages();
   Tracking.registerAllExternalLinks();
 
   const wrapperEl = document.querySelector('.wrapper');
