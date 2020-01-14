@@ -239,12 +239,15 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent#Polyfill
 
 try {
-    var ce = new window.CustomEvent('test');
-    ce.preventDefault();
-    if (ce.defaultPrevented !== true) {
-        // IE has problems with .preventDefault() on custom events
-        // http://stackoverflow.com/questions/23349191
-        throw new Error('Could not prevent default');
+    if(typeof window !== 'undefined' && window.document && window.document.createElement) {
+
+        var ce = new window.CustomEvent('test');
+        ce.preventDefault();
+        if (ce.defaultPrevented !== true) {
+            // IE has problems with .preventDefault() on custom events
+            // http://stackoverflow.com/questions/23349191
+            throw new Error('Could not prevent default');
+        }
     }
 } catch(e) {
   var CustomEvent = function(event, params) {
@@ -6286,15 +6289,17 @@ var cf;
     }());
     cf_1.ConversationalForm = ConversationalForm;
 })(cf || (cf = {}));
-if (document.readyState == "complete") {
-    // if document alread instantiated, usually this happens if Conversational Form is injected through JS
-    setTimeout(function () { return cf.ConversationalForm.autoStartTheConversation(); }, 0);
-}
-else {
-    // await for when document is ready
-    window.addEventListener("load", function () {
-        cf.ConversationalForm.autoStartTheConversation();
-    }, false);
+if(typeof window !== 'undefined' && window.document && window.document.createElement) {
+    if (document.readyState == "complete") {
+        // if document alread instantiated, usually this happens if Conversational Form is injected through JS
+        setTimeout(function () { return cf.ConversationalForm.autoStartTheConversation(); }, 0);
+    }
+    else {
+        // await for when document is ready
+        window.addEventListener("load", function () {
+            cf.ConversationalForm.autoStartTheConversation();
+        }, false);
+    }
 }
 
 // jquery plugin
@@ -6323,18 +6328,20 @@ else {
 }));
 
 // requirejs/amd plugin
-(function (root, factory) {
-	// from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
-	if(typeof define === "function" && define.amd) {
-		define(["conversational-form"], function(conversationalform){
-			return (root.conversationalform = factory(conversationalform));
-		});
-	} else if(typeof module === "object" && module.exports) {
-		module.exports = (root.conversationalform = factory(require("conversational-form")));
-	} else {
-		root.conversationalform = factory(cf.ConversationalForm);
-	}
-	}(window, function(conversationalform) {
+(function (factory) {
+    if(typeof window !== 'undefined' && window.document && window.document.createElement) {
+        // from http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/#update
+        if(typeof define === "function" && define.amd) {
+            define(["conversational-form"], function(conversationalform){
+                return (root.conversationalform = factory(conversationalform));
+            });
+        } else if(typeof module === "object" && module.exports) {
+            module.exports = (root.conversationalform = factory(require("conversational-form")));
+        } else {
+            root.conversationalform = factory(cf.ConversationalForm);
+        }
+    }
+	}(function(conversationalform) {
 		// module code here....
 		return cf;
 	}
