@@ -4330,7 +4330,7 @@ var cf;
             this.errorTimer = setTimeout(function () {
                 _this.disabled = false;
                 if (!cf.ConversationalForm.suppressLog)
-                    console.log('option, disabled 1');
+                    console.log('console error: option, disabled 1');
                 _this.el.removeAttribute("error");
                 _this.inputElement.value = _this.inputElement.getAttribute("data-value");
                 _this.inputElement.setAttribute("data-value", "");
