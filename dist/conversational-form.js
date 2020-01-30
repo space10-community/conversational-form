@@ -4104,7 +4104,7 @@ var cf;
                 this.setFocusOnInput();
             }
         };
-        UserInputElement.ERROR_TIME = 2000;
+        UserInputElement.ERROR_TIME = 0;
         UserInputElement.preventAutoFocus = false;
         UserInputElement.hideUserInputOnNoneTextInput = false;
         return UserInputElement;
