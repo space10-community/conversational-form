@@ -22,26 +22,6 @@ function swallowError(error) {
  */
 
 /**
- * form style tasks
- */
-
-global.gulp.task('sass-form-build', ['sass-form'], function(){
-	var src = [
-		global.buildFolder + "conversational-form*.css"
-	]
-
-	var stream = global.gulp.src(src)
-		// .pipe(concat('conversational-form.css'))
-		.pipe(global.gulp.dest(global.distFolder))
-		.pipe(cleanCSS())
-		.pipe(rename({suffix: '.min'}))
-		.pipe(global.gulp.dest(global.distFolder));
-
-	return stream;
-});
-
-
-/**
  * SCSS
  */
 global.gulp.task('sass-form', function () {
@@ -52,17 +32,29 @@ global.gulp.task('sass-form', function () {
 
 	var stream = global.gulp.src(src)
 		.pipe(sass().on('error', sass.logError))
-		.pipe(autoprefixer({ browsers: ['> 1%']}))
+		.pipe(autoprefixer({ browsers: ['> 1%'] }))
 		.pipe(global.gulp.dest(dst))
 		.pipe(livereload())
-		// .pipe(notify("CSS compiled."));
+	// .pipe(notify("CSS compiled."));
 
 	return stream;
 });
 
+/**
+ * form style tasks
+ */
 
+global.gulp.task('sass-form-build', global.gulp.series('sass-form', () => {
+	var src = [
+		global.buildFolder + "conversational-form*.css"
+	]
 
+	var stream = global.gulp.src(src)
+		// .pipe(concat('conversational-form.css'))
+		.pipe(global.gulp.dest(global.distFolder))
+		.pipe(cleanCSS())
+		.pipe(rename({ suffix: '.min' }))
+		.pipe(global.gulp.dest(global.distFolder));
 
-
-
-
+	return stream;
+}));

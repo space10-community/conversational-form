@@ -25,34 +25,34 @@ global.buildFolder = buildFolder;
 var distFolder = rootPath + 'dist/';
 global.distFolder = distFolder;
 
-var tasks = ['bower', 'scripts-form-build', 'sass-form-build', 'copy-images'];
+var tasks = ['scripts-form-build', 'sass-form-build', 'copy-images'];
 var distTasks = tasks.concat(['karma-tests']);
 
 // Watch Files For Changes
-global.gulp.task('watch', tasks, function() {
+global.gulp.task('watch', global.gulp.series(tasks, () => {
 	livereload.listen();
 
 	console.log("Watch task started — development");
 
-	global.gulp.watch(srcFolder + '/images/**/*', ['copy-images']);
+	global.gulp.watch(srcFolder + '/images/**/*', global.gulp.series('copy-images'));
 
-	global.gulp.watch(srcFolder + '/scripts/**/*.ts', ['typescript-form']);
-	global.gulp.watch(srcFolder + '/scripts/cf/**/*.js', ['scripts-form-build']);
-	
-	global.gulp.watch(srcFolder + '/styles/**/*.scss', ['sass-form']);
+	global.gulp.watch(srcFolder + '/scripts/**/*.ts', global.gulp.series('typescript-form'));
+	global.gulp.watch(srcFolder + '/scripts/cf/**/*.js', global.gulp.series('scripts-form-build'));
 
-	global.gulp.watch(srcFolder + '../docs/**/*.twig', ['documentation']);	
-	global.gulp.watch(srcFolder + '../docs/**/*.scss', ['documentationScss']);
-});
+	global.gulp.watch(srcFolder + '/styles/**/*.scss', global.gulp.series('sass-form'));
 
-// Default tasks
-global.gulp.task('default', ['watch']);
-global.gulp.task('build', gulpsync.sync(tasks));
-global.gulp.task('dist', gulpsync.sync(distTasks));
+	global.gulp.watch(srcFolder + '../docs/**/*.twig', global.gulp.series('documentation'));
+	global.gulp.watch(srcFolder + '../docs/**/*.scss', global.gulp.series('documentationScss'));
+}));
 
 gulp.task('karma-tests', function (done) {
 	new Server({
-	  configFile: __dirname + '/karma.conf.js',
-	  singleRun: true
+		configFile: __dirname + '/karma.conf.js',
+		singleRun: true
 	}, done).start();
-  });
+});
+
+// Default tasks
+global.gulp.task('default', global.gulp.series('watch'));
+global.gulp.task('build', global.gulp.series(tasks));
+global.gulp.task('dist', global.gulp.series(distTasks));
