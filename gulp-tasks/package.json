@@ -23,7 +23,7 @@
     "gulp-twig": "^1.1.1",
     "gulp-typescript": "*",
     "gulp-uglify": "^2.0.0",
-    "prismjs": "^1.9.0",
+    "prismjs": "^1.23.0",
     "stream": "*",
     "typescript": "*"
   }
