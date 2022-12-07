@@ -457,27 +457,29 @@ namespace cf {
 						// find the fieldset, if any..
 						let isFieldsetValidForCF = (tag: HTMLElement) : boolean => {return tag && tag.tagName.toLowerCase() !== "fieldset" && !tag.hasAttribute("cf-questions")};
 
-						let fieldset: HTMLElement = groups[group][0].domElement.parentNode;
-						if(fieldset && fieldset.tagName.toLowerCase() !== "fieldset"){
-							fieldset = <HTMLElement> fieldset.parentNode;
-							if(isFieldsetValidForCF(fieldset)){
-								// not a valid fieldset, we only accept fieldsets that contain cf attr
-								fieldset = null;
+						if(groups[group][0] && groups[group][0].domElement){
+							let fieldset: HTMLElement = groups[group][0].domElement.parentNode;
+							if(fieldset && fieldset.tagName.toLowerCase() !== "fieldset"){
+								fieldset = <HTMLElement> fieldset.parentNode;
+								if(isFieldsetValidForCF(fieldset)){
+									// not a valid fieldset, we only accept fieldsets that contain cf attr
+									fieldset = null;
+								}
 							}
-						}
 
-						const tagGroup: TagGroup = new TagGroup({
-							fieldset: <HTMLFieldSetElement> fieldset, // <-- can be null
-							elements: groups[group]
-						});
+							const tagGroup: TagGroup = new TagGroup({
+								fieldset: <HTMLFieldSetElement> fieldset, // <-- can be null
+								elements: groups[group]
+							});
 
-						// remove the tags as they are now apart of a group
-						for(var i = 0; i < groups[group].length; i++){
-							let tagToBeRemoved: InputTag = groups[group][i];
-							if(i == 0)// add the group at same index as the the first tag to be removed
-								tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
-							else
-								tags.splice(tags.indexOf(tagToBeRemoved), 1);
+							// remove the tags as they are now apart of a group
+							for(var i = 0; i < groups[group].length; i++){
+								let tagToBeRemoved: InputTag = groups[group][i];
+								if(i == 0)// add the group at same index as the the first tag to be removed
+									tags.splice(tags.indexOf(tagToBeRemoved), 1, tagGroup);
+								else
+									tags.splice(tags.indexOf(tagToBeRemoved), 1);
+							}
 						}
 					}
 				}
