@@ -1,0 +1,95 @@
+@import "../../_cf-variables";
+
+cf-upload-file-ui {
+	display: block;
+	width: 100%;
+	height: $cf-input-field-height;
+	position: relative;
+	top: 0px;
+	// padding-right: 30px;
+	color: $cf-color-chat-response-user-text;
+
+	opacity: 0;
+	transform: translateY(20px) rotateX(30deg);
+	will-change: opacity, transform;
+	.conversational-form--enable-animation & {
+		transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut, transform $cf-anim-time * 0.5 $cf-ease-easeOut;
+	}
+
+	&.animate-in {
+		opacity: 1;
+		transform: translateY(0px) rotateX(0deg);
+		.conversational-form--enable-animation & {
+			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut;
+		}
+	}
+
+}
+
+cf-upload-file-text {
+	display: block;
+	float: left;
+	width: auto;
+	height: 100%;
+	// max-width 40%
+	// padding-left: 40px;
+	padding-right: 20px;
+	padding-top: 17px;
+	position: relative;
+	color: currentColor;
+	width: 50%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+
+	&:before {
+		content: "";
+		display: inline-block;
+		position: absolute;
+		top: 17px;
+		left: 23px;
+		width: 10px;
+		height: 14px;
+		background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 10 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate(-756.000000, -549.000000)' fill='" + $cf-color-secondary + "'%3e%3cg transform='translate(736.000000, 127.000000)'%3e%3cg transform='translate(0.000000, 406.000000)'%3e%3cpolygon points='20 16 26.0030799 16 30 19.99994 30 30 20 30'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+		background-repeat: no-repeat;
+		background-size: 10px 14px;
+	}
+}
+
+cf-upload-file-progress {
+	display: block;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	float: right;
+	width: 50%;
+
+	&:after {
+		content: "";
+		width: 100%;
+		background: darken($cf-color-background, 3%);
+		border-radius: 7px;
+	}
+
+	&:after, cf-upload-file-progress-bar {
+		display: block;
+		height: 10px;
+		position: absolute;
+		top: 19px;
+		z-index: 1;
+	}
+	
+	cf-upload-file-progress-bar {
+		width: 0%;
+		will-change: width, border-radius;
+		background: currentColor;
+		z-index: 2;
+		border-radius: 7px;
+		.conversational-form--enable-animation & {
+			transition: width $cf-anim-time * 0.2 linear, border-radius $cf-anim-time * 0.5 $cf-ease-easeOut;
+		}
+
+		&.loaded {
+			border-radius: 7px 7px 7px 7px;	
+		}
+	}
+}

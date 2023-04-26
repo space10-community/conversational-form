@@ -1,0 +1,88 @@
+@import "../../_cf-variables";
+
+.cf-button.cf-checkbox-button {
+	&:hover, &:focus {
+		cf-checkbox {
+			background: $cf-color-primary;
+			
+			&:after {
+				transform: scale(1, 1);
+				top: relativeValue(.5px);
+				left: relativeValue(0px);
+				width: relativeValue(10px);
+				height: relativeValue(8px);
+				background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate%28-290.000000, -505.000000%29' fill='" + encodecolor($cf-color-secondary) + "'%3e%3cg transform='translate%2884.000000, 136.000000%29'%3e%3cg transform='translate%281.000000, 216.000000%29'%3e%3cg transform='translate%28189.000000, 139.000000%29'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+				background-size: relativeValue(10px) relativeValue(8px);
+				transform-origin: 50% 50%;
+			}
+		}
+	}
+
+	&.no-text {
+		padding: relativeValue(12px) relativeValue(16px);
+
+		cf-checkbox {
+			margin-right: 0px;
+			margin-left: 0px;
+		}
+	}
+	
+	&.has-image {
+		cf-checkbox {
+			margin-left: 0px;
+		}
+	}
+
+	cf-checkbox {
+		display: block;
+		float: left;
+		width: relativeValue(9px);
+		height: relativeValue(9px);
+		border-radius: relativeValue(2px);
+		// background: $cf-color-chat-response-user-bg;
+		border: 1px solid $cf-color-chat-response-user-bg;
+		will-change: background;
+		margin-right: 8px;
+		margin-left: -10px;
+		margin-top: relativeValue(0.5px); // We just need to slightly move it a bit up to align better
+		position: relative;
+		.conversational-form--enable-animation & {
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
+		}
+
+		&:after {
+			content: "";
+			position: absolute;
+			top: relativeValue(.5px);
+			left: relativeValue(0px);
+			display: block;
+			width: relativeValue(10px);
+			height: relativeValue(8px);
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate%28-290.000000, -505.000000%29' fill='" + encodecolor($cf-color-secondary) + "'%3e%3cg transform='translate%2884.000000, 136.000000%29'%3e%3cg transform='translate%281.000000, 216.000000%29'%3e%3cg transform='translate%28189.000000, 139.000000%29'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+			background-size: relativeValue(10px) relativeValue(8px);
+			background-repeat: no-repeat;
+			transform-origin: 50% 50%;
+			will-change: transform;
+			transform: scale(0, 0);
+			.conversational-form--enable-animation & {
+				transition: transform $cf-anim-time * 0.25 $cf-ease-easeOut;
+			}
+		}
+	}
+	
+	&[checked="checked"], &[selected="selected"] {
+		background: $cf-color-primary !important;
+		color: $cf-color-secondary !important;
+		cf-checkbox {
+			background: rgba($cf-color-chat-response-user-bg, 0);
+			border: none;
+
+			&:after {
+				transform: scale(1, 1);
+				.conversational-form--enable-animation & {
+					transition-timing-function: $cf-ease-easeOut;
+				}
+			}
+		}
+	}
+}

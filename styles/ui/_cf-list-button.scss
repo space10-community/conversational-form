@@ -1,0 +1,175 @@
+@import "../_cf-variables";
+
+cf-input-control-elements.animate-in {
+	cf-list-button {
+		opacity: 1;
+	}
+}
+
+cf-input-control-elements.hide-nav-buttons {
+	cf-list-button {
+		pointer-events: none;
+
+		&:after {
+			opacity: 0;
+		}
+	}
+}
+
+cf-list-button {
+	display: block;
+	position: absolute;
+	z-index: 2;
+	height: calc(100% - 16px);
+	width: 38px;
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	will-change: opacity;
+	.conversational-form--enable-animation & {
+		transition: opacity $cf-anim-time $cf-ease-easeOut 0.5s;
+	}
+
+	@media (min-width: $cf-breakpoint-medium){
+		&:hover:nth-child(1) {
+			background: linear-gradient(to left, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 75%);
+			&:after {
+				animation: cf-arrow-left $cf-anim-time $cf-ease-easeInOut;
+			}
+		}
+
+		&:hover:nth-child(2) {
+			background: linear-gradient(to right, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 75%);
+			&:after {
+				animation: cf-arrow-right $cf-anim-time $cf-ease-easeInOut;
+			}
+		}
+	}
+	
+	&.cf-gradient {
+		&:before {
+			opacity: 1;
+		}
+	}
+
+	&.active {
+		pointer-events: auto;
+
+		&:after {
+			opacity: 1;
+		}
+	}
+
+	&:active {
+		&:after {
+			visibility: hidden;
+		}
+	}
+
+	&:nth-child(1) {
+		left: 0px;
+
+		&:before {
+			background: linear-gradient(to left, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 100%);
+		}
+
+		&:after {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor(invert($cf-color-background)) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29' %3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon transform='translate%2829.000000, 54.000000%29 rotate%28-180.000000%29 translate%28-29.000000, -54.000000%29 ' points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+		}
+	}
+	
+	&:nth-child(2) {
+		right: 0px;
+
+		&:before {
+			background: linear-gradient(to right, rgba($cf-color-background,0) 0%, rgba($cf-color-background,1) 100%);
+		}
+
+		&:after {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8' standalone='no'?%3e%3csvg viewBox='0 0 6 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='" + encodecolor(invert($cf-color-background)) + "' fill-rule='evenodd'%3e%3cg transform='translate%28-1230.000000, -567.000000%29'%3e%3cg transform='translate%28738.000000, 178.000000%29'%3e%3cg transform='translate%280.000000, 340.000000%29'%3e%3cg transform='translate%28466.000000, 0.000000%29'%3e%3cpolygon points='26 50.1538462 27.125 49 32 54 27.125 59 26 57.8461538 29.75 54'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e"); 
+		}
+	}
+	
+	&:before {
+		content: "";
+		display: block;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		will-change: opacity;
+		.conversational-form--enable-animation & {
+			transition: opacity $cf-anim-time $cf-ease-easeOut;
+		}
+	}
+	
+	&:after {
+		content: "";
+		display: block;
+		width: 6px;
+		height: 10px;
+		position: absolute;
+		background-size: 6px 10px;
+		background-repeat: no-repeat;
+		top: calc(50% - 5px);
+		left: calc(50% - 3px);
+		opacity: 0;
+		will-change: opacity;
+		.conversational-form--enable-animation & {
+			transition: opacity $cf-anim-time * 0.5 $cf-ease-easeOut;
+		}
+	}
+}
+
+@keyframes cf-arrow-right {
+	0% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+	40% {
+		transform: translateX(20px);
+		opacity: 0;
+	}
+	40.001% {
+		transform: translateX(-20px);
+		opacity: 0;
+	}
+	80% {
+		transform: translateX(4px);
+		opacity: 1;
+	}
+	90% {
+		transform: translateX(-2px);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+}
+
+@keyframes cf-arrow-left {
+	0% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+	40% {
+		transform: translateX(-20px);
+		opacity: 0;
+	}
+	40.001% {
+		transform: translateX(20px);
+		opacity: 0;
+	}
+	80% {
+		transform: translateX(-4px);
+		opacity: 1;
+	}
+	90% {
+		transform: translateX(2px);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+}

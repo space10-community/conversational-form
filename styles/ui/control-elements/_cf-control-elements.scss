@@ -1,0 +1,85 @@
+@import "../../_cf-variables";
+
+cf-input-control-elements {
+	width: auto;
+	height: auto;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	z-index: 0;
+	user-select: none;
+	visibility: hidden;
+	height: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	.cf-button {
+		margin-bottom: 10px;
+		display: inline-block;
+
+		&.hide {
+			display: none;
+		}
+	}
+	
+	&.resized {
+		visibility: visible;
+		height: auto;
+	}
+	&.one-row {
+		cf-list {
+			height: auto;
+		}
+
+		cf-list-button {
+			opacity: 0;
+		}
+	}
+	&.two-row {
+		cf-list {
+			white-space: normal;
+			height: auto;
+		}
+	}
+
+	&.animate-in {
+		cf-list:last-of-type {
+			min-height: 56px;
+		}
+	}
+	
+	&.two-row.animate-in {
+		cf-list:last-of-type {
+			min-height: 112px;
+		}
+	}
+}
+
+cf-list, cf-list-button {
+	will-change: height;
+	.conversational-form--enable-animation & {
+		transition: height $cf-anim-time * .5 $cf-ease-easeOut;
+	}
+}
+
+
+cf-input[tag-type="file"] {
+	cf-list {
+		cursor: default;
+	}
+	
+	cf-input-control-elements {
+		margin-bottom: 0;
+	}
+}
+
+cf-list {
+	display: block;
+	height: auto;
+	cursor: move;
+	white-space: nowrap;
+
+	&.disabled {
+		pointer-events: none;
+	}
+}

@@ -1,0 +1,44 @@
+@import "../../_cf-variables";
+
+cf-radio-button.cf-button {
+	&:hover, &.highlight, &:focus {
+		cf-radio {
+			background: $cf-color-secondary;
+		}
+	}
+	
+	&.has-image {
+		cf-checkbox {
+			margin-left: 0px;
+		}
+	}
+
+	cf-radio {
+		display: block;
+		float: left;
+		width: relativeValue(8px);
+		height: relativeValue(8px);
+		border-radius: 50%;
+		background: none; //$cf-color-chat-response-user-bg;
+		border: 1px solid $cf-color-primary;
+		will-change: background;
+		margin-right: 8px;
+		margin-left: -10px;
+		margin-top: relativeValue(1px); // We just need to slightly move it a bit up to align better
+		position: relative;
+		.conversational-form--enable-animation & {
+			transition: background $cf-anim-time * 0.5 $cf-ease-easeOut;
+		}
+	}
+
+	&[checked="checked"] {
+		background: $cf-color-primary !important;
+		color: $cf-color-secondary !important;
+
+		cf-radio {
+			background: $cf-color-background;
+			border: 1px solid $cf-color-background;
+			pointer-events: none;
+		}
+	}
+}

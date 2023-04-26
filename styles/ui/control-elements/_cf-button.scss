@@ -1,0 +1,110 @@
+@import "../../_cf-variables";
+
+.cf-button { //use class because we share the styling on different elements
+	background: $cf-color-background;
+	cursor: pointer;
+	border: 1px solid rgba($cf-color-primary, 1);
+	border-radius: calc(#{$cf-chat-response-border-radius} * .88);
+	color: $cf-color-primary;
+	line-height: 1;
+	user-select: none;
+	overflow: hidden;
+	transform: translateZ(0px); // <-- safari...;
+	font-size: $cf-base-font-size - 2;
+	
+	@media (max-width: $cf-breakpoint-medium) {
+		font-size: $cf-mobile-font-size - 2;
+	}
+
+	> div {
+		position: relative;
+		margin: 12px 22px;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			margin: 10px 22px;
+		}
+	}
+
+	&.has-image {
+		max-width: 160px;
+
+		@media (max-width: $cf-breakpoint-medium) {
+			max-width: 132px;
+		}
+
+		> div {
+			margin: 8px 22px 10px 22px;
+		}
+	}
+
+	transform-origin: 0% 100%;
+	will-change: opacity, background;
+	opacity: 0;
+	.conversational-form--enable-animation & {
+		transition: opacity 0s $cf-ease-easeOut, background $cf-anim-time $cf-ease-easeOut;
+	}
+
+	&.animate-in {
+		.conversational-form--enable-animation & {
+			&:nth-child(even) {
+				transition-delay: 0.05s, 0s;
+			}
+			&:nth-child(odd) {
+				transition-delay: 0.15s, 0s;
+			}
+
+			transition-duration: $cf-anim-time * 0.5, $cf-anim-time;
+			transition-timing-function: $cf-ease-easeOut, $cf-ease-easeOut;
+		}
+		opacity: 1;
+		&.animate-out {
+			transform-origin: 75% 100%;
+			opacity: 0;
+		}
+	}
+	
+	&:not(:last-child) {
+		margin-right: 10px;
+	}
+
+	&:hover, &:focus {
+		// TODO
+		&:not(&[selected="selected"]),
+		&:not([checked="checked"]) {
+			background: $cf-color-primary;
+			color: $cf-color-secondary;
+		}
+	}
+
+	&[selected="selected"], &[checked="checked"] {
+		// TODO
+		&:not(:focus):not(:hover):not(.highlight) {
+			color: $cf-color-secondary;
+		 	background: $cf-color-primary;
+		}
+	}
+	
+	&[disabled="disabled"] {
+		pointer-events: none;
+		&.animate-in {
+			opacity: 0.5;
+		}
+	}
+	
+	&:active {
+		> div {
+			opacity: 0.2;
+		}
+	}
+
+	.cf-image {
+		width: 100%;
+		height: auto;
+		will-change: opacity;
+		transition: opacity $cf-anim-time $cf-ease-easeOut;
+		opacity: 0;
+		&.loaded {
+			opacity: 1;
+		}
+	}
+}

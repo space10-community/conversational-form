@@ -1,0 +1,275 @@
+.conversational-form {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@import "./mixins/cf-mixins";
+
+$cf-color-background: #2C2C2E;
+$cf-color-chat-response-user-bg: #E5E6EA;
+
+@import "./conversational-form.scss";
+
+
+cf-chat-response.robot text > p {
+  background: #3A3A3C;
+  color: #fff;
+  // padding: 13px 21px 13px 21px;
+}
+
+cf-chat-response.user text > p {
+  background: #E5E6EA;
+  color: #303030;
+}
+
+cf-chat-response {
+  & thumb {
+    background-color: inherit;
+  }
+}
+
+.cf-button {
+  border: 1px solid rgba($cf-color-secondary, 1);
+  color: $cf-color-secondary;
+
+  &:hover, &:focus {
+    // TODO
+    &:not(&[selected="selected"]),
+    &:not([checked="checked"]) {
+      background: $cf-color-secondary;
+      color: $cf-color-primary;
+    }
+  }
+
+  &[selected="selected"], &[checked="checked"] {
+    &:not(:focus):not(:hover):not(.highlight) {
+      color: $cf-color-primary;
+       background: $cf-color-secondary;
+    }
+  }
+  
+  &.cf-checkbox-button {
+    &:hover, &.highlight, &:focus {
+      background: $cf-color-secondary;
+      color: $cf-color-primary;
+
+      cf-checkbox {
+        background: $cf-color-secondary;
+
+        &:after {
+          top: relativeValue(.5px);
+          left: relativeValue(0px);
+          width: relativeValue(10px);
+          height: relativeValue(8px);
+          background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate%28-290.000000, -505.000000%29' fill='" + encodecolor($cf-color-primary) + "'%3e%3cg transform='translate%2884.000000, 136.000000%29'%3e%3cg transform='translate%281.000000, 216.000000%29'%3e%3cg transform='translate%28189.000000, 139.000000%29'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+        }
+      }
+    }
+
+    cf-checkbox {
+      border-color: $cf-color-secondary;
+    }
+
+    &[checked="checked"], &[selected="selected"] {
+      background: $cf-color-secondary !important;
+      color: $cf-color-primary !important;
+
+      cf-checkbox {
+        &:after {
+          top: relativeValue(.5px);
+          left: relativeValue(0px);
+          width: relativeValue(10px);
+          height: relativeValue(8px);
+          background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13px' height='10px' viewBox='0 0 13 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3e%3cg transform='translate%28-290.000000, -505.000000%29' fill='" + encodecolor($cf-color-primary) + "'%3e%3cg transform='translate%2884.000000, 136.000000%29'%3e%3cg transform='translate%281.000000, 216.000000%29'%3e%3cg transform='translate%28189.000000, 139.000000%29'%3e%3cpolygon points='17.5 18.5 16 20 20 24 29 15.5 27.5 14 20 21'%3e%3c/polygon%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e") !important;
+        }
+      }
+    }
+  }
+}
+
+cf-radio-button.cf-button {
+  cf-radio {
+    border: 1px solid $cf-color-secondary;
+  }
+
+  &:hover, &.highlight, &:focus {
+    background: $cf-color-secondary !important;
+    color: $cf-color-primary !important;
+
+    cf-radio {
+      background: $cf-color-primary;
+    }
+  }
+  
+  &[checked="checked"] {
+    background: $cf-color-secondary !important;
+    color: $cf-color-primary !important;
+  }
+}
+
+cf-input input, cf-input textarea {
+  box-shadow: none;
+  border-radius: 3px;
+  background-color: #1C1C1E;
+  color: #fff;
+
+  &::placeholder {
+    color: #777 !important;
+  }
+
+  &:focus, &:active {
+    box-shadow: none;
+  }
+}
+
+cf-input-button {
+  border-radius: 3px 5px 5px 3px;
+  background: #3A3A3C !important;
+}
+
+.cf-progressBar {
+  background-color: $cf-color-primary;
+  
+  .bar {
+    background-color: lighten($cf-color-secondary, 20%);
+  }
+}
+
+:root {
+  --anim-easeOutBack: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
+.conversational-form cf-chat-response text {
+  font-weight: var(--cf-font-weight-bold);
+  min-height: 42px;
+  font-size: 17px;
+}
+
+.conversational-form cf-chat-response.robot text > p {
+  border-radius: 4px 20px 20px 20px;
+}
+.conversational-form
+  cf-chat-response.robot
+  text
+  > p:not(:only-child):first-child {
+  border-radius: 20px 20px 20px 4px;
+}
+
+.conversational-form
+  cf-chat-response.robot
+  text
+  > p:not(:only-child):last-child {
+  border-radius: 4px 20px 20px 20px;
+}
+
+.conversational-form cf-chat-response.user {
+  padding-right: 48px;
+}
+
+.conversational-form cf-chat-response.user text > p {
+  border-radius: 20px 4px 20px 20px;
+}
+
+.conversational-form cf-input input,
+.conversational-form cf-input textarea {
+  border-radius: 40px;
+  min-height: 57px;
+  padding: 19px 60px 19px 30px;
+  height: 56px;
+}
+
+@media (min-width: var(--cf-breakpoint-1)) {
+  .conversational-form cf-input input,
+  .conversational-form cf-input textarea {
+    font-size: 16px;
+  }
+}
+
+.conversational-form cf-input input:not(:focus),
+.conversational-form cf-input textarea:not(:focus) {
+  box-shadow: 0 0 1px rgba(163, 163, 163, 0.5);
+}
+.conversational-form cf-input-button {
+  background: var(--cf-color-white);
+  height: 42px;
+  width: 42px;
+  border: none;
+}
+
+.conversational-form cf-list {
+  max-height: 120px !important;
+  overflow-y: auto;
+
+  cursor:initial;
+
+  padding-right: 30px;
+  width: 100% !important;
+  transform: none !important;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  &::-webkit-scrollbar-track {
+    border: 1px solid rgba(163, 163, 163, 0.5);
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: white; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(163, 163, 163, 0.5); 
+  }
+}
+
+.conversational-form cf-input-control-elements {
+  #list-scroll-icon {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 2;
+    right: 5px;
+    border-radius: 50%;
+    display: initial;
+    visibility: initial;
+    top: 10px;
+    background-image: url('assets/icons/scroll.png') ,url('../../../../public/assets/icons/scroll.png') !important;
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.conversational-form cf-chat-response text {
+  padding-right: 10px;
+}
+
+.conversational-form cf-chat-response.user.peak-thumb thumb {
+  background-color: rgba(163, 163, 163, 0.5);
+  border: 2px rgba(163, 163, 163, 0.5) solid;
+  background-size: 51px 51px;
+}
+
+.conversational-form cf-input-button.cf-input-button div.cf-icon-progress {
+  background-image: url('assets/icons/send_message_icon.png'), url('../../../../public/assets/icons/send_message_icon.png');
+  background-size: 20px 20px;
+}
+
+cf-input.animate-in cf-input-button.cf-input-button {
+  height: 100%;
+  border-radius: 0px 25px 25px 0px;
+  width: 70px;
+}
+
+cf-input-control-elements.animate-in cf-list-button {
+  display: none;
+  visibility: hidden;
+}
