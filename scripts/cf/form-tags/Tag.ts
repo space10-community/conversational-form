@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
@@ -41,30 +41,34 @@ import { TagsParser } from '../parsing/TagsParser'
 import { OptionTag } from './OptionTag'
 
 export interface ITag {
-  domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement | null,
-  type: string,
-  name: string,
-  id: string,
-  label: string,
-  question: string,
-  errorMessage: string,
-  setTagValueAndIsValid(dto: FlowDTO): boolean;
-  dealloc(): void;
-  refresh(): void;
-  reset(): void;
-  value: string | Array<string>;
-  inputPlaceholder?: string;
-  required: boolean;
-  defaultValue: string | number;
-  disabled: boolean;
-  skipUserInput: boolean;
-  eventTarget: EventDispatcher;
-  flowManager: FlowManager;
-  hasConditions(): boolean;
-  hasConditionsFor(tagName: string): boolean;
-  checkConditionalAndIsValid(): boolean;
+  domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement | null
+  type: string
+  name: string
+  id: string
+  label: string
+  question: string
+  errorMessage: string
+  setTagValueAndIsValid(dto: FlowDTO): boolean
+  dealloc(): void
+  refresh(): void
+  reset(): void
+  value: string | Array<string>
+  inputPlaceholder?: string
+  required: boolean
+  defaultValue: string | number
+  disabled: boolean
+  skipUserInput: boolean
+  eventTarget: EventDispatcher
+  flowManager: FlowManager
+  hasConditions(): boolean
+  hasConditionsFor(tagName: string): boolean
+  checkConditionalAndIsValid(): boolean
 
-  validationCallback?(dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void): void;
+  validationCallback?(
+    dto: FlowDTO,
+    success: () => void,
+    error: (optionalErrorMessage?: string) => void
+  ): void
 }
 
 export const TagEvents = {
@@ -72,54 +76,58 @@ export const TagEvents = {
 }
 
 export interface TagChangeDTO {
-  tag: ITag,
+  tag: ITag
   value: string
 }
 
 export interface ConditionalValue {
-  key: string,
+  key: string
   conditionals: Array<string | RegExp>
 }
 
 export interface ITagOptions {
-  domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement | null,
-  questions?: Array<string>,
-  label?: string,
-  validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void, // can be set through cf-validation attribute
+  domElement?: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement | null
+  questions?: Array<string>
+  label?: string
+  validationCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void // can be set through cf-validation attribute
 }
 
 // class
 export class Tag implements ITag {
-  private errorMessages!: Array<string>;
+  private errorMessages!: Array<string>
 
-  private pattern?: RegExp | null;
+  private pattern?: RegExp | null
 
-  private changeCallback?: (() => void) | null;
+  private changeCallback?: (() => void) | null
 
-  private conditionalTags!: Array<ConditionalValue>;
+  private conditionalTags!: Array<ConditionalValue>
 
   // input placeholder text, this is for the UserTextInput and not the tag it self.
-  protected _inputPlaceholder!: string;
+  protected _inputPlaceholder!: string
 
-  protected _eventTarget!: EventDispatcher;
+  protected _eventTarget!: EventDispatcher
 
-  protected _label!: string;
+  protected _label!: string
 
-  protected questions?: Array<string> | null; // can also be set through cf-questions attribute.
+  protected questions?: Array<string> | null // can also be set through cf-questions attribute.
 
   public flowManager!: FlowManager
 
-  public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement;
+  public domElement: HTMLInputElement | HTMLSelectElement | HTMLButtonElement | HTMLOptionElement
 
   public optionTags?: OptionTag[]
 
-  public defaultValue!: string | number;
+  public defaultValue!: string | number
 
-  public initialDefaultValue: string | number;
+  public initialDefaultValue: string | number
 
-  public validationCallback?: (dto: FlowDTO, success: () => void, error: (optionalErrorMessage?: string) => void) => void; // can be set through cf-validation attribute, get's called from FlowManager
+  public validationCallback?: (
+    dto: FlowDTO,
+    success: () => void,
+    error: (optionalErrorMessage?: string) => void
+  ) => void // can be set through cf-validation attribute, get's called from FlowManager
 
-  public skipUserInput: boolean; // Used by cf-robot-message which has no input and is just a robot message
+  public skipUserInput: boolean // Used by cf-robot-message which has no input and is just a robot message
 
   public get type(): string {
     return this.domElement.getAttribute('type') || this.domElement?.tagName.toLowerCase() || ''
@@ -146,7 +154,7 @@ export class Tag implements ITag {
   }
 
   public get value(): string | Array<string> {
-    return this.domElement.value || this.initialDefaultValue as string
+    return this.domElement.value || (this.initialDefaultValue as string)
   }
 
   public get hasImage(): boolean {
@@ -154,21 +162,30 @@ export class Tag implements ITag {
   }
 
   public get rows(): number {
-    return this.domElement.hasAttribute('rows') ? Number.parseInt(this.domElement.getAttribute('rows') || '0', 10) : 0
+    return this.domElement.hasAttribute('rows')
+      ? Number.parseInt(this.domElement.getAttribute('rows') || '0', 10)
+      : 0
   }
 
   public get disabled(): boolean {
     // a tag is disabled if its conditions are not meet, also if it contains the disabled attribute
-    return !this.checkConditionalAndIsValid() || (this.domElement.getAttribute('disabled') !== undefined && this.domElement.getAttribute('disabled') !== null)
+    return (
+      !this.checkConditionalAndIsValid() ||
+      (this.domElement.getAttribute('disabled') !== undefined &&
+        this.domElement.getAttribute('disabled') !== null)
+    )
   }
 
   public get required(): boolean {
-    return !!this.domElement.getAttribute('required') || this.domElement.getAttribute('required') === ''
+    return (
+      !!this.domElement.getAttribute('required') || this.domElement.getAttribute('required') === ''
+    )
   }
 
   public get question(): string {
     // if questions are empty, then fall back to dictionary, every time
-    if (!this.questions || this.questions.length === 0) return Dictionary.getRobotResponse(this.type)
+    if (!this.questions || this.questions.length === 0)
+      return Dictionary.getRobotResponse(this.type)
     return this.questions[Math.floor(Math.random() * this.questions.length)]
   }
 
@@ -180,12 +197,20 @@ export class Tag implements ITag {
     if (!this.errorMessages) {
       // custom tag error messages
       if (this.domElement.getAttribute('cf-error')) {
-        this.errorMessages = Helpers.getValuesOfBars(this.domElement.getAttribute('cf-error') as string)
-      } else if (this.domElement.parentNode && (this.domElement.parentNode as HTMLElement).getAttribute('cf-error')) {
-        this.errorMessages = Helpers.getValuesOfBars((this.domElement.parentNode as HTMLElement).getAttribute('cf-error') as string)
+        this.errorMessages = Helpers.getValuesOfBars(
+          this.domElement.getAttribute('cf-error') as string
+        )
+      } else if (
+        this.domElement.parentNode &&
+        (this.domElement.parentNode as HTMLElement).getAttribute('cf-error')
+      ) {
+        this.errorMessages = Helpers.getValuesOfBars(
+          (this.domElement.parentNode as HTMLElement).getAttribute('cf-error') as string
+        )
       } else if (this.required) {
         this.errorMessages = [Dictionary.get('input-placeholder-required')]
-      } else if (this.type === 'file') this.errorMessages = [Dictionary.get('input-placeholder-file-error')]
+      } else if (this.type === 'file')
+        this.errorMessages = [Dictionary.get('input-placeholder-file-error')]
       else {
         this.errorMessages = [Dictionary.get('input-placeholder-error')]
       }
@@ -199,7 +224,11 @@ export class Tag implements ITag {
     this.initialDefaultValue = ''
 
     this.changeCallback = this.onDomElementChange.bind(this)
-    this.domElement.addEventListener('change', this.changeCallback as EventListenerOrEventListenerObject, false)
+    this.domElement.addEventListener(
+      'change',
+      this.changeCallback as EventListenerOrEventListenerObject,
+      false
+    )
 
     // remove tabIndex from the dom element.. danger zone... should we or should we not...
     this.domElement.tabIndex = -1
@@ -207,7 +236,9 @@ export class Tag implements ITag {
     this.skipUserInput = false
 
     // questions array
-    if (options.questions) { this.questions = options.questions }
+    if (options.questions) {
+      this.questions = options.questions
+    }
 
     // custom tag validation - must be a method on window to avoid unsafe eval() calls
     if (this.domElement.getAttribute('cf-validation')) {
@@ -329,11 +360,15 @@ export class Tag implements ITag {
     const isTagFormless: boolean = TagsParser.isElementFormless(element)
 
     const innerText: string = Helpers.getInnerTextOfElement(element)
-    if (element.tagName.toLowerCase() === 'option' && (!isTagFormless && innerText === '' || innerText === ' ')) {
+    if (
+      element.tagName.toLowerCase() === 'option' &&
+      ((!isTagFormless && innerText === '') || innerText === ' ')
+    ) {
       return false
     }
 
-    if (element.tagName.toLowerCase() === 'select' || element.tagName.toLowerCase() === 'option') return true
+    if (element.tagName.toLowerCase() === 'select' || element.tagName.toLowerCase() === 'option')
+      return true
     if (isTagFormless) {
       return true
     }
@@ -342,8 +377,6 @@ export class Tag implements ITag {
 
   public reset(): void {
     this.refresh()
-
-    // this.disabled = false;
 
     // reset to initial value.
     this.defaultValue = ''
@@ -380,10 +413,10 @@ export class Tag implements ITag {
   }
 
   /**
-  * @name checkConditionalAndIsValid
-  * checks for conditional logic, see documentaiton (wiki)
-  * here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
-  */
+   * @name checkConditionalAndIsValid
+   * checks for conditional logic, see documentaiton (wiki)
+   * here we check after cf-conditional{-name}, if we find an attribute we look through tags for value, and ignore the tag if
+   */
   public checkConditionalAndIsValid(): boolean {
     // can we tap into disabled
     // if contains attribute, cf-conditional{-name} then check for conditional value across tags
@@ -402,19 +435,20 @@ export class Tag implements ITag {
     const valueText: string = dto.text || ''
 
     if (
-      this.domElement.hasAttribute('type')
-      && this.domElement.getAttribute('type') === 'email'
-      && !this.pattern
-      && valueText.length > 0
+      this.domElement.hasAttribute('type') &&
+      this.domElement.getAttribute('type') === 'email' &&
+      !this.pattern &&
+      valueText.length > 0
     ) {
-      this.pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      this.pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     } else if (
       // When NOT required: Reset in the event user already typed something, and now they clear their input and want to submit nothing ==> remove pattern previously applied
-      this.domElement.hasAttribute('type')
-      && this.domElement.getAttribute('type') === 'email'
-      && this.pattern
-      && valueText.length === 0
-      && !this.required
+      this.domElement.hasAttribute('type') &&
+      this.domElement.getAttribute('type') === 'email' &&
+      this.pattern &&
+      valueText.length === 0 &&
+      !this.required
     ) {
       this.pattern = null
     }
@@ -446,7 +480,9 @@ export class Tag implements ITag {
 
     if (isValid) {
       // we cannot set the dom element value when type is file
-      if (this.type !== 'file') { this.domElement.value = valueText }
+      if (this.type !== 'file') {
+        this.domElement.value = valueText
+      }
     }
 
     return isValid
@@ -473,17 +509,21 @@ export class Tag implements ITag {
   }
 
   protected getLabel(): string {
-    if (!this._label) { this.findAndSetLabel() }
+    if (!this._label) {
+      this.findAndSetLabel()
+    }
 
-    if (this._label) { return this._label }
+    if (this._label) {
+      return this._label
+    }
 
     return Dictionary.getRobotResponse(this.type)
   }
 
   /**
-  * @name findConditionalAttributes
-  * look for conditional attributes and map them
-  */
+   * @name findConditionalAttributes
+   * look for conditional attributes and map them
+   */
   protected findConditionalAttributes(): void {
     const keys: any = this.domElement.attributes
     if (keys.length > 0) {
@@ -497,7 +537,8 @@ export class Tag implements ITag {
             const _conditionals: Array<string | RegExp> = []
 
             // TODO: when && use to combine multiple values to complete condition.
-            const conditionalsFromAttribute: Array<string> = attr.value.indexOf('||') !== -1 ? attr.value.split('||') : attr.value.split('&&')
+            const conditionalsFromAttribute: Array<string> =
+              attr.value.indexOf('||') !== -1 ? attr.value.split('||') : attr.value.split('&&')
 
             for (let i = 0; i < conditionalsFromAttribute.length; i++) {
               const _conditional: string = conditionalsFromAttribute[i]
@@ -521,7 +562,9 @@ export class Tag implements ITag {
   }
 
   protected findAndSetQuestions(): void {
-    if (this.questions) { return }
+    if (this.questions) {
+      return
+    }
 
     // <label tag with label:for attribute to el:id
     // check for label tag, we only go 2 steps backwards..
@@ -529,12 +572,17 @@ export class Tag implements ITag {
     // from standardize markup: http://www.w3schools.com/tags/tag_label.asp
 
     if (this.domElement.getAttribute('cf-questions')) {
-      this.questions = Helpers.getValuesOfBars(this.domElement.getAttribute('cf-questions') as string)
+      this.questions = Helpers.getValuesOfBars(
+        this.domElement.getAttribute('cf-questions') as string
+      )
 
       if (this.domElement.getAttribute('cf-input-placeholder')) {
         this._inputPlaceholder = this.domElement.getAttribute('cf-input-placeholder') as string
       }
-    } else if (this.domElement.parentNode && (this.domElement.parentNode as HTMLElement).getAttribute('cf-questions')) {
+    } else if (
+      this.domElement.parentNode &&
+      (this.domElement.parentNode as HTMLElement).getAttribute('cf-questions')
+    ) {
       // for groups the parentNode can have the cf-questions..
       const parent = this.domElement.parentNode as HTMLElement
       this.questions = Helpers.getValuesOfBars(parent.getAttribute('cf-questions') as string)
@@ -568,12 +616,17 @@ export class Tag implements ITag {
 
       if (parentDomNode) {
         // step backwards and check for label tag.
-        let labelTags: HTMLElement[] | HTMLCollectionOf<HTMLLabelElement> = (parentDomNode as HTMLElement).tagName.toLowerCase() === 'label' ? [(parentDomNode as HTMLElement)] : (parentDomNode as HTMLElement).getElementsByTagName('label')
+        let labelTags: HTMLElement[] | HTMLCollectionOf<HTMLLabelElement> =
+          (parentDomNode as HTMLElement).tagName.toLowerCase() === 'label'
+            ? [parentDomNode as HTMLElement]
+            : (parentDomNode as HTMLElement).getElementsByTagName('label')
 
         if (labelTags.length === 0) {
           // check for innerText
           const innerText: string = Helpers.getInnerTextOfElement(parentDomNode as any)
-          if (innerText && innerText.length > 0) { labelTags = [parentDomNode as HTMLLabelElement] }
+          if (innerText && innerText.length > 0) {
+            labelTags = [parentDomNode as HTMLLabelElement]
+          }
         } else if (labelTags.length > 0) {
           // check for "for" attribute
           for (let i = 0; i < labelTags.length; i++) {
@@ -592,15 +645,17 @@ export class Tag implements ITag {
   }
 
   /**
-  * @name onDomElementChange
-  * on dom element value change event, ex. w. browser autocomplete mode
-  */
+   * @name onDomElementChange
+   * on dom element value change event, ex. w. browser autocomplete mode
+   */
   private onDomElementChange(): void {
-    this._eventTarget.dispatchEvent(new CustomEvent(TagEvents.ORIGINAL_ELEMENT_CHANGED, {
-      detail: {
-        value: this.value,
-        tag: this
-      } as TagChangeDTO
-    }))
+    this._eventTarget.dispatchEvent(
+      new CustomEvent(TagEvents.ORIGINAL_ELEMENT_CHANGED, {
+        detail: {
+          value: this.value,
+          tag: this
+        } as TagChangeDTO
+      })
+    )
   }
 }

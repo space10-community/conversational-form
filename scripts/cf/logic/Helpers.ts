@@ -1,27 +1,27 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 // interface
 
 export interface TouchVector2d {
-  x: number,
-  y: number,
-  touches: Array<any>,
+  x: number
+  y: number
+  touches: Array<any>
 }
 
 // class
@@ -53,9 +53,7 @@ export class Helpers {
   public static getInnerTextOfElement(element: Element): string {
     const tmp = document.createElement('DIV')
     tmp.innerHTML = element.innerHTML
-    // return
     let text: string = tmp.textContent || tmp.innerText || ''
-    // text = String(text).replace('\t','');
     text = String(text).replace(/^\s+|\s+$/g, '')
 
     return text
@@ -92,7 +90,9 @@ export class Helpers {
 
     // TODO: remove single |
     // fallback to the standard
-    if (strs.length <= 1) { strs = str.split('|') }
+    if (strs.length <= 1) {
+      strs = str.split('|')
+    }
 
     return strs
   }
@@ -108,7 +108,8 @@ export class Helpers {
    * https://stackoverflow.com/a/70452304/10416161
    */
   public static deepMerge(
-    target: Record<string, any>, ...sources: Record<string, any>[]
+    target: Record<string, any>,
+    ...sources: Record<string, any>[]
   ): Record<string, any> {
     if (!sources.length) {
       return target
@@ -120,8 +121,8 @@ export class Helpers {
       }
 
       if (
-        value.constructor === Object
-        || (value.constructor === Array && value.find((v) => v.constructor === Object))
+        value.constructor === Object ||
+        (value.constructor === Array && value.find((v) => v.constructor === Object))
       ) {
         Helpers.deepMerge(target[key], value)
       } else if (value.constructor === Array) {

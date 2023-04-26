@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-len */
@@ -32,29 +32,29 @@ import { ChatListEvents } from '../chat/ChatList'
 
 // interface
 export class UserInputElement extends BasicElement implements IUserInputElement {
-  public static ERROR_TIME = 2000;
+  public static ERROR_TIME = 2000
 
-  public static preventAutoFocus = false;
+  public static preventAutoFocus = false
 
-  public static hideUserInputOnNoneTextInput = false;
+  public static hideUserInputOnNoneTextInput = false
 
-  public el!: HTMLElement;
+  public el!: HTMLElement
 
-  protected cfReference!: ConversationalForm;
+  protected cfReference!: ConversationalForm
 
-  private onChatReponsesUpdatedCallback: (e?: any) => void;
+  private onChatReponsesUpdatedCallback: (e?: any) => void
 
-  private windowFocusCallback: (e?: any) => void;
+  private windowFocusCallback: (e?: any) => void
 
-  private inputInvalidCallback: (e?: any) => void;
+  private inputInvalidCallback: (e?: any) => void
 
-  private flowUpdateCallback: (e?: any) => void;
+  private flowUpdateCallback: (e?: any) => void
 
-  protected _currentTag?: ITag | ITagGroup;
+  protected _currentTag?: ITag | ITagGroup
 
-  protected _disabled = false;
+  protected _disabled = false
 
-  protected _visible = false;
+  protected _visible = false
 
   public get active(): boolean {
     return false
@@ -100,50 +100,68 @@ export class UserInputElement extends BasicElement implements IUserInputElement 
     if (Helpers.isInternetExlorer()) {
       // IE
       elHeight = el.offsetHeight
-      elMargin = parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10)
+      elMargin =
+        parseInt(el.currentStyle.marginTop, 10) + parseInt(el.currentStyle.marginBottom, 10)
       elMargin *= 2
     } else {
       // none-IE
-      elHeight = parseInt(document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('height') || '0', 10)
-      elMargin = parseInt(
-        document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('margin-top') || '0', 10
-      ) + parseInt(document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('margin-bottom') || '0', 10)
+      elHeight = parseInt(
+        document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('height') || '0',
+        10
+      )
+      elMargin =
+        parseInt(
+          document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('margin-top') || '0',
+          10
+        ) +
+        parseInt(
+          document.defaultView?.getComputedStyle(el, '')?.getPropertyValue('margin-bottom') || '0',
+          10
+        )
     }
-    return (elHeight + elMargin)
+    return elHeight + elMargin
   }
 
   constructor(options: IUserInputOptions) {
     super(options)
 
     this.onChatReponsesUpdatedCallback = this.onChatReponsesUpdated.bind(this)
-    this.eventTarget.addEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false)
+    this.eventTarget.addEventListener(
+      ChatListEvents.CHATLIST_UPDATED,
+      this.onChatReponsesUpdatedCallback,
+      false
+    )
 
     this.windowFocusCallback = this.windowFocus.bind(this)
     window.addEventListener('focus', this.windowFocusCallback, false)
 
     this.inputInvalidCallback = this.inputInvalid.bind(this)
-    this.eventTarget.addEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false)
+    this.eventTarget.addEventListener(
+      FlowEvents.USER_INPUT_INVALID,
+      this.inputInvalidCallback,
+      false
+    )
 
     this.flowUpdateCallback = this.onFlowUpdate.bind(this)
     this.eventTarget.addEventListener(FlowEvents.FLOW_UPDATE, this.flowUpdateCallback, false)
   }
-
-  protected onEnterOrSubmitButtonSubmit(event?: CustomEvent): void { }
-
-  protected inputInvalid(event: CustomEvent): void { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected onEnterOrSubmitButtonSubmit(event?: CustomEvent): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected inputInvalid(event: CustomEvent): void {}
 
   /**
-  * @name deactivate
-  * DEactivate the field
-  */
+   * @name deactivate
+   * DEactivate the field
+   */
   public deactivate(): void {
     this.disabled = true
   }
 
   /**
-  * @name reactivate
-  * REactivate the field
-  */
+   * @name reactivate
+   * REactivate the field
+   */
   public reactivate(): void {
     this.disabled = false
   }
@@ -155,18 +173,26 @@ export class UserInputElement extends BasicElement implements IUserInputElement 
     return value
   }
 
-  public setFocusOnInput(): void { }
+  public setFocusOnInput(): void {}
 
-  public onFlowStopped(): void { }
+  public onFlowStopped(): void {}
 
-  public reset(): void { }
+  public reset(): void {}
 
   public dealloc(): void {
-    this.eventTarget.removeEventListener(ChatListEvents.CHATLIST_UPDATED, this.onChatReponsesUpdatedCallback, false)
+    this.eventTarget.removeEventListener(
+      ChatListEvents.CHATLIST_UPDATED,
+      this.onChatReponsesUpdatedCallback,
+      false
+    )
     // @ts-ignore
     this.onChatReponsesUpdatedCallback = null
 
-    this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_INVALID, this.inputInvalidCallback, false)
+    this.eventTarget.removeEventListener(
+      FlowEvents.USER_INPUT_INVALID,
+      this.inputInvalidCallback,
+      false
+    )
     // @ts-ignore
     this.inputInvalidCallback = null
 
@@ -188,8 +214,8 @@ export class UserInputElement extends BasicElement implements IUserInputElement 
       this._currentTag = event.detail.tag as ITag | ITagGroup
     }
   }
-
-  protected windowFocus(event: Event): void { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected windowFocus(event: Event): void {}
 
   private onChatReponsesUpdated(event: CustomEvent) {
     // only show when user response
@@ -202,8 +228,8 @@ export class UserInputElement extends BasicElement implements IUserInputElement 
 }
 
 export interface IUserInputOptions extends IBasicElementOptions {
-  cfReference: ConversationalForm;
-  microphoneInputObj?: IUserInput;
+  cfReference: ConversationalForm
+  microphoneInputObj?: IUserInput
 }
 
 export const UserInputEvents = {

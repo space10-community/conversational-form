@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable no-console */
 /* eslint-disable max-classes-per-file */
@@ -25,10 +25,10 @@ import { EventDispatcher } from './EventDispatcher'
 import { FlowDTO, FlowEvents } from './FlowManager'
 
 export interface IMicrophoneBridgeOptions {
-  el: HTMLElement;
-  button: UserInputSubmitButton;
-  microphoneObj: IUserInput;
-  eventTarget: EventDispatcher;
+  el: HTMLElement
+  button: UserInputSubmitButton
+  microphoneObj: IUserInput
+  eventTarget: EventDispatcher
 }
 
 export const MicrophoneBridgeEvent = {
@@ -38,38 +38,39 @@ export const MicrophoneBridgeEvent = {
 
 // class
 export class MicrophoneBridge {
-  private equalizer!: SimpleEqualizer;
+  private equalizer!: SimpleEqualizer
 
-  private el: HTMLElement;
+  private el: HTMLElement
 
-  private button: UserInputSubmitButton;
+  private button: UserInputSubmitButton
 
-  private currentTextResponse: string | null = '';
+  private currentTextResponse: string | null = ''
 
-  private recordChunks!: Array<any>;
+  private recordChunks!: Array<any>
 
-  // private equalizer: SimpleEqualizer;
-  private promise!: Promise<any>;
+  private promise!: Promise<any>
 
-  private currentStream!: MediaStream;
+  private currentStream!: MediaStream
 
-  private _hasUserMedia = false;
+  private _hasUserMedia = false
 
-  private inputErrorCount = 0;
+  private inputErrorCount = 0
 
-  private inputCurrentError = '';
+  private inputCurrentError = ''
 
-  private microphoneObj: IUserInput;
+  private microphoneObj: IUserInput
 
-  private eventTarget: EventDispatcher;
+  private eventTarget: EventDispatcher
 
-  private flowUpdateCallback: () => void;
+  private flowUpdateCallback: () => void
 
   private set hasUserMedia(value: boolean) {
     this._hasUserMedia = value
     if (!value) {
+      // eslint-disable-next-line etc/no-commented-out-code
       // this.submitButton.classList.add("permission-waiting");
     } else {
+      // eslint-disable-next-line etc/no-commented-out-code
       // this.submitButton.classList.remove("permission-waiting");
     }
   }
@@ -142,10 +143,16 @@ export class MicrophoneBridge {
       if (navigator.mediaDevices.getUserMedia === undefined) {
         navigator.mediaDevices.getUserMedia = function getMedia(constraints) {
           // First get ahold of the legacy getUserMedia, if present
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line max-len
-          const getUserMedia = navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia
+          const getUserMedia =
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            navigator.getUserMedia ||
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.navigator.webkitGetUserMedia ||
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.navigator.mozGetUserMedia
 
           // Some browsers just don't implement it - return a rejected promise with an error
           // to keep a consistent interface
@@ -160,7 +167,8 @@ export class MicrophoneBridge {
         }
       }
 
-      (navigator.mediaDevices).getUserMedia({ audio: true })
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
         .then((stream: MediaStream) => {
           this.currentStream = stream
 
@@ -179,6 +187,7 @@ export class MicrophoneBridge {
             this.hasUserMedia = false
           }
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .catch((error: any) => {
           // Promise catch
           this.hasUserMedia = false
@@ -217,6 +226,7 @@ export class MicrophoneBridge {
     this.flowUpdateCallback = null
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public callInput(messageTime = 0): void {
     // remove current error message after x time
     // clearTimeout(this.clearMessageTimer);
@@ -233,8 +243,8 @@ export class MicrophoneBridge {
     // call API, SpeechRecognintion etc. you decide,
     // passing along the stream from getUserMedia can be used..
     // as long as the resolve is called with string attribute
-    this.promise = new Promise(
-      (resolve: any, reject: any) => this.microphoneObj.input?.(resolve, reject, this.currentStream)
+    this.promise = new Promise((resolve: any, reject: any) =>
+      this.microphoneObj.input?.(resolve, reject, this.currentStream)
     )
       .then((result) => {
         // api contacted
@@ -253,16 +263,20 @@ export class MicrophoneBridge {
         this.inputCurrentError = ''
         this.button.loading = false
 
+        // eslint-disable-next-line etc/no-commented-out-code
         // continue flow
         const dto: FlowDTO = {
           text: this.currentTextResponse
         }
 
         ConversationalForm.illustrateFlow(this, 'dispatch', UserInputEvents.SUBMIT, dto)
-        this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
-          detail: dto
-        }))
-      }).catch((error) => {
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(UserInputEvents.SUBMIT, {
+            detail: dto
+          })
+        )
+      })
+      .catch((error) => {
         // API error
         // ConversationalForm.illustrateFlow(this, "dispatch", MicrophoneBridgeEvent.ERROR, error);
         // this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.ERROR, {
@@ -271,9 +285,11 @@ export class MicrophoneBridge {
 
         if (this.isErrorTerminal(error)) {
           // terminal error, fallback to
-          this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR, {
-            detail: Dictionary.get('microphone-terminal-error')
-          }))
+          this.eventTarget.dispatchEvent(
+            new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR, {
+              detail: Dictionary.get('microphone-terminal-error')
+            })
+          )
 
           if (!ConversationalForm.suppressLog) {
             console.log('Conversational Form: Terminal error: ', error)
@@ -293,11 +309,14 @@ export class MicrophoneBridge {
           if (this.inputErrorCount > 2) {
             this.showError(error)
           } else {
-            this.eventTarget.dispatchEvent(new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR, {
-              detail: Dictionary.get('microphone-terminal-error')
-            }))
+            this.eventTarget.dispatchEvent(
+              new CustomEvent(MicrophoneBridgeEvent.TERMNIAL_ERROR, {
+                detail: Dictionary.get('microphone-terminal-error')
+              })
+            )
 
-            if (!ConversationalForm.suppressLog) console.log('Conversational Form: Terminal error: ', error)
+            if (!ConversationalForm.suppressLog)
+              console.log('Conversational Form: Terminal error: ', error)
           }
         }
       })
@@ -305,7 +324,9 @@ export class MicrophoneBridge {
 
   protected isErrorTerminal(error: string): boolean {
     const terminalErrors: Array<string> = ['network']
-    if (terminalErrors.indexOf(error) !== -1) { return true }
+    if (terminalErrors.indexOf(error) !== -1) {
+      return true
+    }
 
     return false
   }
@@ -316,9 +337,11 @@ export class MicrophoneBridge {
     }
 
     ConversationalForm.illustrateFlow(this, 'dispatch', FlowEvents.USER_INPUT_INVALID, dto)
-    this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-      detail: dto
-    }))
+    this.eventTarget.dispatchEvent(
+      new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+        detail: dto
+      })
+    )
 
     this.callInput()
   }
@@ -335,19 +358,19 @@ export class MicrophoneBridge {
 }
 
 class SimpleEqualizer {
-  private context: AudioContext;
+  private context: AudioContext
 
-  private analyser: AnalyserNode;
+  private analyser: AnalyserNode
 
-  private mic: MediaStreamAudioSourceNode;
+  private mic: MediaStreamAudioSourceNode
 
-  private javascriptNode: ScriptProcessorNode;
+  private javascriptNode: ScriptProcessorNode
 
-  private elementToScale: HTMLElement;
+  private elementToScale: HTMLElement
 
-  private maxBorderWidth = 0;
+  private maxBorderWidth = 0
 
-  private _disabled = false;
+  private _disabled = false
 
   public set disabled(value: boolean) {
     this._disabled = value
@@ -373,7 +396,9 @@ class SimpleEqualizer {
   }
 
   private onAudioProcess() {
-    if (this._disabled) { return }
+    if (this._disabled) {
+      return
+    }
 
     const array = new Uint8Array(this.analyser.frequencyBinCount)
     this.analyser.getByteFrequencyData(array)
@@ -385,7 +410,7 @@ class SimpleEqualizer {
     }
 
     const average = values / length
-    const percent: number = Math.min(1, Math.max(0, 1 - ((50 - average) / 50)))
+    const percent: number = Math.min(1, Math.max(0, 1 - (50 - average) / 50))
 
     if (!this.maxBorderWidth) {
       this.maxBorderWidth = this.elementToScale.offsetWidth * 0.5

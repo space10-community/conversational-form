@@ -1,18 +1,19 @@
+/* eslint-disable prettier/prettier */
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable class-methods-use-this */
@@ -27,7 +28,11 @@ import { ITagGroup, TagGroup } from '../../form-tags/TagGroup'
 import { IUserInput } from '../../interfaces/IUserInput'
 import { IUserInputElement } from '../../interfaces/IUserInputElement'
 import { FlowDTO } from '../../logic/FlowManager'
-import { ControlElementEvents, ControlElementProgressStates, IControlElement } from '../control-elements/ControlElement'
+import {
+  ControlElementEvents,
+  ControlElementProgressStates,
+  IControlElement
+} from '../control-elements/ControlElement'
 import { ControlElements } from '../control-elements/ControlElements'
 import { UploadFileUI } from '../control-elements/UploadFileUI'
 import { IUserInputOptions, UserInputElement, UserInputEvents } from './UserInputElement'
@@ -35,45 +40,45 @@ import { UserInputSubmitButton, UserInputSubmitButtonEvents } from './UserInputS
 
 // interface
 export interface InputKeyChangeDTO {
-  dto: FlowDTO,
-  keyCode: number,
+  dto: FlowDTO
+  keyCode: number
   inputFieldActive: boolean
 }
 
 // class
 export class UserTextInput extends UserInputElement implements IUserInputElement {
-  private inputElement: HTMLInputElement | HTMLTextAreaElement;
+  private inputElement: HTMLInputElement | HTMLTextAreaElement
 
-  private submitButton: UserInputSubmitButton;
+  private submitButton: UserInputSubmitButton
 
-  private onControlElementSubmitCallback: (e?: any) => void;
+  private onControlElementSubmitCallback: (e?: any) => void
 
-  private onSubmitButtonChangeStateCallback: (e?: any) => void;
+  private onSubmitButtonChangeStateCallback: (e?: any) => void
 
-  private onInputFocusCallback: (e?: any) => void;
+  private onInputFocusCallback: (e?: any) => void
 
-  private onInputBlurCallback: (e?: any) => void;
+  private onInputBlurCallback: (e?: any) => void
 
-  private onOriginalTagChangedCallback: (e?: any) => void;
+  private onOriginalTagChangedCallback: (e?: any) => void
 
-  private onControlElementProgressChangeCallback: (e?: any) => void;
+  private onControlElementProgressChangeCallback: (e?: any) => void
 
-  private errorTimer?: ReturnType<typeof setTimeout>;
+  private errorTimer?: ReturnType<typeof setTimeout>
 
-  private initialInputHeight = 0;
+  private initialInputHeight = 0
 
-  private shiftIsDown = false;
+  private shiftIsDown = false
 
-  private keyUpCallback: (e?: any) => void;
+  private keyUpCallback: (e?: any) => void
 
-  private keyDownCallback: (e?: any) => void;
+  private keyDownCallback: (e?: any) => void
 
-  protected microphoneObj?: IUserInput;
+  protected microphoneObj?: IUserInput
 
-  private controlElements: ControlElements;
+  private controlElements: ControlElements
 
   // acts as a fallback for ex. shadow dom implementation
-  private _active = false;
+  private _active = false
 
   public get active(): boolean {
     const listScrollIcon = document.getElementById('list-scroll-icon')
@@ -141,17 +146,33 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     document.addEventListener('keydown', this.keyDownCallback, false)
 
     this.onOriginalTagChangedCallback = this.onOriginalTagChanged.bind(this)
-    this.eventTarget.addEventListener(TagEvents.ORIGINAL_ELEMENT_CHANGED, this.onOriginalTagChangedCallback, false)
+    this.eventTarget.addEventListener(
+      TagEvents.ORIGINAL_ELEMENT_CHANGED,
+      this.onOriginalTagChangedCallback,
+      false
+    )
 
     this.onControlElementSubmitCallback = this.onControlElementSubmit.bind(this)
-    this.eventTarget.addEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false)
+    this.eventTarget.addEventListener(
+      ControlElementEvents.SUBMIT_VALUE,
+      this.onControlElementSubmitCallback,
+      false
+    )
 
     this.onControlElementProgressChangeCallback = this.onControlElementProgressChange.bind(this)
-    this.eventTarget.addEventListener(ControlElementEvents.PROGRESS_CHANGE, this.onControlElementProgressChangeCallback, false)
+    this.eventTarget.addEventListener(
+      ControlElementEvents.PROGRESS_CHANGE,
+      this.onControlElementProgressChangeCallback,
+      false
+    )
 
     this.onSubmitButtonChangeStateCallback = this.onSubmitButtonChangeState.bind(this)
-    this.eventTarget.addEventListener(UserInputSubmitButtonEvents.CHANGE, this.onSubmitButtonChangeStateCallback, false)
-
+    this.eventTarget.addEventListener(
+      UserInputSubmitButtonEvents.CHANGE,
+      this.onSubmitButtonChangeStateCallback,
+      false
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, () => {}, false);
 
     this.submitButton = new UserInputSubmitButton({
@@ -182,7 +203,7 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
   }
 
   public getFlowDTO(): FlowDTO {
-    let value: FlowDTO// = this.inputElement.value;
+    let value: FlowDTO // = this.inputElement.value;
 
     // check for values on control elements as they should overwrite the input value.
     if (this.controlElements && this.controlElements.active) {
@@ -194,7 +215,9 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     }
 
     // add current tag to DTO if not set
-    if (!value.tag) { value.tag = this.currentTag }
+    if (!value.tag) {
+      value.tag = this.currentTag
+    }
 
     value.input = this
     value.tag = this.currentTag
@@ -229,17 +252,21 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
 
   public onFlowStopped(): void {
     this.submitButton.loading = false
-    if (this.submitButton.typing) { this.submitButton.typing = false }
+    if (this.submitButton.typing) {
+      this.submitButton.typing = false
+    }
 
-    if (this.controlElements) { this.controlElements.clearTagsAndReset() }
+    if (this.controlElements) {
+      this.controlElements.clearTagsAndReset()
+    }
 
     this.disabled = true
   }
 
   /**
-  * @name onOriginalTagChanged
-  * on domElement from a Tag value changed..
-  */
+   * @name onOriginalTagChanged
+   * on domElement from a Tag value changed..
+   */
   private onOriginalTagChanged(event: CustomEvent): void {
     if (this.currentTag === event.detail.tag) {
       this.onInputChange()
@@ -251,18 +278,28 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
   }
 
   private onInputChange() {
-    if (!this.active && !this.controlElements.active) { return }
+    if (!this.active && !this.controlElements.active) {
+      return
+    }
 
     // safari likes to jump around with the scrollHeight value, let's keep it in check with an initial height.
-    const oldHeight: number = Math.max(this.initialInputHeight, parseInt(this.inputElement.style.height, 10))
+    const oldHeight: number = Math.max(
+      this.initialInputHeight,
+      parseInt(this.inputElement.style.height, 10)
+    )
     this.inputElement.style.height = '0px'
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // console.log(this.inputElement.style.height, this.inputElement.style);
-    this.inputElement.style.height = `${this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight}px`
+    this.inputElement.style.height = `${
+      this.inputElement.scrollHeight === 0 ? oldHeight : this.inputElement.scrollHeight
+    }px`
 
     ConversationalForm.illustrateFlow(this, 'dispatch', UserInputEvents.HEIGHT_CHANGE)
-    this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
-      detail: this.inputElement.scrollHeight
-    }))
+    this.eventTarget.dispatchEvent(
+      new CustomEvent(UserInputEvents.HEIGHT_CHANGE, {
+        detail: this.inputElement.scrollHeight
+      })
+    )
   }
 
   private resetInputHeight() {
@@ -283,7 +320,10 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     this.el.setAttribute('error', '')
     this.disabled = true
     // cf-error
-    this.inputElement.setAttribute('placeholder', dto.errorText || (this._currentTag ? this._currentTag.errorMessage : ''))
+    this.inputElement.setAttribute(
+      'placeholder',
+      dto.errorText || (this._currentTag ? this._currentTag.errorMessage : '')
+    )
     if (this.errorTimer) {
       clearTimeout(this.errorTimer)
     }
@@ -307,7 +347,9 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
       // TODO: reset submit button..
       this.submitButton.reset()
 
-      if (this.controlElements) { this.controlElements.resetAfterErrorMessage() }
+      if (this.controlElements) {
+        this.controlElements.resetAfterErrorMessage()
+      }
     }, UserInputElement.ERROR_TIME)
   }
 
@@ -417,8 +459,7 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
    * @memberof UserTextInput
    */
   private removeAttribute(attribute: string): void {
-    if (this.inputElement
-      && this.inputElement.hasAttribute(attribute)) {
+    if (this.inputElement && this.inputElement.hasAttribute(attribute)) {
       this.inputElement.removeAttribute(attribute)
     }
   }
@@ -428,20 +469,16 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
       return 'INPUT'
     }
 
-    if (
-      !inputElement.domElement
-      || !inputElement.domElement.tagName
-    ) {
+    if (!inputElement.domElement || !inputElement.domElement.tagName) {
       return 'TEXTAREA'
     }
 
     if (
-      inputElement.domElement.tagName === 'TEXTAREA'
-      || (
-        inputElement.domElement.hasAttribute('rows')
-        && parseInt(inputElement.domElement.getAttribute('rows') || '0', 10) > 1
-      )
-    ) return 'TEXTAREA'
+      inputElement.domElement.tagName === 'TEXTAREA' ||
+      (inputElement.domElement.hasAttribute('rows') &&
+        parseInt(inputElement.domElement.getAttribute('rows') || '0', 10) > 1)
+    )
+      return 'TEXTAREA'
 
     if (inputElement.domElement.tagName === 'INPUT') return 'INPUT'
 
@@ -452,7 +489,9 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     super.onFlowUpdate(event)
 
     this.submitButton.loading = false
-    if (this.submitButton.typing) { this.submitButton.typing = false }
+    if (this.submitButton.typing) {
+      this.submitButton.typing = false
+    }
 
     // animate input field in
 
@@ -462,9 +501,11 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     this.checkForCorrectInputTag()
 
     // set input field to type password if the dom input field is that, covering up the input
-    const isInputSpecificType: boolean = ['password', 'number', 'email', 'tel'].indexOf(this._currentTag?.type || '') !== -1
+    const isInputSpecificType: boolean =
+      ['password', 'number', 'email', 'tel'].indexOf(this._currentTag?.type || '') !== -1
 
-    const inputType = (isInputSpecificType && this._currentTag?.type) ? this._currentTag?.type : 'input'
+    const inputType =
+      isInputSpecificType && this._currentTag?.type ? this._currentTag?.type : 'input'
     this.inputElement.setAttribute('type', inputType)
 
     if (this.errorTimer) {
@@ -554,20 +595,28 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    if (!this.active && !this.controlElements.focus) { return false }
+    if (!this.active && !this.controlElements.focus) {
+      return false
+    }
 
-    if (this.isControlElementsActiveAndUserInputHidden()) { return false }
+    if (this.isControlElementsActiveAndUserInputHidden()) {
+      return false
+    }
 
-    if (this.isMetaKeyPressed(event)) { return false }
+    if (this.isMetaKeyPressed(event)) {
+      return false
+    }
 
     // if any meta keys, then ignore
-    if (event.keyCode === Dictionary.keyCodes.shift) { this.shiftIsDown = true }
+    if (event.keyCode === Dictionary.keyCodes.shift) {
+      this.shiftIsDown = true
+    }
 
     // If submit is prevented by option 'preventSubmitOnEnter'
     if (
-      this.cfReference.preventSubmitOnEnter === true
-      && this.inputElement.hasAttribute('rows')
-      && Number.parseInt(this.inputElement.getAttribute('rows') || '0', 10) > 1
+      this.cfReference.preventSubmitOnEnter === true &&
+      this.inputElement.hasAttribute('rows') &&
+      Number.parseInt(this.inputElement.getAttribute('rows') || '0', 10) > 1
     ) {
       return false
     }
@@ -581,24 +630,40 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
   }
 
   private isControlElementsActiveAndUserInputHidden(): boolean {
-    return this.controlElements && this.controlElements.active && UserInputElement.hideUserInputOnNoneTextInput
+    return (
+      this.controlElements &&
+      this.controlElements.active &&
+      UserInputElement.hideUserInputOnNoneTextInput
+    )
   }
 
   private onKeyUp(event: KeyboardEvent) {
-    if ((!this.active && !this.isControlElementsActiveAndUserInputHidden()) && !this.controlElements.focus) { return }
+    if (
+      !this.active &&
+      !this.isControlElementsActiveAndUserInputHidden() &&
+      !this.controlElements.focus
+    ) {
+      return
+    }
 
-    if (this.isMetaKeyPressed(event)) { return }
+    if (this.isMetaKeyPressed(event)) {
+      return
+    }
 
     if (event.keyCode === Dictionary.keyCodes.shift) {
       this.shiftIsDown = false
     } else if (event.keyCode === Dictionary.keyCodes.up) {
       event.preventDefault()
 
-      if (this.active && !this.controlElements.focus) { this.controlElements.focusFrom('bottom') }
+      if (this.active && !this.controlElements.focus) {
+        this.controlElements.focusFrom('bottom')
+      }
     } else if (event.keyCode === Dictionary.keyCodes.down) {
       event.preventDefault()
 
-      if (this.active && !this.controlElements.focus) { this.controlElements.focusFrom('top') }
+      if (this.active && !this.controlElements.focus) {
+        this.controlElements.focusFrom('top')
+      }
     } else if (event.keyCode === Dictionary.keyCodes.tab) {
       // tab key pressed, check if node is child of CF, if then then reset focus to input element
 
@@ -616,35 +681,55 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
       // prevent normal behaviour, we are not here to take part, we are here to take over!
       if (!doesKeyTargetExistInCF) {
         event.preventDefault()
-        if (!this.controlElements.active) { this.setFocusOnInput() }
+        if (!this.controlElements.active) {
+          this.setFocusOnInput()
+        }
       }
     }
 
-    if (this.el.hasAttribute('disabled')) { return }
+    if (this.el.hasAttribute('disabled')) {
+      return
+    }
 
     const value: FlowDTO = this.getFlowDTO()
 
-    if ((event.keyCode === Dictionary.keyCodes.enter && !event.shiftKey) || event.keyCode === Dictionary.keyCodes.space) {
+    if (
+      (event.keyCode === Dictionary.keyCodes.enter && !event.shiftKey) ||
+      event.keyCode === Dictionary.keyCodes.space
+    ) {
       if (event.keyCode === Dictionary.keyCodes.enter && this.active) {
         if (this.cfReference.preventSubmitOnEnter === true) return
         event.preventDefault()
         this.onEnterOrSubmitButtonSubmit()
-      } else if (event.keyCode === Dictionary.keyCodes.enter || event.keyCode === Dictionary.keyCodes.space) {
+      } else if (
+        event.keyCode === Dictionary.keyCodes.enter ||
+        event.keyCode === Dictionary.keyCodes.space
+      ) {
         // either click on submit button or do something with control elements
         event.preventDefault()
 
-        const tagType = this._currentTag?.type === 'group' ? (this._currentTag as TagGroup).getGroupTagType() : this._currentTag?.type
+        const tagType =
+          this._currentTag?.type === 'group'
+            ? (this._currentTag as TagGroup).getGroupTagType()
+            : this._currentTag?.type
 
         if (tagType === 'select' || tagType === 'checkbox') {
           const mutiTag = this._currentTag
           // if select or checkbox then check for multi select item
           if (tagType === 'checkbox' || (mutiTag as SelectTag).multipleChoice) {
-            if ((this.active || this.isControlElementsActiveAndUserInputHidden()) && event.keyCode === Dictionary.keyCodes.enter) {
+            if (
+              (this.active || this.isControlElementsActiveAndUserInputHidden()) &&
+              event.keyCode === Dictionary.keyCodes.enter
+            ) {
               // click on UserTextInput submit button, only ENTER allowed
               this.submitButton.click()
             } else {
               // let UI know that we changed the key
-              if (!this.active && !this.controlElements.active && !this.isControlElementsActiveAndUserInputHidden()) {
+              if (
+                !this.active &&
+                !this.controlElements.active &&
+                !this.isControlElementsActiveAndUserInputHidden()
+              ) {
                 // after ui has been selected we RESET the input/filter
                 this.resetValue()
                 this.setFocusOnInput()
@@ -659,10 +744,14 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
           // let the controlements handle action
           this.dispatchKeyChange(value, event.keyCode)
         }
+        // eslint-disable-next-line no-dupe-else-if
       } else if (event.keyCode === Dictionary.keyCodes.space && document.activeElement) {
         this.dispatchKeyChange(value, event.keyCode)
       }
-    } else if (event.keyCode !== Dictionary.keyCodes.shift && event.keyCode !== Dictionary.keyCodes.tab) {
+    } else if (
+      event.keyCode !== Dictionary.keyCodes.shift &&
+      event.keyCode !== Dictionary.keyCodes.tab
+    ) {
       this.dispatchKeyChange(value, event.keyCode)
     }
 
@@ -674,25 +763,27 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     this.submitButton.typing = !!(dto.text && dto.text.length > 0)
 
     ConversationalForm.illustrateFlow(this, 'dispatch', UserInputEvents.KEY_CHANGE, dto)
-    this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.KEY_CHANGE, {
-      detail: {
-        dto,
-        keyCode,
-        inputFieldActive: this.active
-      } as InputKeyChangeDTO
-    }))
+    this.eventTarget.dispatchEvent(
+      new CustomEvent(UserInputEvents.KEY_CHANGE, {
+        detail: {
+          dto,
+          keyCode,
+          inputFieldActive: this.active
+        } as InputKeyChangeDTO
+      })
+    )
   }
 
   protected windowFocus(event: Event): void {
     super.windowFocus(event)
     this.setFocusOnInput()
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onInputBlur(event: FocusEvent) {
     this._active = false
     this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.BLUR))
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onInputFocus(event: FocusEvent) {
     this._active = true
     this.onInputChange()
@@ -706,8 +797,12 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
   }
 
   protected onEnterOrSubmitButtonSubmit(event: CustomEvent | null = null): void {
-    const isControlElementsActiveAndUserInputHidden: boolean = this.controlElements.active && UserInputElement.hideUserInputOnNoneTextInput
-    if ((this.active || isControlElementsActiveAndUserInputHidden) && this.controlElements.highlighted) {
+    const isControlElementsActiveAndUserInputHidden: boolean =
+      this.controlElements.active && UserInputElement.hideUserInputOnNoneTextInput
+    if (
+      (this.active || isControlElementsActiveAndUserInputHidden) &&
+      this.controlElements.highlighted
+    ) {
       // active input field and focus on control elements happens when a control element is highlighted
       this.controlElements.clickOnHighlighted()
     } else if (!this._currentTag) {
@@ -732,9 +827,11 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     this.inputElement.setAttribute('data-value', '')
 
     ConversationalForm.illustrateFlow(this, 'dispatch', UserInputEvents.SUBMIT, dto)
-    this.eventTarget.dispatchEvent(new CustomEvent(UserInputEvents.SUBMIT, {
-      detail: dto
-    }))
+    this.eventTarget.dispatchEvent(
+      new CustomEvent(UserInputEvents.SUBMIT, {
+        detail: dto
+      })
+    )
   }
 
   private resetValue() {
@@ -760,12 +857,20 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
     // @ts-ignore
     this.keyUpCallback = null
 
-    this.eventTarget.removeEventListener(ControlElementEvents.SUBMIT_VALUE, this.onControlElementSubmitCallback, false)
+    this.eventTarget.removeEventListener(
+      ControlElementEvents.SUBMIT_VALUE,
+      this.onControlElementSubmitCallback,
+      false
+    )
     // @ts-ignore
     this.onControlElementSubmitCallback = null
 
     // remove submit button instance
-    this.submitButton.el.removeEventListener(UserInputSubmitButtonEvents.CHANGE, this.onSubmitButtonChangeStateCallback, false)
+    this.submitButton.el.removeEventListener(
+      UserInputSubmitButtonEvents.CHANGE,
+      this.onSubmitButtonChangeStateCallback,
+      false
+    )
     // @ts-ignore
     this.onSubmitButtonChangeStateCallback = null
     this.submitButton.dealloc()
@@ -777,7 +882,9 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
 
   // override
   public getTemplate(): string {
-    return this.customTemplate || `<cf-input>
+    return (
+      this.customTemplate ||
+      `<cf-input>
         <cf-info></cf-info>
         <cf-input-control-elements>
           <cf-list-button direction="prev">
@@ -795,5 +902,6 @@ export class UserTextInput extends UserInputElement implements IUserInputElement
         </div>
       </cf-input>
       `
+    )
   }
 }

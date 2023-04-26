@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 import { ConversationalForm } from '../ConversationalForm'
 import { ConditionalValue, ITag, Tag } from '../form-tags/Tag'
@@ -22,24 +22,24 @@ import { UserInputElement, UserInputEvents } from '../ui/inputs/UserInputElement
 import { EventDispatcher } from './EventDispatcher'
 
 export interface FlowDTO {
-  tag?: ITag | ITagGroup,
-  text?: string;
-  errorText?: string;
-  input?: UserInputElement,
-  controlElements?: Array<IControlElement>;
+  tag?: ITag | ITagGroup
+  text?: string
+  errorText?: string
+  input?: UserInputElement
+  controlElements?: Array<IControlElement>
 }
 
 export type FlowStepCallback = (
   dto: FlowDTO,
   success: () => void,
   error: (optionalErrorMessage?: string) => void
-) => void;
+) => void
 
 export interface FlowManagerOptions {
-  cfReference: ConversationalForm;
-  eventTarget: EventDispatcher;
-  tags: Array<ITag>;
-  flowStepCallback?: FlowStepCallback;
+  cfReference: ConversationalForm
+  eventTarget: EventDispatcher
+  tags: Array<ITag>
+  flowStepCallback?: FlowStepCallback
 }
 
 export const FlowEvents = {
@@ -50,35 +50,35 @@ export const FlowEvents = {
 }
 
 export class FlowManager {
-  private static STEP_TIME = 1000;
+  private static STEP_TIME = 1000
 
-  private flowStepCallback?: FlowStepCallback;
+  private flowStepCallback?: FlowStepCallback
 
-  private eventTarget: EventDispatcher;
+  private eventTarget: EventDispatcher
 
-  private cfReference: ConversationalForm;
+  private cfReference: ConversationalForm
 
-  private tags!: Array<ITag | ITagGroup>;
+  private tags!: Array<ITag | ITagGroup>
 
-  private stopped = false;
+  private stopped = false
 
-  private maxSteps = 0;
+  private maxSteps = 0
 
-  private step = 0;
+  private step = 0
 
-  private savedStep = -1;
+  private savedStep = -1
 
-  private stepTimer = 0;
+  private stepTimer = 0
 
   tagRefreshCallback?: (tag: Tag) => void
 
   /**
-  * ignore existing tags, usually this is set to true when using startFrom,
-  * where you don't want it to check for exisintg tags in the list
-  */
-  private ignoreExistingTags = false;
+   * ignore existing tags, usually this is set to true when using startFrom,
+   * where you don't want it to check for exisintg tags in the list
+   */
+  private ignoreExistingTags = false
 
-  private userInputSubmitCallback: (event: CustomEvent<any>) => void;
+  private userInputSubmitCallback: (event: CustomEvent<any>) => void
 
   public get currentTag(): ITag | ITagGroup {
     return this.tags[this.step]
@@ -106,7 +106,9 @@ export class FlowManager {
     ConversationalForm.illustrateFlow(this, 'receive', event.type, event.detail)
 
     let appDTO: FlowDTO = event.detail
-    if (!appDTO.tag) { appDTO.tag = this.currentTag }
+    if (!appDTO.tag) {
+      appDTO.tag = this.currentTag
+    }
 
     let isTagValid: boolean = this.currentTag.setTagValueAndIsValid(appDTO)
     let hasCheckedForTagSpecificValidation = false
@@ -114,17 +116,26 @@ export class FlowManager {
 
     const onValidationCallback = () => {
       // check 1
-      if (this.currentTag.validationCallback && typeof this.currentTag.validationCallback === 'function') {
+      if (
+        this.currentTag.validationCallback &&
+        typeof this.currentTag.validationCallback === 'function'
+      ) {
         if (!hasCheckedForTagSpecificValidation && isTagValid) {
           hasCheckedForTagSpecificValidation = true
-          this.currentTag.validationCallback(appDTO, () => {
-            isTagValid = true
-            onValidationCallback()
-          }, (optionalErrorMessage?: string) => {
-            isTagValid = false
-            if (optionalErrorMessage) { appDTO.errorText = optionalErrorMessage }
-            onValidationCallback()
-          })
+          this.currentTag.validationCallback(
+            appDTO,
+            () => {
+              isTagValid = true
+              onValidationCallback()
+            },
+            (optionalErrorMessage?: string) => {
+              isTagValid = false
+              if (optionalErrorMessage) {
+                appDTO.errorText = optionalErrorMessage
+              }
+              onValidationCallback()
+            }
+          )
 
           return
         }
@@ -135,14 +146,20 @@ export class FlowManager {
         if (!hasCheckedForGlobalFlowValidation && isTagValid) {
           hasCheckedForGlobalFlowValidation = true
           // use global validationCallback method
-          this.flowStepCallback(appDTO, () => {
-            isTagValid = true
-            onValidationCallback()
-          }, (optionalErrorMessage?: string) => {
-            isTagValid = false
-            if (optionalErrorMessage) { appDTO.errorText = optionalErrorMessage }
-            onValidationCallback()
-          })
+          this.flowStepCallback(
+            appDTO,
+            () => {
+              isTagValid = true
+              onValidationCallback()
+            },
+            (optionalErrorMessage?: string) => {
+              isTagValid = false
+              if (optionalErrorMessage) {
+                appDTO.errorText = optionalErrorMessage
+              }
+              onValidationCallback()
+            }
+          )
 
           return
         }
@@ -154,11 +171,15 @@ export class FlowManager {
         ConversationalForm.illustrateFlow(this, 'dispatch', FlowEvents.USER_INPUT_UPDATE, appDTO)
 
         // update to latest DTO because values can be changed in validation flow...
-        if (appDTO.input) { appDTO = appDTO.input.getFlowDTO() }
+        if (appDTO.input) {
+          appDTO = appDTO.input.getFlowDTO()
+        }
 
-        this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
-          detail: appDTO // UserTextInput value
-        }))
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(FlowEvents.USER_INPUT_UPDATE, {
+            detail: appDTO // UserTextInput value
+          })
+        )
 
         // goto next step when user has answered
         setTimeout(() => this.nextStep(), ConversationalForm.animationsEnabled ? 250 : 0)
@@ -166,9 +187,11 @@ export class FlowManager {
         ConversationalForm.illustrateFlow(this, 'dispatch', FlowEvents.USER_INPUT_INVALID, appDTO)
 
         // Value not valid
-        this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-          detail: appDTO // UserTextInput value
-        }))
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+            detail: appDTO // UserTextInput value
+          })
+        )
       }
     }
 
@@ -177,7 +200,9 @@ export class FlowManager {
   }
 
   public startFrom(indexOrTag: number | ITag, ignoreExistingTags = false): void {
-    if (typeof indexOrTag === 'number') { this.step = indexOrTag } else {
+    if (typeof indexOrTag === 'number') {
+      this.step = indexOrTag
+    } else {
       // find the index..
       this.step = this.tags.indexOf(indexOrTag)
     }
@@ -192,12 +217,12 @@ export class FlowManager {
   }
 
   /**
-  * @name editTag
-  * @param tagWithConditions, the tag containing conditions (can contain multiple)
-  * @param tagConditions, the conditions of the tag to be checked
-  */
+   * @name editTag
+   * @param tagWithConditions, the tag containing conditions (can contain multiple)
+   * @param tagConditions, the conditions of the tag to be checked
+   */
 
-  private activeConditions: any;
+  private activeConditions: any
 
   public areConditionsInFlowFullfilled(
     tagWithConditions: ITag,
@@ -220,7 +245,10 @@ export class FlowManager {
           const tagName: string = (tag.name || tag.id || '').toLowerCase()
           if (tagName !== '' && `cf-conditional-${tagName}` === tagCondition.key.toLowerCase()) {
             // key found, so check condition
-            const flowTagValue: string | string[] = typeof tag.value === 'string' ? (tag as ITag).value as string : (tag as ITagGroup).value as string[]
+            const flowTagValue: string | string[] =
+              typeof tag.value === 'string'
+                ? ((tag as ITag).value as string)
+                : ((tag as ITagGroup).value as string[])
             const areConditionsMeet: boolean = Tag.testConditions(flowTagValue, tagCondition)
             if (areConditionsMeet) {
               this.activeConditions[tagName] = tagConditions
@@ -247,7 +275,9 @@ export class FlowManager {
   }
 
   public nextStep(): void {
-    if (this.stopped) { return }
+    if (this.stopped) {
+      return
+    }
 
     if (this.savedStep !== -1) {
       // if you are looking for where the none EDIT tag conditionsl check is done
@@ -275,7 +305,7 @@ export class FlowManager {
       }
     }
 
-    this.savedStep = -1// reset saved step
+    this.savedStep = -1 // reset saved step
 
     this.step++
 
@@ -294,7 +324,6 @@ export class FlowManager {
   public addTags(tags: Array<ITag | ITagGroup>, atIndex = -1): Array<ITag | ITagGroup> {
     // used to append new tag
     if (atIndex !== -1 && atIndex < this.tags.length) {
-      // const pre: Array<ITag | ITagGroup> = this.tags.slice(0, atIndex)
       const post: Array<ITag | ITagGroup> = this.tags.slice(atIndex, this.tags.length)
       this.tags = this.tags.slice(0, atIndex).concat(tags).concat(post)
     } else {
@@ -320,17 +349,17 @@ export class FlowManager {
   }
 
   /**
-  * @name editTag
-  * go back in time and edit a tag.
-  */
+   * @name editTag
+   * go back in time and edit a tag.
+   */
   public editTag(tag: ITag): void {
     this.ignoreExistingTags = false
-    this.savedStep = this.step - 1// save step
+    this.savedStep = this.step - 1 // save step
     this.step = this.tags.indexOf(tag) // === this.currentTag
     this.validateStepAndUpdate()
 
     if (this.activeConditions && Object.keys(this.activeConditions).length > 0) {
-      this.savedStep = -1// don't save step, as we wont return
+      this.savedStep = -1 // don't save step, as we wont return
 
       // clear chatlist.
       this.cfReference.chatList?.clearFrom(this.step + 1)
@@ -362,7 +391,6 @@ export class FlowManager {
   private validateStepAndUpdate() {
     if (this.maxSteps > 0) {
       if (this.step === this.maxSteps) {
-        // console.warn("We are at the end..., submit click")
         this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FORM_SUBMIT, {}))
         this.cfReference.doSubmitForm()
       } else {
@@ -379,21 +407,25 @@ export class FlowManager {
   }
 
   private showStep() {
-    if (this.stopped) { return }
+    if (this.stopped) {
+      return
+    }
 
     ConversationalForm.illustrateFlow(this, 'dispatch', FlowEvents.FLOW_UPDATE, this.currentTag)
 
     this.currentTag?.refresh()
 
     setTimeout(() => {
-      this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.FLOW_UPDATE, {
-        detail: {
-          tag: this?.currentTag,
-          ignoreExistingTag: this.ignoreExistingTags,
-          step: this.step,
-          maxSteps: this.maxSteps
-        }
-      }))
+      this.eventTarget.dispatchEvent(
+        new CustomEvent(FlowEvents.FLOW_UPDATE, {
+          detail: {
+            tag: this?.currentTag,
+            ignoreExistingTag: this.ignoreExistingTags,
+            step: this.step,
+            maxSteps: this.maxSteps
+          }
+        })
+      )
     }, 0)
   }
 }

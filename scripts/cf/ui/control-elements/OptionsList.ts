@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-plusplus */
@@ -28,25 +28,25 @@ import { IOptionButtonOptions, OptionButton, OptionButtonEvents } from './Option
 // interface
 
 export interface IOptionsListOptions {
-  context: HTMLElement;
-  eventTarget: EventDispatcher;
-  referenceTag: ITag;
+  context: HTMLElement
+  eventTarget: EventDispatcher
+  referenceTag: ITag
 }
 
 // class
 // builds x OptionsButton from the registered SelectTag
 export class OptionsList {
-  public elements?: OptionButton[];
+  public elements?: OptionButton[]
 
-  private eventTarget: EventDispatcher;
+  private eventTarget: EventDispatcher
 
-  private context: HTMLElement;
+  private context: HTMLElement
 
-  private multiChoice?: boolean;
+  private multiChoice?: boolean
 
-  private referenceTag: ITag;
+  private referenceTag: ITag
 
-  private onOptionButtonClickCallback: (e?: any) => void;
+  private onOptionButtonClickCallback: (e?: any) => void
 
   public get type(): string {
     return 'OptionsList'
@@ -62,7 +62,9 @@ export class OptionsList {
 
     this.onOptionButtonClickCallback = this.onOptionButtonClick.bind(this)
     this.eventTarget.addEventListener(
-      OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false
+      OptionButtonEvents.CLICK,
+      this.onOptionButtonClickCallback,
+      false
     )
 
     this.createElements()
@@ -80,7 +82,8 @@ export class OptionsList {
       if (!this.multiChoice && element.selected) {
         arr.push(element)
         return arr
-      } if (this.multiChoice && element.selected) {
+      }
+      if (this.multiChoice && element.selected) {
         arr.push(element)
       }
     }
@@ -106,12 +109,19 @@ export class OptionsList {
         }
       }
 
-      ConversationalForm.illustrateFlow(this, 'dispatch', ControlElementEvents.SUBMIT_VALUE, this.referenceTag)
-      this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
-        detail: event.detail as OptionButton
-      }))
+      ConversationalForm.illustrateFlow(
+        this,
+        'dispatch',
+        ControlElementEvents.SUBMIT_VALUE,
+        this.referenceTag
+      )
+      this.eventTarget.dispatchEvent(
+        new CustomEvent(ControlElementEvents.SUBMIT_VALUE, {
+          detail: event.detail as OptionButton
+        })
+      )
     } else {
-      // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line no-param-reassign, prettier/prettier
       (event.detail as OptionButton).selected = !(event.detail as OptionButton).selected
     }
   }
@@ -136,7 +146,9 @@ export class OptionsList {
 
   public dealloc(): void {
     this.eventTarget.removeEventListener(
-      OptionButtonEvents.CLICK, this.onOptionButtonClickCallback, false
+      OptionButtonEvents.CLICK,
+      this.onOptionButtonClickCallback,
+      false
     )
     // @ts-ignore
     this.onOptionButtonClickCallback = null

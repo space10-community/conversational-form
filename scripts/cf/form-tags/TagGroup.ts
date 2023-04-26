@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable no-console */
 import { Dictionary } from '../data/Dictionary'
@@ -30,50 +30,50 @@ import { ConversationalForm } from '../ConversationalForm'
 // multi choice logic for Checkboxes, <input type="checkbox", where name is the same
 
 export interface ITagGroupOptions {
-  elements: Array<ITag>;
-  fieldset?: HTMLFieldSetElement;
+  elements: Array<ITag>
+  fieldset?: HTMLFieldSetElement
 }
 
 export interface ITagGroup extends ITag {
-  elements: Array<ITag>;
-  activeElements: Array<ITag>;
-  getGroupTagType: () => string;
-  refresh(): void;
-  dealloc(): void;
-  required: boolean;
-  disabled: boolean;
-  skipUserInput: boolean;
-  flowManager: FlowManager;
-  inputPlaceholder?: string;
+  elements: Array<ITag>
+  activeElements: Array<ITag>
+  getGroupTagType: () => string
+  refresh(): void
+  dealloc(): void
+  required: boolean
+  disabled: boolean
+  skipUserInput: boolean
+  flowManager: FlowManager
+  inputPlaceholder?: string
 }
 
 // class
 export class TagGroup implements ITagGroup {
-  private onInputKeyChangeCallback?: () => void | null;
+  private onInputKeyChangeCallback?: () => void | null
 
-  private _values!: Array<string>;
+  private _values!: Array<string>
 
   // can also be set through `fieldset` cf-questions="..."` attribute.
-  private questions!: Array<string>;
+  private questions!: Array<string>
 
   /**
-  * Array checked/choosen ITag's
-  */
-  private _activeElements!: Array<ITag>;
+   * Array checked/choosen ITag's
+   */
+  private _activeElements!: Array<ITag>
 
-  private _eventTarget!: EventDispatcher;
+  private _eventTarget!: EventDispatcher
 
-  private _fieldset?: HTMLFieldSetElement | null;
+  private _fieldset?: HTMLFieldSetElement | null
 
-  protected _inputPlaceholder!: string;
+  protected _inputPlaceholder!: string
 
-  public skipUserInput: boolean;
+  public skipUserInput: boolean
 
   // event target..
   // not getting set... as taggroup differs from tag
-  public defaultValue!: string;
+  public defaultValue!: string
 
-  public elements: Array<ITag>;
+  public elements: Array<ITag>
 
   public get required(): boolean {
     for (let i = 0; i < this.elements.length; i++) {
@@ -111,7 +111,10 @@ export class TagGroup implements ITagGroup {
   }
 
   public get name(): string {
-    const name = this._fieldset && this._fieldset.hasAttribute('name') ? this._fieldset.getAttribute('name') : this.elements[0].name
+    const name =
+      this._fieldset && this._fieldset.hasAttribute('name')
+        ? this._fieldset.getAttribute('name')
+        : this.elements[0].name
     return name || ''
   }
 
@@ -123,7 +126,8 @@ export class TagGroup implements ITagGroup {
     // check if elements have the questions, else fallback
     if (this.questions && this.questions.length > 0) {
       return this.questions[Math.floor(Math.random() * this.questions.length)]
-    } if (this.elements[0] && this.elements[0].question) {
+    }
+    if (this.elements[0] && this.elements[0].question) {
       const tagQuestion: string = this.elements[0].question
       return tagQuestion
     }
@@ -142,11 +146,12 @@ export class TagGroup implements ITagGroup {
   }
 
   public get disabled(): boolean {
-    // const disabled = false
     let allShouldBedisabled = 0
     for (let i = 0; i < this.elements.length; i++) {
       const element = this.elements[i]
-      if (element.disabled) { allShouldBedisabled++ }
+      if (element.disabled) {
+        allShouldBedisabled++
+      }
     }
 
     return allShouldBedisabled === this.elements.length
@@ -172,7 +177,9 @@ export class TagGroup implements ITagGroup {
     // set wrapping element
     this._fieldset = options.fieldset
     if (this._fieldset && this._fieldset.getAttribute('cf-questions')) {
-      this.questions = Helpers.getValuesOfBars(this._fieldset.getAttribute('cf-questions') as string)
+      this.questions = Helpers.getValuesOfBars(
+        this._fieldset.getAttribute('cf-questions') as string
+      )
     }
     if (this._fieldset && this._fieldset.getAttribute('cf-input-placeholder')) {
       this._inputPlaceholder = this._fieldset.getAttribute('cf-input-placeholder') as string
@@ -240,10 +247,10 @@ export class TagGroup implements ITagGroup {
   }
 
   /**
-  * @name checkConditionalAndIsValid
-  * checks for conditional logic, see documentaiton (wiki)
-  * here we check after cf-conditional{-name} on group tags
-  */
+   * @name checkConditionalAndIsValid
+   * checks for conditional logic, see documentaiton (wiki)
+   * here we check after cf-conditional{-name} on group tags
+   */
   public checkConditionalAndIsValid(): boolean {
     // can we tap into disabled
     // if contains attribute, cf-conditional{-name} then check for conditional value across tags
@@ -281,7 +288,9 @@ export class TagGroup implements ITagGroup {
                 this._activeElements.push(tag)
               }
               // a radio button was checked
-              if (!wasRadioButtonChecked && element.checked) { wasRadioButtonChecked = true }
+              if (!wasRadioButtonChecked && element.checked) {
+                wasRadioButtonChecked = true
+              }
             }
           }
         } else {
@@ -294,8 +303,8 @@ export class TagGroup implements ITagGroup {
             if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
               this._activeElements.push(tag)
               // check the original tag
-              this._values.push(tag.value as string);
-              (tag.domElement as HTMLInputElement).checked = true
+              this._values.push(tag.value as string)
+              ;(tag.domElement as HTMLInputElement).checked = true
               wasRadioButtonChecked = true
             }
           }
@@ -311,8 +320,8 @@ export class TagGroup implements ITagGroup {
         if (dto.controlElements) {
           for (let i = 0; i < dto.controlElements?.length; i++) {
             const element = dto.controlElements[i] as CheckboxButton
-            const tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-            (tag.domElement as HTMLInputElement).checked = element.checked
+            const tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)]
+            ;(tag.domElement as HTMLInputElement).checked = element.checked
 
             if (element.checked) {
               this._values.push(tag.value as string)

@@ -1,19 +1,16 @@
+/* eslint-disable etc/no-commented-out-code */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright (c) 2013-2018 SPACE10
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/// <reference types="node" />
 /* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
@@ -35,27 +32,27 @@ export const ChatListEvents = {
 
 // class
 export class ChatList extends BasicElement {
-  private flowUpdateCallback: (event: CustomEvent<any>) => void;
+  private flowUpdateCallback: (event: CustomEvent<any>) => void
 
-  private userInputUpdateCallback: (event: CustomEvent<any>) => void;
+  private userInputUpdateCallback: (event: CustomEvent<any>) => void
 
-  private onInputKeyChangeCallback: (event: CustomEvent<any>) => void;
+  private onInputKeyChangeCallback: (event: CustomEvent<any>) => void
 
-  private onInputHeightChangeCallback: (event: CustomEvent<any>) => void;
+  private onInputHeightChangeCallback: (event: CustomEvent<any>) => void
 
-  private onControlElementsResizedCallback: (event: CustomEvent<any>) => void;
+  private onControlElementsResizedCallback: (event: CustomEvent<any>) => void
 
-  private onControlElementsChangedCallback: (event: CustomEvent<any>) => void;
+  private onControlElementsChangedCallback: (event: CustomEvent<any>) => void
 
-  private currentResponse!: ChatResponse;
+  private currentResponse!: ChatResponse
 
-  private currentUserResponse!: ChatResponse;
+  private currentUserResponse!: ChatResponse
 
-  private flowDTOFromUserInputUpdate!: FlowDTO;
+  private flowDTOFromUserInputUpdate!: FlowDTO
 
-  private responses: Array<ChatResponse>;
+  private responses: Array<ChatResponse>
 
-  private input!: UserInputElement;
+  private input!: UserInputElement
 
   constructor(options: IBasicElementOptions) {
     super(options)
@@ -74,30 +71,50 @@ export class ChatList extends BasicElement {
     this.userInputUpdateCallback = this.onUserInputUpdate.bind(this)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.addEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false)
+    this.eventTarget.addEventListener(
+      FlowEvents.USER_INPUT_UPDATE,
+      this.userInputUpdateCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
 
     // user input key change
     this.onInputKeyChangeCallback = this.onInputKeyChange.bind(this)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.addEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false)
+    this.eventTarget.addEventListener(
+      UserInputEvents.KEY_CHANGE,
+      this.onInputKeyChangeCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
 
     // user input height change
     this.onInputHeightChangeCallback = this.onInputHeightChange.bind(this)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.addEventListener(UserInputEvents.HEIGHT_CHANGE, this.onInputHeightChangeCallback, false)
+    this.eventTarget.addEventListener(
+      UserInputEvents.HEIGHT_CHANGE,
+      this.onInputHeightChangeCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
 
     // on control elements changed
     this.onControlElementsResizedCallback = this.onControlElementsResized.bind(this)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.addEventListener(ControlElementsEvents.ON_RESIZE, this.onControlElementsResizedCallback, false)
+    this.eventTarget.addEventListener(
+      ControlElementsEvents.ON_RESIZE,
+      this.onControlElementsResizedCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
 
     this.onControlElementsChangedCallback = this.onControlElementsChanged.bind(this)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.addEventListener(ControlElementsEvents.CHANGED, this.onControlElementsChangedCallback, false)
+    this.eventTarget.addEventListener(
+      ControlElementsEvents.CHANGED,
+      this.onControlElementsChangedCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
   }
 
   private onInputHeightChange(event: CustomEvent) {
@@ -129,17 +146,17 @@ export class ChatList extends BasicElement {
   }
 
   /**
-  * @name onControlElementsChanged
-  * on control elements change
-  */
+   * @name onControlElementsChanged
+   * on control elements change
+   */
   private onControlElementsChanged(event: Event): void {
     this.onInputElementChanged()
   }
 
   /**
-  * @name onControlElementsResized
-  * on control elements resize
-  */
+   * @name onControlElementsResized
+   * on control elements resize
+   */
   private onControlElementsResized(event: Event): void {
     ConversationalForm.illustrateFlow(this, 'receive', ControlElementsEvents.ON_RESIZE)
     let responseToScrollTo: ChatResponse = this.currentResponse
@@ -174,7 +191,9 @@ export class ChatList extends BasicElement {
 
     const currentTag = event.detail.tag as ITag | ITagGroup
 
-    if (this.currentResponse) { this.currentResponse.disabled = false }
+    if (this.currentResponse) {
+      this.currentResponse.disabled = false
+    }
 
     if (this.containsTagResponse(currentTag) && !event.detail.ignoreExistingTag) {
       // because user maybe have scrolled up and wants to edit
@@ -185,28 +204,31 @@ export class ChatList extends BasicElement {
       this.onUserWantsToEditTag(currentTag)
     } else {
       // robot response
-      setTimeout(() => {
-        const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question)
-        robot.whenReady(() => {
-          // create user response
-          this.currentUserResponse = this.createResponse(false, currentTag)
-          robot.scrollTo()
-        })
+      setTimeout(
+        () => {
+          const robot: ChatResponse = this.createResponse(true, currentTag, currentTag.question)
+          robot.whenReady(() => {
+            // create user response
+            this.currentUserResponse = this.createResponse(false, currentTag)
+            robot.scrollTo()
+          })
 
-        if (this.currentUserResponse) {
-          // linked, but only if we should not ignore existing tag
-          this.currentUserResponse.setLinkToOtherReponse(robot)
-          robot.setLinkToOtherReponse(this.currentUserResponse)
-        }
-      }, this.responses.length === 0 ? 500 : 0)
+          if (this.currentUserResponse) {
+            // linked, but only if we should not ignore existing tag
+            this.currentUserResponse.setLinkToOtherReponse(robot)
+            robot.setLinkToOtherReponse(this.currentUserResponse)
+          }
+        },
+        this.responses.length === 0 ? 500 : 0
+      )
     }
   }
 
   /**
-  * @name containsTagResponse
-  * @return boolean
-  * check if tag has already been responded to
-  */
+   * @name containsTagResponse
+   * @return boolean
+   * check if tag has already been responded to
+   */
   private containsTagResponse(tagToChange: ITag): boolean {
     for (let i = 0; i < this.responses.length; i++) {
       const element = this.responses[i] as ChatResponse
@@ -219,9 +241,9 @@ export class ChatList extends BasicElement {
   }
 
   /**
-  * @name onUserAnswerClicked
-  * on user ChatReponse clicked
-  */
+   * @name onUserAnswerClicked
+   * on user ChatReponse clicked
+   */
   private onUserWantsToEditTag(tagToChange: ITag): void {
     let responseUserWantsToEdit: ChatResponse | undefined
     for (let i = 0; i < this.responses.length; i++) {
@@ -259,22 +281,24 @@ export class ChatList extends BasicElement {
     }
   }
 
-  private updateTimer: number | NodeJS.Timeout = 0 ;
+  private updateTimer: number | NodeJS.Timeout = 0
 
   private onListUpdate(chatResponse: ChatResponse) {
     clearTimeout(this.updateTimer as number)
 
     this.updateTimer = setTimeout(() => {
-      this.eventTarget.dispatchEvent(new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
-        detail: this
-      }))
+      this.eventTarget.dispatchEvent(
+        new CustomEvent(ChatListEvents.CHATLIST_UPDATED, {
+          detail: this
+        })
+      )
       chatResponse.show()
     }, 0)
   }
 
   /**
-  * remove responses, this usually happens if a user jumps back to a conditional element
-  */
+   * remove responses, this usually happens if a user jumps back to a conditional element
+   */
   public clearFrom(index: number): void {
     let i = index
     i *= 2 // double up because of robot responses
@@ -286,10 +310,10 @@ export class ChatList extends BasicElement {
   }
 
   /**
-  * Update current reponse, is being called automatically from onFlowUpdate
-  * but can also, in rare cases, be called when flow is controlled manually.
-  * reponse: FlowDTO
-  */
+   * Update current reponse, is being called automatically from onFlowUpdate
+   * but can also, in rare cases, be called when flow is controlled manually.
+   * reponse: FlowDTO
+   */
   public setCurrentUserResponse(dto: FlowDTO): void {
     this.flowDTOFromUserInputUpdate = dto
 
@@ -305,8 +329,8 @@ export class ChatList extends BasicElement {
   }
 
   /**
-  * returns the submitted responses.
-  */
+   * returns the submitted responses.
+   */
   public getResponses(): Array<ChatResponse> {
     return this.responses
   }
@@ -314,7 +338,9 @@ export class ChatList extends BasicElement {
   public updateThumbnail(robot: boolean, img: string): void {
     Dictionary.set(robot ? 'robot-image' : 'user-image', robot ? 'robot' : 'human', img)
 
-    const newImage: string = robot ? Dictionary.getRobotResponse('robot-image') : Dictionary.get('user-image')
+    const newImage: string = robot
+      ? Dictionary.getRobotResponse('robot-image')
+      : Dictionary.get('user-image')
     for (let i = 0; i < this.responses.length; i++) {
       const element: ChatResponse = this.responses[i] as ChatResponse
       if (robot && element.isRobotResponse) {
@@ -335,7 +361,9 @@ export class ChatList extends BasicElement {
       eventTarget: this.eventTarget,
       isRobotResponse,
       response: value || '',
-      image: isRobotResponse ? Dictionary.getRobotResponse('robot-image') : Dictionary.get('user-image'),
+      image: isRobotResponse
+        ? Dictionary.getRobotResponse('robot-image')
+        : Dictionary.get('user-image'),
       container: scrollable
     })
 
@@ -366,14 +394,22 @@ export class ChatList extends BasicElement {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.removeEventListener(FlowEvents.USER_INPUT_UPDATE, this.userInputUpdateCallback, false)
+    this.eventTarget.removeEventListener(
+      FlowEvents.USER_INPUT_UPDATE,
+      this.userInputUpdateCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.userInputUpdateCallback = null
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.eventTarget.removeEventListener(UserInputEvents.KEY_CHANGE, this.onInputKeyChangeCallback, false)
+    this.eventTarget.removeEventListener(
+      UserInputEvents.KEY_CHANGE,
+      this.onInputKeyChangeCallback as EventListenerOrEventListenerObject | null,
+      false
+    )
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.onInputKeyChangeCallback = null

@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
@@ -22,29 +22,32 @@ import { Dictionary } from '../../data/Dictionary'
 import { FlowDTO, FlowEvents } from '../../logic/FlowManager'
 import { Helpers } from '../../logic/Helpers'
 import { Button } from './Button'
-import { ControlElementEvents, ControlElementProgressStates, IControlElementOptions } from './ControlElement'
+import {
+  ControlElementEvents,
+  ControlElementProgressStates,
+  IControlElementOptions
+} from './ControlElement'
 
 // class
 export class UploadFileUI extends Button {
-  private maxFileSize = 100000000000;
+  private maxFileSize = 100000000000
 
-  private onDomElementChangeCallback: (e?: any) => void;
+  private onDomElementChangeCallback: (e?: any) => void
 
-  private progressBar: HTMLElement;
+  private progressBar: HTMLElement
 
-  private loading = false;
+  private loading = false
 
-  private submitTimer: number | NodeJS.Timeout = 0;
+  private submitTimer: number | NodeJS.Timeout = 0
 
-  private _fileName = '';
+  private _fileName = ''
 
-  private _readerResult = '';
+  private _readerResult = ''
 
-  private _files!: FileList;
+  private _files!: FileList
 
   public get value(): string {
     return (this.referenceTag.domElement as HTMLInputElement).value
-    // ;this.readerResult || this.fileName;
   }
 
   public get readerResult(): string {
@@ -67,17 +70,25 @@ export class UploadFileUI extends Button {
     super(options)
 
     if (Helpers.caniuse.fileReader()) {
-      const maxFileSizeStr = this.referenceTag.domElement?.getAttribute('cf-max-size') || this.referenceTag.domElement?.getAttribute('max-size')
+      const maxFileSizeStr =
+        this.referenceTag.domElement?.getAttribute('cf-max-size') ||
+        this.referenceTag.domElement?.getAttribute('max-size')
 
       if (maxFileSizeStr) {
         const maxFileSize: number = parseInt(maxFileSizeStr, 10)
         this.maxFileSize = maxFileSize
       }
 
-      this.progressBar = this.el.getElementsByTagName('cf-upload-file-progress-bar')[0] as HTMLElement
+      this.progressBar = this.el.getElementsByTagName(
+        'cf-upload-file-progress-bar'
+      )[0] as HTMLElement
 
       this.onDomElementChangeCallback = this.onDomElementChange.bind(this)
-      this.referenceTag.domElement?.addEventListener('change', this.onDomElementChangeCallback, false)
+      this.referenceTag.domElement?.addEventListener(
+        'change',
+        this.onDomElementChangeCallback,
+        false
+      )
     } else {
       throw new Error('Conversational Form Error: No FileReader available for client.')
     }
@@ -112,6 +123,7 @@ export class UploadFileUI extends Button {
     reader.onabort = (abortEvent: any) => {
       if (!ConversationalForm.suppressLog) console.log('onabort', abortEvent)
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     reader.onloadstart = (loadstartEvent: any) => {
       // check for file size
       const file: File = this.files[0]
@@ -124,9 +136,11 @@ export class UploadFileUI extends Button {
         }
 
         ConversationalForm.illustrateFlow(this, 'dispatch', FlowEvents.USER_INPUT_INVALID, dto)
-        this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-          detail: dto
-        }))
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+            detail: dto
+          })
+        )
       } else {
         // good to go
         this._fileName = file.name
@@ -136,14 +150,18 @@ export class UploadFileUI extends Button {
         let sizeConversion: number = Math.floor(Math.log(fileSize) / Math.log(1024))
         const sizeChart: Array<string> = ['b', 'kb', 'mb', 'gb']
         sizeConversion = Math.min(sizeChart.length - 1, sizeConversion)
-        const humanSizeString = `${Number((fileSize / 1024 ** sizeConversion).toFixed(2)) * 1} ${sizeChart[sizeConversion]}`
+        const humanSizeString = `${Number((fileSize / 1024 ** sizeConversion).toFixed(2)) * 1} ${
+          sizeChart[sizeConversion]
+        }`
 
         const text = `${file.name} (${humanSizeString})`
         this.el.getElementsByTagName('cf-upload-file-text')[0].innerHTML = text
 
-        this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
-          detail: ControlElementProgressStates.BUSY
-        }))
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+            detail: ControlElementProgressStates.BUSY
+          })
+        )
       }
     }
 
@@ -154,9 +172,11 @@ export class UploadFileUI extends Button {
         this.el.classList.remove('animate-in')
         this.onChoose() // submit the file
 
-        this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
-          detail: ControlElementProgressStates.READY
-        }))
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+            detail: ControlElementProgressStates.READY
+          })
+        )
       }, 0)
     }
 
@@ -164,10 +184,13 @@ export class UploadFileUI extends Button {
   }
 
   public animateIn(): void {
-    if (this.loading) { super.animateIn() }
+    if (this.loading) {
+      super.animateIn()
+    }
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onClick(event: MouseEvent): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // super.onClick(event);
   }
 
@@ -186,7 +209,11 @@ export class UploadFileUI extends Button {
     this.progressBar = null
 
     if (this.onDomElementChangeCallback) {
-      this.referenceTag.domElement?.removeEventListener('change', this.onDomElementChangeCallback, false)
+      this.referenceTag.domElement?.removeEventListener(
+        'change',
+        this.onDomElementChangeCallback,
+        false
+      )
 
       // @ts-ignore
       this.onDomElementChangeCallback = null

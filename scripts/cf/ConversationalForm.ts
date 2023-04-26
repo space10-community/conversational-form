@@ -1,20 +1,20 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 import { Dictionary } from './data/Dictionary'
 import { InputTag } from './form-tags/InputTag'
@@ -22,7 +22,10 @@ import { ITag, Tag } from './form-tags/Tag'
 import { ITagGroup, TagGroup } from './form-tags/TagGroup'
 import { createTag } from './form-tags/TagHelpers'
 import { IUserInput } from './interfaces/IUserInput'
-import { IUserInterfaceOptions, UserInterfaceDefaultOptions } from './interfaces/IUserInterfaceOptions'
+import {
+  IUserInterfaceOptions,
+  UserInterfaceDefaultOptions
+} from './interfaces/IUserInterfaceOptions'
 import { EventDispatcher } from './logic/EventDispatcher'
 import { FlowDTO, FlowManager } from './logic/FlowManager'
 import { Helpers } from './logic/Helpers'
@@ -34,87 +37,98 @@ import { UserTextInput } from './ui/inputs/UserTextInput'
 import { ProgressBar } from './ui/ProgressBar'
 import { ScrollController } from './ui/ScrollController'
 
-export interface Window { ConversationalForm: any; }
+export interface Window {
+  ConversationalForm: any
+}
 
 // CUI options
 export interface ConversationalFormOptions {
   // HTMLFormElement
-  formEl: HTMLFormElement;
+  formEl: HTMLFormElement
 
   // context (HTMLElement) of where to append the ConversationalForm (see also cf-context attribute)
-  context?: HTMLElement;
+  context?: HTMLElement
 
   // pass in custom tags (when prevent the auto-instantiation of ConversationalForm)
-  tags?: Array<ITag>;
+  tags?: Array<ITag>
 
   // overwrite the default user Dictionary items
-  dictionaryData?: Record<string, any>;
+  dictionaryData?: Record<string, any>
 
   // overwrite the default robot Dictionary items
-  dictionaryRobot?: Record<string, any>;
+  dictionaryRobot?: Record<string, any>
 
   // base64 || image url // overwrite user image, without overwritting the user dictionary
-  userImage?: string;
+  userImage?: string
 
   // base64 || image url // overwrite robot image, without overwritting the robot dictionary
-  robotImage?: string;
+  robotImage?: string
 
   // custom submit callback if button[type=submit] || form.submit() is not wanted..
-  submitCallback?: () => void | HTMLButtonElement;
+  submitCallback?: () => void | HTMLButtonElement
 
   // can be set to false to allow for loading and packaging
   // of Conversational Form styles within a larger project.
-  loadExternalStyleSheet?: boolean;
+  loadExternalStyleSheet?: boolean
 
   // Theme
-  theme?: string;
+  theme?: string
 
   // prevent auto appending of Conversational Form, append it yourself.
-  preventAutoAppend?: boolean;
+  preventAutoAppend?: boolean
 
   // start the form in your own time, {cf-instance}.start(),
   // exclude cf-form from form tag, see examples: manual-start.html
-  preventAutoStart?: boolean;
+  preventAutoStart?: boolean
 
   // prevents the initial auto focus on UserInput
-  preventAutoFocus?: boolean;
+  preventAutoFocus?: boolean
 
   // optional horizontal scroll acceleration value, 0-1
-  scrollAcceleration?: number;
+  scrollAcceleration?: number
 
   // allow for a global validation method, asyncronous,
   // so a value can be validated through a server, call success || error
-  flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
+  flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void
 
   // optional event dispatcher, has to be an instance of cf.EventDispatcher
-  eventDispatcher?: EventDispatcher;
+  eventDispatcher?: EventDispatcher
 
   // optional, set microphone nput, future, add other custom inputs, ex. VR
-  microphoneInput?: IUserInput;
+  microphoneInput?: IUserInput
 
   // optional, hide ÜserInputField when radio, checkbox, select input is active
-  hideUserInputOnNoneTextInput?: boolean;
+  hideUserInputOnNoneTextInput?: boolean
 
   // optional, parameters for the User Interface of
   // Conversational Form, set here to show thinking dots or not,
   // set delay time in-between robot responses
-  userInterfaceOptions?: IUserInterfaceOptions;
+  userInterfaceOptions?: IUserInterfaceOptions
 
   // optional, Whenther to suppress console.log, default true
-  suppressLog?: boolean;
+  suppressLog?: boolean
 
   // Show progressbar
-  showProgressBar?: boolean;
+  showProgressBar?: boolean
 
   // Prevent submit on Enter keypress: https://github.com/space10-community/conversational-form/issues/270
-  preventSubmitOnEnter?: boolean;
+  preventSubmitOnEnter?: boolean
 
-  animationsEnabled?: boolean;
+  animationsEnabled?: boolean
 
-  tagRefreshCallback?: (tag: Tag) => void;
+  tagRefreshCallback?: (tag: Tag) => void
 }
 
-export type FormlessTagType = 'text' | 'email' | 'tel' | 'checkbox' | 'radio' | 'password' | 'file' | 'audio' | 'numeric'
+export type FormlessTagType =
+  | 'text'
+  | 'email'
+  | 'tel'
+  | 'checkbox'
+  | 'radio'
+  | 'password'
+  | 'file'
+  | 'audio'
+  | 'numeric'
 
 export type FormlessTag = {
   tag: 'input' | 'cf-robot-message' | 'select'
@@ -134,24 +148,25 @@ export type FormlessTagChild = {
 
 // CUI formless options
 export interface ConversationalFormlessOptions {
-  options: Partial<ConversationalFormOptions>;
-  tags: FormlessTag[];
+  options: Partial<ConversationalFormOptions>
+  tags: FormlessTag[]
 }
 
 export class ConversationalForm {
-  public version = '1.0.2';
+  public version = '1.0.2'
 
-  public static animationsEnabled = true;
+  public static animationsEnabled = true
 
-  public static illustrateAppFlow = true;
+  public static illustrateAppFlow = true
 
-  public static suppressLog = true;
+  public static suppressLog = true
 
-  public static showProgressBar = false;
+  public static showProgressBar = false
 
-  public static preventSubmitOnEnter = false;
+  public static preventSubmitOnEnter = false
 
-  private cdnPath = 'https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/';
+  private cdnPath =
+    'https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/'
 
   /**
    * createId
@@ -168,7 +183,7 @@ export class ConversationalForm {
   }
 
   // instance specific event target
-  private _eventTarget?: EventDispatcher;
+  private _eventTarget?: EventDispatcher
 
   public get eventTarget(): EventDispatcher {
     if (!this._eventTarget) {
@@ -178,45 +193,45 @@ export class ConversationalForm {
     return this._eventTarget
   }
 
-  public dictionary: Dictionary;
+  public dictionary: Dictionary
 
-  public el?: HTMLElement;
+  public el?: HTMLElement
 
-  public chatList?: ChatList;
+  public chatList?: ChatList
 
-  public uiOptions: IUserInterfaceOptions;
+  public uiOptions: IUserInterfaceOptions
 
-  public options: ConversationalFormOptions;
+  public options: ConversationalFormOptions
 
-  public preventSubmitOnEnter?: boolean;
+  public preventSubmitOnEnter?: boolean
 
-  private context: HTMLElement;
+  private context: HTMLElement
 
-  private formEl: HTMLFormElement;
+  private formEl: HTMLFormElement
 
-  private submitCallback?: (cf: ConversationalForm) => void | HTMLButtonElement;
+  private submitCallback?: (cf: ConversationalForm) => void | HTMLButtonElement
 
-  private onUserAnswerClickedCallback?: () => void;
+  private onUserAnswerClickedCallback?: () => void
 
-  private flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void;
+  private flowStepCallback?: (dto: FlowDTO, success: () => void, error: () => void) => void
 
-  private tags: Array<ITag | ITagGroup>;
+  private tags: Array<ITag | ITagGroup>
 
-  private flowManager?: FlowManager;
+  private flowManager?: FlowManager
 
-  private isDevelopment = false;
+  private isDevelopment = false
 
-  private loadExternalStyleSheet = true;
+  private loadExternalStyleSheet = true
 
-  private theme = 'light';
+  private theme = 'light'
 
-  private preventAutoAppend: boolean | undefined = false;
+  private preventAutoAppend: boolean | undefined = false
 
-  private preventAutoStart: boolean | undefined = false;
+  private preventAutoStart: boolean | undefined = false
 
-  private userInput?: UserTextInput;
+  private userInput?: UserTextInput
 
-  private microphoneInputObj?: IUserInput;
+  private microphoneInputObj?: IUserInput
 
   constructor(options: ConversationalFormOptions) {
     // @ts-ignore
@@ -224,11 +239,17 @@ export class ConversationalForm {
 
     this.cdnPath = this.cdnPath.split('{version}').join(this.version)
 
-    if (typeof options.suppressLog === 'boolean') { ConversationalForm.suppressLog = options.suppressLog }
+    if (typeof options.suppressLog === 'boolean') {
+      ConversationalForm.suppressLog = options.suppressLog
+    }
 
-    if (typeof options.showProgressBar === 'boolean') { ConversationalForm.showProgressBar = options.showProgressBar }
+    if (typeof options.showProgressBar === 'boolean') {
+      ConversationalForm.showProgressBar = options.showProgressBar
+    }
 
-    if (typeof options.preventSubmitOnEnter === 'boolean') { this.preventSubmitOnEnter = options.preventSubmitOnEnter }
+    if (typeof options.preventSubmitOnEnter === 'boolean') {
+      this.preventSubmitOnEnter = options.preventSubmitOnEnter
+    }
 
     if (!ConversationalForm.suppressLog) console.log('Conversational Form > version:', this.version)
     if (!ConversationalForm.suppressLog) console.log('Conversational Form > options:', options)
@@ -241,19 +262,27 @@ export class ConversationalForm {
       this._eventTarget = options.eventDispatcher as EventDispatcher
     }
 
-    if (!this.eventTarget.cf) { this.eventTarget.cf = this }
+    if (!this.eventTarget.cf) {
+      this.eventTarget.cf = this
+    }
 
     // set a general step validation callback
-    if (options.flowStepCallback) { this.flowStepCallback = options.flowStepCallback }
+    if (options.flowStepCallback) {
+      this.flowStepCallback = options.flowStepCallback
+    }
 
     // eslint-disable-next-line no-multi-assign
-    this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById('conversational-form-development')
+    this.isDevelopment = ConversationalForm.illustrateAppFlow = !!document.getElementById(
+      'conversational-form-development'
+    )
 
     if (options.loadExternalStyleSheet === false) {
       this.loadExternalStyleSheet = false
     }
 
-    if (typeof options.theme === 'string') { this.theme = options.theme }
+    if (typeof options.theme === 'string') {
+      this.theme = options.theme
+    }
 
     if (options.scrollAcceleration && !Number.isNaN(options.scrollAcceleration)) {
       ScrollController.acceleration = options.scrollAcceleration
@@ -262,7 +291,9 @@ export class ConversationalForm {
     this.preventAutoStart = options.preventAutoStart
     this.preventAutoAppend = options.preventAutoAppend
 
-    if (!options.formEl) { throw new Error('Conversational Form error, the formEl needs to be defined.') }
+    if (!options.formEl) {
+      throw new Error('Conversational Form error, the formEl needs to be defined.')
+    }
 
     this.formEl = options.formEl
     this.formEl.setAttribute('cf-create-id', this.createId)
@@ -284,17 +315,18 @@ export class ConversationalForm {
       }
     }
 
-    if (this.formEl.getAttribute('cf-no-animation') === '') { ConversationalForm.animationsEnabled = false }
+    if (this.formEl.getAttribute('cf-no-animation') === '') {
+      ConversationalForm.animationsEnabled = false
+    }
 
-    if (
-      typeof options.animationsEnabled === 'boolean'
-      && options.animationsEnabled === false
-    ) {
+    if (typeof options.animationsEnabled === 'boolean' && options.animationsEnabled === false) {
       ConversationalForm.animationsEnabled = false
       this.formEl.setAttribute('cf-no-animation', '')
     }
 
-    if (options.preventAutoFocus || this.formEl.getAttribute('cf-prevent-autofocus') === '') { UserInputElement.preventAutoFocus = true }
+    if (options.preventAutoFocus || this.formEl.getAttribute('cf-prevent-autofocus') === '') {
+      UserInputElement.preventAutoFocus = true
+    }
 
     this.dictionary = new Dictionary({
       data: options.dictionaryData,
@@ -310,7 +342,10 @@ export class ConversationalForm {
     if (options.microphoneInput) {
       // validate the user ..... TODO....
       if (!options.microphoneInput.init || !options.microphoneInput.input) {
-        console.warn('Conversational Form: microphoneInput is not correctly setup', options.microphoneInput)
+        console.warn(
+          'Conversational Form: microphoneInput is not correctly setup',
+          options.microphoneInput
+        )
         // eslint-disable-next-line no-param-reassign
         options.microphoneInput = undefined
       }
@@ -321,7 +356,8 @@ export class ConversationalForm {
     }
 
     this.uiOptions = Helpers.deepMerge(
-      UserInterfaceDefaultOptions, options.userInterfaceOptions || {}
+      UserInterfaceDefaultOptions,
+      options.userInterfaceOptions || {}
     )
 
     this.options = options
@@ -384,7 +420,10 @@ export class ConversationalForm {
     */
 
     // set context position to relative, else we break out of the box
-    const position: string = window.getComputedStyle(this.context).getPropertyValue('position').toLowerCase()
+    const position: string = window
+      .getComputedStyle(this.context)
+      .getPropertyValue('position')
+      .toLowerCase()
     if (['fixed', 'absolute', 'relative'].indexOf(position) === -1) {
       this.context.style.position = 'relative'
     }
@@ -393,7 +432,10 @@ export class ConversationalForm {
     if (!this.tags || this.tags.length === 0) {
       this.tags = []
 
-      const fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(this.formEl.querySelectorAll('input, select, button, textarea, cf-robot-message'), 0)
+      const fields: Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement> = [].slice.call(
+        this.formEl.querySelectorAll('input, select, button, textarea, cf-robot-message'),
+        0
+      )
 
       for (let i = 0; i < fields.length; i++) {
         const element = fields[i]
@@ -438,15 +480,15 @@ export class ConversationalForm {
   }
 
   /**
-  * @name updateDictionaryValue
-  * set a dictionary value at "runtime"
-  * id: string, id of the value to update
-  * type: string, "human" || "robot"
-  * value: string, value to be inserted
-  */
+   * @name updateDictionaryValue
+   * set a dictionary value at "runtime"
+   * id: string, id of the value to update
+   * type: string, "human" || "robot"
+   * value: string, value to be inserted
+   */
   public updateDictionaryValue(id: string, type: string, value: string): void {
     Dictionary.set(id, type, value)
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // if(["robot-image", "user-image"].indexOf(id) != -1){
     //   this.chatList.updateThumbnail(id === "robot-image", value);
     // }
@@ -509,7 +551,9 @@ export class ConversationalForm {
     for (let i = 0; i < tags.length; i++) {
       const tag: ITag = tags[i]
       if (tag.type === 'radio' || tag.type === 'checkbox') {
-        if (!groups[tag.name]) { groups[tag.name] = [] }
+        if (!groups[tag.name]) {
+          groups[tag.name] = []
+        }
 
         groups[tag.name].push(tag)
       }
@@ -522,7 +566,8 @@ export class ConversationalForm {
           // always build groupd when radio or checkbox
 
           // find the fieldset, if any..
-          const isFieldsetValidForCF = (tag: HTMLElement): boolean => tag && tag.tagName.toLowerCase() !== 'fieldset' && !tag.hasAttribute('cf-questions')
+          const isFieldsetValidForCF = (tag: HTMLElement): boolean =>
+            tag && tag.tagName.toLowerCase() !== 'fieldset' && !tag.hasAttribute('cf-questions')
 
           let fieldset: HTMLElement | null = groups[group][0].domElement.parentNode
           if (fieldset && fieldset.tagName.toLowerCase() !== 'fieldset') {
@@ -570,10 +615,14 @@ export class ConversationalForm {
 
     this.addBrowserTypes(this.el)
 
-    if (ConversationalForm.animationsEnabled) { this.el.classList.add('conversational-form--enable-animation') }
+    if (ConversationalForm.animationsEnabled) {
+      this.el.classList.add('conversational-form--enable-animation')
+    }
 
     // add conversational form to context
-    if (!this.preventAutoAppend) { this.context.appendChild(this.el) }
+    if (!this.preventAutoAppend) {
+      this.context.appendChild(this.el)
+    }
 
     // hide until stylesheet is rendered
     this.el.style.visibility = 'hidden'
@@ -609,12 +658,16 @@ export class ConversationalForm {
     this.onUserAnswerClickedCallback = this.onUserAnswerClicked.bind(this)
     // @ts-ignore
     this.eventTarget.addEventListener(
-      ChatResponseEvents.USER_ANSWER_CLICKED, this.onUserAnswerClickedCallback || null, false
+      ChatResponseEvents.USER_ANSWER_CLICKED,
+      this.onUserAnswerClickedCallback || null,
+      false
     )
 
     this.el.classList.add('conversational-form--show')
 
-    if (!this.preventAutoStart) { this.flowManager.start() }
+    if (!this.preventAutoStart) {
+      this.flowManager.start()
+    }
 
     if (!this.tags || this.tags.length === 0) {
       // no tags, so just show the input
@@ -623,9 +676,9 @@ export class ConversationalForm {
   }
 
   /**
-  * @name onUserAnswerClicked
-  * on user ChatReponse clicked
-  */
+   * @name onUserAnswerClicked
+   * on user ChatReponse clicked
+   */
   private onUserAnswerClicked(event: CustomEvent): void {
     const tag: ITag | ITagGroup = event.detail
     this.flowManager?.editTag(tag)
@@ -637,10 +690,10 @@ export class ConversationalForm {
   }
 
   /**
-  * @name addTag
-  * Add a tag to the conversation. This can be used to add tags at runtime
-  * see examples/formless.html
-  */
+   * @name addTag
+   * Add a tag to the conversation. This can be used to add tags at runtime
+   * see examples/formless.html
+   */
   public addTags(tagsData: Array<DataTag>, addAfterCurrentStep = true, atIndex = -1): void {
     let tags: Array<ITag | ITagGroup> = []
 
@@ -674,7 +727,10 @@ export class ConversationalForm {
           }
         }
       } else {
-        const tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement = tagData.tag === 'select' ? TagsParser.parseGroupTag(tagData) : TagsParser.parseTag(tagData)
+        const tag: HTMLElement | HTMLInputElement | HTMLSelectElement | HTMLButtonElement =
+          tagData.tag === 'select'
+            ? TagsParser.parseGroupTag(tagData)
+            : TagsParser.parseTag(tagData)
         if (Tag.isTagValid(tag)) {
           const createdTag = createTag(
             tag as HTMLInputElement | HTMLSelectElement | HTMLButtonElement
@@ -693,7 +749,8 @@ export class ConversationalForm {
 
     // add new tags to the flow
     const addedTags = this.flowManager?.addTags(
-      tags, addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex
+      tags,
+      addAfterCurrentStep ? this.flowManager.getStep() + 1 : atIndex
     )
 
     if (addedTags) {
@@ -702,14 +759,14 @@ export class ConversationalForm {
   }
 
   /**
-  * @name remapTagsAndStartFrom
-  * index: number, what index to start from
-  * setCurrentTagValue: boolean, usually this
-  * method is called when wanting to loop or skip over questions,
-  * therefore it might be usefull to set the value of the current tag before changing index.
-  * ignoreExistingTags: boolean, possible to ignore existing tags,
-  * to allow for the flow to just "happen"
-  */
+   * @name remapTagsAndStartFrom
+   * index: number, what index to start from
+   * setCurrentTagValue: boolean, usually this
+   * method is called when wanting to loop or skip over questions,
+   * therefore it might be usefull to set the value of the current tag before changing index.
+   * ignoreExistingTags: boolean, possible to ignore existing tags,
+   * to allow for the flow to just "happen"
+   */
   public remapTagsAndStartFrom(
     index = 0,
     setCurrentTagValue = false,
@@ -732,11 +789,13 @@ export class ConversationalForm {
   }
 
   /**
-  * @name focus
-  * Sets focus on Conversational Form
-  */
+   * @name focus
+   * Sets focus on Conversational Form
+   */
   public focus(): void {
-    if (this.userInput) { this.userInput.setFocusOnInput() }
+    if (this.userInput) {
+      this.userInput.setFocusOnInput()
+    }
   }
 
   public doSubmitForm(): void {
@@ -780,9 +839,15 @@ export class ConversationalForm {
       this.onUserAnswerClickedCallback = null
     }
 
-    if (this.flowManager) { this.flowManager.dealloc() }
-    if (this.userInput) { this.userInput.dealloc() }
-    if (this.chatList) { this.chatList.dealloc() }
+    if (this.flowManager) {
+      this.flowManager.dealloc()
+    }
+    if (this.userInput) {
+      this.userInput.dealloc()
+    }
+    if (this.chatList) {
+      this.chatList.dealloc()
+    }
 
     // @ts-ignore
     this.dictionary = null
@@ -819,13 +884,26 @@ export class ConversationalForm {
     detail: any = null
   ): void {
     if (ConversationalForm.illustrateAppFlow) {
-      const highlight = `font-weight: 900; background: ${type === 'receive' ? '#e6f3fe' : 'pink'}; color: black; padding: 0px 5px;`
-      if (!ConversationalForm.suppressLog) console.log(`%c** event flow: %c${eventType}%c flow type: %c${type}%c from: %c${classRef.constructor.name}`, 'font-weight: 900;', highlight, 'font-weight: 400;', highlight, 'font-weight: 400;', highlight)
-      if (detail) { if (!ConversationalForm.suppressLog) console.log('** event flow detail:', detail) }
+      const highlight = `font-weight: 900; background: ${
+        type === 'receive' ? '#e6f3fe' : 'pink'
+      }; color: black; padding: 0px 5px;`
+      if (!ConversationalForm.suppressLog)
+        console.log(
+          `%c** event flow: %c${eventType}%c flow type: %c${type}%c from: %c${classRef.constructor.name}`,
+          'font-weight: 900;',
+          highlight,
+          'font-weight: 400;',
+          highlight,
+          'font-weight: 400;',
+          highlight
+        )
+      if (detail) {
+        if (!ConversationalForm.suppressLog) console.log('** event flow detail:', detail)
+      }
     }
   }
 
-  private static hasAutoInstantiated = false;
+  private static hasAutoInstantiated = false
 
   public static startTheConversation(
     data: ConversationalFormOptions | ConversationalFormlessOptions
@@ -866,7 +944,9 @@ export class ConversationalForm {
   }
 
   public static autoStartTheConversation(): void {
-    if (ConversationalForm.hasAutoInstantiated) { return }
+    if (ConversationalForm.hasAutoInstantiated) {
+      return
+    }
 
     // auto start the conversation
     let formElements = document.querySelectorAll('form[cf-form]')

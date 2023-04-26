@@ -1,39 +1,40 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable no-console */
 import { FlowDTO } from '../logic/FlowManager'
 import { OptionButton } from '../ui/control-elements/OptionButton'
 import { OptionTag } from './OptionTag'
-import {
-  ITag, ITagOptions, Tag
-} from './Tag'
+import { ITag, ITagOptions, Tag } from './Tag'
 import { createTag } from './TagHelpers'
 
 export class SelectTag extends Tag {
-  public optionTags: Array<OptionTag>;
+  public optionTags: Array<OptionTag>
 
-  private _values!: Array<string>;
+  private _values!: Array<string>
 
   public get type(): string {
     return 'select'
   }
 
   public get name(): string {
-    const name = this.domElement && this.domElement.hasAttribute('name') ? this.domElement.getAttribute('name') : this.optionTags[0].name
+    const name =
+      this.domElement && this.domElement.hasAttribute('name')
+        ? this.domElement.getAttribute('name')
+        : this.optionTags[0].name
 
     return name || ''
   }
@@ -84,11 +85,17 @@ export class SelectTag extends Tag {
             tag.selected = controllerElement.selected
 
             // check for minimum one selected
-            if (!isValid && tag.selected) { isValid = true }
+            if (!isValid && tag.selected) {
+              isValid = true
+            }
 
-            if (tag.selected) { this._values.push(tag.value as string) }
+            if (tag.selected) {
+              this._values.push(tag.value as string)
+            }
 
-            if (controllerElement.visible) { numberOptionButtonsVisible.push(controllerElement) }
+            if (controllerElement.visible) {
+              numberOptionButtonsVisible.push(controllerElement)
+            }
           }
         }
       }
@@ -102,8 +109,8 @@ export class SelectTag extends Tag {
         // brute force checking...
         if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
           // check the original tag
-          this._values.push(tag.value as string);
-          (tag.domElement as HTMLInputElement).checked = true
+          this._values.push(tag.value as string)
+          ;(tag.domElement as HTMLInputElement).checked = true
           wasSelected = true
         }
       }
@@ -119,7 +126,9 @@ export class SelectTag extends Tag {
       tag.selected = true
       isValid = true
 
-      if (tag.selected) { this._values.push(tag.value as string) }
+      if (tag.selected) {
+        this._values.push(tag.value as string)
+      }
     }
 
     return isValid

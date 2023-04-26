@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013-2018 SPACE10
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 /* eslint-disable prefer-destructuring */
 import { ConversationalForm } from '../../ConversationalForm'
@@ -24,12 +24,12 @@ import { BasicElement, IBasicElementOptions } from '../BasicElement'
 import { ChatList } from './ChatList'
 
 export interface IChatResponseOptions extends IBasicElementOptions {
-  response: string;
-  image: string;
-  list: ChatList;
-  isRobotResponse: boolean;
-  tag?: ITag;
-  container: HTMLElement;
+  response: string
+  image: string
+  list: ChatList
+  isRobotResponse: boolean
+  tag?: ITag
+  container: HTMLElement
 }
 
 export const ChatResponseEvents = {
@@ -37,35 +37,36 @@ export const ChatResponseEvents = {
 }
 
 export class ChatResponse extends BasicElement {
-  public static list: ChatList;
+  public static list: ChatList
 
-  private static THINKING_MARKUP = "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>";
+  private static THINKING_MARKUP =
+    "<p class='show'><thinking><span>.</span><span>.</span><span>.</span></thinking></p>"
 
-  public isRobotResponse!: boolean;
+  public isRobotResponse!: boolean
 
-  public response!: string;
+  public response!: string
 
-  public originalResponse!: string; // keep track of original response with id pipings
+  public originalResponse!: string // keep track of original response with id pipings
 
-  public parsedResponse!: string;
+  public parsedResponse!: string
 
-  private uiOptions!: IUserInterfaceOptions;
+  private uiOptions!: IUserInterfaceOptions
 
-  private textEl!: Element;
+  private textEl!: Element
 
-  private image!: string;
+  private image!: string
 
-  private container: HTMLElement;
+  private container: HTMLElement
 
-  private _tag?: ITag;
+  private _tag?: ITag
 
-  private readyTimer: any;
+  private readyTimer: any
 
-  private responseLink!: ChatResponse; // robot reference from use
+  private responseLink!: ChatResponse // robot reference from use
 
-  private onReadyCallback!: () => void;
+  private onReadyCallback!: () => void
 
-  private onClickCallback!: () => void;
+  private onClickCallback!: () => void
 
   public get tag(): ITag | undefined {
     return this._tag
@@ -80,7 +81,11 @@ export class ChatResponse extends BasicElement {
   }
 
   public set disabled(value: boolean) {
-    if (value) { this.el.classList.add('disabled') } else { this.el.classList.remove('disabled') }
+    if (value) {
+      this.el.classList.add('disabled')
+    } else {
+      this.el.classList.remove('disabled')
+    }
   }
 
   /**
@@ -89,8 +94,8 @@ export class ChatResponse extends BasicElement {
    */
   private hasFlexBug(): boolean {
     return !!(
-      this.cfReference?.el?.classList.contains('browser-firefox')
-      || this.cfReference?.el?.classList.contains('browser-edge')
+      this.cfReference?.el?.classList.contains('browser-firefox') ||
+      this.cfReference?.el?.classList.contains('browser-edge')
     )
   }
 
@@ -166,12 +171,6 @@ export class ChatResponse extends BasicElement {
   }
 
   public setValue(dto?: FlowDTO): void {
-    // if(!this.visible){
-    //  this.visible = true;
-    // }
-
-    // const isThinking: boolean = this.el.hasAttribute('thinking')
-
     if (!dto) {
       this.setToThinking()
     } else {
@@ -237,7 +236,9 @@ export class ChatResponse extends BasicElement {
   }
 
   public processResponseAndSetText(): void {
-    if (!this.originalResponse) { return }
+    if (!this.originalResponse) {
+      return
+    }
 
     let innerResponse: string = this.originalResponse
 
@@ -252,7 +253,9 @@ export class ChatResponse extends BasicElement {
     // if robot, then check linked response for binding values
     if (this.responseLink && this.isRobotResponse) {
       // one way data binding values:
-      innerResponse = innerResponse.split('{previous-answer}').join(this.responseLink.parsedResponse)
+      innerResponse = innerResponse
+        .split('{previous-answer}')
+        .join(this.responseLink.parsedResponse)
     }
 
     if (this.isRobotResponse) {
@@ -264,12 +267,16 @@ export class ChatResponse extends BasicElement {
           if (response.tag) {
             // check for id, standard
             if (response.tag.id) {
-              innerResponse = innerResponse.split(`{${response.tag.id}}`).join(response.tag.value as string)
+              innerResponse = innerResponse
+                .split(`{${response.tag.id}}`)
+                .join(response.tag.value as string)
             }
 
             // fallback check for name
             if (response.tag.name) {
-              innerResponse = innerResponse.split(`{${response.tag.name}}`).join(response.tag.value as string)
+              innerResponse = innerResponse
+                .split(`{${response.tag.name}}`)
+                .join(response.tag.value as string)
             }
           }
         }
@@ -278,7 +285,9 @@ export class ChatResponse extends BasicElement {
 
     // check if response contains an image as answer
     const responseContains: boolean = innerResponse.indexOf('contains-image') !== -1
-    if (responseContains) { this.textEl.classList.add('contains-image') }
+    if (responseContains) {
+      this.textEl.classList.add('contains-image')
+    }
     // now set it
     if (this.isRobotResponse) {
       this.textEl.innerHTML = ''
@@ -303,26 +312,22 @@ export class ChatResponse extends BasicElement {
           this.textEl.innerHTML += `<p>${str}</p>`
         }
         for (let i = 0; i < chainedResponses.length; i++) {
-          const timeout = (
+          const timeout =
             chainedResponses.length > 1 && i > 0
-              ? robotInitResponseTime + ((i + 1) * (this.uiOptions.robot?.chainedResponseTime || 1))
+              ? robotInitResponseTime + (i + 1) * (this.uiOptions.robot?.chainedResponseTime || 1)
               : 0
-          )
 
-          setTimeout(
-            () => {
-              this.tryClearThinking()
-              const p = this.textEl.getElementsByTagName('p')
-              p[i].classList.add('show')
-              this.scrollTo()
-            }, timeout
-          )
+          setTimeout(() => {
+            this.tryClearThinking()
+            const p = this.textEl.getElementsByTagName('p')
+            p[i].classList.add('show')
+            this.scrollTo()
+          }, timeout)
         }
       } else {
         for (let i = 0; i < chainedResponses.length; i++) {
-          const revealAfter = robotInitResponseTime + (
-            i * (this.uiOptions?.robot?.chainedResponseTime || 1)
-          )
+          const revealAfter =
+            robotInitResponseTime + i * (this.uiOptions?.robot?.chainedResponseTime || 1)
 
           const str: string = chainedResponses[i] as string
           setTimeout(() => {
@@ -336,7 +341,9 @@ export class ChatResponse extends BasicElement {
       }
 
       this.readyTimer = setTimeout(() => {
-        if (this.onReadyCallback) { this.onReadyCallback() }
+        if (this.onReadyCallback) {
+          this.onReadyCallback()
+        }
 
         // reset, as it can be called again
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -353,8 +360,7 @@ export class ChatResponse extends BasicElement {
             }
           }, this.uiOptions?.robot?.chainedResponseTime)
         }
-      }, robotInitResponseTime + (
-        chainedResponses.length * (this.uiOptions?.robot?.chainedResponseTime || 1)))
+      }, robotInitResponseTime + chainedResponses.length * (this.uiOptions?.robot?.chainedResponseTime || 1))
     } else {
       // user response, act normal
       this.tryClearThinking()
@@ -370,7 +376,6 @@ export class ChatResponse extends BasicElement {
       }
 
       const p = this.textEl.getElementsByTagName('p')
-      // p[p.length - 1].offsetWidth
       p[p.length - 1].classList.add('show')
       this.scrollTo()
     }
@@ -380,10 +385,7 @@ export class ChatResponse extends BasicElement {
     // }
 
     // value set, so add element, if not added
-    if (
-      this.uiOptions.robot
-      && this.uiOptions.robot.robotResponseTime === 0
-    ) {
+    if (this.uiOptions.robot && this.uiOptions.robot.robotResponseTime === 0) {
       this.addSelf()
     } else {
       setTimeout(() => {
@@ -413,9 +415,9 @@ export class ChatResponse extends BasicElement {
     if (!this.container && this.el) this.container = this.el
 
     if (
-      this.container
-      && this.container.parentElement
-      && this.container.parentElement.scrollHeight
+      this.container &&
+      this.container.parentElement &&
+      this.container.parentElement.scrollHeight
     ) {
       this.container.parentElement.scrollTop = y + h + this.container.parentElement.scrollHeight
     }
@@ -436,13 +438,12 @@ export class ChatResponse extends BasicElement {
   }
 
   private setToThinking() {
-    const canShowThinking: boolean = (
-      this.isRobotResponse
-      && this.uiOptions?.robot?.robotResponseTime !== 0)
-      || (
-        !this.isRobotResponse
-        && this.cfReference?.uiOptions?.user?.showThinking && !this._tag?.skipUserInput
-      ) || false
+    const canShowThinking: boolean =
+      (this.isRobotResponse && this.uiOptions?.robot?.robotResponseTime !== 0) ||
+      (!this.isRobotResponse &&
+        this.cfReference?.uiOptions?.user?.showThinking &&
+        !this._tag?.skipUserInput) ||
+      false
     if (canShowThinking) {
       this.textEl.innerHTML = ChatResponse.THINKING_MARKUP
       this.el.classList.remove('can-edit')
@@ -450,17 +451,17 @@ export class ChatResponse extends BasicElement {
     }
 
     if (
-      this.cfReference?.uiOptions?.user?.showThinking
-      || this.cfReference?.uiOptions?.user?.showThumb
+      this.cfReference?.uiOptions?.user?.showThinking ||
+      this.cfReference?.uiOptions?.user?.showThumb
     ) {
       this.addSelf()
     }
   }
 
   /**
-  * @name addSelf
-  * add one self to the chat list
-  */
+   * @name addSelf
+   * add one self to the chat list
+   */
   private addSelf(): void {
     if (this.el.parentNode !== this.container) {
       this.container.appendChild(this.el)
@@ -469,16 +470,23 @@ export class ChatResponse extends BasicElement {
   }
 
   /**
-  * @name onClickCallback
-  * click handler for el
-  */
+   * @name onClickCallback
+   * click handler for el
+   */
   private onClick(event: MouseEvent): void {
     this.setToThinking()
 
-    ConversationalForm.illustrateFlow(this, 'dispatch', ChatResponseEvents.USER_ANSWER_CLICKED, event)
-    this.eventTarget.dispatchEvent(new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
-      detail: this._tag
-    }))
+    ConversationalForm.illustrateFlow(
+      this,
+      'dispatch',
+      ChatResponseEvents.USER_ANSWER_CLICKED,
+      event
+    )
+    this.eventTarget.dispatchEvent(
+      new CustomEvent(ChatResponseEvents.USER_ANSWER_CLICKED, {
+        detail: this._tag
+      })
+    )
   }
 
   protected setData(options: IChatResponseOptions): void {
