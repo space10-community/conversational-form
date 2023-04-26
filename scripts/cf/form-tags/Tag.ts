@@ -183,7 +183,7 @@ export class Tag implements ITag {
     this.initialDefaultValue = ''
 
     this.changeCallback = this.onDomElementChange.bind(this)
-    this.domElement.addEventListener('change', this.changeCallback, false)
+    this.domElement.addEventListener('change', this.changeCallback as EventListenerOrEventListenerObject, false)
 
     // remove tabIndex from the dom element.. danger zone... should we or should we not...
     this.domElement.tabIndex = -1
