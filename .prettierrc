@@ -1,0 +1,10 @@
+{
+  "trailingComma": "none",
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 100,
+  "importOrder": ["^react$", "^react-(.*)$", "<THIRD_PARTY_MODULES>", "^@mui/(.*)$", "^yu-open-lib$", "^@/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

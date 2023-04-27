@@ -1,4 +1,4 @@
-# THIS IS A ORIGINAL LICENSE PROVIDED BY SPACE10 IN https://github.com/space10-community/conversational-form/blob/master/LICENSE.md
+# THIS IS A ORIGINAL LICENSE PROVIDED BY SPACE10 IN [conversational-form](https://github.com/space10-community/conversational-form/blob/master/LICENSE.md)
 
 The MIT License (MIT)
 

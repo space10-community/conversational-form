@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "eslint-plugin-prettier": "^4.2.1"
+
   },
   "scripts": {
     "build": "echo \"VITE_RELEASE_HASH=${SOURCE_VERSION}\" >> \"`find . -name \".env\"`\" && NODE_OPTIONS=--max-old-space-size=8096 vite build",
@@ -16,7 +16,8 @@
     "storybook": "VITE_APP_API_URL=\"/api\" storybook dev -p 6006",
     "test-storybook": "VITE_APP_API_URL=\"/api\" test-storybook",
     "build-storybook": "NODE_OPTIONS=\"--max-old-space-size=32768\" VITE_APP_API_URL=\"/api\" storybook build",
-    "chromatic": "chromatic --exit-zero-on-changes --skip 'dependabot/**'"
+    "chromatic": "chromatic --exit-zero-on-changes --skip 'dependabot/**'",
+    "eslint-plugin-prettier": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
