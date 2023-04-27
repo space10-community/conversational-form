@@ -1,31 +1,48 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "outDir": "dist",
+    "module": "esnext",
     "lib": [
       "dom",
-      "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
     "moduleResolution": "node",
+    "jsx": "react",
+    "sourceMap": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "typeRoots": [
-      "src/@types"
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "noEmit": false
+  },
+  "react": [
+    "./node_modules/@types/react"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "example"
+  ],
+  "typeRoots": [
+    "@types",
+    "types"
+  ],
+  "paths": {
+    "*": [
+      "types/*.d.ts"
+    ]
   }
 }

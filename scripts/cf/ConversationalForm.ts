@@ -165,9 +165,6 @@ export class ConversationalForm {
 
   public static preventSubmitOnEnter = false
 
-  private cdnPath =
-    'https://cdn.jsdelivr.net/gh/space10-community/conversational-form@{version}/dist/'
-
   /**
    * createId
    * Id of the instance, to isolate events
@@ -236,8 +233,6 @@ export class ConversationalForm {
   constructor(options: ConversationalFormOptions) {
     // @ts-ignore
     window.ConversationalForm = this
-
-    this.cdnPath = this.cdnPath.split('{version}').join(this.version)
 
     if (typeof options.suppressLog === 'boolean') {
       ConversationalForm.suppressLog = options.suppressLog

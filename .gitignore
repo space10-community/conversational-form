@@ -1,19 +1,31 @@
-.DS_Store
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
 node_modules
-bower_components
-.vscode
-/build
-src/scripts/typings
-docs/build/conversational-form-docs.css
-docs/build/conversational-form-docs.js
-docs/build/conversational-form-examples.js
-docs/build/cf/ConversationalFormDocs.js
-docs/build/cf/ConversationalFormExamples.js
-docs/build/styles/cf/docs.css
-docs/build/styles/cf/ui/section-cf-context.css
-docs/build/styles/cf/ui/section-form.css
-docs/build/styles/cf/ui/section-info.css
-docs/build/styles/cf/ui/sticky-menu.css
-docs/build/styles/cf/ui/switch.css
-landingpage/src/.cache/*
-landingpage/src/dist/*
+
+# builds
+build
+dist
+.rpt2_cache
+storybook-static
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+tmp/
+
+# storybook
+storybook-static
+build-storybook.log
+
+# bundle analyzer
+bundle_analyzer.html
