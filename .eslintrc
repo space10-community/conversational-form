@@ -1,0 +1,48 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "standard",
+    "standard-react",
+      "plugin:prettier/recommended",
+      "prettier",
+    "plugin:@typescript-eslint/eslint-recommended"
+  ],
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "ecmaFeatures": {
+      "legacyDecorators": true,
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "17"
+    }
+  },
+  "plugins": ["@typescript-eslint", "unused-imports", "react-hooks"],
+  "rules": {
+    "no-unused-expressions": "off",
+    "no-unused-vars": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"warn",
+			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+		],
+    "semi": [2, "never"],
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-unused-vars": "warn",
+    "space-before-function-paren": 0,
+    "react/prop-types": 0,
+    "react/jsx-handler-names": 0,
+    "react/jsx-fragments": [2, "element"],
+    "react/no-unused-prop-types": 0,
+    "import/export": 0,
+    "import/no-absolute-path": "off"
+  }
+}

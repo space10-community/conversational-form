@@ -1,4 +1,16 @@
 {
+  "name": "yu-conversational-form",
+  "version": "0.0.0",
+  "description": "Turning web forms into conversations",
+  "author": "SPACE10 in collaboration with YU",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jornadayu/conversational-form"
+  },
+  "bugs": {
+    "url": "https://github.com/jornadayu/conversational-form"
+  },
   "files": [
     "dist"
   ],
@@ -18,7 +30,6 @@
     "build:types": "tsc --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist && cp dist/src/* ./dist -r || exit 0",
     "lint": "eslint \"./**/*.{ts,tsx,js,jsx}\"",
     "lint:fix": "yarn lint --fix",
-    "lint:ruby": "bundle exec rubocop -a",
     "dev": "NODE_OPTIONS=--max_http_header_size=220480 vite",
     "start": "yarn dev",
     "prepare": "yarn run husky install",
@@ -50,6 +61,7 @@
     "husky": "^8.0.3",
     "prettier": "^2.8.8",
     "rollup-plugin-visualizer": "^5.9.0",
+    "sass": "^1.62.1",
     "typescript": "^5.0.4",
     "vite": "^4.3.3",
     "vite-plugin-dts": "^2.3.0"

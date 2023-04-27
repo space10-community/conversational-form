@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Copyright (c) 2013-2018 SPACE10
  *
@@ -37,7 +36,6 @@ export class OptionTag extends Tag {
   }
 
   public set selected(value: boolean) {
-    // eslint-disable-next-line prettier/prettier
     (this.domElement as HTMLOptionElement).selected = value
     if (value) {
       this.domElement.setAttribute('selected', 'selected')
@@ -46,7 +44,7 @@ export class OptionTag extends Tag {
     }
   }
 
-  public setTagValueAndIsValid(value: FlowDTO): boolean {
+  public setTagValueAndIsValid(_value: FlowDTO): boolean {
     const isValid = true
     // OBS: No need to set any validation og value for this tag type ..
     // .. it is atm. only used to create pseudo elements in the OptionsList
