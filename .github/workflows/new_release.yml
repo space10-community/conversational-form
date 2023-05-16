@@ -80,13 +80,6 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
 
-      - name: Set release version for unreleased Stories
-        run: |
-          bin/set_release_badges.sh ${{ fromJson(steps.new_version.outputs.packageJson).version }}
-          bin/check_unreleased.sh
-          git add src/stories
-          git commit --amend --no-edit
-
       - name: Publish package
         run: yarn publish --provenance --access public
         if: ${{ github.event.inputs.fakeDeploy == 'false' }}
