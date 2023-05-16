@@ -34,20 +34,20 @@ cf-chat-response {
   color: $cf-color-secondary;
 
   &:hover, &:focus {
-		// TODO
-		&:not(&[selected="selected"]),
-		&:not([checked="checked"]) {
-			background: $cf-color-secondary;
-			color: $cf-color-primary;
-		}
-	}
+    // TODO
+    &:not(&[selected="selected"]),
+    &:not([checked="checked"]) {
+      background: $cf-color-secondary;
+      color: $cf-color-primary;
+    }
+  }
 
-	&[selected="selected"], &[checked="checked"] {
-		&:not(:focus):not(:hover):not(.highlight) {
-			color: $cf-color-primary;
-		 	background: $cf-color-secondary;
-		}
-	}
+  &[selected="selected"], &[checked="checked"] {
+    &:not(:focus):not(:hover):not(.highlight) {
+      color: $cf-color-primary;
+       background: $cf-color-secondary;
+    }
+  }
   
   &.cf-checkbox-button {
     &:hover, &.highlight, &:focus {
@@ -97,13 +97,13 @@ cf-radio-button.cf-button {
     background: $cf-color-secondary !important;
     color: $cf-color-primary !important;
 
-		cf-radio {
-			background: $cf-color-primary;
-		}
+    cf-radio {
+      background: $cf-color-primary;
+    }
   }
   
   &[checked="checked"] {
-		background: $cf-color-secondary !important;
+    background: $cf-color-secondary !important;
     color: $cf-color-primary !important;
   }
 }
@@ -129,9 +129,9 @@ cf-input-button {
 }
 
 .cf-progressBar {
-	background-color: $cf-color-primary;
-	
-	.bar {
-		background-color: lighten($cf-color-secondary, 20%);
-	}
+  background-color: $cf-color-primary;
+  
+  .bar {
+    background-color: lighten($cf-color-secondary, 20%);
+  }
 }

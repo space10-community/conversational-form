@@ -1,170 +1,246 @@
-/// <reference path="Button.ts"/>
-/// <reference path="../../logic/Helpers.ts"/>
+/*
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-// namespace
-namespace cf {
-	// interface
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
+import { ConversationalForm } from '../../ConversationalForm'
+import { Dictionary } from '../../data/Dictionary'
+import { FlowDTO, FlowEvents } from '../../logic/FlowManager'
+import { Helpers } from '../../logic/Helpers'
+import { Button } from './Button'
+import {
+  ControlElementEvents,
+  ControlElementProgressStates,
+  IControlElementOptions
+} from './ControlElement'
 
-	// class
-	export class UploadFileUI extends Button {
-		private maxFileSize: number = 100000000000;
-		private onDomElementChangeCallback: () => void;
-		private progressBar: HTMLElement;
-		private loading: boolean = false;
-		private submitTimer: number = 0;
-		private _fileName: string = "";
-		private _readerResult: string = "";
-		private _files: FileList;
+// class
+export class UploadFileUI extends Button {
+  private maxFileSize = 100000000000
 
-		public get value():string{
-			return (<HTMLInputElement> this.referenceTag.domElement).value;//;this.readerResult || this.fileName;
-		}
+  private onDomElementChangeCallback: (e?: any) => void
 
-		public get readerResult():string{
-			return this._readerResult;
-		}
+  private progressBar: HTMLElement
 
-		public get files():FileList{
-			return this._files;
-		}
+  private loading = false
 
-		public get fileName():string{
-			return this._fileName;
-		}
+  private submitTimer: number | NodeJS.Timeout = 0
 
-		public get type():string{
-			return "UploadFileUI";
-		}
+  private _fileName = ''
 
-		constructor(options: IControlElementOptions){
-			super(options);
+  private _readerResult = ''
 
-			if(Helpers.caniuse.fileReader()){
-				const maxFileSizeStr: string = this.referenceTag.domElement.getAttribute("cf-max-size") || this.referenceTag.domElement.getAttribute("max-size");
-				if(maxFileSizeStr){
-					const maxFileSize: number = parseInt(maxFileSizeStr, 10);
-					this.maxFileSize = maxFileSize;
-				}
+  private _files!: FileList
 
-				this.progressBar = <HTMLElement> this.el.getElementsByTagName("cf-upload-file-progress-bar")[0];
+  public get value(): string {
+    return (this.referenceTag.domElement as HTMLInputElement).value
+  }
 
-				this.onDomElementChangeCallback = this.onDomElementChange.bind(this);
-				this.referenceTag.domElement.addEventListener("change", this.onDomElementChangeCallback, false);
-			}else{
-				throw new Error("Conversational Form Error: No FileReader available for client.");
-			}
-		}
+  public get readerResult(): string {
+    return this._readerResult
+  }
 
-		public getFilesAsString(): string{
-			// value is for the chat response -->
-			var icon = document.createElement("span");
-			icon.innerHTML = Dictionary.get("icon-type-file") + this.fileName;
-			return icon.outerHTML;
-		}
+  public get files(): FileList {
+    return this._files
+  }
 
-		private onDomElementChange(event: any){
-			if(!ConversationalForm.suppressLog) console.log("...onDomElementChange");
+  public get fileName(): string {
+    return this._fileName
+  }
 
-			var reader: FileReader = new FileReader();
-			this._files = (<HTMLInputElement> this.referenceTag.domElement).files;
+  public get type(): string {
+    return 'UploadFileUI'
+  }
 
-			reader.onerror = (event: any) => {
-				if(!ConversationalForm.suppressLog) console.log("onerror", event);
-			}
-			reader.onprogress = (event: ProgressEvent) => {
-				if(!ConversationalForm.suppressLog) console.log("onprogress", event);
+  constructor(options: IControlElementOptions) {
+    super(options)
 
-				this.progressBar.style.width = ((event.loaded / event.total) * 100) + "%";
-			}
-			reader.onabort = (event: any) => {
-				if(!ConversationalForm.suppressLog) console.log("onabort", event);
-			}
-			reader.onloadstart = (event: any) => {
-				// check for file size
-				const file: File = this.files[0];
-				const fileSize: number = file ? file.size : this.maxFileSize + 1;// if file is undefined then abort ...
-				if(fileSize > this.maxFileSize){
-					reader.abort();
-					const dto: FlowDTO = {
-						errorText: Dictionary.get("input-placeholder-file-size-error")
-					};
+    if (Helpers.caniuse.fileReader()) {
+      const maxFileSizeStr =
+        this.referenceTag.domElement?.getAttribute('cf-max-size') ||
+        this.referenceTag.domElement?.getAttribute('max-size')
 
-					ConversationalForm.illustrateFlow(this, "dispatch", FlowEvents.USER_INPUT_INVALID, dto)
-					this.eventTarget.dispatchEvent(new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
-						detail: dto
-					}));
-				}else{
-					// good to go
-					this._fileName = file.name;
-					this.loading = true;
-					this.animateIn();
-					// set text
-					let sizeConversion: number = Math.floor( Math.log(fileSize) / Math.log(1024) );
-					const sizeChart: Array<string> = ["b", "kb", "mb", "gb"];
-					sizeConversion = Math.min(sizeChart.length - 1, sizeConversion);
-					const humanSizeString: string = Number((fileSize / Math.pow(1024, sizeConversion)).toFixed(2)) * 1 + " " + sizeChart[sizeConversion];
-					
-					const text: string = file.name + " ("+humanSizeString+")";
-					this.el.getElementsByTagName("cf-upload-file-text")[0].innerHTML = text;
+      if (maxFileSizeStr) {
+        const maxFileSize: number = parseInt(maxFileSizeStr, 10)
+        this.maxFileSize = maxFileSize
+      }
 
-					this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
-						detail: ControlElementProgressStates.BUSY
-					}));
-				}
-			}
+      this.progressBar = this.el.getElementsByTagName(
+        'cf-upload-file-progress-bar'
+      )[0] as HTMLElement
 
-			reader.onload = (event: any) => {
-				this._readerResult = event.target.result;
-				this.progressBar.classList.add("loaded");
-				this.submitTimer = setTimeout(() =>{
-					this.el.classList.remove("animate-in");
-					this.onChoose(); // submit the file
+      this.onDomElementChangeCallback = this.onDomElementChange.bind(this)
+      this.referenceTag.domElement?.addEventListener(
+        'change',
+        this.onDomElementChangeCallback,
+        false
+      )
+    } else {
+      throw new Error(
+        'Conversational Form Error: No FileReader available for client.'
+      )
+    }
+  }
 
-					this.eventTarget.dispatchEvent(new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
-						detail: ControlElementProgressStates.READY
-					}));
-				}, 0);
-			}
+  public getFilesAsString(): string {
+    // value is for the chat response -->
+    const icon = document.createElement('span')
+    icon.innerHTML = Dictionary.get('icon-type-file') + this.fileName
+    return icon.outerHTML
+  }
 
-			reader.readAsDataURL(this.files[0]);
-		}
+  private onDomElementChange(event: any) {
+    if (!ConversationalForm.suppressLog) console.log('...onDomElementChange')
 
-		public animateIn(){
-			if(this.loading)
-				super.animateIn();
-		}
+    const reader: FileReader = new FileReader()
 
-		protected onClick(event: MouseEvent){
-			// super.onClick(event);
-		}
+    const domFiles = (this.referenceTag.domElement as HTMLInputElement).files
 
-		public triggerFileSelect(){
-			// trigger file prompt
-			this.referenceTag.domElement.click();
-		}
+    if (domFiles) {
+      this._files = domFiles
+    }
 
-		// override
+    reader.onerror = (errorEvent: any) => {
+      if (!ConversationalForm.suppressLog) console.log('onerror', errorEvent)
+    }
+    reader.onprogress = (progressEvent: ProgressEvent) => {
+      if (!ConversationalForm.suppressLog)
+        console.log('onprogress', progressEvent)
 
-		public dealloc(){
-			clearTimeout(this.submitTimer);
-			this.progressBar = null;
-			if(this.onDomElementChangeCallback){
-				this.referenceTag.domElement.removeEventListener("change", this.onDomElementChangeCallback, false);
-				this.onDomElementChangeCallback = null;
-			}
+      this.progressBar.style.width = `${(event.loaded / event.total) * 100}%`
+    }
+    reader.onabort = (abortEvent: any) => {
+      if (!ConversationalForm.suppressLog) console.log('onabort', abortEvent)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    reader.onloadstart = (_loadstartEvent: any) => {
+      // check for file size
+      const file: File = this.files[0] as File
+      const fileSize: number = file ? file.size : this.maxFileSize + 1
+      // if file is undefined then abort ...
+      if (fileSize > this.maxFileSize) {
+        reader.abort()
+        const dto: FlowDTO = {
+          errorText: Dictionary.get('input-placeholder-file-size-error')
+        }
 
-			super.dealloc();
-		}
+        ConversationalForm.illustrateFlow(
+          this,
+          'dispatch',
+          FlowEvents.USER_INPUT_INVALID,
+          dto
+        )
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(FlowEvents.USER_INPUT_INVALID, {
+            detail: dto
+          })
+        )
+      } else {
+        // good to go
+        this._fileName = file.name
+        this.loading = true
+        this.animateIn()
+        // set text
+        let sizeConversion: number = Math.floor(
+          Math.log(fileSize) / Math.log(1024)
+        )
+        const sizeChart: Array<string> = ['b', 'kb', 'mb', 'gb']
+        sizeConversion = Math.min(sizeChart.length - 1, sizeConversion)
+        const humanSizeString = `${
+          Number((fileSize / 1024 ** sizeConversion).toFixed(2)) * 1
+        } ${sizeChart[sizeConversion]}`
 
-		public getTemplate () : string {
-			const isChecked: boolean = this.referenceTag.value == "1" || this.referenceTag.domElement.hasAttribute("checked");
-			return `<cf-upload-file-ui>
-				<cf-upload-file-text></cf-upload-file-text>
-				<cf-upload-file-progress>
-					<cf-upload-file-progress-bar></cf-upload-file-progress-bar>
-				</cf-upload-file-progress>
-			</cf-upload-file-ui>
-			`;
-		}
-	}
+        const text = `${file.name} (${humanSizeString})`
+        const element = this.el.getElementsByTagName('cf-upload-file-text')[0]
+        if (element) element.innerHTML = text
+
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+            detail: ControlElementProgressStates.BUSY
+          })
+        )
+      }
+    }
+
+    reader.onload = (onloadEvent: any) => {
+      this._readerResult = onloadEvent.target.result
+      this.progressBar.classList.add('loaded')
+      this.submitTimer = setTimeout(() => {
+        this.el.classList.remove('animate-in')
+        this.onChoose() // submit the file
+
+        this.eventTarget.dispatchEvent(
+          new CustomEvent(ControlElementEvents.PROGRESS_CHANGE, {
+            detail: ControlElementProgressStates.READY
+          })
+        )
+      }, 0)
+    }
+
+    reader.readAsDataURL(this.files[0] as File)
+  }
+
+  public animateIn(): void {
+    if (this.loading) {
+      super.animateIn()
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected onClick(_event: MouseEvent): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // super.onClick(event);
+  }
+
+  public triggerFileSelect(): void {
+    // trigger file prompt
+    this.referenceTag.domElement?.click()
+  }
+
+  // override
+  public dealloc(): void {
+    if (this.submitTimer && typeof this.submitTimer !== 'number') {
+      clearTimeout(this.submitTimer)
+    }
+
+    // @ts-ignore
+    this.progressBar = null
+
+    if (this.onDomElementChangeCallback) {
+      this.referenceTag.domElement?.removeEventListener(
+        'change',
+        this.onDomElementChangeCallback,
+        false
+      )
+
+      // @ts-ignore
+      this.onDomElementChangeCallback = null
+    }
+
+    super.dealloc()
+  }
+
+  public getTemplate(): string {
+    return `<cf-upload-file-ui>
+        <cf-upload-file-text></cf-upload-file-text>
+        <cf-upload-file-progress>
+          <cf-upload-file-progress-bar></cf-upload-file-progress-bar>
+        </cf-upload-file-progress>
+      </cf-upload-file-ui>
+      `
+  }
 }

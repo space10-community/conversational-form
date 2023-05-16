@@ -1,0 +1,119 @@
+name: New Release and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      fakeDeploy:
+        type: boolean
+        default: false
+        required: false
+        description: Run pre-release tasks but don't deploy to NPM or GitHub
+      releaseType:
+        description: 'Release Type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  new_release:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_SECRET_PAT }}
+
+      - name: Git credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Cache Yarn Dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ hashFiles('**/yarn.lock') }}
+
+      - name: Setup Node and Yarn
+        uses: actions/setup-node@v2
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn install --prefer-offline --ignore-scripts
+
+      # https://stackoverflow.com/a/61919791/10416161
+      - name: Get current (old) project version
+        id: old_version
+        run: |
+          content=`cat package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+
+      - name: Bump project version
+        run: yarn version --${{ github.event.inputs.releaseType }}
+
+      # https://stackoverflow.com/a/61919791/10416161
+      - name: Get new project version
+        id: new_version
+        run: |
+          content=`cat package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+
+      - name: Set release version for unreleased Stories
+        run: |
+          bin/set_release_badges.sh ${{ fromJson(steps.new_version.outputs.packageJson).version }}
+          bin/check_unreleased.sh
+          git add src/stories
+          git commit --amend --no-edit
+
+      - name: Publish package
+        run: yarn publish --provenance --access public
+        if: ${{ github.event.inputs.fakeDeploy == 'false' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - name: Push changes
+        if: ${{ github.event.inputs.fakeDeploy == 'false' }}
+        run: git push origin master --tags
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v1
+        with:
+          configuration: '.github/configs/changelog-builder.json'
+          fromTag: v${{ fromJson(steps.old_version.outputs.packageJson).version }}
+          toTag: v${{ fromJson(steps.new_version.outputs.packageJson).version }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ github.event.inputs.fakeDeploy == 'false' }}
+        with:
+          tag_name: v${{ fromJson(steps.new_version.outputs.packageJson).version }}
+          files: |
+            dist/*
+          body: |
+            https://www.npmjs.com/package/yu-open-lib/v/${{ fromJson(steps.new_version.outputs.packageJson).version }}
+
+            ${{steps.github_release.outputs.changelog}}
+      - run: npm publish --provenance --access public

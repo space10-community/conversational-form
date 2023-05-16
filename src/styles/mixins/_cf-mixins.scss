@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @function relativeValue($pixels) {
     $base-size: 12px;
 
@@ -5,7 +7,7 @@
         $pixels: $pixels * 1px;
     }
 
-    @return round( $pixels  * ($cf-base-font-size/$base-size) );
+    @return round( $pixels  * math.div($cf-base-font-size, $base-size) );
 }
 
 /**

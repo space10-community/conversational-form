@@ -1,306 +1,355 @@
-/// <reference path="ButtonTag.ts"/>
-/// <reference path="InputTag.ts"/>
-/// <reference path="SelectTag.ts"/>
-/// <reference path="../ui/inputs/UserTextInput.ts"/>
+/*
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-// group tags together, this is done automatically by looking through InputTags with type radio or checkbox and same name attribute.
+/* eslint-disable no-console */
+import { Dictionary } from '../data/Dictionary'
+import { EventDispatcher } from '../logic/EventDispatcher'
+import { FlowDTO, FlowManager } from '../logic/FlowManager'
+import { ITag } from './Tag'
+import { Helpers } from '../logic/Helpers'
+import { RadioButton } from '../ui/control-elements/RadioButton'
+import { CheckboxButton } from '../ui/control-elements/CheckboxButton'
+import { ConversationalForm } from '../ConversationalForm'
+
+// group tags together, this is done automatically by looking through
+// InputTags with type radio or checkbox and same name attribute.
 // single choice logic for Radio Button, <input type="radio", where name is the same
 // multi choice logic for Checkboxes, <input type="checkbox", where name is the same
 
+export interface ITagGroupOptions {
+  elements: Array<ITag>
+  fieldset?: HTMLFieldSetElement
+}
 
-// namespace
-namespace cf {
-	// interface
-	export interface ITagGroupOptions{
-		elements: Array <ITag>;
-		fieldset?: HTMLFieldSetElement;
-	}
+export interface ITagGroup extends ITag {
+  elements: Array<ITag>
+  activeElements: Array<ITag>
+  getGroupTagType: () => string
+  refresh(): void
+  dealloc(): void
+  required: boolean
+  disabled: boolean
+  skipUserInput: boolean
+  flowManager: FlowManager
+  inputPlaceholder?: string
+}
 
-	export interface ITagGroup extends ITag{
-		elements: Array <ITag>;
-		activeElements: Array <ITag>;
-		getGroupTagType: () => string;
-		refresh():void;
-		dealloc():void;
-		required: boolean;
-		disabled: boolean;
-		skipUserInput: boolean;
-		flowManager: FlowManager;
-		inputPlaceholder?: string;
-	}
+// class
+export class TagGroup implements ITagGroup {
+  private onInputKeyChangeCallback?: () => void | null
 
-	// class
-	export class TagGroup implements ITagGroup {
+  private _values!: Array<string>
 
-		private onInputKeyChangeCallback: () => void;
-		private _values: Array<string>;
-		private questions: Array<string>; // can also be set through `fieldset` cf-questions="..."` attribute.
-		
-		/**
-		* Array checked/choosen ITag's
-		*/
-		private _activeElements: Array<ITag>;
-		private _eventTarget: EventDispatcher;
-		private _fieldset: HTMLFieldSetElement;
-		protected _inputPlaceholder: string;
+  // can also be set through `fieldset` cf-questions="..."` attribute.
+  private questions!: Array<string>
 
-		public skipUserInput: boolean;
+  /**
+   * Array checked/choosen ITag's
+   */
+  private _activeElements!: Array<ITag>
 
-		// event target..
-		public defaultValue: string; // not getting set... as taggroup differs from tag
-		public elements: Array <ITag>;
-		
-		public get required(): boolean{
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				if(this.elements[i].required){
-					return true;
-				}
-			}
+  private _eventTarget!: EventDispatcher
 
-			return false;
-		}
+  private _fieldset?: HTMLFieldSetElement | null
 
-		public set eventTarget(value: EventDispatcher){
-			this._eventTarget = value;
-			for (let i = 0; i < this.elements.length; i++) {
-				let tag: ITag = <ITag>this.elements[i];
-				tag.eventTarget = value;
-			}
-		}
+  protected _inputPlaceholder!: string
 
-		public set flowManager(value: FlowManager){
-			for (let i = 0; i < this.elements.length; i++) {
-				let tag: ITag = <ITag>this.elements[i];
-				tag.flowManager = value;
-			}
-		}
+  public skipUserInput: boolean
 
-		public get type (): string{
-			return "group";
-		}
+  // event target..
+  // not getting set... as taggroup differs from tag
+  public defaultValue!: string
 
-		public get label (): string{
-			return "";
-		}
+  public elements: Array<ITag>
 
-		public get name (): string{
-			return this._fieldset && this._fieldset.hasAttribute("name") ? this._fieldset.getAttribute("name") : this.elements[0].name;
-		}
+  public get required(): boolean {
+    this.elements.forEach((element) => {
+      if (element.required) {
+        return true
+      }
+    })
 
-		public get id (): string{
-			return this._fieldset && this._fieldset.id ? this._fieldset.id : this.elements[0].id;
-		}
+    return false
+  }
 
-		public get question():string{
-			// check if elements have the questions, else fallback
-			if(this.questions && this.questions.length > 0){
-				return this.questions[Math.floor(Math.random() * this.questions.length)];
-			}else if(this.elements[0] && this.elements[0].question){
-				let tagQuestion: string = this.elements[0].question;
-				return tagQuestion;
-			}else{
-				// fallback to robot response from dictionary
-				const robotReponse: string = Dictionary.getRobotResponse(this.getGroupTagType());
-				return robotReponse;
-			}
-		}
+  public set eventTarget(value: EventDispatcher) {
+    this._eventTarget = value
+    for (let i = 0; i < this.elements.length; i++) {
+      const tag: ITag = this.elements[i] as ITag
+      tag.eventTarget = value
+    }
+  }
 
-		public get activeElements (): Array<ITag>{
-			return this._activeElements;
-		}
+  public set flowManager(value: FlowManager) {
+    for (let i = 0; i < this.elements.length; i++) {
+      const tag: ITag = this.elements[i] as ITag
+      tag.flowManager = value
+    }
+  }
 
-		public get value (): Array<string>{
-			// TODO: fix value???
-			return this._values ? this._values : [""];
-		}
+  public get type(): string {
+    return 'group'
+  }
 
-		public get disabled (): boolean{
-			let disabled: boolean = false;
-			let allShouldBedisabled: number = 0;
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				if(element.disabled)
-					allShouldBedisabled++;
-			}
+  public get label(): string {
+    return ''
+  }
 
-			return allShouldBedisabled === this.elements.length;
-		}
-		
-		public get errorMessage():string{
-			var errorMessage = Dictionary.get("input-placeholder-error");
+  public get name(): string {
+    const name =
+      this._fieldset && this._fieldset.hasAttribute('name')
+        ? this._fieldset.getAttribute('name')
+        : this.elements[0]?.name
+    return name || ''
+  }
 
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				errorMessage = element.errorMessage;
-			}
+  public get id(): string {
+    return this._fieldset && this._fieldset.id
+      ? this._fieldset.id
+      : (this.elements[0]?.id as string)
+  }
 
-			return errorMessage;
-		}
+  public get question(): string {
+    // check if elements have the questions, else fallback
+    if (this.questions && this.questions.length > 0) {
+      return this.questions[
+        Math.floor(Math.random() * this.questions.length)
+      ] as string
+    }
+    if (this.elements[0] && this.elements[0].question) {
+      const tagQuestion: string = this.elements[0].question
+      return tagQuestion
+    }
+    // fallback to robot response from dictionary
+    const robotReponse: string = Dictionary.getRobotResponse(
+      this.getGroupTagType()
+    )
+    return robotReponse
+  }
 
-		public get inputPlaceholder (): string{
-			return this._inputPlaceholder;
-		}
+  public get activeElements(): Array<ITag> {
+    return this._activeElements
+  }
 
-		constructor(options: ITagGroupOptions){
-			this.elements = options.elements;
-			// set wrapping element
-			this._fieldset = options.fieldset;
-			if(this._fieldset && this._fieldset.getAttribute("cf-questions")){
-				this.questions = Helpers.getValuesOfBars(this._fieldset.getAttribute("cf-questions"));
-			}
-			if (this._fieldset && this._fieldset.getAttribute("cf-input-placeholder")) {
-				this._inputPlaceholder = this._fieldset.getAttribute("cf-input-placeholder");
-			}
+  public get value(): Array<string> {
+    // TODO: fix value???
+    return this._values ? this._values : ['']
+  }
 
-			if(ConversationalForm.illustrateAppFlow)
-				if(!ConversationalForm.suppressLog) console.log('Conversational Form > TagGroup registered:', this.elements[0].type, this);
+  public get disabled(): boolean {
+    let allShouldBedisabled = 0
+    this.elements.forEach((element) => {
+      if (element.disabled) {
+        allShouldBedisabled++
+      }
+    })
 
-			this.skipUserInput = false;
-		}
+    return allShouldBedisabled === this.elements.length
+  }
 
-		public dealloc(){
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				element.dealloc();
-			}
+  public get errorMessage(): string {
+    let errorMessage = Dictionary.get('input-placeholder-error')
 
-			this.elements = null;
-		}
+    this.elements.forEach((element) => {
+      errorMessage = element.errorMessage
+    })
 
-		public refresh(){
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				element.refresh();
-			}
-		}
+    return errorMessage
+  }
 
-		public reset(){
-			this._values = [];
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				element.reset();
-			}
-		}
+  public get inputPlaceholder(): string {
+    return this._inputPlaceholder
+  }
 
-		public getGroupTagType():string{
-			return this.elements[0].type;
-		}
+  constructor(options: ITagGroupOptions) {
+    this.elements = options.elements
+    // set wrapping element
+    this._fieldset = options.fieldset
+    if (this._fieldset && this._fieldset.getAttribute('cf-questions')) {
+      this.questions = Helpers.getValuesOfBars(
+        this._fieldset.getAttribute('cf-questions') as string
+      )
+    }
+    if (this._fieldset && this._fieldset.getAttribute('cf-input-placeholder')) {
+      this._inputPlaceholder = this._fieldset.getAttribute(
+        'cf-input-placeholder'
+      ) as string
+    }
 
-		public hasConditionsFor(tagName: string):boolean{
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				if(element.hasConditionsFor(tagName)){
-					return true;
-				}
-			}
+    if (ConversationalForm.illustrateAppFlow) {
+      if (!ConversationalForm.suppressLog) {
+        console.log(
+          'Conversational Form > TagGroup registered:',
+          this.elements[0]?.type,
+          this
+        )
+      }
+    }
 
-			return false;
-		}
+    this.skipUserInput = false
+  }
 
-		public hasConditions():boolean{
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				if(element.hasConditions()){
-					return true;
-				}
-			}
+  public dealloc(): void {
+    for (let i = 0; i < this.elements.length; i++) {
+      const element: ITag = this.elements[i] as ITag
+      element.dealloc()
+    }
 
-			return false;
-		}
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.elements = null
+  }
 
-		/**
-		* @name checkConditionalAndIsValid
-		* checks for conditional logic, see documentaiton (wiki)
-		* here we check after cf-conditional{-name} on group tags
-		*/
-		public checkConditionalAndIsValid(): boolean {
-			// can we tap into disabled
-			// if contains attribute, cf-conditional{-name} then check for conditional value across tags
-			for (let i = 0; i < this.elements.length; i++) {
-				let element: ITag = <ITag>this.elements[i];
-				element.checkConditionalAndIsValid();
-			}
+  public refresh(): void {
+    this.elements.forEach((element) => {
+      element.refresh()
+    })
+  }
 
-			// else return true, as no conditional means happy tag
-			return true;
-		}
+  public reset(): void {
+    this._values = []
+    this.elements.forEach((element) => {
+      element.reset()
+    })
+  }
 
-		public setTagValueAndIsValid(dto: FlowDTO):boolean{
-			let isValid: boolean = false;
+  public getGroupTagType(): string {
+    return this.elements[0]?.type || ''
+  }
 
-			const groupType: string = this.elements[0].type;
-			this._values = [];
-			this._activeElements = [];
+  public hasConditionsFor(tagName: string): boolean {
+    for (let i = 0; i < this.elements.length; i++) {
+      const element = this.elements[i]
+      if (element?.hasConditionsFor(tagName)) {
+        return true
+      }
+    }
 
-			switch(groupType){
-				case "radio" :
-					let wasRadioButtonChecked: boolean = false;
-					let numberRadioButtonsVisible: Array <RadioButton> = [];
-					if(dto.controlElements){
-						// TODO: Refactor this so it is less dependant on controlElements
-						for (let i = 0; i < dto.controlElements.length; i++) {
-							let element: RadioButton = <RadioButton> dto.controlElements[i];
-							let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-							numberRadioButtonsVisible.push(element);
+    return false
+  }
 
-							if(tag == element.referenceTag){
-								if(element.checked){
-									this._values.push(<string> tag.value);
-									this._activeElements.push(tag);
-								}
-								// a radio button was checked
-								if(!wasRadioButtonChecked && element.checked)
-									wasRadioButtonChecked = true;
-							}
-						}
+  public hasConditions(): boolean {
+    for (let i = 0; i < this.elements.length; i++) {
+      const element = this.elements[i]
+      if (element?.hasConditions()) {
+        return true
+      }
+    }
 
-					}else{
-						// for when we don't have any control elements, then we just try and map values
-						for (let i = 0; i < this.elements.length; i++) {
-							let tag: ITag = <ITag>this.elements[i];
-							const v1: string = tag.value.toString().toLowerCase();
-							const v2: string = dto.text.toString().toLowerCase();
-							//brute force checking...
-							if(v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1){
-								this._activeElements.push(tag);
-								// check the original tag
-								this._values.push(<string> tag.value);
-								(<HTMLInputElement> tag.domElement).checked = true;
-								wasRadioButtonChecked = true;
-							}
-						}
-					}
+    return false
+  }
 
-					isValid = wasRadioButtonChecked;
-					break;
+  /**
+   * @name checkConditionalAndIsValid
+   * checks for conditional logic, see documentaiton (wiki)
+   * here we check after cf-conditional{-name} on group tags
+   */
+  public checkConditionalAndIsValid(): boolean {
+    // can we tap into disabled
+    // if contains attribute, cf-conditional{-name} then check for conditional value across tags
+    for (let i = 0; i < this.elements.length; i++) {
+      const element = this.elements[i]
+      element?.checkConditionalAndIsValid()
+    }
 
-				case "checkbox" :
-					// checkbox is always valid
-					isValid = true;
+    // else return true, as no conditional means happy tag
+    return true
+  }
 
-					if(dto.controlElements){
-						for (let i = 0; i < dto.controlElements.length; i++) {
-							let element: CheckboxButton = <CheckboxButton> dto.controlElements[i];
-							let tag: ITag = this.elements[this.elements.indexOf(element.referenceTag)];
-							(<HTMLInputElement> tag.domElement).checked = element.checked;
+  public setTagValueAndIsValid(dto: FlowDTO): boolean {
+    let isValid = false
 
-							if(element.checked){
-								this._values.push(<string> tag.value);
-								this._activeElements.push(tag);
-							}
-						}
-					}
+    const groupType: string = this.elements[0]?.type || ''
+    this._values = []
+    this._activeElements = []
 
-					if(this.required && this._activeElements.length == 0){
-						// checkbox can be required
-						isValid = false;
-					}
+    let wasRadioButtonChecked = false
+    const numberRadioButtonsVisible: RadioButton[] = []
 
-					break;
-			}
+    switch (groupType) {
+      case 'radio':
+        if (dto.controlElements) {
+          // TODO: Refactor this so it is less dependant on controlElements
+          for (let i = 0; i < dto.controlElements?.length; i++) {
+            const element: RadioButton = dto.controlElements[i] as RadioButton
+            const tag: ITag = this.elements[
+              this.elements.indexOf(element.referenceTag)
+            ] as ITag
+            numberRadioButtonsVisible.push(element)
 
-			return isValid;
-		}
-	}
+            if (tag === element.referenceTag) {
+              if (element.checked) {
+                this._values.push(tag.value as string)
+                this._activeElements.push(tag)
+              }
+              // a radio button was checked
+              if (!wasRadioButtonChecked && element.checked) {
+                wasRadioButtonChecked = true
+              }
+            }
+          }
+        } else {
+          // for when we don't have any control elements, then we just try and map values
+          for (let i = 0; i < this.elements.length; i++) {
+            const tag: ITag = this.elements[i] as ITag
+            const v1: string = tag.value.toString()?.toLowerCase()
+            const v2: string = dto.text?.toString()?.toLowerCase() || ''
+            // brute force checking...
+            if (v1.indexOf(v2) !== -1 || v2.indexOf(v1) !== -1) {
+              this._activeElements.push(tag)
+              // check the original tag
+              this._values.push(tag.value as string)
+              ;(tag.domElement as HTMLInputElement).checked = true
+              wasRadioButtonChecked = true
+            }
+          }
+        }
+
+        isValid = wasRadioButtonChecked
+        break
+
+      case 'checkbox':
+        // checkbox is always valid
+        isValid = true
+
+        if (dto.controlElements) {
+          for (let i = 0; i < dto.controlElements?.length; i++) {
+            const element = dto.controlElements[i] as CheckboxButton
+            const tag: ITag = this.elements[
+              this.elements.indexOf(element.referenceTag)
+            ] as ITag
+            ;(tag.domElement as HTMLInputElement).checked = element.checked
+
+            if (element.checked) {
+              this._values.push(tag.value as string)
+              this._activeElements.push(tag)
+            }
+          }
+        }
+
+        if (this.required && this._activeElements.length === 0) {
+          // checkbox can be required
+          isValid = false
+        }
+
+        break
+      default:
+        break
+    }
+
+    return isValid
+  }
 }

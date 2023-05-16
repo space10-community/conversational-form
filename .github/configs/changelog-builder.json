@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "title": "## :rocket: Novas Adições",
+      "labels": ["feature", "enhancement"]
+    }
+  ],
+  "template": "${{CHANGELOG}}\n\n## :wrench: Outras Alterações\n\n${{UNCATEGORIZED}}\n",
+  "pr_template": "- #${{NUMBER}} ${{TITLE}}",
+  "empty_template": "- Nenhuma alteração",
+  "transformers": [
+    {
+      "pattern": "YURI-(\\d+)",
+      "target": "[YURI-$1](https://jornadayu.atlassian.net/browse/YURI-$1)"
+    },
+    {
+      "pattern": "YURI2-(\\d+)",
+      "target": "[YURI2-$1](https://jornadayu.atlassian.net/browse/YURI2-$1)"
+    },
+    {
+      "pattern": "Outras Alterações\n\n\n",
+      "target": ""
+    }
+  ]
+}

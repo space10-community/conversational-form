@@ -1,227 +1,348 @@
-/// <reference path="../logic/Helpers.ts"/>
-/// <reference path="../logic/EventDispatcher.ts"/>
+/*
+ * Copyright (c) 2013-2018 SPACE10
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * Copyright (c) 2023 YU TECNOLOGIA E CONSULTORIA EM CAPITAL HUMANO LTDA.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-// namespace
-namespace cf {
-	export interface IScrollControllerOptions{
-		interactionListener: HTMLElement;
-		eventTarget: EventDispatcher;
-		listToScroll: HTMLElement;
-		listNavButtons: NodeListOf<Element>;
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable max-len */
+import { EventDispatcher } from '../logic/EventDispatcher'
+import { Helpers, TouchVector2d } from '../logic/Helpers'
 
-	}
-	export class ScrollController{
-		public static acceleration: number = 0.1;
+export interface IScrollControllerOptions {
+  interactionListener: HTMLElement
+  eventTarget: EventDispatcher
+  listToScroll: HTMLElement
+  listNavButtons: NodeListOf<Element>
+}
 
-		private eventTarget: EventDispatcher;
-		private interactionListener: HTMLElement;
-		private listToScroll: HTMLElement;
-		private listWidth: number = 0;
-		private prevButton: Element;
-		private nextButton: Element;
+export class ScrollController {
+  public static acceleration = 0.1
 
-		private rAF: number;
-		private visibleAreaWidth: number = 0;
-		private max: number = 0;
+  private eventTarget: EventDispatcher
 
-		private onListNavButtonsClickCallback: () => void;
-		private documentLeaveCallback: () => void;
-		private onInteractStartCallback: () => void;
-		private onInteractEndCallback: () => void;
-		private onInteractMoveCallback: () => void;
+  private interactionListener: HTMLElement
 
-		private interacting: boolean = false;
-		private x: number = 0;
-		private xTarget: number = 0;
-		private startX: number = 0;
-		private startXTarget: number = 0;
-		private mouseSpeed: number = 0;
-		private mouseSpeedTarget: number = 0;
-		private direction: number = 0;
-		private directionTarget: number = 0;
-		private inputAccerlation: number = 0;
-		private inputAccerlationTarget: number = 0;
+  private listToScroll: HTMLElement
 
-		constructor(options: IScrollControllerOptions){
-			this.interactionListener = options.interactionListener;
-			this.eventTarget = options.eventTarget;
-			this.listToScroll = options.listToScroll;
-			this.prevButton = options.listNavButtons[0];
-			this.nextButton = options.listNavButtons[1];
+  private listWidth = 0
 
-			this.onListNavButtonsClickCallback = this.onListNavButtonsClick.bind(this);
-			this.prevButton.addEventListener("click", this.onListNavButtonsClickCallback, false);
-			this.nextButton.addEventListener("click", this.onListNavButtonsClickCallback, false);
+  private prevButton: Element
 
-			this.documentLeaveCallback = this.documentLeave.bind(this);
-			this.onInteractStartCallback = this.onInteractStart.bind(this);
-			this.onInteractEndCallback = this.onInteractEnd.bind(this);
-			this.onInteractMoveCallback = this.onInteractMove.bind(this);
+  private nextButton: Element
 
-			document.addEventListener("mouseleave", this.documentLeaveCallback, false);
-			document.addEventListener(Helpers.getMouseEvent("mouseup"), this.documentLeaveCallback, false);
-			this.interactionListener.addEventListener(Helpers.getMouseEvent("mousedown"), this.onInteractStartCallback, false);
-			this.interactionListener.addEventListener(Helpers.getMouseEvent("mouseup"), this.onInteractEndCallback, false);
-			this.interactionListener.addEventListener(Helpers.getMouseEvent("mousemove"), this.onInteractMoveCallback, false);
-		}
+  private rAF: number | undefined
 
-		private onListNavButtonsClick(event: MouseEvent){
-			const dirClick: string = (<HTMLElement> event.currentTarget).getAttribute("direction");
-			this.pushDirection(dirClick == "next" ? -1 : 1);
-		}
+  private visibleAreaWidth = 0
 
-		private documentLeave(event: MouseEvent | TouchEvent){
-			this.onInteractEnd(event);
-		}
+  private max = 0
 
-		private onInteractStart(event: MouseEvent | TouchEvent){
-			const vector: TouchVector2d = Helpers.getXYFromMouseTouchEvent(event);
+  private onListNavButtonsClickCallback: (e?: any) => void
 
-			this.interacting = true;
-			this.startX = vector.x;
-			this.startXTarget = this.startX;
-			this.inputAccerlation = 0;
+  private documentLeaveCallback: (e?: any) => void
 
-			this.render();
-		}
+  private onInteractStartCallback: (e?: any) => void
 
-		private onInteractEnd(event: MouseEvent | TouchEvent){
-			this.interacting = false;
-		}
+  private onInteractEndCallback: (e?: any) => void
 
-		private onInteractMove(event: MouseEvent | TouchEvent){
-			if(this.interacting){
-				const vector: TouchVector2d = Helpers.getXYFromMouseTouchEvent(event);
-				const newAcc: number = vector.x - this.startX;
-				
-				const magnifier: number = 6.2;
-				this.inputAccerlationTarget = newAcc * magnifier;
-				
-				this.directionTarget = this.inputAccerlationTarget < 0 ? -1 : 1;
-				this.startXTarget = vector.x;
-			}
-		}
+  private onInteractMoveCallback: (e?: any) => void
 
-		private render(){
-			if(this.rAF)
-				cancelAnimationFrame(this.rAF);
+  private interacting = false
 
+  private x = 0
 
-			// normalise startX
-			this.startX += (this.startXTarget - this.startX) * 0.2;
+  private xTarget = 0
 
-			// animate accerlaration
-			this.inputAccerlation += (this.inputAccerlationTarget - this.inputAccerlation) * (this.interacting ? Math.min(ScrollController.acceleration + 0.1, 1) : ScrollController.acceleration);
-			const accDamping: number = 0.25;
-			this.inputAccerlationTarget *= accDamping;
+  private startX = 0
 
-			// animate directions
-			this.direction += (this.directionTarget - this.direction) * 0.2;
+  private startXTarget = 0
 
-			// extra extra
-			this.mouseSpeed += (this.mouseSpeedTarget - this.mouseSpeed) * 0.2;
-			this.direction += this.mouseSpeed;
-			
-			// animate x
-			this.xTarget += this.inputAccerlation * 0.05;
+  private mouseSpeed = 0
 
-			// bounce back when over
-			if(this.xTarget > 0)
-				this.xTarget += (0 - this.xTarget) * Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
+  private mouseSpeedTarget = 0
 
-			if(this.xTarget < this.max)
-				this.xTarget += (this.max - this.xTarget) * Helpers.lerp(ScrollController.acceleration, 0.3, 0.8);
+  private direction = 0
 
-			this.x += (this.xTarget - this.x) * 0.4;
+  private directionTarget = 0
 
-			// toggle visibility on nav arrows
+  private inputAccerlation = 0
 
-			const xRounded: number = Math.round(this.x);
-			if(xRounded < 0){
-				if(!this.prevButton.classList.contains("active"))
-					this.prevButton.classList.add("active");
-				if(!this.prevButton.classList.contains("cf-gradient"))
-					this.prevButton.classList.add("cf-gradient");
-			}
+  private inputAccerlationTarget = 0
 
-			if(xRounded == 0){
-				if(this.prevButton.classList.contains("active"))
-					this.prevButton.classList.remove("active");
-				if(this.prevButton.classList.contains("cf-gradient"))
-					this.prevButton.classList.remove("cf-gradient");
-			}
+  constructor(options: IScrollControllerOptions) {
+    this.interactionListener = options.interactionListener
+    this.eventTarget = options.eventTarget
+    this.listToScroll = options.listToScroll
+    this.prevButton = options.listNavButtons[0] as Element
+    this.nextButton = options.listNavButtons[1] as Element
 
-			if(xRounded > this.max){
-				if(!this.nextButton.classList.contains("active"))
-					this.nextButton.classList.add("active");
-				if(!this.nextButton.classList.contains("cf-gradient"))
-					this.nextButton.classList.add("cf-gradient");
-			}
+    this.onListNavButtonsClickCallback = this.onListNavButtonsClick.bind(this)
+    this.prevButton.addEventListener(
+      'click',
+      this.onListNavButtonsClickCallback,
+      false
+    )
+    this.nextButton.addEventListener(
+      'click',
+      this.onListNavButtonsClickCallback,
+      false
+    )
 
-			if(xRounded <= this.max){
-				if(this.nextButton.classList.contains("active"))
-					this.nextButton.classList.remove("active");
-				if(this.nextButton.classList.contains("cf-gradient"))
-					this.nextButton.classList.remove("cf-gradient");
-			}
+    this.documentLeaveCallback = this.documentLeave.bind(this)
+    this.onInteractStartCallback = this.onInteractStart.bind(this)
+    this.onInteractEndCallback = this.onInteractEnd.bind(this)
+    this.onInteractMoveCallback = this.onInteractMove.bind(this)
 
-			// set css transforms
-			const xx: number = this.x;
-			Helpers.setTransform(this.listToScroll, "translateX("+xx+"px)");
+    document.addEventListener('mouseleave', this.documentLeaveCallback, false)
+    document.addEventListener(
+      Helpers.getMouseEvent('mouseup'),
+      this.documentLeaveCallback,
+      false
+    )
+    this.interactionListener.addEventListener(
+      Helpers.getMouseEvent('mousedown'),
+      this.onInteractStartCallback,
+      false
+    )
+    this.interactionListener.addEventListener(
+      Helpers.getMouseEvent('mouseup'),
+      this.onInteractEndCallback,
+      false
+    )
+    this.interactionListener.addEventListener(
+      Helpers.getMouseEvent('mousemove'),
+      this.onInteractMoveCallback,
+      false
+    )
+  }
 
-			// cycle render
-			if(this.interacting || (Math.abs(this.x -this.xTarget) > 0.02 && !this.interacting))
-				this.rAF = window.requestAnimationFrame(() => this.render());
-		}
+  private onListNavButtonsClick(event: MouseEvent) {
+    const dirClick = (event.currentTarget as HTMLElement).getAttribute(
+      'direction'
+    )
+    this.pushDirection(dirClick === 'next' ? -1 : 1)
+  }
 
-		public setScroll(x: number, y: number){
-			this.xTarget = this.visibleAreaWidth == this.listWidth ? 0 : x;
-			this.render();
-		}
+  private documentLeave(event: MouseEvent | TouchEvent) {
+    this.onInteractEnd(event)
+  }
 
-		public pushDirection(dir: number){
-			this.inputAccerlationTarget += (5000) * dir;
-			this.render();
-		}
+  private onInteractStart(event: MouseEvent | TouchEvent) {
+    const vector: TouchVector2d = Helpers.getXYFromMouseTouchEvent(event)
 
-		public dealloc(){
-			this.prevButton.removeEventListener("click", this.onListNavButtonsClickCallback, false);
-			this.nextButton.removeEventListener("click", this.onListNavButtonsClickCallback, false);
-			this.onListNavButtonsClickCallback = null;
-			this.prevButton = null;
-			this.nextButton = null;
+    this.interacting = true
+    this.startX = vector.x
+    this.startXTarget = this.startX
+    this.inputAccerlation = 0
 
-			document.removeEventListener("mouseleave", this.documentLeaveCallback, false);
-			document.removeEventListener(Helpers.getMouseEvent("mouseup"), this.documentLeaveCallback, false);
-			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mousedown"), this.onInteractStartCallback, false);
-			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mouseup"), this.onInteractEndCallback, false);
-			this.interactionListener.removeEventListener(Helpers.getMouseEvent("mousemove"), this.onInteractMoveCallback, false);
+    this.render()
+  }
 
-			this.documentLeaveCallback = null;
-			this.onInteractStartCallback = null;
-			this.onInteractEndCallback = null;
-			this.onInteractMoveCallback = null;
-		}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onInteractEnd(_event: MouseEvent | TouchEvent) {
+    this.interacting = false
+  }
 
-		public reset(){
-			this.interacting = false;
-			this.startX = 0;
-			this.startXTarget = this.startX;
-			this.inputAccerlation = 0;
-			this.x = 0;
-			this.xTarget = 0;
-			Helpers.setTransform(this.listToScroll, "translateX(0px)");
-			this.render();
-			this.prevButton.classList.remove("active");
-			this.nextButton.classList.remove("active");
-		}
+  private onInteractMove(event: MouseEvent | TouchEvent) {
+    if (this.interacting) {
+      const vector: TouchVector2d = Helpers.getXYFromMouseTouchEvent(event)
+      const newAcc: number = vector.x - this.startX
 
-		public resize(listWidth: number, visibleAreaWidth: number){
-			this.reset();
-			this.visibleAreaWidth = visibleAreaWidth;
-			this.listWidth = Math.max(visibleAreaWidth, listWidth);
-			this.max = (this.listWidth - this.visibleAreaWidth) * -1;
-			this.render();
-		}
-	}
-} 
+      const magnifier = 6.2
+      this.inputAccerlationTarget = newAcc * magnifier
+
+      this.directionTarget = this.inputAccerlationTarget < 0 ? -1 : 1
+      this.startXTarget = vector.x
+    }
+  }
+
+  private render() {
+    if (this.rAF) {
+      cancelAnimationFrame(this.rAF)
+    }
+
+    // normalise startX
+    this.startX += (this.startXTarget - this.startX) * 0.2
+
+    // animate accerlaration
+    this.inputAccerlation +=
+      (this.inputAccerlationTarget - this.inputAccerlation) *
+      (this.interacting
+        ? Math.min(ScrollController.acceleration + 0.1, 1)
+        : ScrollController.acceleration)
+    const accDamping = 0.25
+    this.inputAccerlationTarget *= accDamping
+
+    // animate directions
+    this.direction += (this.directionTarget - this.direction) * 0.2
+
+    // extra extra
+    this.mouseSpeed += (this.mouseSpeedTarget - this.mouseSpeed) * 0.2
+    this.direction += this.mouseSpeed
+
+    // animate x
+    this.xTarget += this.inputAccerlation * 0.05
+
+    // bounce back when over
+    if (this.xTarget > 0) {
+      this.xTarget +=
+        (0 - this.xTarget) *
+        Helpers.lerp(ScrollController.acceleration, 0.3, 0.8)
+    }
+
+    if (this.xTarget < this.max) {
+      this.xTarget +=
+        (this.max - this.xTarget) *
+        Helpers.lerp(ScrollController.acceleration, 0.3, 0.8)
+    }
+
+    this.x += (this.xTarget - this.x) * 0.4
+
+    // toggle visibility on nav arrows
+
+    const xRounded: number = Math.round(this.x)
+    if (xRounded < 0) {
+      if (!this.prevButton.classList.contains('active')) {
+        this.prevButton.classList.add('active')
+      }
+      if (!this.prevButton.classList.contains('cf-gradient')) {
+        this.prevButton.classList.add('cf-gradient')
+      }
+    }
+
+    if (xRounded === 0) {
+      if (this.prevButton.classList.contains('active')) {
+        this.prevButton.classList.remove('active')
+      }
+      if (this.prevButton.classList.contains('cf-gradient')) {
+        this.prevButton.classList.remove('cf-gradient')
+      }
+    }
+
+    if (xRounded > this.max) {
+      if (!this.nextButton.classList.contains('active')) {
+        this.nextButton.classList.add('active')
+      }
+      if (!this.nextButton.classList.contains('cf-gradient')) {
+        this.nextButton.classList.add('cf-gradient')
+      }
+    }
+
+    if (xRounded <= this.max) {
+      if (this.nextButton.classList.contains('active')) {
+        this.nextButton.classList.remove('active')
+      }
+      if (this.nextButton.classList.contains('cf-gradient')) {
+        this.nextButton.classList.remove('cf-gradient')
+      }
+    }
+
+    // set css transforms
+    const xx: number = this.x
+    Helpers.setTransform(this.listToScroll, `translateX(${xx}px)`)
+
+    // cycle render
+    if (
+      this.interacting ||
+      (Math.abs(this.x - this.xTarget) > 0.02 && !this.interacting)
+    ) {
+      this.rAF = window.requestAnimationFrame(() => this.render())
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setScroll(x: number, _y: number): void {
+    this.xTarget = this.visibleAreaWidth === this.listWidth ? 0 : x
+    this.render()
+  }
+
+  public pushDirection(dir: number): void {
+    this.inputAccerlationTarget += 5000 * dir
+    this.render()
+  }
+
+  public dealloc(): void {
+    this.prevButton.removeEventListener(
+      'click',
+      this.onListNavButtonsClickCallback,
+      false
+    )
+    this.nextButton.removeEventListener(
+      'click',
+      this.onListNavButtonsClickCallback,
+      false
+    )
+    // @ts-ignore
+    this.onListNavButtonsClickCallback = null
+    // @ts-ignore
+    this.prevButton = null
+    // @ts-ignore
+    this.nextButton = null
+
+    document.removeEventListener(
+      'mouseleave',
+      this.documentLeaveCallback,
+      false
+    )
+    document.removeEventListener(
+      Helpers.getMouseEvent('mouseup'),
+      this.documentLeaveCallback,
+      false
+    )
+    this.interactionListener.removeEventListener(
+      Helpers.getMouseEvent('mousedown'),
+      this.onInteractStartCallback,
+      false
+    )
+    this.interactionListener.removeEventListener(
+      Helpers.getMouseEvent('mouseup'),
+      this.onInteractEndCallback,
+      false
+    )
+    this.interactionListener.removeEventListener(
+      Helpers.getMouseEvent('mousemove'),
+      this.onInteractMoveCallback,
+      false
+    )
+
+    // @ts-ignore
+    this.documentLeaveCallback = null
+    // @ts-ignore
+    this.onInteractStartCallback = null
+    // @ts-ignore
+    this.onInteractEndCallback = null
+    // @ts-ignore
+    this.onInteractMoveCallback = null
+  }
+
+  public reset(): void {
+    this.interacting = false
+    this.startX = 0
+    this.startXTarget = this.startX
+    this.inputAccerlation = 0
+    this.x = 0
+    this.xTarget = 0
+    Helpers.setTransform(this.listToScroll, 'translateX(0px)')
+    this.render()
+    this.prevButton.classList.remove('active')
+    this.nextButton.classList.remove('active')
+  }
+
+  public resize(listWidth: number, visibleAreaWidth: number): void {
+    this.reset()
+    this.visibleAreaWidth = visibleAreaWidth
+    this.listWidth = Math.max(visibleAreaWidth, listWidth)
+    this.max = (this.listWidth - this.visibleAreaWidth) * -1
+    this.render()
+  }
+}

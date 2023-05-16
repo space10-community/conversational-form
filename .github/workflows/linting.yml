@@ -1,0 +1,78 @@
+name: Linting/Build/Tests
+
+on:
+  pull_request:
+    branches: [master]
+    # Trigger only with changes to any code
+    paths: ['src/**']
+
+  push:
+    branches: [master]
+    # Trigger only with changes to any code
+    paths: ['src/**']
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache Yarn Dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ hashFiles('**/yarn.lock') }}
+
+      - name: Setup Node and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn install --prefer-offline --ignore-scripts
+
+      - name: Run Eslint
+        run: yarn run eslint "src/**/*.{ts,tsx}"
+
+      - name: Run Tests
+        run: yarn test
+
+      - name: Run TypeScript Type-checking
+        run: yarn run tsc --noEmit
+
+      - name: Build with bundle size grep by "dist/index.js"
+        id: build_bundle_size
+        shell: bash
+        run: |
+          BUILD_OUTPUT=$(yarn build)
+          GZIP_SIZE=$(cat -v <<< "$BUILD_OUTPUT" | grep 'index.js[^ ]*gz' | sed -r 's/.*\^\[\[31m([0-9]+) kB\^\[\[39m.*/\1 kB/')
+          echo "::set-output name=gzipSize::$GZIP_SIZE"
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@a54c31d7fa095754bfef525c0c8e5e5674c4b4b1
+        id: fc
+        if: github.event_name == 'pull_request'
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Bundle size
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@700b7747569afe6451120008543f9dda464be6fc
+        if: github.event_name == 'pull_request'
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **Bundle size**
+
+            ---
+
+            | Type | Size |
+            | --- | --- |
+            | gzip | :package: ${{ steps.build_bundle_size.outputs.gzipSize }} |
+
+          edit-mode: replace
